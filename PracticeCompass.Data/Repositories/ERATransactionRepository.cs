@@ -66,6 +66,7 @@ namespace PracticeCompass.Data.Repositories
             var outpatientlist = new List<ERSMedicareOutpatAdj>();
             var ProviderAdjustments = new List<ERSPmtProvLevelAdj>();
             var ERSClaimDates = new List<ERSClaimDate>();
+            var ERSPaymentParty = new List<ERSPaymentParty>();
             using var txScope = new TransactionScope();
             for (var era = 0; era < transactions.Count; era++)
             {
@@ -73,6 +74,57 @@ namespace PracticeCompass.Data.Repositories
                 var ERSClaimSID = random.Next(1000, 999999);
                 var ERSChargeSID = random.Next(1000, 999999);
                 var ERSPaymentSID = random.Next(1000, 999999);
+                string PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
+                ERSPaymentParty.Add(new ERSPaymentParty
+                {
+                    prrowid = PaymentPartyMAXRowID,
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    ERSPaymentSID = ERSPaymentSID,
+                    EntityIDCode = "PR",
+                    Name = transactions[era].Payer.Name,
+                    AddressInfo01 = transactions[era].Payer.Address.Line1,
+                    AddressInfo02 = transactions[era].Payer.Address.Line2,
+                    PostalCode = transactions[era].Payer.Address.ZipCode,
+                    StateCode = transactions[era].Payer.Address.State,
+                    CityName = transactions[era].Payer.Address.City,
+                    CountryCode = "",
+                    LocationID = "",
+                    LocationQualifier = "",
+                    IDCode="",//unknown
+                    IDCodeQualifier= ""//unknown
+
+                });
+                PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
+                ERSPaymentParty.Add(new ERSPaymentParty
+                {
+                    prrowid = PaymentPartyMAXRowID,
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    ERSPaymentSID = ERSPaymentSID,
+                    EntityIDCode = "PE",
+                    Name = transactions[era].Payee.Name,
+                    AddressInfo01 = transactions[era].Payee.Address.Line1,
+                    AddressInfo02 = transactions[era].Payee.Address.Line2,
+                    PostalCode = transactions[era].Payee.Address.ZipCode,
+                    StateCode = transactions[era].Payee.Address.State,
+                    CityName = transactions[era].Payee.Address.City,
+                    CountryCode = "",
+                    LocationID = "",
+                    LocationQualifier = "",
+                    IDCode = transactions[era].Payee.IDCode,
+                    IDCodeQualifier = transactions[era].Payee.IDCodeQualifier
+                });
                 #region ProviderAdjustments PLB
                 for (var provadj = 0; provadj < transactions[era].ProviderAdjustments.Count; provadj++)
                 {
@@ -271,26 +323,42 @@ namespace PracticeCompass.Data.Repositories
            "@ClaimDate, @TimeStamp,@LastUser, @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
             var dates = this.db.Execute(claimDateSQL, ERSClaimDates);
+            var PaymentPartySQL = "INSERT INTO [dbo].[ERSPaymentParty] VALUES (@prrowid, @ERSPaymentSID, @EntityIDCode," +
+           "@Name, @IDCodeQualifier, @IDCode, @AddressInfo01, @AddressInfo02," +
+           "@CityName, @StateCode, @PostalCode, @CountryCode, @LocationQualifier," +
+           "@LocationID, @TimeStamp, @LastUser, @CreateStamp, @CreateUser," +
+           "@Pro2SrcPDB, @pro2created, @pro2modified)";
+            var PayParty = this.db.Execute(PaymentPartySQL, ERSPaymentParty);
             txScope.Complete();
             return true;
         }
         private string GetMAXRowID(string tableName, string lastprrowid)
         {
-            int intFromHex;
-            if (lastprrowid != "0")
+            try
             {
-                intFromHex = Convert.ToInt32(lastprrowid, 16) + 1;
-            }
-            else
-            {
-                string sql = string.Format("SELECT top(1) prrowid from [{0}] group by prrowid order by MAX(CONVERT(INT, CONVERT(VARBINARY(MAX),prrowid))) desc", tableName);
-                var prrowid = db.ExecuteScalar(sql);
-                var maxprrowid = prrowid != null ? prrowid.ToString() : "0";
-                intFromHex = Convert.ToInt32(maxprrowid, 16) + 1;
-            }
-            string hexValue = intFromHex.ToString("X");
-            return string.Format("0x{0:X}", hexValue);
 
+
+                long intFromHex;
+                if (lastprrowid != "0")
+                {
+                    intFromHex = Convert.ToInt64(lastprrowid, 16) + 1;
+                }
+                else
+                {
+                    string sql = string.Format("SELECT MAX(CONVERT(INT, CONVERT(VARBINARY, prrowid,1))) from [{0}]", tableName);
+                    var prrowid = db.ExecuteScalar(sql);
+                    intFromHex = 1;
+                    if (prrowid != null)
+                        intFromHex = (int)prrowid + 1;
+                }
+                string hexValue = intFromHex.ToString("x16");
+                return string.Format("0x{0:X}", hexValue);
+            }
+            catch (Exception e)
+            {
+                var cc = e;
+                return "";
+            }
         }
         public Task<ERSClaimAdjustment> SingleOrDefaultAsync(Expression<Func<ERSClaimAdjustment, bool>> predicate, bool trackChanges = false)
         {

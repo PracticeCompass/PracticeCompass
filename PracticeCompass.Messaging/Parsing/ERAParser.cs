@@ -203,6 +203,8 @@ namespace PracticeCompass.Messaging.Parsing
                 throw new Exception("Payee identifier segment (N1)  not found");
             }
             eRa.Payee.Name = payeeIdentifier[2];
+            eRa.Payee.IDCodeQualifier = payeeIdentifier[3];
+            eRa.Payee.IDCode = payeeIdentifier[4];
             var payeeAddress = transactionEnvelope.Segments[transactionEnvelope.Segments.IndexOf(payeeIdentifier) + 1];
             if (payerAddress == null)
             {

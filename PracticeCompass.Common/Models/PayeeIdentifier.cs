@@ -8,6 +8,8 @@ namespace PracticeCompass.Common.Models
     {
 
         public string Name { set; get; }
+        public string IDCodeQualifier { set; get; }
+        public string IDCode { set; get; }
         public Address Address { set; get; }
         public PayeeIdentifier()
         {
