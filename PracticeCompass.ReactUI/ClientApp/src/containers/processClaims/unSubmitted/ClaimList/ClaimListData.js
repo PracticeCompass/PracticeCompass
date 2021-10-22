@@ -100,6 +100,7 @@ export const columns = [
   {
     field: "notes",
     title: "Notes ",
+    iscellWithIcon:true,
     minWidth: 100,
     orderIndex: 11,
   },
