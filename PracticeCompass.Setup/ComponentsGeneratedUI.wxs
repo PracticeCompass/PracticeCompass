@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLFOLDERUI">
+            <Component Id="cmpD77A7E7D7E3CAD40FE2A1BCAC4E44F9C" Guid="{9A6C91D6-2102-4852-B83D-7AC0560B68B0}">
+                <File Id="fil0F857E99201C3E5D4C146D207AB3372C" KeyPath="yes" Source="$(var.BasePathUI)\3rdpartylicenses.txt" />
+            </Component>
+            <Component Id="cmpBD5588FF66FE1189E876056CD53570CB" Guid="{17EE8313-226E-4A25-92B8-B93A39926744}">
+                <File Id="filDD00154C7883CC77623DCBC8D9174011" KeyPath="yes" Source="$(var.BasePathUI)\4.268910950e92beb980b4.js" />
+            </Component>
+            <Component Id="cmp479CB2557718EB8802EF9B691C41F20C" Guid="{46552620-1F44-4910-9E21-BCF7408A82A5}">
+                <File Id="fil7EE44CED8D04B4B29C371738A1F09334" KeyPath="yes" Source="$(var.BasePathUI)\5.7e2998ad77d7301c970f.js" />
+            </Component>
+            <Component Id="cmpB24CD14AD3DD71FB837B7B6FB70BC30F" Guid="{9C7A8EDD-0C30-446A-A6B3-AEAEAA273CE3}">
+                <File Id="filEAC5A144F9D319CC048B95222EC61BF2" KeyPath="yes" Source="$(var.BasePathUI)\6.8c375880477e98c0e70e.js" />
+            </Component>
+            <Component Id="cmp3855653A2B35CAFEC5B7580FDB87270A" Guid="{5A07835E-D22B-4090-B1E8-A6B85E36310F}">
+                <File Id="fil113B7723B733A9E4B11042F51DBB9C82" KeyPath="yes" Source="$(var.BasePathUI)\7.1101474bee00aaaae9ef.js" />
+            </Component>
+            <Component Id="cmp562D8B63ED06D721AED0918891F7CAB9" Guid="{5D6C61E1-BD63-4008-9259-5E3799C9E895}">
+                <File Id="fil792BD5B6DB072C745D4F24E851899220" KeyPath="yes" Source="$(var.BasePathUI)\8.2bb8d4bd6ea4e814d5aa.js" />
+            </Component>
+            <Component Id="cmp382478790C6A4DF0729B640675DD8E28" Guid="{901A43E6-7267-49BE-9958-002897FA292B}">
+                <File Id="fil5B93841D4450C13404672A28469C2C57" KeyPath="yes" Source="$(var.BasePathUI)\index.html" />
+            </Component>
+            <Component Id="cmp6186A5054D7B60DA40B5A104F14890E7" Guid="{A9FEA684-809D-4D1D-A0F1-F8C729628DB5}">
+                <File Id="filE4917886DEE6AE51B5D52AA8F2E4043C" KeyPath="yes" Source="$(var.BasePathUI)\main.03717baa8ab5b1fd52af.js" />
+            </Component>
+            <Component Id="cmpEC22803CF04DA156DC88624F2ED58E27" Guid="{7A98C598-BD43-421A-AD27-F06EB8E87085}">
+                <File Id="fil69354F2AC475002EF3E4E69FD1D23FB9" KeyPath="yes" Source="$(var.BasePathUI)\polyfills.abbc1dfd2c506bedadea.js" />
+            </Component>
+            <Component Id="cmp5AD3EA60CD9878F08694894E16042165" Guid="{2D2F48FB-5A8B-45B9-94BE-2C936FD6C85D}">
+                <File Id="fil965697F4781A2487BFC3A717B8DD918A" KeyPath="yes" Source="$(var.BasePathUI)\runtime.5a3c69ead9eed8944d70.js" />
+            </Component>
+            <Component Id="cmp3471BCA8D72CD820F18532F222857D07" Guid="{C35E0E95-3593-43ED-98DC-ADBE5A8B78BE}">
+                <File Id="fil358F012C076136814865643718D3F118" KeyPath="yes" Source="$(var.BasePathUI)\styles.7f1418e42cd88e92c08f.css" />
+            </Component>
+            <Directory Id="dir0B76C06670B50BC8EEBCDD0A349BD52E" Name="assets">
+                <Directory Id="dirAB03CBD2E2902FAB747064BEEE2F1575" Name="Images">
+                    <Directory Id="dir862C965E60249BCDBE0E94FD5387B465" Name="Header">
+                        <Component Id="cmpB7881EFAC35481F844D5803400229824" Guid="{CACE4F30-FD96-4188-ABC3-10208539D2F1}">
+                            <File Id="fil50D5CBDC2CE8F5BA44398658623C3426" KeyPath="yes" Source="$(var.BasePathUI)\assets\Images\Header\med-logo.png" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dirC314AAEF3993303433A5A45A5DBADCFD" Name="Imaging">
+                        <Directory Id="dir1E927E4DED13373A034A3D623DC8EB47" Name="Toolbox">
+                            <Component Id="cmpD2C793A44238A6EBE2CA6708D20E97AD" Guid="{6716D452-1030-4446-B476-358F8B11FF4D}">
+                                <File Id="fil18AAF5EAE09FF626ED3FE019865F5D11" KeyPath="yes" Source="$(var.BasePathUI)\assets\Images\Imaging\Toolbox\verify_with_idme_green.png" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir521DE99D1510DC0D5EEDBD02035E1747" Name="Style">
+                    <Component Id="cmp10D9652B6A3D19FFF95A895BFB39C3DA" Guid="{88F6C786-B1E2-46EB-B001-F592FFD7D2DA}">
+                        <File Id="fil48AEFBBB7871E2BB99BFA581A07DF2D3" KeyPath="yes" Source="$(var.BasePathUI)\assets\Style\global.css" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="PublishedComponentsUI">
+            <ComponentRef Id="cmpD77A7E7D7E3CAD40FE2A1BCAC4E44F9C" />
+            <ComponentRef Id="cmpBD5588FF66FE1189E876056CD53570CB" />
+            <ComponentRef Id="cmp479CB2557718EB8802EF9B691C41F20C" />
+            <ComponentRef Id="cmpB24CD14AD3DD71FB837B7B6FB70BC30F" />
+            <ComponentRef Id="cmp3855653A2B35CAFEC5B7580FDB87270A" />
+            <ComponentRef Id="cmp562D8B63ED06D721AED0918891F7CAB9" />
+            <ComponentRef Id="cmp382478790C6A4DF0729B640675DD8E28" />
+            <ComponentRef Id="cmp6186A5054D7B60DA40B5A104F14890E7" />
+            <ComponentRef Id="cmpEC22803CF04DA156DC88624F2ED58E27" />
+            <ComponentRef Id="cmp5AD3EA60CD9878F08694894E16042165" />
+            <ComponentRef Id="cmp3471BCA8D72CD820F18532F222857D07" />
+            <ComponentRef Id="cmpB7881EFAC35481F844D5803400229824" />
+            <ComponentRef Id="cmpD2C793A44238A6EBE2CA6708D20E97AD" />
+            <ComponentRef Id="cmp10D9652B6A3D19FFF95A895BFB39C3DA" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

@@ -1,0 +1,40 @@
+.summaryTextBox {
+  height: 25px;
+  width: 100px !important;
+}
+
+.container {
+  margin-top: 5px;
+  margin-left: 20px;
+  background-color: white;
+  height: 300px;
+  padding: 5px;
+}
+.filterLabel {
+  padding-left: 15px;
+  width: 66px;
+}
+.actionButton {
+  border: 1px grey solid;
+  border-radius: 4px;
+  padding: 2px;
+}
+.infraBtn {
+  font-size: 11px !important;
+}
+.k-combobox {
+  font-size: 11px !important;
+}
+.k-window-title {
+  font-size: 1rem !important;
+}
+.k-panelbar-item-text {
+  font-size: 12px !important;
+  /* padding-top: 10px !important;
+  padding-left: 20px !important;
+  padding-bottom: 10px !important;
+  padding-right: 0px !important; */
+}
+.k-pager-nav {
+  font-size: 12px !important;
+}

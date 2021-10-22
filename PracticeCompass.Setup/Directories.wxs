@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="WINDOWSVOLUME">
+        <Directory Id="PracticeCompass" Name="PracticeCompass">
+          <Directory Id="INSTALLFOLDERUI" Name="TechnoMedicUI" />
+          <Directory Id="INSTALLFOLDERAPI" Name="TechnoMedicAPI" />
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+</Wix>

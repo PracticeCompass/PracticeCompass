@@ -1,0 +1,69 @@
+USE [medman]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [LookupCode##CodeOrder]    Script Date: 08/01/2021 2:39:31 AM ******/
+CREATE NONCLUSTERED INDEX [LookupCode##CodeOrder] ON [dbo].[LookupCode]
+(
+	[LookupType] ASC,
+	[Order] ASC,
+	[LookupCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [LookupCode##Description]    Script Date: 08/01/2021 2:39:31 AM ******/
+CREATE NONCLUSTERED INDEX [LookupCode##Description] ON [dbo].[LookupCode]
+(
+	[Description] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [LookupCode##DescriptionWord]    Script Date: 08/01/2021 2:39:31 AM ******/
+CREATE NONCLUSTERED INDEX [LookupCode##DescriptionWord] ON [dbo].[LookupCode]
+(
+	[Description] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [LookupCode##LookupCodePK]    Script Date: 08/01/2021 2:39:31 AM ******/
+CREATE NONCLUSTERED INDEX [LookupCode##LookupCodePK] ON [dbo].[LookupCode]
+(
+	[LookupType] ASC,
+	[LookupCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [LookupCode##RecordStatus]    Script Date: 08/01/2021 2:39:31 AM ******/
+CREATE NONCLUSTERED INDEX [LookupCode##RecordStatus] ON [dbo].[LookupCode]
+(
+	[LookupType] ASC,
+	[RecordStatus] ASC,
+	[LookupCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [PK__LookupCo__CE87783404F0651B]    Script Date: 08/01/2021 2:39:31 AM ******/
+ALTER TABLE [dbo].[LookupCode] ADD PRIMARY KEY NONCLUSTERED 
+(
+	[prrowid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+

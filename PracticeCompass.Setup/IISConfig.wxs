@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
+  <Fragment>
+
+    <!-- Install to default web site -->
+    <iis:WebSite Id="DefaultWebSite" Description="Default Web Site">
+      <iis:WebAddress Id="AllUnassigned" Port="80" />
+    </iis:WebSite>
+    <DirectoryRef Id="INSTALLFOLDERUI">
+      <Component Id="TechnoMedicUIAppPool" Guid="" KeyPath="yes">
+        <iis:WebAppPool Id="TechnoMedicUIAppPool"
+                        Name="TechnoMedicUI"
+                        Identity="localSystem"
+                        ManagedPipelineMode="Integrated"
+                        ManagedRuntimeVersion="v4.0" />
+      </Component>
+      <Component Id="InstallWebsite" Guid="" KeyPath="yes">
+        <!-- Install to default web site -->
+        <iis:WebVirtualDir Id="MsWebServiceVD" Alias="TechnoMedicUI"  Directory="INSTALLFOLDERUI" WebSite="DefaultWebSite">
+          <iis:WebApplication Id="MsWebServiceApplication" Name="[DemoWebsiteWebsite][WEBSITE_ID]"  WebAppPool="TechnoMedicUIAppPool"/>
+          <iis:WebDirProperties Id="WebServiceVirtualDirProperties" Execute="yes" Script="yes" Read="yes" WindowsAuthentication="no" AnonymousAccess="yes" IIsControlledPassword="yes" />
+        </iis:WebVirtualDir>
+      </Component>
+    </DirectoryRef>
+
+
+    <DirectoryRef Id="INSTALLFOLDERAPI">
+      <Component Id="TechnoMedicUIAppPool2" Guid="" KeyPath="yes">
+        <iis:WebAppPool Id="TechnoMedicAPIAppPool"
+                        Name="TechnoMedicAPI"
+                        Identity="localSystem"
+                        ManagedPipelineMode="Integrated"
+                        ManagedRuntimeVersion="v4.0" />
+      </Component>
+      <Component Id="InstallWebsite2" Guid="" KeyPath="yes">
+        <!-- Install to default web site -->
+        <iis:WebVirtualDir Id="MsWebServiceVD2" Alias="TechnoMedicAPI"  Directory="INSTALLFOLDERAPI" WebSite="DefaultWebSite">
+          <iis:WebApplication Id="MsWebServiceApplication2" Name="[DemoWebsiteWebsite][WEBSITE_ID]"  WebAppPool="TechnoMedicAPIAppPool"/>
+          <iis:WebDirProperties Id="WebServiceVirtualDirProperties2" Execute="yes" Script="yes" Read="yes" WindowsAuthentication="no" AnonymousAccess="yes" IIsControlledPassword="yes" />
+        </iis:WebVirtualDir>
+      </Component>
+    </DirectoryRef>
+
+ 
+
+
+    <ComponentGroup Id="TechnoMedicUIIssConfiguration">
+      <ComponentRef Id="InstallWebsite" />
+      <ComponentRef Id="TechnoMedicUIAppPool" />
+
+      <ComponentRef Id="InstallWebsite2" />
+      <ComponentRef Id="TechnoMedicUIAppPool2" />
+
+    </ComponentGroup>
+  </Fragment>
+</Wix>

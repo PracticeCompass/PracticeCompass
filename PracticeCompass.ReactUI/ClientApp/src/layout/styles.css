@@ -1,0 +1,304 @@
+my-app {
+  padding: 0 !important;
+}
+
+.title {
+  margin-left: 20px;
+  font-weight: bold;
+  font-size: 17px;
+}
+.custom-toolbar {
+  width: 100%;
+  background-color: #f6f6f6;
+  line-height: 10px;
+  border-bottom: inset;
+  border-bottom-width: 1px;
+  padding: 3px 8px;
+  color: #656565;
+}
+.k-drawer-container {
+  height: calc(100vh - 43px);
+}
+.k-drawer-item {
+  user-select: none;
+  line-height: 1 !important;
+  display: block !important;
+}
+.k-drawer-item .k-icon {
+  font-size: 20px;
+}
+.k-drawer-content {
+  padding: 10px;
+  /* margin-top: -55px; */
+}
+.k-card-image {
+  max-height: 240px;
+}
+.k-drawer-item.sub-item {
+  padding-left: 20px;
+}
+.k-card-subtitle {
+  margin: 0;
+  line-height: 1.5;
+}
+.infraBtn {
+  width: auto;
+  padding: 3px 10px !important;
+  font-size: 11px !important;
+  line-height: 1.42857143 !important;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-image: none !important;
+  border-radius: 3px !important;
+  margin: 3px;
+}
+
+.infraBtn.e-disable,
+.infraBtn[disabled] {
+  opacity: 0.65;
+  border: 1px solid lightgray !important;
+  background-color: lightgray !important;
+  pointer-events: none;
+}
+
+.infraBtn-confirm {
+  color: #fff !important;
+  background-color: var(--GlobalColorKey) !important;
+  border-color: var(--GlobalColorKey) !important;
+}
+
+.infraBtn-confirm:hover {
+  border-color: #073938 !important;
+  color: #073938 !important;
+}
+
+.infraBtn-info {
+  color: #fff !important;
+  background-color: #5f50c5 !important;
+  border-color: #5f50c5 !important;
+}
+
+.infraBtn-info:hover {
+  border-color: #211b45 !important;
+  color: #211b45 !important;
+}
+.infraBtn-refresh {
+  color: white;
+  background-color: blue;
+  border-color: transparent;
+}
+.infraBtn-refresh:hover {
+  border-color: blue !important;
+  background-color: blue !important;
+  color: black !important;
+}
+
+.infraBtn-cancel {
+  color: #fff !important;
+  background-color: #fcaf41 !important;
+  border-color: #fcaf41 !important;
+}
+
+.infraBtn-cancel:hover {
+  border-color: #845b21 !important;
+  color: #845b21 !important;
+}
+
+.infraBtn-primary {
+  color: #fff !important;
+  background-color: #2184da !important;
+  border-color: #2184da !important;
+}
+.infraBtn-edit {
+  color: #fff !important;
+  background-color: #073938 !important;
+  border-color: #073938 !important;
+}
+
+.infraBtn-primary:hover {
+  border-color: #13446d !important;
+}
+
+.infraBtn-delete {
+  color: #fff !important;
+  background-color: #f04b46 !important;
+  border-color: #f04b46 !important;
+}
+.infraBtn-delete:hover {
+  border-color: #802a27 !important;
+}
+
+.infraBtn-reset {
+  color: #fff !important;
+  background-color: #1bb8a2 !important;
+  border-color: #1bb8a2 !important;
+}
+
+.infraBtn-reset:hover {
+  border-color: #211b45 !important;
+  color: #211b45 !important;
+}
+
+.infraBtn-export {
+  color: #fff !important;
+  background-color: green !important;
+  border-color: green !important;
+}
+
+.infraBtn-export:hover {
+  border-color: #211b45 !important;
+  color: #211b45 !important;
+}
+.k-panelbar > .k-item > .k-link,
+.k-panelbar > .k-panelbar-header > .k-link {
+  padding: 0.5rem 1.5rem !important;
+}
+.k-grid-table {
+  font-size: 11px;
+}
+.k-animation-container li,
+.k-animation-container-shown li {
+  font-size: 11px !important;
+}
+.fieldsetStyle {
+  margin: 0;
+  padding: 0;
+  border: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+.legendStyle {
+  font-size: 12px;
+  width: auto;
+  margin-bottom: 0px;
+  font-weight: bold;
+  color: "#1f497d";
+}
+.k-radio-label {
+  font-size: 12px;
+}
+.k-grid-header .k-header > .k-link {
+  text-overflow: initial !important;
+}
+.k-grid tbody tr:hover,
+.k-grid tbody tr.k-state-hover {
+  background-color: #2184da !important;
+  color: white !important;
+}
+.k-grid tbody tr.k-state-hover {
+  background-color: #2184da !important;
+  color: white !important;
+}
+thead {
+  background-color: lightgrey;
+}
+button {
+  width: 80px;
+}
+.k-button {
+  width: 80px;
+}
+.logoButton {
+  width: 40px !important;
+}
+.filterDropDown {
+  width: 300px;
+}
+.summaryTextBox {
+  height: 35px;
+  width: 100px !important;
+}
+.card-body {
+  padding: 0px;
+}
+.find-button {
+  width: 60px !important;
+  height: 22px !important;
+}
+.action-button {
+  width: 65px !important;
+  height: 22px !important;
+  margin-right: 0px !important;
+}
+.provider-button {
+  width: 95px !important;
+  height: 22px !important;
+  margin-right: 0px !important;
+}
+.insurance-button {
+  width: 105px !important;
+  height: 22px !important;
+  margin-right: 0px !important;
+}
+.details-button {
+  width: 115px !important;
+  height: 22px !important;
+  margin-right: 0px !important;
+}
+.action-grid-button {
+  width: 95px !important;
+  height: 22px !important;
+  margin-right: 0px !important;
+}
+.k-grid th,
+.k-grid td {
+  padding: 0.2rem !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+}
+.rowHeight {
+  height: 25px;
+}
+.patientStyle {
+  width: 190px;
+}
+.patientTypeStyle{
+  width: 360px;
+}
+.physicianStyle{
+  width: 240px;
+}
+.PracticeStyle{
+  width: 416px;
+}
+.insuranceStyle{
+  width: 300px;
+}
+.filterStyle{
+  width:  236px;
+}
+.insPlan{
+  width: 92px;
+}
+.PhoneStyle{
+  width: 88px;
+}
+.phoneExt{
+  width: 73px;
+}
+.ZipStyle{
+  width: 73px;
+}
+.SSNStyle{
+  width: 83px;
+}
+.genderStyle{
+  width: 136px;
+}
+.GuarantorStyle{
+  width: 276px;
+}
+.dateStyle{
+  width: 135px;
+}
+.claimStyle{
+  width:174px;
+}
+.logo {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}

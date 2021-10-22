@@ -1,0 +1,353 @@
+:root {
+  --GlobalFontColor: #7b7c94;
+  --BodyBackgroundColor: #e9e8ed;
+  --MainHeaderBackgroundColor: #2d2c3a;
+}
+
+body {
+  color: var(--GlobalFontColor);
+  margin: 0;
+  background-color: var(--BodyBackgroundColor);
+  font-family: "Mukta Vaani", sans-serif;
+}
+
+.infraBtn {
+  width: auto;
+  padding: 3px 10px !important;
+  font-size: 11px !important;
+  line-height: 1.42857143 !important;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-image: none !important;
+  border-radius: 3px !important;
+  margin: 3px;
+}
+
+.infraBtn.e-disable,
+.infraBtn[disabled] {
+  opacity: 0.65;
+  border: 1px solid lightgray !important;
+  background-color: lightgray !important;
+  pointer-events: none;
+}
+.appointmentTypeLabel {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+}
+.locationLabel {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+}
+.roleLabel {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+}
+.infraBtn-confirm {
+  color: #fff !important;
+  background-color: var(--GlobalColorKey) !important;
+  border-color: var(--GlobalColorKey) !important;
+}
+
+.infraBtn-confirm:hover {
+  border-color: #073938 !important;
+  color: #073938 !important;
+}
+
+.infraBtn-info {
+  color: #fff !important;
+  background-color: #5f50c5 !important;
+  border-color: #5f50c5 !important;
+}
+
+.infraBtn-info:hover {
+  border-color: #211b45 !important;
+  color: #211b45 !important;
+}
+.infraBtn-refresh {
+  color: white;
+  background-color: blue;
+  border-color: transparent;
+}
+.infraBtn-refresh:hover {
+  border-color: blue !important;
+  background-color: blue !important;
+  color: black !important;
+}
+
+.infraBtn-cancel {
+  color: #fff !important;
+  background-color: #fcaf41 !important;
+  border-color: #fcaf41 !important;
+}
+
+.infraBtn-cancel:hover {
+  border-color: #845b21 !important;
+  color: #845b21 !important;
+}
+
+.ui-pnotify-action-button.btn.btn-default.primary,
+.infraBtn-primary {
+  color: #fff !important;
+  background-color: #2184da !important;
+  border-color: #2184da !important;
+}
+.ui-pnotify-action-button.btn.btn-default.primary,
+.infraBtn-edit {
+  color: #fff !important;
+  background-color: #073938 !important;
+  border-color: #073938 !important;
+}
+
+.ui-pnotify-action-button.btn.btn-default.primary:hover,
+.infraBtn-primary:hover {
+  border-color: #13446d !important;
+}
+
+.ui-pnotify-action-button.btn.btn-default.no,
+.infraBtn-delete {
+  color: #fff !important;
+  background-color: #f04b46 !important;
+  border-color: #f04b46 !important;
+}
+
+.ui-pnotify-action-button.btn.btn-default.no:hover,
+.infraBtn-delete:hover {
+  border-color: #802a27 !important;
+}
+
+.infraBtn-reset {
+  color: #fff !important;
+  background-color: #1bb8a2 !important;
+  border-color: #1bb8a2 !important;
+}
+
+.infraBtn-reset:hover {
+  border-color: #211b45 !important;
+  color: #211b45 !important;
+}
+
+.infraBtn-export {
+  color: #fff !important;
+  background-color: green !important;
+  border-color: green !important;
+}
+
+.infraBtn-export:hover {
+  border-color: #211b45 !important;
+  color: #211b45 !important;
+}
+
+.userDefaultsLabel {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-left: 4px;
+}
+
+.userDefaults {
+  padding-right: 2px !important;
+}
+
+.resourceInfoLabel {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-left: 4px;
+  height: 18px;
+}
+
+.resorceInfoHl7Label {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+}
+
+.userInfoLabel {
+  font-size: 12px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+  display: inline-block;
+}
+.userInfoLabel3 {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  height: 18px;
+}
+.userInfoLabel2 {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+  width: 5px;
+}
+.personnelDetailsLabel {
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+}
+
+.userManagmentTabStrip {
+  color: var(--GlobalFontColor) !important;
+  font-size: 11px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+}
+
+html,
+body,
+layout-component {
+  padding: 0;
+  height: 100%;
+}
+
+layout-component {
+  display: flex;
+  flex-direction: column;
+}
+
+kendo-drawer-container {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.k-icon {
+  font-size: 11px;
+}
+
+.custom-toolbar {
+  width: 100%;
+  background-color: #f6f6f6;
+  line-height: 10px;
+  border-bottom: inset;
+  border-bottom-width: 1px;
+  padding: 3px 8px;
+  color: #656565;
+}
+
+.mail-box {
+  margin-left: 20px;
+  font-weight: bold;
+  font-size: 11px;
+}
+/* kendo-drawer-content {
+  padding: 20px;
+} */
+
+.unifyHeight {
+  width: 100% !important;
+  font-size: 11px;
+  /* display: inline-block; */
+  border-radius: 0.25rem !important;
+  border-width: thin !important;
+  border-style: solid !important;
+  border-color: #000000 !important;
+  height: 20px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+.textAreaUnifyHeight {
+  width: 100% !important;
+  font-size: 11px;
+  /* display: inline-block; */
+  border-radius: 0.25rem !important;
+  border-width: thin !important;
+  border-style: solid !important;
+  border-color: #000000 !important;
+}
+.unifyHeight2 {
+  font-size: 11px;
+  /* display: inline-block; */
+  border-radius: 0.25rem !important;
+  border-width: thin !important;
+  border-style: solid !important;
+  border-color: #000000 !important;
+  height: 20px !important;
+  width: 90% !important;
+}
+fieldset {
+  display: block;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding-top: 0.35em;
+  padding-bottom: 0.625em;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  border-style: dotted;
+  border-width: thin;
+  width: 380px;
+  /* font-weight: bold; */
+}
+legend {
+  padding: 5px 10px;
+  font-size: 11px;
+}
+.legend2 {
+  position: absolute;
+  font-size: 11px;
+  top: 285px;
+  right: 190px;
+  background: #fff;
+  line-height: 1.2em;
+}
+.legend3 {
+  position: absolute;
+  font-size: 11px;
+  top: 285px;
+  right: 49px;
+  background: #fff;
+  line-height: 1.2em;
+}
+.k-textbox {
+  border-color: #000000 !important;
+  height: 25px !important;
+  width: 100% !important;
+  font-size: 12px !important;
+}
+.k-animation-container .k-animation-container-relative {
+  width: 100%;
+}
+.k-clear-value {
+  height: auto !important;
+}
+.k-icon {
+  height: 15px !important;
+}
+.k-i-menu {
+  height: auto !important;
+}
+.k-i-arrow-chevron-right {
+  height: auto !important;
+}
+.k-formatted-value {
+  text-align: right;
+}
+.k-menu.k-menu-horizontal:not(.k-context-menu) {
+  padding: 0 !important;
+}

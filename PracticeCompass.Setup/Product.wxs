@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="PracticeCompass.Setup" Language="1033" Version="1.0.0.0" Manufacturer="dddd" UpgradeCode="e7ba7764-822c-4c73-aa6c-dcd968ef2879">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <!-- Embed cab files, don't include them in the output -->
+    <MediaTemplate EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="PracticeCompass.Setup" Level="1">
+      <ComponentGroupRef Id="PublishedComponentsUI" />
+      <ComponentGroupRef Id="PublishedComponentsAPI" />
+      <ComponentGroupRef Id="TechnoMedicUIIssConfiguration" />
+    </Feature>
+  </Product>
+
+</Wix>
