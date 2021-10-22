@@ -12,7 +12,6 @@ GO
 /****** Object:  Table [dbo].[AuditLog]    Script Date: 9/27/2021 11:27:03 PM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 
 GO
