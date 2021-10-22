@@ -52,6 +52,9 @@ export const MyPager = (props) => {
 export const CurrencyCell = (props) => {
     return <td style={{ textAlign: "right" }}>{props.dataItem[props.field]}</td>;
 };
+export const cellWithIcon = (props) => {
+    return <td style={{color: "red"}}><span className="k-icon k-i-file-pdf k-i-pdf"></span></td>;
+};
 export const CustomCell = (props) => {
     const field = props.field || "";
     const value = props.dataItem[field];

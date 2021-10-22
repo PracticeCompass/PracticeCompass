@@ -10,7 +10,7 @@ import {
 import { getter } from "@progress/kendo-react-common";
 import { Slider, NumericTextBox } from "@progress/kendo-react-inputs";
 import { filterBy, orderBy } from "@progress/kendo-data-query";
-import { MyPager, CurrencyCell, CustomCell } from "./GridData.js";
+import { MyPager, CurrencyCell, CustomCell,cellWithIcon } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 import $ from "jquery";
@@ -281,12 +281,15 @@ class GridComponent extends React.Component {
                     cell={
                       column.type == "currency"
                         ? CurrencyCell
+                        : column.iscellWithIcon
+                        ? cellWithIcon
                         : column.isCustomCell
                         ? this.MyCustomCell
                         : column.showToolTip && ColumnNameCell
                     }
                   />
                 );
+              
               })}
           </Grid>
         </Tooltip>
