@@ -181,6 +181,8 @@ namespace PracticeCompass.Messaging.Parsing
                 throw new Exception("Payer Identification Segment  (N1) not found");
             }
             eRa.Payer.Name = payerIdentification[2];
+            if (payerIdentification.Fields.Count >= 4)
+                eRa.Payer.IDCode = payerIdentification[4];
             var payerAddress = transactionEnvelope.Segments[transactionEnvelope.Segments.IndexOf(payerIdentification) + 1];
             if (payerAddress == null)
             {
@@ -197,6 +199,14 @@ namespace PracticeCompass.Messaging.Parsing
             eRa.Payer.Address.City = payerCity[1];
             eRa.Payer.Address.State = payerCity[2];
             eRa.Payer.Address.ZipCode = payerCity[3];
+            var payercontactinfo = transactionEnvelope.Segments[transactionEnvelope.Segments.IndexOf(payerCity) + 1];
+            if (payercontactinfo == null)
+            {
+                throw new Exception("Payer Contact Info Segment  (PER) not found");
+            }
+            eRa.Payer.ContactFunctionCode = payercontactinfo[1];
+            eRa.Payer.ClaimContactName = payercontactinfo[2];
+
             var payeeIdentifier = (from s in transactionEnvelope.Segments where s.Name == "N1" && s[1] == "PE" select s).FirstOrDefault();
             if (payeeIdentifier == null)
             {

@@ -67,6 +67,7 @@ namespace PracticeCompass.Data.Repositories
             var ProviderAdjustments = new List<ERSPmtProvLevelAdj>();
             var ERSClaimDates = new List<ERSClaimDate>();
             var ERSPaymentParty = new List<ERSPaymentParty>();
+            var ERSClaimContacts = new List<ERSClaimContact>();
             using var txScope = new TransactionScope();
             for (var era = 0; era < transactions.Count; era++)
             {
@@ -96,8 +97,24 @@ namespace PracticeCompass.Data.Repositories
                     CountryCode = "",
                     LocationID = "",
                     LocationQualifier = "",
-                    IDCode="",//unknown
-                    IDCodeQualifier= ""//unknown
+                    IDCode= transactions[era].Payer.IDCode,
+                    IDCodeQualifier= ""
+
+                });
+                string ClaimContactMAXRowID = GetMAXRowID("ERSClaimContact", ERSClaimContacts.Count != 0 ? ERSClaimContacts[ERSClaimContacts.Count - 1].prrowid : "0");
+                ERSClaimContacts.Add(new ERSClaimContact
+                {
+                    prrowid = PaymentPartyMAXRowID,
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    ERSClaimSID= ERSClaimSID,
+                    ClaimContactName= transactions[era].Payer.ClaimContactName,
+                    ContactFunctionCode= transactions[era].Payer.ContactFunctionCode
 
                 });
                 PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
@@ -162,57 +179,58 @@ namespace PracticeCompass.Data.Repositories
 
                     //for (var HGItems = 0; HGItems < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems.Count; HGItems++)
                     {
+                        string ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
+                        ERSClaimDates.Add(new ERSClaimDate  //050
+                        {
+                            TimeStamp = DateTime.Now.ToString(),
+                            LastUser = 88,
+                            CreateStamp = DateTime.Now.ToString(),
+                            CreateUser = 88,
+                            Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                            pro2created = DateTime.Now,
+                            pro2modified = DateTime.Now,
+                            ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ClaimReceivedDate,
+                            DateTimeQualifier = "050",
+                            ERSClaimSID = ERSClaimSID,
+                            prrowid = ClaimDateMAXRowID
+                        });
+                        ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
+                        ERSClaimDates.Add(new ERSClaimDate  //232
+                        {
+                            TimeStamp = DateTime.Now.ToString(),
+                            LastUser = 88,
+                            CreateStamp = DateTime.Now.ToString(),
+                            CreateUser = 88,
+                            Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                            pro2created = DateTime.Now,
+                            pro2modified = DateTime.Now,
+                            ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].StatementStartDate,
+                            DateTimeQualifier = "232",
+                            ERSClaimSID = ERSClaimSID,
+                            prrowid = ClaimDateMAXRowID
+                        });
+                        ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
+                        ERSClaimDates.Add(new ERSClaimDate  //233
+                        {
+                            TimeStamp = DateTime.Now.ToString(),
+                            LastUser = 88,
+                            CreateStamp = DateTime.Now.ToString(),
+                            CreateUser = 88,
+                            Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                            pro2created = DateTime.Now,
+                            pro2modified = DateTime.Now,
+                            ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].StatementEndDate,
+                            DateTimeQualifier = "233",
+                            ERSClaimSID = ERSClaimSID,
+                            prrowid = ClaimDateMAXRowID
+                        });
                         #region modifiers segment SVC
                         for (var mod = 0; mod < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ServiceLineItems.Count; mod++)
                         {
                             string ChargeServiceInfoMAXRowID = GetMAXRowID("ERSChargeServiceInfo", ChargeServiceInfos.Count != 0 ? ChargeServiceInfos[ChargeServiceInfos.Count - 1].prrowid : "0");
 
                             string outpatientMAXRowID = GetMAXRowID("ERSMedicareOutpatAdj", outpatientlist.Count != 0 ? outpatientlist[outpatientlist.Count - 1].prrowid : "0");
-                            string ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
-                            ERSClaimDates.Add(new ERSClaimDate  //050
-                            {
-                                TimeStamp = DateTime.Now.ToString(),
-                                LastUser = 88,
-                                CreateStamp = DateTime.Now.ToString(),
-                                CreateUser = 88,
-                                Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
-                                pro2created = DateTime.Now,
-                                pro2modified = DateTime.Now,
-                                ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ClaimReceivedDate,
-                                DateTimeQualifier = "050",
-                                ERSClaimSID = ERSClaimSID,
-                                prrowid = ClaimDateMAXRowID
-                            });
-                            ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
-                            ERSClaimDates.Add(new ERSClaimDate  //232
-                            {
-                                TimeStamp = DateTime.Now.ToString(),
-                                LastUser = 88,
-                                CreateStamp = DateTime.Now.ToString(),
-                                CreateUser = 88,
-                                Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
-                                pro2created = DateTime.Now,
-                                pro2modified = DateTime.Now,
-                                ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].StatementStartDate,
-                                DateTimeQualifier = "232",
-                                ERSClaimSID = ERSClaimSID,
-                                prrowid = ClaimDateMAXRowID
-                            });
-                            ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
-                            ERSClaimDates.Add(new ERSClaimDate  //233
-                            {
-                                TimeStamp = DateTime.Now.ToString(),
-                                LastUser = 88,
-                                CreateStamp = DateTime.Now.ToString(),
-                                CreateUser = 88,
-                                Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
-                                pro2created = DateTime.Now,
-                                pro2modified = DateTime.Now,
-                                ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].StatementEndDate,
-                                DateTimeQualifier = "233",
-                                ERSClaimSID = ERSClaimSID,
-                                prrowid = ClaimDateMAXRowID
-                            });
+                            
 
                             var procedure = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ServiceLineItems[mod].Procedure;
                             if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks.Count > 0)
@@ -329,6 +347,10 @@ namespace PracticeCompass.Data.Repositories
            "@LocationID, @TimeStamp, @LastUser, @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
             var PayParty = this.db.Execute(PaymentPartySQL, ERSPaymentParty);
+            var ERSClaimContactSQL = "INSERT INTO [dbo].[ERSClaimContact]VALUES (@prrowid,  @ERSClaimSID, @ContactFunctionCode," +
+           "@ClaimContactName, @TimeStamp,@LastUser,  @CreateStamp," +
+           "@CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
             txScope.Complete();
             return true;
         }
