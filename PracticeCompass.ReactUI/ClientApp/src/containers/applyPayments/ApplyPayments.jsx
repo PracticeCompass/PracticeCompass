@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import FindPayments from "./findPayments/findPayments";
+import InsurancePayments from "./insurance/insurancePayments";
 function mapStateToProps(state) {
   return {};
 }
@@ -12,7 +12,7 @@ class ApplyPayments extends Component {
   render() {
     return (
       <Fragment>
-        <FindPayments></FindPayments>
+        <InsurancePayments></InsurancePayments>
       </Fragment>
     );
   }

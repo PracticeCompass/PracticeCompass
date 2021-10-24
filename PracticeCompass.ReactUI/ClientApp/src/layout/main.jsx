@@ -12,7 +12,10 @@ import Transactions from "../containers/lists/transactions/Transactions";
 import PatientMore from "../containers/processPatients/more/PatientsMore";
 import Insurance from "../containers/lists/insurance/Insurance";
 import ApplyPayments from "../containers/applyPayments/ApplyPayments";
-import FindPayments from "../containers/applyPayments/findPayments/findPayments";
+import EraPayments from "../containers/applyPayments/eraPayments/eraPayments";
+import InsurancePayments from "../containers/applyPayments/insurance/insurancePayments";
+import PatientPayments from "../containers/applyPayments/patient/patientPayments";
+
 import AutomationTasks from "../containers/automationTasks/AutomationTasks";
 import Claims from "../containers/automationTasks/Claims";
 import ERA from "../containers/automationTasks/ERA";
@@ -89,8 +92,18 @@ class Main extends Component {
               />
               <Route
                 exact={true}
-                path="/applypayments/findPayments"
-                component={FindPayments}
+                path="/applypayments/eraPayments"
+                component={EraPayments}
+              />
+              <Route
+                exact={true}
+                path="/applypayments/insurancePayments"
+                component={InsurancePayments}
+              />
+              <Route
+                exact={true}
+                path="/applypayments/patientPayments"
+                component={PatientPayments}
               />
               <Route
                 exact={true}

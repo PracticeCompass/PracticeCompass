@@ -11,14 +11,14 @@ import {
   PracticeColumns,
   PhysicianColumns,
   patientPaymentColumns,
-} from "./findPaymentsData";
+} from "./eraPaymentsData";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
 import DatePicker from "../../../components/DatePicker";
-import config from "../../../../src/config";
+import config from "../../../config";
 import SaveFilterComponent from "../../common/saveFilter";
 import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
@@ -73,7 +73,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     // getPatientList: (name) => dispatch(getpatientList(name)),
-    getguarantorList: (name, refreshData, skip) => dispatch(getguarantorList(name, refreshData, skip)),
+    getguarantorList: (name, refreshData, skip) =>
+      dispatch(getguarantorList(name, refreshData, skip)),
     getinsuranceList: (name) => dispatch(getinsuranceList(name)),
     resetPatientList: () => dispatch(resetPatientList()),
     resetInsuranceList: () => dispatch(resetInsuranceList()),
@@ -89,13 +90,14 @@ function mapDispatchToProps(dispatch) {
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
-    getPhysicianList: (name, refreshdata, skip) => dispatch(getPhysicianList(name, refreshdata, skip)),
+    getPhysicianList: (name, refreshdata, skip) =>
+      dispatch(getPhysicianList(name, refreshdata, skip)),
     resetPhysicianList: () => dispatch(resetPhysicianList()),
     resetPracticeList: () => dispatch(resetPracticeList()),
   };
 }
 
-class FindPayments extends Component {
+class EraPayments extends Component {
   state = {
     type: "Patient",
     selected: 0,
@@ -239,7 +241,11 @@ class FindPayments extends Component {
     });
   };
   guarantorsearch = (refreshData, skip) => {
-    this.props.getguarantorList(this.state.guarantorSearchText, refreshData, skip);
+    this.props.getguarantorList(
+      this.state.guarantorSearchText,
+      refreshData,
+      skip
+    );
   };
   onGuarantorSelectionChange = (event) => {
     var selectedDataItems = event.dataItems.slice(
@@ -482,7 +488,7 @@ class FindPayments extends Component {
       guarantorSelected: null,
     });
   };
-  onSortChange = () => { };
+  onSortChange = () => {};
   toggleSaveInsuranceDialog = () => {
     this.setState({
       visibleInsuranceSaveFilter: false,
@@ -638,7 +644,11 @@ class FindPayments extends Component {
     });
   };
   physicianSearch = (refreshdata, skip) => {
-    this.props.getPhysicianList(this.state.physicianSearchText, refreshdata, skip);
+    this.props.getPhysicianList(
+      this.state.physicianSearchText,
+      refreshdata,
+      skip
+    );
   };
   setSelectedPhysican = (entitySID, sortName) => {
     if (this.state.physicianVisiblePatient) {
@@ -833,53 +843,53 @@ class FindPayments extends Component {
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
             this.state.practiceVisibleSubInsurance) && (
-              <FindDialogComponent
-                title="Practice Search"
-                placeholder="Enter Practice Name"
-                searcTextBoxValue={this.state.practiceSearchText}
-                onTextSearchChange={(e) => {
-                  this.setState({
-                    practiceSearchText: e.value,
-                  });
-                }}
-                clickOnSearch={this.practiceSearch}
-                dataItemKey="practiceID"
-                data={this.props.practiceList}
-                columns={PracticeColumns}
-                onSelectionChange={this.onPracticeSelectionChange}
-                onRowDoubleClick={this.onPracticeDoubleClick}
-                onKeyDown={this.onPracticeKeyDown}
-                idGetterLookup={idGetterPracticeID}
-                toggleDialog={this.cancelPracticeDialog}
-                cancelDialog={this.cancelPracticeDialog}
-              ></FindDialogComponent>
-            )}
+            <FindDialogComponent
+              title="Practice Search"
+              placeholder="Enter Practice Name"
+              searcTextBoxValue={this.state.practiceSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  practiceSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.practiceSearch}
+              dataItemKey="practiceID"
+              data={this.props.practiceList}
+              columns={PracticeColumns}
+              onSelectionChange={this.onPracticeSelectionChange}
+              onRowDoubleClick={this.onPracticeDoubleClick}
+              onKeyDown={this.onPracticeKeyDown}
+              idGetterLookup={idGetterPracticeID}
+              toggleDialog={this.cancelPracticeDialog}
+              cancelDialog={this.cancelPracticeDialog}
+            ></FindDialogComponent>
+          )}
 
           {(this.state.physicianVisiblePatient ||
             this.state.physicianVisibleSubPatient ||
             this.state.physicianVisibleInsurance ||
             this.state.physicianVisibleSubInsurance) && (
-              <FindDialogComponent
-                title="Physician Search"
-                placeholder="Enter Physician Name"
-                searcTextBoxValue={this.state.physicianSearchText}
-                onTextSearchChange={(e) => {
-                  this.setState({
-                    physicianSearchText: e.value,
-                  });
-                }}
-                clickOnSearch={this.physicianSearch}
-                dataItemKey="EntitySID"
-                data={this.props.physicians}
-                columns={PhysicianColumns}
-                onSelectionChange={this.onPhysicianSelectionChange}
-                onRowDoubleClick={this.onPhysicianDoubleClick}
-                onKeyDown={this.onPhysicianKeyDown}
-                idGetterLookup={idGetterPhysicianID}
-                toggleDialog={this.cancelPhysicianDialog}
-                cancelDialog={this.cancelPhysicianDialog}
-              ></FindDialogComponent>
-            )}
+            <FindDialogComponent
+              title="Physician Search"
+              placeholder="Enter Physician Name"
+              searcTextBoxValue={this.state.physicianSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  physicianSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.physicianSearch}
+              dataItemKey="EntitySID"
+              data={this.props.physicians}
+              columns={PhysicianColumns}
+              onSelectionChange={this.onPhysicianSelectionChange}
+              onRowDoubleClick={this.onPhysicianDoubleClick}
+              onKeyDown={this.onPhysicianKeyDown}
+              idGetterLookup={idGetterPhysicianID}
+              toggleDialog={this.cancelPhysicianDialog}
+              cancelDialog={this.cancelPhysicianDialog}
+            ></FindDialogComponent>
+          )}
           {this.state.insuranceVisible && (
             <FindDialogComponent
               title="Insurance Search"
@@ -926,34 +936,34 @@ class FindPayments extends Component {
           )}
           {(this.state.visiblePatientSaveFilter ||
             this.state.editPatientFilter) && (
-              <SaveFilterComponent
-                toggleSaveDialog={() => {
-                  this.toggleSavePatientDialog();
-                }}
-                filterName={
-                  this.state.currentPatientFilter &&
-                    this.state.currentPatientFilter.displayName
-                    ? this.state.currentPatientFilter.displayName
-                    : ""
-                }
-                saveFilter={this.savePatientFilter}
-              ></SaveFilterComponent>
-            )}
+            <SaveFilterComponent
+              toggleSaveDialog={() => {
+                this.toggleSavePatientDialog();
+              }}
+              filterName={
+                this.state.currentPatientFilter &&
+                this.state.currentPatientFilter.displayName
+                  ? this.state.currentPatientFilter.displayName
+                  : ""
+              }
+              saveFilter={this.savePatientFilter}
+            ></SaveFilterComponent>
+          )}
           {(this.state.visibleInsuranceSaveFilter ||
             this.state.editInsuranceFilter) && (
-              <SaveFilterComponent
-                toggleSaveDialog={() => {
-                  this.toggleSaveInsuranceDialog();
-                }}
-                filterName={
-                  this.state.currentInsuranceFilter &&
-                    this.state.currentInsuranceFilter.displayName
-                    ? this.state.currentInsuranceFilter.displayName
-                    : ""
-                }
-                saveFilter={this.saveInsuranceFilter}
-              ></SaveFilterComponent>
-            )}
+            <SaveFilterComponent
+              toggleSaveDialog={() => {
+                this.toggleSaveInsuranceDialog();
+              }}
+              filterName={
+                this.state.currentInsuranceFilter &&
+                this.state.currentInsuranceFilter.displayName
+                  ? this.state.currentInsuranceFilter.displayName
+                  : ""
+              }
+              saveFilter={this.saveInsuranceFilter}
+            ></SaveFilterComponent>
+          )}
           {this.state.guarantorVisible && (
             <FindDialogComponent
               title="Guarantor Search"
@@ -1592,9 +1602,9 @@ class FindPayments extends Component {
                 type="edit"
                 icon="edit"
                 classButton="infraBtn-primary action-button"
-              // onClick={() => {
-              //     this.setState({ visibleSaveFilter: true });
-              // }}
+                // onClick={() => {
+                //     this.setState({ visibleSaveFilter: true });
+                // }}
               >
                 Find
               </ButtonComponent>
@@ -1604,9 +1614,9 @@ class FindPayments extends Component {
                 type="edit"
                 icon="edit"
                 classButton="infraBtn-primary action-button"
-              // onClick={() => {
-              //     this.setState({ visibleSaveFilter: true });
-              // }}
+                // onClick={() => {
+                //     this.setState({ visibleSaveFilter: true });
+                // }}
               >
                 Add
               </ButtonComponent>
@@ -1616,9 +1626,9 @@ class FindPayments extends Component {
                 type="edit"
                 icon="edit"
                 classButton="infraBtn-primary action-button"
-              // onClick={() => {
-              //     this.setState({ visibleSaveFilter: true });
-              // }}
+                // onClick={() => {
+                //     this.setState({ visibleSaveFilter: true });
+                // }}
               >
                 Apply
               </ButtonComponent>
@@ -1628,9 +1638,9 @@ class FindPayments extends Component {
                 type="edit"
                 icon="edit"
                 classButton="infraBtn-primary action-button"
-              // onClick={() => {
-              //     this.setState({ visibleSaveFilter: true });
-              // }}
+                // onClick={() => {
+                //     this.setState({ visibleSaveFilter: true });
+                // }}
               >
                 Edit
               </ButtonComponent>
@@ -1643,7 +1653,11 @@ class FindPayments extends Component {
               onSelect={this.handleSelect}
               style={{ width: "100%" }}
             >
-              <TabStripTab title="Patient Payment List" selected={"true"} style={{ width: "100%" }}>
+              <TabStripTab
+                title="Patient Payment List"
+                selected={"true"}
+                style={{ width: "100%" }}
+              >
                 <div
                   className="accordion"
                   id="accordionSummary"
@@ -1660,7 +1674,6 @@ class FindPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionSummary"
-
                     >
                       <GridComponent
                         id="findPayment1"
@@ -1672,7 +1685,10 @@ class FindPayments extends Component {
                   </div>
                 </div>
               </TabStripTab>
-              <TabStripTab title="Insurance Payment List" style={{ width: "100%" }}>
+              <TabStripTab
+                title="Insurance Payment List"
+                style={{ width: "100%" }}
+              >
                 <div
                   className="accordion"
                   id="accordionSummary"
@@ -1918,13 +1934,10 @@ class FindPayments extends Component {
                         className="unifyHeight"
                         placeholder="MM/DD/YYYY"
                         format="M/dd/yyyy"
-                        value={
-                          this.state.txnDate
-                        }
+                        value={this.state.txnDate}
                         onChange={(e) =>
                           this.setState({
-                            txnDate
-                              : e.value
+                            txnDate: e.value,
                           })
                         }
                       ></DatePicker>
@@ -2103,7 +2116,7 @@ class FindPayments extends Component {
                         format="M/dd/yyyy"
                         value={
                           this.state.currentInsurance != null &&
-                            this.state.currentInsurance.endDate
+                          this.state.currentInsurance.endDate
                             ? new Date(this.state.currentInsurance.endDate)
                             : null
                         }
@@ -2150,4 +2163,4 @@ class FindPayments extends Component {
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(FindPayments);
+export default connect(mapStateToProps, mapDispatchToProps)(EraPayments);
