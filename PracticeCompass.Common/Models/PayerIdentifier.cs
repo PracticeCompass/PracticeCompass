@@ -6,6 +6,9 @@
         public string IDCode { set; get; }
         public string ContactFunctionCode { set; get; }
         public string ClaimContactName { set; get; }
+        public string CommunicationsNbrQualifier { set; get; }
+        public string NbrFunctionCode { set; get; }
+        public string ClaimContactCommunicationsNbr { set; get; }
         public Address Address { set; get; }
         public PayerIdentifier()
         {

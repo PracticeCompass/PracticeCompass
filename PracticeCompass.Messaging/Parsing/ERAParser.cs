@@ -323,9 +323,11 @@ namespace PracticeCompass.Messaging.Parsing
                     claimDetail.Patient.LastName = patientSegment[3];
                     claimDetail.Patient.FirstName = patientSegment[4];
                     claimDetail.Patient.MiddleName = patientSegment[5];
+                    claimDetail.Patient.Suffix = patientSegment[7];
                     if (!string.IsNullOrEmpty(patientSegment[8]))
                     {
-                        claimDetail.Patient.Qualifier = GetPatientIdentifierFromCode(patientSegment[8]);
+                       // claimDetail.Patient.Qualifier = GetPatientIdentifierFromCode(patientSegment[8]);
+                        claimDetail.Patient.Qualifier = patientSegment[8];
                         claimDetail.Patient.Identifier = patientSegment[9];
                     }
                     var subscriberSegment = (from s in claimChildSegments where s.Name == "NM1" && s[1] == "IL" && s[2] == "1" select s).FirstOrDefault();
@@ -346,6 +348,8 @@ namespace PracticeCompass.Messaging.Parsing
                         claimDetail.Provider.LastName = providerSegment[3];
                         claimDetail.Provider.FirstName = providerSegment[4];
                         claimDetail.Provider.MiddleName = providerSegment[5];
+                        claimDetail.Provider.Suffix = providerSegment[7];
+                        claimDetail.Provider.IDCodeQualifier= providerSegment[8];
                         if (!string.IsNullOrEmpty(providerSegment[8]) && providerSegment[8] == "XX")
                         {
                             claimDetail.Provider.NPI = providerSegment[9];
@@ -370,6 +374,13 @@ namespace PracticeCompass.Messaging.Parsing
                     {
                         claimDetail.ClaimReceivedDate = new DateTime(int.Parse(claimReceivedDateSegment[2].Substring(0, 4)),
                             int.Parse(claimReceivedDateSegment[2].Substring(4, 2)), int.Parse(claimReceivedDateSegment[2].Substring(6, 2)));
+                    }
+                    var payercommunication = (from s in claimChildSegments where s.Name == "PER" && s[1] == "CX" select s).FirstOrDefault();
+                    if (payercommunication != null)
+                    {
+                        eRa.Payer.CommunicationsNbrQualifier = payercommunication[3];
+                        eRa.Payer.NbrFunctionCode = payercommunication[1];
+                        eRa.Payer.ClaimContactCommunicationsNbr = payercommunication[4];
                     }
                     var statementFromDateSegment = (from s in claimChildSegments where s.Name == "DTM" && s[1] == "232" select s).FirstOrDefault();
                     if (statementFromDateSegment != null && !string.IsNullOrEmpty(statementFromDateSegment[2]))
