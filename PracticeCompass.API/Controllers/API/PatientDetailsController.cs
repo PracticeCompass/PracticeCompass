@@ -178,10 +178,20 @@ namespace PracticeCompass.API.Controllers.API
             try
             {
                 var LedgerData = unitOfWork.PatientDetailsRepository.LedgerDataGet(PersonID);
+                float TotalAmount = 0;
                 foreach (var row in LedgerData)
                 {
   
                     row.AmountStr = row.Amount == null? "" : "$ " + row.Amount;
+                    if (row.ActivityType == "Charge Details")
+                    {
+                        TotalAmount = row.Amount == null? 0 : row.Amount.Value;
+                    }
+                    if(row.ActivityType == "Txn")
+                    {
+                        row.BalanceStr = "$ " + (TotalAmount + (row.Amount == null ? 0 : row.Amount.Value));
+                        TotalAmount = TotalAmount +( row.Amount == null ? 0 : row.Amount.Value);
+                    }
 
                 }
                 return LedgerData;
