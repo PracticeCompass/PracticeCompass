@@ -16,5 +16,6 @@ namespace PracticeCompass.Core.Common
         IGridColumnsRepository GridColumnsRepository { get; }
         IERATransaction ERATransactionRepository { get; }
         IInsuranceRecordRepository InsuranceRecordRepository { get; }
+        IPaymentRepository PaymentRepository { get; }
     }
 }

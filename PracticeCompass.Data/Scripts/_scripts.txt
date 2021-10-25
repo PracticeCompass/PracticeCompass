@@ -43,3 +43,5 @@ uspGridColumns.sql
 uspLedgerGet.sql
 uspInsuranceRecordGet.sql
 uspClaimfillingGet.sql
+uspPatientPaymentGet.sql
+uspInsurancePaymentGet.sql
