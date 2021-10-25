@@ -59,6 +59,12 @@ namespace PracticeCompass.Data.Repositories
             return data.Read<Payment>().ToList();
         }
 
+        public List<PaymentClass> GetPaymentClass()
+        {
+            var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);
+            return data.Read<PaymentClass>().ToList();
+        }
+
         public void Remove(Payment entity)
         {
             throw new NotImplementedException();

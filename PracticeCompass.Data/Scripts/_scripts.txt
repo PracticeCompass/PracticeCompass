@@ -45,3 +45,4 @@ uspInsuranceRecordGet.sql
 uspClaimfillingGet.sql
 uspPatientPaymentGet.sql
 uspInsurancePaymentGet.sql
+uspPayClassGet.sql

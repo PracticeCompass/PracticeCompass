@@ -8,5 +8,6 @@ namespace PracticeCompass.Core.Repositories
     {
         List<Payment> GetInsurancePayment(int PracticeID , int PatientID);
         List<Payment> GetPatientPayment(int PracticeID, int PatientID);
+        List<PaymentClass> GetPaymentClass();
     }
 }

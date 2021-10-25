@@ -45,5 +45,20 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<Payment>();
             }
         }
+        [HttpGet]
+        [Route("api/payment/PaymentClassGet")]
+        public List<PaymentClass> PaymentClassGet()
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetPaymentClass();
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<PaymentClass>();
+            }
+        }
     }
 }
