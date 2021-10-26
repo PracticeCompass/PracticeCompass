@@ -70,6 +70,8 @@ namespace PracticeCompass.Data.Repositories
             var ERSClaimContacts = new List<ERSClaimContact>();
             var ERSClaimContactNbrs = new List<ERSClaimContactNbr>();
             var ERSClaimNames = new List<ERSClaimName>();
+            var ERSPaymentHeaders = new List<ERSPaymentHeader>();
+            var ERSClaimData = new List<ERSClaimData>();
             using var txScope = new TransactionScope();
             for (var era = 0; era < transactions.Count; era++)
             {
@@ -77,7 +79,43 @@ namespace PracticeCompass.Data.Repositories
                 var ERSClaimSID = random.Next(1000, 999999);
                 var ERSChargeSID = random.Next(1000, 999999);
                 var ERSPaymentSID = random.Next(1000, 999999);
+                var ERSRemittenceSID = random.Next(1000, 999999);
                 string PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
+                string ERSPaymentHeaderMAXRowID = GetMAXRowID("ERSPaymentHeader", ERSPaymentHeaders.Count != 0 ? ERSPaymentHeaders[ERSPaymentHeaders.Count - 1].prrowid : "0");
+                ERSPaymentHeaders.Add(new ERSPaymentHeader
+                {
+                    prrowid = ERSPaymentHeaderMAXRowID,
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = DateTime.Now.ToString("MM-dd-yyy"),
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    ERSPaymentSID = ERSPaymentSID,
+                    RemittanceSID = ERSRemittenceSID,
+                    TransHandlingCode= transactions[era].financialInformation.HandlingMethod,
+                    PaymentMethodCode= transactions[era].financialInformation.PaymentMethod,
+                    TotalActualProviderPaymentAmt= transactions[era].financialInformation.TotalPaidAmount,
+                    CreditOrDebitFlagCode= transactions[era].financialInformation.CreditDebit,
+                    PaymentFormatCode= transactions[era].financialInformation.PaymentFormat,
+                    SenderDFIIDNbrQualifier= transactions[era].financialInformation.AccountNumber,
+                    SenderDFINbr= transactions[era].financialInformation.DfiNumber,
+                    SenderAcctNbrQualifier= transactions[era].financialInformation.senderAccountNbrQualifier,
+                    SenderBankAcctNbr= transactions[era].financialInformation.senderAccountNumber,
+                    PayerSupplCode= transactions[era].financialInformation.OriginCompanySupplementalCode,
+                    RemitPayerIdent = transactions[era].financialInformation.CompanyId,
+                    ReceiverDFIIDNbrQualifier= transactions[era].financialInformation.RoutingNumber,
+                    ReceiverAcctNbr= transactions[era].financialInformation.receiverDfiNumber,
+                    ReceiverAcctNbrQualifier= transactions[era].financialInformation.receiverAcctNumberQualifier,
+                    ReceiverBankIDNbr= transactions[era].financialInformation.receiverAccountNumber,
+                    CheckIssueDate= transactions[era].financialInformation.PaymentEffectiveDate,
+                    TraceTypeCode= transactions[era].financialInformation.TraceTypeCode,
+                    TraceOrigCompanySupplCode= transactions[era].financialInformation.TraceOrigCompanySupplCode,
+                    CheckTraceNbr= transactions[era].financialInformation.CheckTraceNbr,
+                    TracePayerIdent= transactions[era].financialInformation.ReferenceIdentificationNumber,
+                    
+                });
                 ERSPaymentParty.Add(new ERSPaymentParty
                 {
                     prrowid = PaymentPartyMAXRowID,
@@ -424,6 +462,22 @@ namespace PracticeCompass.Data.Repositories
            "@NameSuffix, @TimeStamp,  @LastUser,  @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
             var ClaimName = this.db.Execute(ERSClaimNameSQL, ERSClaimNames);
+            var ERSPaymentHeaderSQL = "INSERT INTO [dbo].[ERSPaymentHeader] VALUES (@prrowid, @ERSPaymentSID,  @RemittanceSID, @RemittanceSourceCode, @ParameterGroupCode," +
+           "@TransHandlingCode, @TotalActualProviderPaymentAmt,  @CreditOrDebitFlagCode, @PaymentMethodCode, @PaymentFormatCode," +
+           "@SenderDFIIDNbrQualifier, @SenderDFINbr,  @SenderAcctNbrQualifier, @SenderBankAcctNbr, @RemitPayerIdent," +
+           "@PayerSupplCode, @ReceiverDFIIDNbrQualifier, @ReceiverBankIDNbr, @ReceiverAcctNbrQualifier, @ReceiverAcctNbr, " +
+           "@CheckIssueDate,  @TraceTypeCode, @CheckTraceNbr,  @TracePayerIdent, @TraceOrigCompanySupplCode, @TimeStamp," +
+           "@LastUser, @CreateStamp, @CreateUser, @RuralHealth, @RecordStatus, @PayerNameText, @PaymentNotBalanced, " +
+           "@PaymentSID, @DeletedAfterPost, @OriginalPaymentAmt, @CBOERAPaymentSID, @ReportStorageSID," +
+           "@ReportStorageParams, @PracticeID, @DateReceived, @FileArchiveSID, @Pro2SrcPDB," +
+           "@pro2created, @pro2modified)";
+            var PaymentHeader = this.db.Execute(ERSPaymentHeaderSQL, ERSPaymentHeaders);
+            var ERSClaimDataSQL = "INSERT INTO[dbo].[ERSClaimData] VALUES(@prrowid, @ERSClaimSID, @ERSPaymentSID, @PatientControlNbr, @ClaimStatusCode," +
+         "@TotalClaimChargeAmt, @ClaimPaymentAmt, @PatientResponsibilityAmt, @ClaimFilingIndicatorCode," +
+         "@PayerClaimControlNumber, @FacilityTypeCode, @ClaimFrequencyTypeCode, @DiagnosisRelatedGroupCode," +
+         "@DiagnosisRelatedGroupWeight, @DischargeFraction, @TimeStamp, @LastUser, @CreateStamp," +
+         "@CreateUser, @ClaimDetail, @SkipClaim, @Posted, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
             txScope.Complete();
             return true;
         }

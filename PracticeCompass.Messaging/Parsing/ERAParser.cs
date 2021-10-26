@@ -126,30 +126,32 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 throw new Exception("no financial information segment (BPR) found.");
             }
-            eRa.financialInformation.HandlingMethod = GetHandlingMethodFromCode(financialInformationSegment[1]);
+            eRa.financialInformation.HandlingMethod =financialInformationSegment[1];
             if (!string.IsNullOrEmpty(financialInformationSegment[2]) && decimal.TryParse(financialInformationSegment[2], out decimal financialAmount))
             {
                 eRa.financialInformation.TotalPaidAmount = financialAmount;
             }
-            eRa.financialInformation.CreditDebit = GetCreditDebitFromCode(financialInformationSegment[3]);
+            eRa.financialInformation.CreditDebit = financialInformationSegment[3];
             if (!string.IsNullOrEmpty(financialInformationSegment[4]))
             {
-                eRa.financialInformation.PaymentMethod = GetPaymentMethodFromCode(financialInformationSegment[4]);
+                eRa.financialInformation.PaymentMethod = financialInformationSegment[4];
             }
             if (!string.IsNullOrEmpty(financialInformationSegment[5]))
             {
-                eRa.financialInformation.PaymentFormat = GetPaymentFormatFromCode(financialInformationSegment[5]);
+                eRa.financialInformation.PaymentFormat = financialInformationSegment[5];
             }
             if (!string.IsNullOrEmpty(financialInformationSegment[6]))
             {
-                eRa.financialInformation.AccountNumber = GetDfiDestinationQualifierFromCode(financialInformationSegment[6]);
+                eRa.financialInformation.AccountNumber = financialInformationSegment[6];
             }
+            eRa.financialInformation.senderAccountNbrQualifier= financialInformationSegment[8];
             eRa.financialInformation.DfiNumber = financialInformationSegment[7];
             eRa.financialInformation.senderAccountNumber = financialInformationSegment[9];
             eRa.financialInformation.CompanyId = financialInformationSegment[10];
             eRa.financialInformation.OriginCompanySupplementalCode = financialInformationSegment[11];
-            eRa.financialInformation.RoutingNumber = GetDfiDestinationQualifierFromCode(financialInformationSegment[12]);
+            eRa.financialInformation.RoutingNumber = financialInformationSegment[12];
             eRa.financialInformation.receiverDfiNumber = financialInformationSegment[13];
+            eRa.financialInformation.receiverAcctNumberQualifier = financialInformationSegment[14];
             eRa.financialInformation.receiverAccountNumber = financialInformationSegment[15];
             if (string.IsNullOrEmpty(financialInformationSegment[16]))
             {
@@ -166,7 +168,10 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 throw new Exception("TraceNumber (TRN[2]) not found.");
             }
+            eRa.financialInformation.TraceTypeCode = reAssociationTrace[1];
             eRa.financialInformation.ReferenceIdentificationNumber = reAssociationTrace[2];
+            eRa.financialInformation.TraceOrigCompanySupplCode = reAssociationTrace[3];
+            eRa.financialInformation.CheckTraceNbr = reAssociationTrace[4];
             var productionDateSegment = (from s in transactionEnvelope.Segments where s.Name == "DTM" && s[1] == "405" select s).FirstOrDefault();
             if (productionDateSegment != null && !string.IsNullOrEmpty(productionDateSegment[2]))
             {
