@@ -276,6 +276,9 @@ class insurancePayments extends Component {
   setApplyInsurancePaymentExpanded = () => {
     $("#ApplyInsurancePayment").children("span").trigger("click");
   };
+  practiceSearch = () => {
+    this.props.getPracticeList(this.state.practiceSearchText);
+  };
   render() {
     return (
       <Fragment>
