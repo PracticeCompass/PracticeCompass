@@ -49,7 +49,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     // getPatientList: (name) => dispatch(getpatientList(name)),
-    getinsuranceList: (name) => dispatch(getinsuranceList(name)),
+    getinsuranceList: (name, refreshData,
+      skip) => dispatch(getinsuranceList(name, refreshData,
+        skip)),
     resetInsuranceList: () => dispatch(resetInsuranceList()),
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
@@ -158,8 +160,9 @@ class insurancePayments extends Component {
       insuranceIDSelectedState: selectedDataItems[0].entitySID,
     });
   };
-  insuranceSearch = () => {
-    this.props.getinsuranceList(this.state.insuranceSearchText);
+  insuranceSearch = async (refreshData, skip) => {
+    this.props.getinsuranceList(this.state.insuranceSearchText, refreshData,
+      skip);
   };
   onInsuranceSelectionChange = (event) => {
     var selectedDataItems = event.dataItems.slice(
@@ -177,7 +180,7 @@ class insurancePayments extends Component {
     });
     this.toggleInsuranceDialog();
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   toggleSaveInsuranceDialog = () => {
     this.setState({
       visibleInsuranceSaveFilter: false,
@@ -301,27 +304,27 @@ class insurancePayments extends Component {
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
             this.state.practiceVisibleSubInsurance) && (
-            <FindDialogComponent
-              title="Practice Search"
-              placeholder="Enter Practice Name"
-              searcTextBoxValue={this.state.practiceSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  practiceSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.practiceSearch}
-              dataItemKey="practiceID"
-              data={this.props.practiceList}
-              columns={PracticeColumns}
-              onSelectionChange={this.onPracticeSelectionChange}
-              onRowDoubleClick={this.onPracticeDoubleClick}
-              onKeyDown={this.onPracticeKeyDown}
-              idGetterLookup={idGetterPracticeID}
-              toggleDialog={this.cancelPracticeDialog}
-              cancelDialog={this.cancelPracticeDialog}
-            ></FindDialogComponent>
-          )}
+              <FindDialogComponent
+                title="Practice Search"
+                placeholder="Enter Practice Name"
+                searcTextBoxValue={this.state.practiceSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    practiceSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.practiceSearch}
+                dataItemKey="practiceID"
+                data={this.props.practiceList}
+                columns={PracticeColumns}
+                onSelectionChange={this.onPracticeSelectionChange}
+                onRowDoubleClick={this.onPracticeDoubleClick}
+                onKeyDown={this.onPracticeKeyDown}
+                idGetterLookup={idGetterPracticeID}
+                toggleDialog={this.cancelPracticeDialog}
+                cancelDialog={this.cancelPracticeDialog}
+              ></FindDialogComponent>
+            )}
           {this.state.insuranceVisible && (
             <FindDialogComponent
               title="Insurance Search"
@@ -342,6 +345,7 @@ class insurancePayments extends Component {
               idGetterLookup={idGetterInsurance}
               toggleDialog={this.cancelInsuranceDialog}
               cancelDialog={this.cancelInsuranceDialog}
+              getNextData={true}
             ></FindDialogComponent>
           )}
           <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
@@ -473,9 +477,9 @@ class insurancePayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                    // onClick={() => {
-                    //     this.setState({ visibleSaveFilter: true });
-                    // }}
+                  // onClick={() => {
+                  //     this.setState({ visibleSaveFilter: true });
+                  // }}
                   >
                     Search
                   </ButtonComponent>
@@ -711,7 +715,7 @@ class insurancePayments extends Component {
                             format="M/dd/yyyy"
                             value={
                               this.state.currentInsurance != null &&
-                              this.state.currentInsurance.endDate
+                                this.state.currentInsurance.endDate
                                 ? new Date(this.state.currentInsurance.endDate)
                                 : null
                             }
