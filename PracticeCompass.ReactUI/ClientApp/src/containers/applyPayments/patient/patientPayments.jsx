@@ -49,7 +49,7 @@ function mapStateToProps(state) {
     dropDownPractices: state.lookups.practices,
     dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
-    physicians: state.claimList.physicians,
+    paymentClass: state.payments.paymentClass,
   };
 }
 
@@ -80,6 +80,7 @@ class PatientPayments extends Component {
     tabSelected: 0,
     dostype: null,
     dos: null,
+    payment_calss: null,
     guarantorSelectedState: null,
     guarantorIDSelectedState: null,
     guarantorSelected: null,
@@ -743,6 +744,28 @@ class PatientPayments extends Component {
                           >
                             Find
                           </ButtonComponent>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", flexFlow: "row" }}>
+                        <div style={{ float: "left", marginLeft: "31px" }}>
+                          <label className="userInfoLabel">Class </label>
+                        </div>
+                        <div
+                          className="insuranceStyle"
+                          style={{ float: "left" }}
+                        >
+                          <DropDown
+                            className="unifyHeight"
+                            data={this.props.paymentClass}
+                            textField="description"
+                            dataItemKey="lookupCode"
+                            value={this.state.payment_calss}
+                            onChange={(e) =>
+                              this.setState({
+                                payment_calss: e.value,
+                              })
+                            }
+                          ></DropDown>
                         </div>
                       </div>
                       <div style={{ display: "flex", flexFlow: "row" }}>

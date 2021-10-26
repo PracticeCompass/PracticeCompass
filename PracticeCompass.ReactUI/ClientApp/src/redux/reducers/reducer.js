@@ -5,12 +5,13 @@ import { filtersReducer } from "./filter";
 import { uiReducer } from "./ui";
 import { PatientDetailsReducer } from "./PatientDetails";
 import { claimListReducer } from "./claimList";
+import { paymentsReducer } from "./payments";
 import { claimDetailsReducer } from "./claimDetails";
 import { accountsReducer } from "./account";
 import { lookupsReducer } from "./lookups";
 import { charageDetailsReducer } from "./chargeDetail";
-import {insuranceReducer} from "./Insurance"
-import {gridColumnsReducer} from "./GridColumns";
+import { insuranceReducer } from "./Insurance";
+import { gridColumnsReducer } from "./GridColumns";
 import { authentication } from "./authentication.reducer";
 import { registration } from "./registration.reducer";
 import { users } from "./users.reducer";
@@ -25,9 +26,10 @@ const rootReducer = (history) =>
     claimList: claimListReducer,
     claimDetails: claimDetailsReducer,
     account: accountsReducer,
+    payments: paymentsReducer,
     charageDetails: charageDetailsReducer,
-    insurances:insuranceReducer,
-    gridColumns:gridColumnsReducer,
+    insurances: insuranceReducer,
+    gridColumns: gridColumnsReducer,
     lookups: lookupsReducer,
     authentication,
     registration,

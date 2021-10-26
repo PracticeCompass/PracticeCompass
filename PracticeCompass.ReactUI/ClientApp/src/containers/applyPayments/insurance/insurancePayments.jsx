@@ -37,16 +37,12 @@ const DATA_ITEM_KEY_INSURANCE_PAYMENT = "paymentSID";
 const idGetterInsurancePaymentID = getter(DATA_ITEM_KEY_INSURANCE_PAYMENT);
 function mapStateToProps(state) {
   return {
-    patientList: state.patients.patientList,
     insuranceList: state.patients.insuranceList,
     guarantorList: state.claimList.guarantorList,
-    dropDownPatients: state.lookups.patients,
     dropDownInsurance: state.lookups.insurances,
-    dropDownGuarantors: state.lookups.guarantors,
     dropDownPractices: state.lookups.practices,
-    dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
-    physicians: state.claimList.physicians,
+    paymentClass: state.payments.paymentClass,
   };
 }
 
@@ -73,6 +69,7 @@ class insurancePayments extends Component {
     creditCard: null,
     methodSelected: 0,
     methodTabSelected: 0,
+    payment_calss: null,
     insuranceVisible: false,
     insuranceSearchText: null,
     insuranceSelectedState: null,
@@ -670,23 +667,13 @@ class insurancePayments extends Component {
                         >
                           <DropDown
                             className="unifyHeight"
-                            data={this.props.dropDownInsurance}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={{
-                              entityId: this.state.insuranceID,
-                              entityName: this.state.insuranceNameSelected,
-                            }}
-                            value={{
-                              entityId: this.state.insuranceID,
-                              entityName: this.state.insuranceNameSelected,
-                            }}
+                            data={this.props.paymentClass}
+                            textField="description"
+                            dataItemKey="lookupCode"
+                            value={this.state.payment_calss}
                             onChange={(e) =>
                               this.setState({
-                                insuranceSelectedState: e.value?.entityName,
-                                insuranceIDSelectedState: e.value?.entityId,
-                                insuranceNameSelected: e.value?.entityName,
-                                insuranceID: e.value?.entityId,
+                                payment_calss: e.value,
                               })
                             }
                           ></DropDown>
