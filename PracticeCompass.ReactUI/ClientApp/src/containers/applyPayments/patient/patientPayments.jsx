@@ -1,19 +1,13 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import RadioButtonComponent from "../../../components/RadioButton";
-import {
-  typeList,
-  InsuranceCategory,
-  guarantorColumns,
-  PhysicianColumns,
-  patientPaymentColumns,
-} from "./patientPaymentsData";
+import { guarantorColumns } from "./patientPaymentsData";
 import {
   insuranceColumns,
   methodList,
-  insurancePatientColumns,
+  creditCared,
   PracticeColumns,
   insuranceAssignmentColumns,
+  DOSFilter,
 } from "../insurance/insurancePaymentsData";
 import { PanelBar, PanelBarItem } from "@progress/kendo-react-layout";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
@@ -21,7 +15,7 @@ import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
-import DatePicker from "../../../components/DatePicker";
+import DatePickerComponent from "../../../components/DatePicker";
 import config from "../../../config";
 import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
@@ -37,18 +31,10 @@ import {
   resetGuarantorList,
 } from "../../../redux/actions/claimList";
 
-import PatientFindDialogComponent from "../../common/patientFindDialog";
-import { patientColumns } from "../../processPatients/patients/patient/patientData";
-
-const DATA_ITEM_KEY_PATIENT = "patientListgridID";
-const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
 const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
-
-const DATA_ITEM_KEY_Physician = "entitySID";
-const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
 
 const DATA_ITEM_KEY_PATIENT_PAYMENT = "paymentSID";
 const idGetterPatientPaymentID = getter(DATA_ITEM_KEY_PATIENT_PAYMENT);
@@ -88,17 +74,12 @@ class PatientPayments extends Component {
     methodTabSelected: 0,
     patientPaymentExpanded: true,
     patientPaymentDetailsExpanded: false,
+    applypatientPaymentExpanded: false,
     selected: 0,
     refreshFilter: true,
-    patientBatch: null,
-    patientPhysicianID: null,
     tabSelected: 0,
-    patientVisible: false,
-    patientSearchText: null,
-    patientSelectedState: null,
-    patientIDSelectedState: null,
-    patientNameSelected: null,
-    patientID: null,
+    dostype: null,
+    dos: null,
     guarantorSelectedState: null,
     guarantorIDSelectedState: null,
     guarantorSelected: null,
@@ -121,11 +102,7 @@ class PatientPayments extends Component {
     insuranceBatch: null,
     insurancePhysicianID: null,
     insuranceType: null,
-    physicianVisiblePatient: false,
-    physicianVisibleSubPatient: false,
-    physicianVisibleInsurance: false,
-    physicianVisibleSubInsurance: false,
-    physicianSearchText: null,
+
     subInsurancePhysicianID: null,
     subPatientPhysicianID: null,
 
@@ -356,28 +333,6 @@ class PatientPayments extends Component {
               cancelDialog={this.cancelPracticeDialog}
             ></FindDialogComponent>
           )}
-          {this.state.patientVisible && (
-            <PatientFindDialogComponent
-              title="Patient Search"
-              placeholder="Enter Patient Name"
-              // searcTextBoxValue={this.state.patientSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  patientSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.patientsearch}
-              dataItemKey="patientListgridID"
-              data={this.props.patientList}
-              columns={patientColumns}
-              onSelectionChange={this.onPatientSelectionChange}
-              onRowDoubleClick={this.onPatientDoubleClick}
-              onKeyDown={this.onPatientKeyDown}
-              idGetterLookup={idGetterPaient}
-              toggleDialog={this.cancelPatientDialog}
-              cancelDialog={this.cancelPatientDialog}
-            ></PatientFindDialogComponent>
-          )}
           {this.state.guarantorVisible && (
             <FindDialogComponent
               title="Guarantor Search"
@@ -409,7 +364,7 @@ class PatientPayments extends Component {
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div style={{ float: "left", width: "100%" }}>
                   <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ marginLeft: "15px" }}>
+                    <div style={{ marginLeft: "32px" }}>
                       <label className="userInfoLabel">Practice </label>
                     </div>
                     <div className="PracticeStyle">
@@ -451,44 +406,6 @@ class PatientPayments extends Component {
                       marginLeft: "20px",
                     }}
                   >
-                    <div style={{ float: "left" }}>
-                      <label className="userInfoLabel">Patient </label>
-                    </div>
-                    <div className="patientStyle">
-                      <DropDown
-                        className="unifyHeight"
-                        data={this.props.dropDownPatients}
-                        textField="entityName"
-                        dataItemKey="entityId"
-                        defaultValue={{
-                          entityId: this.state.patientID,
-                          entityName: this.state.patientNameSelected,
-                        }}
-                        value={{
-                          entityId: this.state.patientID,
-                          entityName: this.state.patientNameSelected,
-                        }}
-                        onChange={(e) =>
-                          this.setState({
-                            patientSelectedState: e.value?.entityName,
-                            patientIDSelectedState: e.value?.entityId,
-                            patientNameSelected: e.value?.entityName,
-                            patientID: e.value?.entityId,
-                          })
-                        }
-                      ></DropDown>
-                    </div>
-                    <div>
-                      <ButtonComponent
-                        icon="search"
-                        type="search"
-                        classButton="infraBtn-primary find-button"
-                        onClick={this.togglePatientDialog}
-                        style={{ marginTop: "0px" }}
-                      >
-                        Find
-                      </ButtonComponent>
-                    </div>
                     <div>
                       <label className="userInfoLabel">Guarantor </label>
                     </div>
@@ -526,6 +443,34 @@ class PatientPayments extends Component {
                       >
                         Find
                       </ButtonComponent>
+                    </div>
+                  </div>
+                  <div
+                    style={{ display: "flex", flexFlow: "row", width: "100%" }}
+                  >
+                    <div style={{ width: "28px", marginLeft: "53px" }}>
+                      <label className="userInfoLabel">DOS </label>
+                    </div>
+                    <div style={{ width: "147px" }}>
+                      <DropDown
+                        data={DOSFilter}
+                        textField="text"
+                        dataItemKey="id"
+                        className="unifyHeight"
+                        id="tins"
+                        name="tins"
+                        value={this.state.dostype}
+                        onChange={(e) => this.setState({ dostype: e.value })}
+                      ></DropDown>
+                    </div>
+                    <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                      <DatePickerComponent
+                        className="unifyHeight"
+                        placeholder="MM/DD/YYYY"
+                        format="M/dd/yyyy"
+                        value={this.state.dos}
+                        onChange={(e) => this.setState({ dos: e.value })}
+                      ></DatePickerComponent>
                     </div>
                   </div>
                 </div>
@@ -651,20 +596,6 @@ class PatientPayments extends Component {
                       selected={"true"}
                     >
                       <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left", marginLeft: "14px" }}>
-                          <label className="userInfoLabel">Batch </label>
-                        </div>
-                        <div style={{ width: "100px" }}>
-                          <TextBox
-                            className="unifyHeight"
-                            value={this.state.batch ?? ""}
-                            onChange={(e) => {
-                              this.setState({
-                                batch: e.value,
-                              });
-                            }}
-                          ></TextBox>
-                        </div>
                         <div style={{ marginLeft: "3px" }}>
                           <label className="userInfoLabel">Practice </label>
                         </div>
@@ -832,26 +763,10 @@ class PatientPayments extends Component {
                           ></TextBox>
                         </div>
                         <div style={{ float: "left", marginLeft: "10px" }}>
-                          <label className="userInfoLabel">On Hold </label>
-                        </div>
-                        <div style={{ float: "left", width: "100px" }}>
-                          <TextBox
-                            type="numeric"
-                            format="c2"
-                            className="unifyHeight"
-                            value={this.state.units}
-                            onChange={(e) =>
-                              this.setState({
-                                units: e.value,
-                              })
-                            }
-                          ></TextBox>
-                        </div>
-                        <div style={{ float: "left", marginLeft: "10px" }}>
                           <label className="userInfoLabel">Txn Date </label>
                         </div>
                         <div style={{ float: "left", width: "132px" }}>
-                          <DatePicker
+                          <DatePickerComponent
                             id="planEndDate"
                             name="planEndDate"
                             className="unifyHeight"
@@ -863,7 +778,7 @@ class PatientPayments extends Component {
                                 txnDate: e.value,
                               })
                             }
-                          ></DatePicker>
+                          ></DatePickerComponent>
                         </div>
                       </div>
                       <div style={{ display: "flex", flexFlow: "row" }}>
@@ -879,436 +794,77 @@ class PatientPayments extends Component {
                             className="legendStyle"
                             style={{ paddingRight: "5px", paddingLeft: "5px" }}
                           >
-                            Method
+                            Payment Method
                           </legend>
                           <div className="row" style={{ marginLeft: "5px" }}>
-                            <RadioButtonComponent
-                              name="method"
-                              className="userInfoLabel"
-                              type="horizontal"
-                              items={methodList}
-                              selectedValue={this.state.method}
-                              handleChange={(e) =>
-                                this.setState({ method: e.value })
-                              }
-                            ></RadioButtonComponent>
+                            <div style={{ float: "left", marginLeft: "24px" }}>
+                              <label className="userInfoLabel">Method</label>
+                            </div>
+                            <div style={{ float: "left", width: "215px" }}>
+                              <DropDown
+                                className="unifyHeight"
+                                data={methodList}
+                                textField="label"
+                                dataItemKey="value"
+                                value={this.state.method}
+                                onChange={(e) =>
+                                  this.setState({
+                                    method: e.value,
+                                  })
+                                }
+                              ></DropDown>
+                            </div>
+                            <div style={{ float: "left", marginLeft: "12px" }}>
+                              <label className="userInfoLabel">Voucher </label>
+                            </div>
+                            <div style={{ float: "left", width: "100px" }}>
+                              <TextBox
+                                className="unifyHeight"
+                                value={this.state.units}
+                                onChange={(e) =>
+                                  this.setState({
+                                    units: e.value,
+                                  })
+                                }
+                              ></TextBox>
+                            </div>
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexFlow: "row",
-                              marginTop: "10px",
-                            }}
-                          >
-                            <TabStrip
-                              className="userManagmentTabStrip"
-                              selected={this.state.methodTabSelected}
-                              onSelect={this.handleMethodTabSelect}
-                              style={{ width: "100%" }}
-                            >
-                              <TabStripTab title="Check" selected={"true"}>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Bank:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Check #:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Txn Date:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Account #:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      DL #:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                              </TabStripTab>
-                              <TabStripTab title="Charge Card">
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Type
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      CC Number:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Card Holder:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Exp Date:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Auth #:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                              </TabStripTab>
-                              <TabStripTab title="Electronic Fund Transfer">
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Account #:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Trace Number:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Source:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Dest:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      Authorization:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexFlow: "row" }}
-                                >
-                                  <div
-                                    style={{ float: "left", marginLeft: "5px" }}
-                                  >
-                                    <label className="userInfoLabel">
-                                      DL #:
-                                    </label>
-                                  </div>
-                                  <div
-                                    className="insuranceStyle"
-                                    style={{ float: "left" }}
-                                  >
-                                    <TextBox
-                                      className="unifyHeight"
-                                      value={this.state.units}
-                                      onChange={(e) =>
-                                        this.setState({
-                                          units: e.value,
-                                        })
-                                      }
-                                    ></TextBox>
-                                  </div>
-                                </div>
-                              </TabStripTab>
-                            </TabStrip>
+                          <div className="row" style={{ marginLeft: "5px" }}>
+                            <div style={{ float: "left", marginLeft: "5px" }}>
+                              <label className="userInfoLabel">
+                                Credit Card
+                              </label>
+                            </div>
+                            <div style={{ float: "left", width: "215px" }}>
+                              <DropDown
+                                className="unifyHeight"
+                                data={creditCared}
+                                textField="value"
+                                dataItemKey="code"
+                                value={this.state.creditCard}
+                                onChange={(e) =>
+                                  this.setState({
+                                    creditCard: e.value,
+                                  })
+                                }
+                              ></DropDown>
+                            </div>
+                            <div style={{ float: "left", marginLeft: "12px" }}>
+                              <label className="userInfoLabel">
+                                Authorization Code
+                              </label>
+                            </div>
+                            <div style={{ float: "left", width: "100px" }}>
+                              <TextBox
+                                className="unifyHeight"
+                                value={this.state.units}
+                                onChange={(e) =>
+                                  this.setState({
+                                    units: e.value,
+                                  })
+                                }
+                              ></TextBox>
+                            </div>
                           </div>
                         </fieldset>
                       </div>
@@ -1365,6 +921,82 @@ class PatientPayments extends Component {
                         </div>
                       </div>
                     </TabStripTab>
+                  </TabStrip>
+                </div>
+              </div>
+            </PanelBarItem>
+            <PanelBarItem
+              id="ApplyPatientPayment"
+              expanded={this.state.applypatientPaymentExpanded}
+              title="Apply Patient Payments"
+            >
+              <div
+                style={{
+                  marginTop: "5px",
+                  marginBottom: "30px",
+                  width: "100%",
+                }}
+              >
+                <div style={{ display: "flex", flexFlow: "row" }}>
+                  <TabStrip
+                    className="userManagmentTabStrip"
+                    selected={this.state.tabSelected}
+                    onSelect={this.handleTabSelect}
+                    style={{ width: "100%" }}
+                  >
+                    <TabStripTab title="Payment Assignment" selected={"true"}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexFlow: "row",
+                          width: "100%",
+                        }}
+                      >
+                        <div className="accordion" id="accordionExample">
+                          <div
+                            className="card bg-light mb-3"
+                            style={{
+                              marginLeft: "10px",
+                              marginRight: "10px",
+                              marginTop: "5px",
+                            }}
+                          >
+                            <div
+                              id="collapseOne"
+                              className="collapse show"
+                              aria-labelledby="headingOne"
+                              data-parent="#accordionExample"
+                            >
+                              <GridComponent
+                                id="insurancePayment"
+                                columns={insuranceAssignmentColumns}
+                                skip={0}
+                                take={21}
+                                // onSelectionChange={this.onClaimGridSelectionChange}
+                                // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                                // getSelectedItems={this.getSelectedClaims}
+                                // selectionMode="multiple"
+                                DATA_ITEM_KEY="paymentSID"
+                                idGetter={idGetterPatientPaymentID}
+                                // data={this.props.Claims}
+                                // totalCount={
+                                //   this.props.Claims != null && this.props.Claims.length > 0
+                                //     ? this.props.Claims[0].totalCount
+                                //     : this.props.Claims.length
+                                // }
+                                height="700px"
+                                width="100%"
+                                //hasCheckBox={true}
+                                sortColumns={[]}
+                                onSortChange={this.onSortChange}
+                                pageChange={this.pageChange}
+                              ></GridComponent>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TabStripTab>
+                    <TabStripTab title="Patient Payment Details"></TabStripTab>
                   </TabStrip>
                 </div>
               </div>

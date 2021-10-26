@@ -335,3 +335,5 @@ PracticeCompass.Data/Scripts/__tmp_uspClaimfillingGet.sql.txt
 /Publish/PracticeCompassAPI/Microsoft.Extensions.DependencyInjection.dll
 /Publish/PracticeCompassAPI/System.Diagnostics.DiagnosticSource.dll
 Publish
+PracticeCompass.Data/Scripts/__tmp_uspPatientPaymentGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspInsurancePaymentGet.sql.txt

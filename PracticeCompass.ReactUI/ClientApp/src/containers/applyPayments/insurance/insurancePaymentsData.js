@@ -5,6 +5,16 @@ export const methodList = [
   { value: "E", label: "Electronic Fund Transfer" },
   { value: "O", label: "Other" },
 ];
+export const creditCared = [
+  { code: "AE", value: "American Express" },
+  { code: "MC", value: "Master Card" },
+  { code: "VI", value: "Visa" },
+  { code: "DC", value: "Discover" },
+  { code: "JC", value: "JCB" },
+  { code: "DB", value: "Debit Card" },
+  { code: "CC", value: "Care Credit Card" },
+  { code: "00", value: "kk" },
+];
 export const InsuranceCategory = [
   {
     id: "1",
@@ -59,34 +69,28 @@ export const insuranceColumns = [
     orderIndex: 4,
   },
   {
-    field: "onHold",
-    title: "OnHold",
-    minWidth: 70,
-    orderIndex: 5,
-  },
-  {
     field: "location",
     title: "Location",
     minWidth: 300,
-    orderIndex: 6,
+    orderIndex: 5,
   },
   {
     field: "method",
     title: "Payment Method",
     minWidth: 150,
-    orderIndex: 7,
+    orderIndex: 6,
   },
   {
     field: "class",
     title: "Payment Class",
     minWidth: 150,
-    orderIndex: 8,
+    orderIndex: 7,
   },
   {
     field: "notes",
     title: "Notes",
     minWidth: 300,
-    orderIndex: 9,
+    orderIndex: 8,
   },
   {
     field: "id",
@@ -157,5 +161,23 @@ export const insuranceAssignmentColumns = [
     minWidth: 50,
     orderIndex: 0,
     hide: true,
+  },
+];
+export const DOSFilter = [
+  {
+    id: "0",
+    text: "Any",
+  },
+  {
+    id: "1",
+    text: "Equal",
+  },
+  {
+    id: "2",
+    text: "Older than",
+  },
+  {
+    id: "3",
+    text: "Newer than",
   },
 ];
