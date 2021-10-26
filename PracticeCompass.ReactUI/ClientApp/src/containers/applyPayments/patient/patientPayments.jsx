@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { guarantorColumns } from "./patientPaymentsData";
+import { guarantorColumns, PhysicianColumns } from "./patientPaymentsData";
 import {
   insuranceColumns,
   methodList,
@@ -21,6 +21,8 @@ import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
+import PatientFindDialogComponent from "../../common/patientFindDialog";
+import { patientColumns } from "../../processPatients/patients/patient/patientData";
 import {
   resetPatientList,
   getPracticeList,
@@ -29,8 +31,11 @@ import {
 import {
   getguarantorList,
   resetGuarantorList,
+  resetPhysicianList,
+  getPhysicianList,
 } from "../../../redux/actions/claimList";
-
+const DATA_ITEM_KEY_PATIENT = "patientListgridID";
+const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
 const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
@@ -38,6 +43,9 @@ const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 
 const DATA_ITEM_KEY_PATIENT_PAYMENT = "paymentSID";
 const idGetterPatientPaymentID = getter(DATA_ITEM_KEY_PATIENT_PAYMENT);
+
+const DATA_ITEM_KEY_Physician = "entitySID";
+const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
 function mapStateToProps(state) {
   return {
     patientList: state.patients.patientList,
@@ -50,6 +58,7 @@ function mapStateToProps(state) {
     dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
+    physicians: state.claimList.physicians,
   };
 }
 
@@ -64,6 +73,9 @@ function mapDispatchToProps(dispatch) {
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
     resetPracticeList: () => dispatch(resetPracticeList()),
+    getPhysicianList: (name, refreshdata, skip) =>
+      dispatch(getPhysicianList(name, refreshdata, skip)),
+    resetPhysicianList: () => dispatch(resetPhysicianList()),
   };
 }
 
@@ -117,6 +129,7 @@ class PatientPayments extends Component {
     subPatientPracticeID: null,
     subInsurancePracticeID: null,
     practiceSearchText: null,
+    physicianSearchText: null,
   };
   handleSelect = (e) => {
     this.setState({
@@ -195,7 +208,7 @@ class PatientPayments extends Component {
     });
     this.togglePatientDialog();
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   practiceSearch = () => {
     this.props.getPracticeList(this.state.practiceSearchText);
   };
@@ -291,6 +304,92 @@ class PatientPayments extends Component {
       methodSelected: e.selected,
     });
   };
+  guarantorsearch = (refreshData, skip) => {
+    this.props.getguarantorList(
+      this.state.guarantorSearchText,
+      refreshData,
+      skip
+    );
+  };
+  toggleGuarantorDialog = () => {
+    debugger;
+    if (this.state.guarantorVisible) {
+      this.setState({
+        guarantorSearchText: null,
+      });
+      this.props.resetGuarantorList();
+    }
+    this.setState({
+      guarantorVisible: !this.state.guarantorVisible,
+    });
+  };
+  cancelGuarantorDialog = () => {
+    this.setState({
+      guarantorSelectedState: null,
+    });
+    this.toggleGuarantorDialog();
+  };
+  physicianSearch = (refreshdata, skip) => {
+    this.props.getPhysicianList(
+      this.state.physicianSearchText,
+      refreshdata,
+      skip
+    );
+  };
+  setSelectedPhysican = (entitySID, sortName) => {
+    this.setState({
+      subPatientPhysicianID: {
+        entityName: sortName,
+        entityId: entitySID,
+      },
+    });
+
+  };
+  onPhysicianSelectionChange = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setSelectedPhysican(
+      selectedDataItems[0].entitySID,
+      selectedDataItems[0].sortName
+    );
+  };
+  onPhysicianDoubleClick = async (event) => {
+    this.setSelectedPhysican(event.dataItem.entitySID, event.dataItem.sortName);
+    this.props.SaveLookups(event.dataItem.entitySID, "Physician");
+    //this.selectPatient();
+    this.togglePhysicianDialog();
+  };
+  onPhysicianKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setSelectedPhysican(
+      selectedDataItems ? selectedDataItems[0].entitySID : null,
+      selectedDataItems ? selectedDataItems[0].sortName : null
+    );
+  };
+  cancelPhysicianDialog = () => {
+    this.setState({
+      physicianSearchText: null,
+    });
+    this.togglePhysicianDialog();
+  };
+  togglePhysicianDialog = () => {
+    if (
+      this.state.physicianVisibleSubPatient
+    ) {
+      this.setState({
+        physicianSearchText: null,
+      });
+      this.props.resetPhysicianList();
+    }
+    this.setState({
+      physicianVisibleSubPatient: false
+    });
+  };
   render() {
     return (
       <Fragment>
@@ -309,31 +408,75 @@ class PatientPayments extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {this.state.patientVisible && (
+            <PatientFindDialogComponent
+              title="Patient Search"
+              placeholder="Enter Patient Name"
+              // searcTextBoxValue={this.state.patientSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  patientSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.patientsearch}
+              dataItemKey="patientListgridID"
+              data={this.props.patientList}
+              columns={patientColumns}
+              onSelectionChange={this.onPatientSelectionChange}
+              onRowDoubleClick={this.onPatientDoubleClick}
+              onKeyDown={this.onPatientKeyDown}
+              idGetterLookup={idGetterPaient}
+              toggleDialog={this.cancelPatientDialog}
+              cancelDialog={this.cancelPatientDialog}
+            ></PatientFindDialogComponent>
+          )}
+          {this.state.physicianVisibleSubPatient && (
+            <FindDialogComponent
+              title="Physician Search"
+              placeholder="Enter Physician Name"
+              searcTextBoxValue={this.state.physicianSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  physicianSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.physicianSearch}
+              dataItemKey="EntitySID"
+              data={this.props.physicians}
+              columns={PhysicianColumns}
+              onSelectionChange={this.onPhysicianSelectionChange}
+              onRowDoubleClick={this.onPhysicianDoubleClick}
+              onKeyDown={this.onPhysicianKeyDown}
+              idGetterLookup={idGetterPhysicianID}
+              toggleDialog={this.cancelPhysicianDialog}
+              cancelDialog={this.cancelPhysicianDialog}
+            ></FindDialogComponent>
+          )}
           {(this.state.practiceVisiblePatient ||
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
             this.state.practiceVisibleSubInsurance) && (
-            <FindDialogComponent
-              title="Practice Search"
-              placeholder="Enter Practice Name"
-              searcTextBoxValue={this.state.practiceSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  practiceSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.practiceSearch}
-              dataItemKey="practiceID"
-              data={this.props.practiceList}
-              columns={PracticeColumns}
-              onSelectionChange={this.onPracticeSelectionChange}
-              onRowDoubleClick={this.onPracticeDoubleClick}
-              onKeyDown={this.onPracticeKeyDown}
-              idGetterLookup={idGetterPracticeID}
-              toggleDialog={this.cancelPracticeDialog}
-              cancelDialog={this.cancelPracticeDialog}
-            ></FindDialogComponent>
-          )}
+              <FindDialogComponent
+                title="Practice Search"
+                placeholder="Enter Practice Name"
+                searcTextBoxValue={this.state.practiceSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    practiceSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.practiceSearch}
+                dataItemKey="practiceID"
+                data={this.props.practiceList}
+                columns={PracticeColumns}
+                onSelectionChange={this.onPracticeSelectionChange}
+                onRowDoubleClick={this.onPracticeDoubleClick}
+                onKeyDown={this.onPracticeKeyDown}
+                idGetterLookup={idGetterPracticeID}
+                toggleDialog={this.cancelPracticeDialog}
+                cancelDialog={this.cancelPracticeDialog}
+              ></FindDialogComponent>
+            )}
           {this.state.guarantorVisible && (
             <FindDialogComponent
               title="Guarantor Search"
@@ -484,9 +627,9 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                    // onClick={() => {
-                    //     this.setState({ visibleSaveFilter: true });
-                    // }}
+                  // onClick={() => {
+                  //     this.setState({ visibleSaveFilter: true });
+                  // }}
                   >
                     Find
                   </ButtonComponent>
@@ -496,9 +639,9 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                    // onClick={() => {
-                    //     this.setState({ visibleSaveFilter: true });
-                    // }}
+                  // onClick={() => {
+                  //     this.setState({ visibleSaveFilter: true });
+                  // }}
                   >
                     Add
                   </ButtonComponent>
@@ -508,9 +651,9 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                    // onClick={() => {
-                    //     this.setState({ visibleSaveFilter: true });
-                    // }}
+                  // onClick={() => {
+                  //     this.setState({ visibleSaveFilter: true });
+                  // }}
                   >
                     Apply
                   </ButtonComponent>
@@ -520,9 +663,9 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                    // onClick={() => {
-                    //     this.setState({ visibleSaveFilter: true });
-                    // }}
+                  // onClick={() => {
+                  //     this.setState({ visibleSaveFilter: true });
+                  // }}
                   >
                     Edit
                   </ButtonComponent>
