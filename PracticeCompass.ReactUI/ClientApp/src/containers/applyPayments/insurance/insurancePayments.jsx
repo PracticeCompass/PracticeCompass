@@ -352,7 +352,7 @@ class insurancePayments extends Component {
             <PanelBarItem
               id="InsurancePaymentSearch"
               expanded={this.state.insurancePaymentExpanded}
-              title="Insurance Payment"
+              title="Plan Payment"
             >
               <div
                 style={{
@@ -396,7 +396,10 @@ class insurancePayments extends Component {
                     Find
                   </ButtonComponent>
                 </div>
-                <div style={{ float: "left", marginLeft: "5px" }}>
+
+              </div>
+              <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+              <div style={{ float: "left", marginLeft: "5px" }}>
                   <label className="userInfoLabel">Plan Company</label>
                 </div>
                 <div
@@ -563,7 +566,7 @@ class insurancePayments extends Component {
             <PanelBarItem
               id="InsurancePaymentDetails"
               expanded={this.state.insurancePaymentDetailsExpanded}
-              title="Insurance Payment Details"
+              title="Plan Payment Details"
             >
               <div
                 style={{ display: "flex", flexFlow: "row", marginTop: "10px" }}
