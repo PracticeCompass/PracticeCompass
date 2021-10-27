@@ -61,7 +61,7 @@ export const columns = [
   },
   {
     field: "planName",
-    title: "Insurance Company",
+    title: "Plan Company",
     minWidth: 180,
     showToolTip: true,
     orderIndex: 4,

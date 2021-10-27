@@ -67,7 +67,7 @@ class Main extends Component {
               />
               <Route
                 exact={true}
-                path="/lists/insurance"
+                path="/lists/plan"
                 component={Insurance}
               />
               <Route

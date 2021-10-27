@@ -38,7 +38,7 @@ export const PracticeColumns = [
 export const insurancePatientColumns = [
   {
     field: "sortName",
-    title: "Insurance Company",
+    title: "Plan Company",
     //minWidth: "100px",
   },
 ];
@@ -46,7 +46,7 @@ export const insurancePatientColumns = [
 export const insuranceColumns = [
   {
     field: "paymentSID",
-    title: "Insurance",
+    title: "Plan",
     minWidth: 300,
     orderIndex: 1,
   },

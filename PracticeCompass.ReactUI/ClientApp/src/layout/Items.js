@@ -72,7 +72,7 @@ export const itemsList = [
     route: "/applypayments",
   },
   {
-    text: "Insurance",
+    text: "Plan",
     icon: "k-i-inbox",
     id: 10,
     parentId: 9,
@@ -123,11 +123,11 @@ export const itemsList = [
     route: "/lists",
   },
   {
-    text: "Insurance",
+    text: "Plan",
     icon: "k-i-inbox",
     id: 17,
     parentId: 16,
-    route: "/lists/insurance",
+    route: "/lists/plan",
   },
   {
     text: "Physicians",

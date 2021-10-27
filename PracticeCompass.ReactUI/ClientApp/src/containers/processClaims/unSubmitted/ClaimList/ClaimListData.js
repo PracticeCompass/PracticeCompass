@@ -19,7 +19,7 @@ export const PhysicianColumns = [
 export const insuranceColumns = [
   {
     field: "sortName",
-    title: "Insurance Company",
+    title: "Plan Company",
     //minWidth: "100px",
   },
 ];

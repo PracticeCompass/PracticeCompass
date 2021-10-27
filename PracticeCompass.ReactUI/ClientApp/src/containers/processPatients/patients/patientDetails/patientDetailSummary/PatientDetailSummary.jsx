@@ -1111,7 +1111,7 @@ class PatientDetailSummary extends Component {
                 className="legendStyle"
                 style={{ paddingRight: "5px", paddingLeft: "5px" }}
               >
-                Insurance Detail
+                Plan Detail
               </legend>
               <div style={{ float: "left", width: "110px" }}>
                 <fieldset
@@ -1151,7 +1151,7 @@ class PatientDetailSummary extends Component {
                   selected={this.state.selected}
                   onSelect={this.handleSelect}
                 >
-                  <TabStripTab title="Insurance">
+                  <TabStripTab title="Plan">
                     <div className="rowHeight" style={{ display: "flex", flexFlow: "row nowrap" }}>
                       <div style={{ float: "left" }}>
                         <label className="userInfoLabel">Company Name</label>
