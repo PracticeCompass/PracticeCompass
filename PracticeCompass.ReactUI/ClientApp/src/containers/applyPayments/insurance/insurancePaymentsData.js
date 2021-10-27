@@ -45,7 +45,7 @@ export const insurancePatientColumns = [
 
 export const insuranceColumns = [
   {
-    field: "paymentSID",
+    field: "payorName",
     title: "Plan",
     minWidth: 300,
     orderIndex: 1,
@@ -60,6 +60,8 @@ export const insuranceColumns = [
   {
     field: "amount",
     title: "Amount",
+    type: "currency",
+    isCustomCell: true,
     minWidth: 100,
     orderIndex: 3,
   },

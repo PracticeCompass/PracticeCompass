@@ -418,6 +418,37 @@ class PatientPayments extends Component {
     //$("#patient").children("span").trigger("click");
     $("#PatientPaymentDetailsSearch").children("span").trigger("click");
   };
+  onGuarantorSelectionChange = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      guarantorSelectedState: selectedDataItems[0].sortName,
+      guarantorIDSelectedState: selectedDataItems[0].entitySID,
+    });
+  };
+  onGuarantorDoubleClick = async (event) => {
+    await this.setState({
+      guarantorSelectedState: event.dataItem.sortName,
+      guarantorIDSelectedState: event.dataItem.entitySID,
+      guarantorSelected: event.dataItem.sortName,
+      guarantorID: event.dataItem.entitySID,
+    });
+    this.props.SaveLookups(event.dataItem.entitySID, "Guarantor");
+    //this.selectGuarantor();
+    this.toggleGuarantorDialog();
+  };
+  onGuarantorKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      guarantorSelectedState: selectedDataItems[0].sortName,
+      guarantorIDSelectedState: selectedDataItems[0].entitySID,
+    });
+  };
   render() {
     return (
       <Fragment>
@@ -458,28 +489,7 @@ class PatientPayments extends Component {
               cancelDialog={this.cancelPatientDialog}
             ></PatientFindDialogComponent>
           )}
-          {this.state.physicianVisibleSubPatient && (
-            <FindDialogComponent
-              title="Physician Search"
-              placeholder="Enter Physician Name"
-              searcTextBoxValue={this.state.physicianSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  physicianSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.physicianSearch}
-              dataItemKey="EntitySID"
-              data={this.props.physicians}
-              columns={PhysicianColumns}
-              onSelectionChange={this.onPhysicianSelectionChange}
-              onRowDoubleClick={this.onPhysicianDoubleClick}
-              onKeyDown={this.onPhysicianKeyDown}
-              idGetterLookup={idGetterPhysicianID}
-              toggleDialog={this.cancelPhysicianDialog}
-              cancelDialog={this.cancelPhysicianDialog}
-            ></FindDialogComponent>
-          )}
+
           {(this.state.practiceVisiblePatient ||
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
@@ -739,7 +749,7 @@ class PatientPayments extends Component {
                             ? this.props.patientPayments[0].totalCount
                             : this.props.patientPayments.length
                         }
-                        height="700px"
+                        height="579px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
@@ -813,19 +823,19 @@ class PatientPayments extends Component {
                       textField="entityName"
                       dataItemKey="entityId"
                       defaultValue={{
-                        entityId: this.state.guarantorID,
-                        entityName: this.state.guarantorSelected,
+                        entityId: this.state.guarantorDetailsSID,
+                        entityName: this.state.guarantorDetailsSSelected,
                       }}
                       value={{
-                        entityId: this.state.guarantorID,
-                        entityName: this.state.guarantorSelected,
+                        entityId: this.state.guarantorDetailsSID,
+                        entityName: this.state.guarantorDetailsSSelected,
                       }}
                       onChange={(e) =>
                         this.setState({
-                          guarantorSelectedState: e.value?.entityName,
-                          guarantorIDSelectedState: e.value?.entityId,
-                          guarantorSelected: e.value?.entityName,
-                          guarantorID: e.value?.entityId,
+                          guarantorDetailsSelectedState: e.value?.entityName,
+                          guarantorDetailsSIDSelectedState: e.value?.entityId,
+                          guarantorDetailsSSelected: e.value?.entityName,
+                          guarantorDetailsSID: e.value?.entityId,
                         })
                       }
                     ></DropDown>

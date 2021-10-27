@@ -66,6 +66,8 @@ export const patientPaymentColumns = [
   {
     field: "amount",
     title: "Amount",
+    type: "currency",
+    isCustomCell: true,
     minWidth: 100,
     orderIndex: 3,
   },

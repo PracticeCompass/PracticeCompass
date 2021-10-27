@@ -30,16 +30,17 @@ export const getPatientPayments =
       dispatch(uiStopLoading());
     }
   };
-export const getInurancePayments =
+export const getInsurancePayments =
   (PracticeID, InsuranceID) => async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
+      dispatch(setInsurancePayments([]));
       if (PracticeID == null && InsuranceID == null) return;
       const resp = await axios({
         method: "GET",
         url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}`,
-      });
-      return resp.data;
+      });     
+      dispatch(setInsurancePayments(resp.data||[]));
     } catch (error) {
       console.log("error ==> ", error);
       dispatch({
@@ -76,6 +77,13 @@ export const setPaymentClass = (paymentClass) => {
 export const setPatientPayments = (payments) => {
   return {
     type: GET_PATIENT_PAYMENTS,
+    payload: payments,
+  };
+};
+
+export const setInsurancePayments = (payments) => {
+  return {
+    type: GET_INSURANCE_PAYMENTS,
     payload: payments,
   };
 };

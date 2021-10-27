@@ -16,6 +16,7 @@ import GridComponent from "../../../components/Grid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
 import DatePickerComponent from "../../../components/DatePicker";
+import CheckboxComponent from "../../../components/Checkbox"
 import config from "../../../config";
 import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
@@ -27,6 +28,9 @@ import {
   getPracticeList,
   resetPracticeList,
 } from "../../../redux/actions/patient";
+import {
+  getInsurancePayments
+} from "../../../redux/actions/payments";
 import $ from "jquery";
 
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
@@ -43,6 +47,7 @@ function mapStateToProps(state) {
     dropDownPractices: state.lookups.practices,
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
+    insurancePayments: state.payments.insurancePayemnts,
   };
 }
 
@@ -57,6 +62,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
     resetPracticeList: () => dispatch(resetPracticeList()),
+    getInsurancePayments: (PracticeID, PatientID) => dispatch(getInsurancePayments(PracticeID, PatientID))
+
   };
 }
 
@@ -93,6 +100,7 @@ class insurancePayments extends Component {
     subPatientPracticeID: null,
     subInsurancePracticeID: null,
     practiceSearchText: null,
+    fullyApplied: false
   };
   handleSelect = (e) => {
     this.setState({
@@ -282,6 +290,25 @@ class insurancePayments extends Component {
   practiceSearch = () => {
     this.props.getPracticeList(this.state.practiceSearchText);
   };
+  insurancePaymentGridSearch = () => {
+    //this.props.getInsurancePayments(73835 , 916497);
+    this.props.getInsurancePayments(this.state.insurancePracticeID?.entityId, this.state.insuranceID);
+  }
+  onInsurancePaymentGridSelectionChange = (event) => {
+    this.setState({
+      InsurancePaymentDetails: event.dataItems == null || event.dataItems.length == 0
+        ? event.dataItem
+        : event.dataItems[event.endRowIndex]
+    });
+  };
+  onInsurancePaymentGridDoubleSelectionChange = (event) => {
+    this.setState({
+      InsurancePaymentDetails: event.dataItems == null || event.dataItems.length == 0
+        ? event.dataItem
+        : event.dataItems[event.endRowIndex]
+    });
+    this.setInsurancePaymentDetailsExpanded();
+  };
   render() {
     return (
       <Fragment>
@@ -362,7 +389,7 @@ class insurancePayments extends Component {
                   marginTop: "10px",
                 }}
               >
-                <div style={{ marginLeft: "15px" }}>
+                <div style={{ marginLeft: "45px" }}>
                   <label className="userInfoLabel">Practice </label>
                 </div>
                 <div className="PracticeStyle">
@@ -399,7 +426,7 @@ class insurancePayments extends Component {
 
               </div>
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-              <div style={{ float: "left", marginLeft: "5px" }}>
+                <div style={{ float: "left", marginLeft: "5px" }}>
                   <label className="userInfoLabel">Plan Company</label>
                 </div>
                 <div
@@ -447,8 +474,8 @@ class insurancePayments extends Component {
                 </div>
               </div>
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-                <div style={{ width: "28px", marginLeft: "36px" }}>
-                  <label className="userInfoLabel">DOS </label>
+                <div style={{ width: "57px", marginLeft: "36px" }}>
+                  <label className="userInfoLabel">Txn Date </label>
                 </div>
                 <div style={{ width: "147px" }}>
                   <DropDown
@@ -458,8 +485,8 @@ class insurancePayments extends Component {
                     className="unifyHeight"
                     id="tins"
                     name="tins"
-                    value={this.state.dostype}
-                    onChange={(e) => this.setState({ dostype: e.value })}
+                    value={this.state.txnDatetype}
+                    onChange={(e) => this.setState({ txnDatetype: e.value })}
                   ></DropDown>
                 </div>
                 <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -467,9 +494,18 @@ class insurancePayments extends Component {
                     className="unifyHeight"
                     placeholder="MM/DD/YYYY"
                     format="M/dd/yyyy"
-                    value={this.state.dos}
-                    onChange={(e) => this.setState({ dos: e.value })}
+                    value={this.state.txnDate}
+                    onChange={(e) => this.setState({ txnDate: e.value })}
                   ></DatePickerComponent>
+                </div>
+                <div>
+                  <CheckboxComponent
+                    style={{ marginRight: "5px" }}
+                    id="isCopayExmpted"
+                    label="Fully Applied"
+                    value={this.state.fullyApplied}
+                    onChange={(e) => this.setState({ fullyApplied: e.value })}
+                  />
                 </div>
               </div>
               <div
@@ -477,12 +513,10 @@ class insurancePayments extends Component {
               >
                 <div style={{ float: "left" }}>
                   <ButtonComponent
-                        icon="search"
-                        type="search"
+                    icon="search"
+                    type="search"
                     classButton="infraBtn-primary action-button"
-                  // onClick={() => {
-                  //     this.setState({ visibleSaveFilter: true });
-                  // }}
+                    onClick={this.insurancePaymentGridSearch}
                   >
                     Search
                   </ButtonComponent>
@@ -539,19 +573,19 @@ class insurancePayments extends Component {
                         columns={insuranceColumns}
                         skip={0}
                         take={21}
-                        // onSelectionChange={this.onClaimGridSelectionChange}
-                        // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                        onSelectionChange={this.onInsurancePaymentGridSelectionChange}
+                        onRowDoubleClick={this.onInsurancePaymentGridDoubleSelectionChange}
                         // getSelectedItems={this.getSelectedClaims}
                         // selectionMode="multiple"
                         DATA_ITEM_KEY="paymentSID"
                         idGetter={idGetterInsurancePaymentID}
-                        // data={this.props.Claims}
-                        // totalCount={
-                        //   this.props.Claims != null && this.props.Claims.length > 0
-                        //     ? this.props.Claims[0].totalCount
-                        //     : this.props.Claims.length
-                        // }
-                        height="700px"
+                        data={this.props.insurancePayments}
+                        totalCount={
+                          this.props.insurancePayments != null && this.props.insurancePayments.length > 0
+                            ? this.props.insurancePayments[0].totalCount
+                            : this.props.insurancePayments.length
+                        }
+                        height="579px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
