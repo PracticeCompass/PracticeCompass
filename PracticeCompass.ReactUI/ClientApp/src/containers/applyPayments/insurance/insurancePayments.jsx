@@ -474,8 +474,8 @@ class insurancePayments extends Component {
               >
                 <div style={{ float: "left" }}>
                   <ButtonComponent
-                    type="edit"
-                    icon="edit"
+                        icon="search"
+                        type="search"
                     classButton="infraBtn-primary action-button"
                   // onClick={() => {
                   //     this.setState({ visibleSaveFilter: true });

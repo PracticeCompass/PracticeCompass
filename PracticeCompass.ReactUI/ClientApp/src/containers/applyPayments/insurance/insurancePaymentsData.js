@@ -45,15 +45,16 @@ export const insurancePatientColumns = [
 
 export const insuranceColumns = [
   {
-    field: "insurance",
+    field: "paymentSID",
     title: "Insurance",
     minWidth: 300,
     orderIndex: 1,
   },
   {
-    field: "depositDate",
+    field: "postDate",
     title: "Deposit Date",
     minWidth: 100,
+    format: "MM/DD/YYYY",
     orderIndex: 2,
   },
   {
@@ -63,37 +64,37 @@ export const insuranceColumns = [
     orderIndex: 3,
   },
   {
-    field: "applied",
+    field: "fullyApplied",
     title: "Applied",
     minWidth: 70,
     orderIndex: 4,
   },
   {
-    field: "location",
+    field: "practiceName",
     title: "Location",
     minWidth: 300,
     orderIndex: 5,
   },
   {
-    field: "method",
+    field: "payMethod",
     title: "Payment Method",
     minWidth: 150,
     orderIndex: 6,
   },
   {
-    field: "class",
+    field: "paymentClass",
     title: "Payment Class",
     minWidth: 150,
     orderIndex: 7,
   },
+  // {
+  //   field: "notes",
+  //   title: "Notes",
+  //   minWidth: 300,
+  //   orderIndex: 8,
+  // },
   {
-    field: "notes",
-    title: "Notes",
-    minWidth: 300,
-    orderIndex: 8,
-  },
-  {
-    field: "id",
+    field: "paymentSID",
     title: "ID",
     minWidth: 50,
     orderIndex: 0,
@@ -122,6 +123,7 @@ export const insuranceAssignmentColumns = [
   {
     field: "postDate",
     title: "Post Date",
+    format: "MM/DD/YYYY",
     minWidth: 100,
     orderIndex: 4,
   },

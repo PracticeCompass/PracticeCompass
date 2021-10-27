@@ -302,3 +302,6 @@ button {
   background-repeat: no-repeat;
   background-color: transparent;
 }
+#accordionExample{
+  width: 100% !important;
+}
