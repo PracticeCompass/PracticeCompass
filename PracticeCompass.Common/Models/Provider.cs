@@ -13,6 +13,7 @@ namespace PracticeCompass.Common.Models
         public string Suffix { set; get; }
         public string NPI { set; get; }
         public string IDCodeQualifier { set; get; }
+        
         public List<ProviderSecIdentifier> SecondaryIdentifiers { set; get; }
         public Provider()
         {
