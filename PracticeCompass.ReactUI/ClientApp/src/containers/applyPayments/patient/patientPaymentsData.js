@@ -38,7 +38,7 @@ export const PracticeColumns = [
 export const insurancePatientColumns = [
   {
     field: "sortName",
-    title: "Insurance Company",
+    title: "Plan Company",
     //minWidth: "100px",
   },
 ];
@@ -51,48 +51,60 @@ export const guarantorColumns = [
 ];
 export const patientPaymentColumns = [
   {
-    field: "id",
-    title: "ID",
-    minWidth: 60,
-  },
-  {
-    field: "patient",
+    field: "payorName",
     title: "Patient",
-    minWidth: 180,
+    minWidth: 300,
+    orderIndex: 1,
   },
   {
-    field: "depositDate",
+    field: "postDate",
     title: "Deposit Date",
     minWidth: 100,
+    format: "MM/DD/YYYY",
+    orderIndex: 2,
   },
   {
     field: "amount",
     title: "Amount",
-    minWidth: 150,
+    minWidth: 100,
+    orderIndex: 3,
   },
   {
-    field: "applied",
+    field: "fullyApplied",
     title: "Applied",
-    minWidth: 80,
-  },
-  {
-    field: "onHold",
-    title: "OnHold",
     minWidth: 70,
+    orderIndex: 4,
   },
   {
-    field: "location",
+    field: "practiceName",
     title: "Location",
+    minWidth: 300,
+    orderIndex: 5,
+  },
+  {
+    field: "payMethod",
+    title: "Payment Method",
     minWidth: 150,
+    orderIndex: 6,
   },
   {
-    field: "user",
-    title: "User",
-    minWidth: 130,
+    field: "paymentClass",
+    title: "Payment Class",
+    minWidth: 150,
+    orderIndex: 7,
   },
+  // {
+  //   field: "notes",
+  //   title: "Notes",
+  //   minWidth: 300,
+  //   orderIndex: 8,
+  // },
   {
-    field: "notes",
-    title: "Notes",
+    field: "paymentSID",
+    title: "ID",
+    minWidth: 50,
+    orderIndex: 0,
+    hide: true,
   },
 ];
 export const insuranceColumns = [
@@ -103,7 +115,7 @@ export const insuranceColumns = [
   },
   {
     field: "insurance",
-    title: "Insurance",
+    title: "Plan",
     minWidth: 180,
   },
   {

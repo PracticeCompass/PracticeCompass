@@ -1127,7 +1127,7 @@ class Patient extends Component {
                   ></DropDown>
                 </div>
                 <div style={{ float: "left", marginLeft: "5px" }}>
-                  <label className="userInfoLabel">Insurance Company</label>
+                  <label className="userInfoLabel">Plan Company</label>
                 </div>
                 <div style={{ float: "left" }} className="insuranceStyle">
                   <DropDown
@@ -1332,8 +1332,8 @@ class Patient extends Component {
         )}
         {this.state.insuranceVisible && (
           <FindDialogComponent
-            title="Insurance Search"
-            placeholder="Enter Insurance Company Name"
+            title="Plan Search"
+            placeholder="Enter Plan Company Name"
             searcTextBoxValue={this.state.insuranceSearchText}
             onTextSearchChange={(e) => {
               this.setState({

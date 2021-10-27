@@ -893,7 +893,7 @@ class EraPayments extends Component {
           {this.state.insuranceVisible && (
             <FindDialogComponent
               title="Insurance Search"
-              placeholder="Enter Insurance Company Name"
+              placeholder="Enter Plan Company Name"
               searcTextBoxValue={this.state.insuranceSearchText}
               onTextSearchChange={(e) => {
                 this.setState({
@@ -1265,7 +1265,7 @@ class EraPayments extends Component {
                       ></DropDown>
                     </div>
                     <div style={{ float: "left", marginLeft: "5px" }}>
-                      <label className="userInfoLabel">Insurance Company</label>
+                      <label className="userInfoLabel">Plan Company</label>
                     </div>
                     <div
                       className="insuranceStyle"
@@ -1314,7 +1314,7 @@ class EraPayments extends Component {
                     </div>
                   </div>
                 </TabStripTab>
-                <TabStripTab title="Insurance">
+                <TabStripTab title="Plan">
                   <div style={{ display: "flex", flexFlow: "row wrap" }}>
                     <div style={{ width: "285px" }}>
                       <div style={{ float: "left", marginLeft: "13px" }}>
@@ -1546,7 +1546,7 @@ class EraPayments extends Component {
                       ></DropDown>
                     </div>
                     <div style={{ float: "left", marginLeft: "5px" }}>
-                      <label className="userInfoLabel">Insurance Company</label>
+                      <label className="userInfoLabel">Plan Company</label>
                     </div>
                     <div
                       className="insuranceStyle"
@@ -1686,7 +1686,7 @@ class EraPayments extends Component {
                 </div>
               </TabStripTab>
               <TabStripTab
-                title="Insurance Payment List"
+                title="Plan Payment List"
                 style={{ width: "100%" }}
               >
                 <div
@@ -1944,7 +1944,7 @@ class EraPayments extends Component {
                     </div>
                   </div>
                 </TabStripTab>
-                <TabStripTab title="Insurance">
+                <TabStripTab title="Plan">
                   <div style={{ display: "flex", flexFlow: "row" }}>
                     <div style={{ float: "left", marginLeft: "28px" }}>
                       <label className="userInfoLabel">Batch </label>
@@ -2031,7 +2031,7 @@ class EraPayments extends Component {
                   </div>
                   <div style={{ display: "flex", flexFlow: "row" }}>
                     <div style={{ float: "left", marginLeft: "5px" }}>
-                      <label className="userInfoLabel">Insurance </label>
+                      <label className="userInfoLabel">Plan </label>
                     </div>
                     <div className="insuranceStyle" style={{ float: "left" }}>
                       <DropDown

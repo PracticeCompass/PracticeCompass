@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { guarantorColumns, PhysicianColumns } from "./patientPaymentsData";
+import { guarantorColumns, PhysicianColumns, patientPaymentColumns } from "./patientPaymentsData";
 import {
   insuranceColumns,
   methodList,
@@ -15,6 +15,7 @@ import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
+import CheckboxComponent from "../../../components/Checkbox"
 import DatePickerComponent from "../../../components/DatePicker";
 import config from "../../../config";
 import FindDialogComponent from "../../common/findDialog";
@@ -23,6 +24,7 @@ import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
 import PatientFindDialogComponent from "../../common/patientFindDialog";
 import { patientColumns } from "../../processPatients/patients/patient/patientData";
+import $ from "jquery";
 import {
   resetPatientList,
   getPracticeList,
@@ -34,6 +36,7 @@ import {
   resetPhysicianList,
   getPhysicianList,
 } from "../../../redux/actions/claimList";
+import { getPatientPayments } from "../../../redux/actions/payments"
 const DATA_ITEM_KEY_PATIENT = "patientListgridID";
 const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
@@ -47,6 +50,7 @@ const idGetterPatientPaymentID = getter(DATA_ITEM_KEY_PATIENT_PAYMENT);
 const DATA_ITEM_KEY_Physician = "entitySID";
 const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
 function mapStateToProps(state) {
+  debugger;
   return {
     patientList: state.patients.patientList,
     insuranceList: state.patients.insuranceList,
@@ -59,6 +63,7 @@ function mapStateToProps(state) {
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
     physicians: state.claimList.physicians,
+    patientPayments: state.payments.patientPayments
   };
 }
 
@@ -76,6 +81,7 @@ function mapDispatchToProps(dispatch) {
     getPhysicianList: (name, refreshdata, skip) =>
       dispatch(getPhysicianList(name, refreshdata, skip)),
     resetPhysicianList: () => dispatch(resetPhysicianList()),
+    getPatientPayments: (PracticeID, PatientID) => dispatch(getPatientPayments(PracticeID, PatientID))
   };
 }
 
@@ -123,7 +129,7 @@ class PatientPayments extends Component {
     practiceVisibleSubPatient: false,
     practiceVisibleInsurance: false,
     practiceVisibleSubInsurance: false,
-
+    fullyApplied: false,
     patientPracticeID: null,
     insurancePracticeID: null,
     subPatientPracticeID: null,
@@ -312,7 +318,6 @@ class PatientPayments extends Component {
     );
   };
   toggleGuarantorDialog = () => {
-    debugger;
     if (this.state.guarantorVisible) {
       this.setState({
         guarantorSearchText: null,
@@ -389,6 +394,29 @@ class PatientPayments extends Component {
     this.setState({
       physicianVisibleSubPatient: false
     });
+  };
+  patientPaymentGridSearch = () => {
+    //this.props.getPatientPayments(142690, 886880)
+    this.props.getPatientPayments(this.state.patientPracticeID?.entityId,this.state.guarantorID);
+  }
+  onPatientPaymentGridSelectionChange = (event) => {
+    this.setState({
+      patientPaymentDetails: event.dataItems == null || event.dataItems.length == 0
+        ? event.dataItem
+        : event.dataItems[event.endRowIndex]
+    });
+  };
+  onPatientPaymentGridDoubleSelectionChange = (event) => {
+    this.setState({
+      patientPaymentDetails: event.dataItems == null || event.dataItems.length == 0
+        ? event.dataItem
+        : event.dataItems[event.endRowIndex]
+    });
+    this.setPatientPaymentDetailExpanded();
+  };
+  setPatientPaymentDetailExpanded = () => {
+    //$("#patient").children("span").trigger("click");
+    $("#PatientPaymentDetailsSearch").children("span").trigger("click");
   };
   render() {
     return (
@@ -592,8 +620,8 @@ class PatientPayments extends Component {
                   <div
                     style={{ display: "flex", flexFlow: "row", width: "100%" }}
                   >
-                    <div style={{ width: "28px", marginLeft: "53px" }}>
-                      <label className="userInfoLabel">DOS </label>
+                    <div style={{ width: "54px", marginLeft: "27px" }}>
+                      <label className="userInfoLabel">Txn Date</label>
                     </div>
                     <div style={{ width: "147px" }}>
                       <DropDown
@@ -616,6 +644,15 @@ class PatientPayments extends Component {
                         onChange={(e) => this.setState({ dos: e.value })}
                       ></DatePickerComponent>
                     </div>
+                    <div>
+                      <CheckboxComponent
+                        style={{ marginRight: "5px" }}
+                        id="isCopayExmpted"
+                        label="Fully Applied"
+                        value={this.state.fullyApplied}
+                        onChange={(e) => this.setState({ fullyApplied: e.value })}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -624,14 +661,12 @@ class PatientPayments extends Component {
               >
                 <div style={{ float: "left" }}>
                   <ButtonComponent
-                    type="edit"
-                    icon="edit"
-                    classButton="infraBtn-primary action-button"
-                  // onClick={() => {
-                  //     this.setState({ visibleSaveFilter: true });
-                  // }}
+                    classButton="infraBtn-primary action-grid-button"
+                    icon="search"
+                    type="search"
+                    onClick={this.patientPaymentGridSearch}
                   >
-                    Find
+                    Search
                   </ButtonComponent>
                 </div>
                 <div style={{ float: "left" }}>
@@ -689,21 +724,21 @@ class PatientPayments extends Component {
                     >
                       <GridComponent
                         id="insurancePayment"
-                        columns={insuranceColumns}
+                        columns={patientPaymentColumns}
                         skip={0}
                         take={21}
-                        // onSelectionChange={this.onClaimGridSelectionChange}
-                        // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                        onSelectionChange={this.onPatientPaymentGridSelectionChange}
+                        onRowDoubleClick={this.onPatientPaymentGridDoubleSelectionChange}
                         // getSelectedItems={this.getSelectedClaims}
                         // selectionMode="multiple"
                         DATA_ITEM_KEY="paymentSID"
                         idGetter={idGetterPatientPaymentID}
-                        // data={this.props.Claims}
-                        // totalCount={
-                        //   this.props.Claims != null && this.props.Claims.length > 0
-                        //     ? this.props.Claims[0].totalCount
-                        //     : this.props.Claims.length
-                        // }
+                        data={this.props.patientPayments}
+                        totalCount={
+                          this.props.patientPayments != null && this.props.patientPayments.length > 0
+                            ? this.props.patientPayments[0].totalCount
+                            : this.props.patientPayments.length
+                        }
                         height="700px"
                         width="100%"
                         //hasCheckBox={true}
@@ -728,366 +763,294 @@ class PatientPayments extends Component {
                   width: "100%",
                 }}
               >
-                <div style={{ display: "flex", flexFlow: "row" }}>
-                  <TabStrip
-                    className="userManagmentTabStrip"
-                    selected={this.state.tabSelected}
-                    onSelect={this.handleTabSelect}
-                    style={{ width: "100%" }}
-                  >
-                    <TabStripTab
-                      title="Patient Payment Details"
-                      selected={"true"}
+
+                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                  <div style={{ marginLeft: "15px" }}>
+                    <label className="userInfoLabel">Practice </label>
+                  </div>
+                  <div className="PracticeStyle">
+                    <DropDown
+                      className="unifyHeight"
+                      data={this.props.dropDownPractices}
+                      textField="entityName"
+                      dataItemKey="entityId"
+                      defaultValue={this.state.subPatientPracticeID}
+                      value={this.state.subPatientPracticeID}
+                      onChange={(e) =>
+                        this.setState({
+                          subPatientPracticeID: {
+                            entityName: e.value?.entityName,
+                            entityId: e.value?.entityId,
+                          },
+                        })
+                      }
+                    ></DropDown>
+                  </div>
+                  <div style={{ float: "left" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary find-button"
+                      style={{ marginTop: "0px" }}
+                      onClick={(e) =>
+                        this.setState({ practiceVisibleSubPatient: true })
+                      }
                     >
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ marginLeft: "3px" }}>
-                          <label className="userInfoLabel">Practice </label>
-                        </div>
-                        <div className="PracticeStyle">
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownPractices}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.subPatientPracticeID}
-                            value={this.state.subPatientPracticeID}
-                            onChange={(e) =>
-                              this.setState({
-                                subPatientPracticeID: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
-                                },
-                              })
-                            }
-                          ></DropDown>
-                        </div>
-                        <div style={{ float: "left" }}>
-                          <ButtonComponent
-                            icon="search"
-                            type="search"
-                            classButton="infraBtn-primary find-button"
-                            style={{ marginTop: "0px" }}
-                            onClick={(e) =>
-                              this.setState({ practiceVisibleSubPatient: true })
-                            }
-                          >
-                            Find
-                          </ButtonComponent>
-                        </div>
-                        <div>
-                          <label className="userInfoLabel">Physician </label>
-                        </div>
-                        <div className="physicianStyle">
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownPhysicians}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.subPatientPhysicianID}
-                            value={this.state.subPatientPhysicianID}
-                            onChange={(e) =>
-                              this.setState({
-                                subPatientPhysicianID: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
-                                },
-                              })
-                            }
-                          ></DropDown>
-                        </div>
-                        <div style={{ float: "left" }}>
-                          <ButtonComponent
-                            icon="search"
-                            type="search"
-                            classButton="infraBtn-primary find-button"
-                            style={{ marginTop: "0px" }}
-                            onClick={(e) =>
-                              this.setState({
-                                physicianVisibleSubPatient: true,
-                              })
-                            }
-                          >
-                            Find
-                          </ButtonComponent>
-                        </div>
+                      Find
+                    </ButtonComponent>
+                  </div>
+
+                </div>
+                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+
+                  <div style={{ marginLeft: "2px" }}>
+                    <label className="userInfoLabel">Guarantor</label>
+                  </div>
+                  <div className="GuarantorStyle">
+                    <DropDown
+                      className="unifyHeight"
+                      data={this.props.dropDownGuarantors}
+                      textField="entityName"
+                      dataItemKey="entityId"
+                      defaultValue={{
+                        entityId: this.state.guarantorID,
+                        entityName: this.state.guarantorSelected,
+                      }}
+                      value={{
+                        entityId: this.state.guarantorID,
+                        entityName: this.state.guarantorSelected,
+                      }}
+                      onChange={(e) =>
+                        this.setState({
+                          guarantorSelectedState: e.value?.entityName,
+                          guarantorIDSelectedState: e.value?.entityId,
+                          guarantorSelected: e.value?.entityName,
+                          guarantorID: e.value?.entityId,
+                        })
+                      }
+                    ></DropDown>
+                  </div>
+                  <div>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary find-button"
+                      onClick={this.toggleGuarantorDialog}
+                      style={{ marginTop: "0px" }}
+                    >
+                      Find
+                    </ButtonComponent>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                  <div style={{ float: "left", marginLeft: "32px" }}>
+                    <label className="userInfoLabel">Class </label>
+                  </div>
+                  <div
+                    className="insuranceStyle"
+                    style={{ float: "left" }}
+                  >
+                    <DropDown
+                      className="unifyHeight"
+                      data={this.props.paymentClass}
+                      textField="description"
+                      dataItemKey="lookupCode"
+                      value={this.state.payment_calss}
+                      onChange={(e) =>
+                        this.setState({
+                          payment_calss: e.value,
+                        })
+                      }
+                    ></DropDown>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                  <div style={{ float: "left", marginLeft: "14px" }}>
+                    <label className="userInfoLabel">Amount </label>
+                  </div>
+                  <div style={{ float: "left", width: "100px" }}>
+                    <TextBox
+                      type="numeric"
+                      format="c2"
+                      className="unifyHeight"
+                      value={this.state.units}
+                      onChange={(e) =>
+                        this.setState({
+                          units: e.value,
+                        })
+                      }
+                    ></TextBox>
+                  </div>
+                  <div style={{ float: "left", marginLeft: "10px" }}>
+                    <label className="userInfoLabel">Txn Date </label>
+                  </div>
+                  <div style={{ float: "left", width: "132px" }}>
+                    <DatePickerComponent
+                      id="planEndDate"
+                      name="planEndDate"
+                      className="unifyHeight"
+                      placeholder="MM/DD/YYYY"
+                      format="M/dd/yyyy"
+                      value={this.state.txnDate}
+                      onChange={(e) =>
+                        this.setState({
+                          txnDate: e.value,
+                        })
+                      }
+                    ></DatePickerComponent>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                  <fieldset
+                    className="fieldsetStyle"
+                    style={{
+                      width: "540px",
+                      marginTop: "5px",
+                      height: "78px",
+                      marginLeft: "10px"
+                    }}
+                  >
+                    <legend
+                      className="legendStyle"
+                      style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                    >
+                      Payment Method
+                    </legend>
+                    <div className="row nowrap" style={{ marginLeft: "5px" }}>
+                      <div style={{ float: "left", marginLeft: "24px" }}>
+                        <label className="userInfoLabel">Method</label>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left", marginLeft: "5px" }}>
-                          <label className="userInfoLabel">Patient </label>
-                        </div>
-                        <div className="patientStyle">
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownPatients}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={{
-                              entityId: this.state.patientID,
-                              entityName: this.state.patientNameSelected,
-                            }}
-                            value={{
-                              entityId: this.state.patientID,
-                              entityName: this.state.patientNameSelected,
-                            }}
-                            onChange={(e) =>
-                              this.setState({
-                                patientSelectedState: e.value?.entityName,
-                                patientIDSelectedState: e.value?.entityId,
-                                patientNameSelected: e.value?.entityName,
-                                patientID: e.value?.entityId,
-                              })
-                            }
-                          ></DropDown>
-                        </div>
-                        <div>
-                          <ButtonComponent
-                            icon="search"
-                            type="search"
-                            classButton="infraBtn-primary find-button"
-                            onClick={this.togglePatientDialog}
-                            style={{ marginTop: "0px" }}
-                          >
-                            Find
-                          </ButtonComponent>
-                        </div>
-                        <div>
-                          <label className="userInfoLabel">Guarantor</label>
-                        </div>
-                        <div className="GuarantorStyle">
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownGuarantors}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={{
-                              entityId: this.state.guarantorID,
-                              entityName: this.state.guarantorSelected,
-                            }}
-                            value={{
-                              entityId: this.state.guarantorID,
-                              entityName: this.state.guarantorSelected,
-                            }}
-                            onChange={(e) =>
-                              this.setState({
-                                guarantorSelectedState: e.value?.entityName,
-                                guarantorIDSelectedState: e.value?.entityId,
-                                guarantorSelected: e.value?.entityName,
-                                guarantorID: e.value?.entityId,
-                              })
-                            }
-                          ></DropDown>
-                        </div>
-                        <div>
-                          <ButtonComponent
-                            icon="search"
-                            type="search"
-                            classButton="infraBtn-primary find-button"
-                            onClick={this.toggleGuarantorDialog}
-                            style={{ marginTop: "0px" }}
-                          >
-                            Find
-                          </ButtonComponent>
-                        </div>
+                      <div style={{ float: "left", width: "215px" }}>
+                        <DropDown
+                          className="unifyHeight"
+                          data={methodList}
+                          textField="label"
+                          dataItemKey="value"
+                          value={this.state.method}
+                          onChange={(e) =>
+                            this.setState({
+                              method: e.value,
+                            })
+                          }
+                        ></DropDown>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left", marginLeft: "31px" }}>
-                          <label className="userInfoLabel">Class </label>
-                        </div>
-                        <div
-                          className="insuranceStyle"
-                          style={{ float: "left" }}
-                        >
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.paymentClass}
-                            textField="description"
-                            dataItemKey="lookupCode"
-                            value={this.state.payment_calss}
-                            onChange={(e) =>
-                              this.setState({
-                                payment_calss: e.value,
-                              })
-                            }
-                          ></DropDown>
-                        </div>
+                      <div style={{ float: "left", marginLeft: "12px" }}>
+                        <label className="userInfoLabel">Voucher </label>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left" }}>
-                          <label className="userInfoLabel">Amount </label>
-                        </div>
-                        <div style={{ float: "left", width: "100px" }}>
-                          <TextBox
-                            type="numeric"
-                            format="c2"
-                            className="unifyHeight"
-                            value={this.state.units}
-                            onChange={(e) =>
-                              this.setState({
-                                units: e.value,
-                              })
-                            }
-                          ></TextBox>
-                        </div>
-                        <div style={{ float: "left", marginLeft: "10px" }}>
-                          <label className="userInfoLabel">Txn Date </label>
-                        </div>
-                        <div style={{ float: "left", width: "132px" }}>
-                          <DatePickerComponent
-                            id="planEndDate"
-                            name="planEndDate"
-                            className="unifyHeight"
-                            placeholder="MM/DD/YYYY"
-                            format="M/dd/yyyy"
-                            value={this.state.txnDate}
-                            onChange={(e) =>
-                              this.setState({
-                                txnDate: e.value,
-                              })
-                            }
-                          ></DatePickerComponent>
-                        </div>
+                      <div style={{ float: "left", width: "100px" }}>
+                        <TextBox
+                          className="unifyHeight"
+                          value={this.state.units}
+                          onChange={(e) =>
+                            this.setState({
+                              units: e.value,
+                            })
+                          }
+                        ></TextBox>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <fieldset
-                          className="fieldsetStyle"
-                          style={{
-                            width: "700px",
-                            marginTop: "5px",
-                            height: "250px",
-                          }}
-                        >
-                          <legend
-                            className="legendStyle"
-                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                          >
-                            Payment Method
-                          </legend>
-                          <div className="row" style={{ marginLeft: "5px" }}>
-                            <div style={{ float: "left", marginLeft: "24px" }}>
-                              <label className="userInfoLabel">Method</label>
-                            </div>
-                            <div style={{ float: "left", width: "215px" }}>
-                              <DropDown
-                                className="unifyHeight"
-                                data={methodList}
-                                textField="label"
-                                dataItemKey="value"
-                                value={this.state.method}
-                                onChange={(e) =>
-                                  this.setState({
-                                    method: e.value,
-                                  })
-                                }
-                              ></DropDown>
-                            </div>
-                            <div style={{ float: "left", marginLeft: "12px" }}>
-                              <label className="userInfoLabel">Voucher </label>
-                            </div>
-                            <div style={{ float: "left", width: "100px" }}>
-                              <TextBox
-                                className="unifyHeight"
-                                value={this.state.units}
-                                onChange={(e) =>
-                                  this.setState({
-                                    units: e.value,
-                                  })
-                                }
-                              ></TextBox>
-                            </div>
-                          </div>
-                          <div className="row" style={{ marginLeft: "5px" }}>
-                            <div style={{ float: "left", marginLeft: "5px" }}>
-                              <label className="userInfoLabel">
-                                Credit Card
-                              </label>
-                            </div>
-                            <div style={{ float: "left", width: "215px" }}>
-                              <DropDown
-                                className="unifyHeight"
-                                data={creditCared}
-                                textField="value"
-                                dataItemKey="code"
-                                value={this.state.creditCard}
-                                onChange={(e) =>
-                                  this.setState({
-                                    creditCard: e.value,
-                                  })
-                                }
-                              ></DropDown>
-                            </div>
-                            <div style={{ float: "left", marginLeft: "12px" }}>
-                              <label className="userInfoLabel">
-                                Authorization Code
-                              </label>
-                            </div>
-                            <div style={{ float: "left", width: "100px" }}>
-                              <TextBox
-                                className="unifyHeight"
-                                value={this.state.units}
-                                onChange={(e) =>
-                                  this.setState({
-                                    units: e.value,
-                                  })
-                                }
-                              ></TextBox>
-                            </div>
-                          </div>
-                        </fieldset>
+                    </div>
+                    <div className="row" style={{ marginLeft: "5px" }}>
+                      <div style={{ float: "left", marginLeft: "5px" }}>
+                        <label className="userInfoLabel">
+                          Credit Card
+                        </label>
                       </div>
-                    </TabStripTab>
-                    <TabStripTab title="Payment Assignment">
+                      <div style={{ float: "left", width: "215px" }}>
+                        <DropDown
+                          className="unifyHeight"
+                          data={creditCared}
+                          textField="value"
+                          dataItemKey="code"
+                          value={this.state.creditCard}
+                          onChange={(e) =>
+                            this.setState({
+                              creditCard: e.value,
+                            })
+                          }
+                        ></DropDown>
+                      </div>
+                      <div style={{ float: "left", marginLeft: "12px" }}>
+                        <label className="userInfoLabel">
+                          Authorization Code
+                        </label>
+                      </div>
+                      <div style={{ float: "left", width: "100px" }}>
+                        <TextBox
+                          className="unifyHeight"
+                          value={this.state.units}
+                          onChange={(e) =>
+                            this.setState({
+                              units: e.value,
+                            })
+                          }
+                        ></TextBox>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <div
+                  className="rowHeight"
+                  style={{
+                    display: "flex",
+                    flexFlow: "row nowrap",
+                    marginTop: "10px",
+                  }}
+                >
+                  <ButtonComponent
+                    classButton="infraBtn-primary action-button"
+                    look="outline"
+                    icon="edit"
+                    type="edit"
+                    onClick={this.patientGridSearch}
+                  >
+                    Search
+                  </ButtonComponent>
+                </div>
+
+                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                  <div className="accordion" id="accordionExample">
+                    <div
+                      className="card bg-light mb-3"
+                      style={{
+                        marginLeft: "10px",
+                        marginRight: "10px",
+                        marginTop: "5px",
+                      }}
+                    >
                       <div
-                        style={{
-                          display: "flex",
-                          flexFlow: "row",
-                          width: "100%",
-                        }}
+                        id="collapseOne"
+                        className="collapse show"
+                        aria-labelledby="headingOne"
+                        data-parent="#accordionExample"
                       >
-                        <div className="accordion" id="accordionExample">
-                          <div
-                            className="card bg-light mb-3"
-                            style={{
-                              marginLeft: "10px",
-                              marginRight: "10px",
-                              marginTop: "5px",
-                            }}
-                          >
-                            <div
-                              id="collapseOne"
-                              className="collapse show"
-                              aria-labelledby="headingOne"
-                              data-parent="#accordionExample"
-                            >
-                              <GridComponent
-                                id="insurancePayment"
-                                columns={insuranceAssignmentColumns}
-                                skip={0}
-                                take={21}
-                                // onSelectionChange={this.onClaimGridSelectionChange}
-                                // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
-                                // getSelectedItems={this.getSelectedClaims}
-                                // selectionMode="multiple"
-                                DATA_ITEM_KEY="paymentSID"
-                                idGetter={idGetterPatientPaymentID}
-                                // data={this.props.Claims}
-                                // totalCount={
-                                //   this.props.Claims != null && this.props.Claims.length > 0
-                                //     ? this.props.Claims[0].totalCount
-                                //     : this.props.Claims.length
-                                // }
-                                height="700px"
-                                width="100%"
-                                //hasCheckBox={true}
-                                sortColumns={[]}
-                                onSortChange={this.onSortChange}
-                                pageChange={this.pageChange}
-                              ></GridComponent>
-                            </div>
-                          </div>
-                        </div>
+                        <GridComponent
+                          id="insurancePayment"
+                          columns={insuranceAssignmentColumns}
+                          skip={0}
+                          take={21}
+                          // onSelectionChange={this.onClaimGridSelectionChange}
+                          // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                          // getSelectedItems={this.getSelectedClaims}
+                          // selectionMode="multiple"
+                          DATA_ITEM_KEY="paymentSID"
+                          idGetter={idGetterPatientPaymentID}
+                          // data={this.props.Claims}
+                          // totalCount={
+                          //   this.props.Claims != null && this.props.Claims.length > 0
+                          //     ? this.props.Claims[0].totalCount
+                          //     : this.props.Claims.length
+                          // }
+                          height="700px"
+                          width="100%"
+                          //hasCheckBox={true}
+                          sortColumns={[]}
+                          onSortChange={this.onSortChange}
+                          pageChange={this.pageChange}
+                        ></GridComponent>
                       </div>
-                    </TabStripTab>
-                  </TabStrip>
+                    </div>
+                  </div>
                 </div>
               </div>
             </PanelBarItem>

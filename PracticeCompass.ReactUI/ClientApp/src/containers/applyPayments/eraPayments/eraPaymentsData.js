@@ -7,7 +7,7 @@ export const methodList = [
 ];
 export const typeList = [
   { value: "Patient", label: "Patient" },
-  { value: "Insurance", label: "Insurance" },
+  { value: "Plan", label: "Plan" },
 ];
 export const InsuranceCategory = [
   {
@@ -38,7 +38,7 @@ export const PracticeColumns = [
 export const insurancePatientColumns = [
   {
     field: "sortName",
-    title: "Insurance Company",
+    title: "Plan Company",
     //minWidth: "100px",
   },
 ];
@@ -103,7 +103,7 @@ export const insuranceColumns = [
   },
   {
     field: "insurance",
-    title: "Insurance",
+    title: "Plan",
     minWidth: 180,
   },
   {

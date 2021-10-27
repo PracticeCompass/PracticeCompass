@@ -35,12 +35,12 @@ export const Columns = [
     },
     {
         field: "insurance",
-        title: "Insurance",
+        title: "Plan",
         orderIndex: 4,
     },
     {
         field: "insuranceGroup",
-        title: "Insurance Group",
+        title: "Plan Group",
         orderIndex: 5,
     },
     {

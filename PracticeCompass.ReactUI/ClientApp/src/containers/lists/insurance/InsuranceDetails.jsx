@@ -29,7 +29,6 @@ class InsuranceDetails extends Component {
   }
   componentDidMount=async ()=>{
    let result= await this.props.GetInsuranceRecord(232562);
-   debugger;
    this.setState({name:result?.carrierCode,listName:result?.sortName,
     Address1:result?.line1,Address2:result?.line2,City:result?.City,
     City:result?.City,Zip:result?.dnZip,eDI:result?.ediOptions,

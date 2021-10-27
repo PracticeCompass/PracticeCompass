@@ -45,7 +45,7 @@ export const insuranceColumns = [
   },
   {
     field: "sortName",
-    title: "Insurance Company",
+    title: "Plan Company",
     orderIndex: 1,
   },
 ];

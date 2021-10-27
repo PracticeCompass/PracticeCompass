@@ -1602,7 +1602,7 @@ class Details extends Component {
                       <div style={{ float: "left" }}>
                         <div style={{ float: "left", marginLeft: "21px" }}>
                           <label className="userInfoLabel">
-                            Insurance Portion
+                            Plan Portion
                           </label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>

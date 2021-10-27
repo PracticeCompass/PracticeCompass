@@ -1466,7 +1466,7 @@ class ClaimList extends Component {
               ></DropDown>
             </div>
             <div style={{ float: "left", marginLeft: "5px" }}>
-              <label className="userInfoLabel">Insurance Company</label>
+              <label className="userInfoLabel">Plan Company</label>
             </div>
             <div className="insuranceStyle" style={{ marginLeft: "10px" }}>
               <DropDown
@@ -1747,7 +1747,7 @@ class ClaimList extends Component {
         {this.state.insuranceVisible && (
           <FindDialogComponent
             title="Insurance Search"
-            placeholder="Enter Insurance Company Name"
+            placeholder="Enter Plan Company Name"
             searcTextBoxValue={this.state.insuranceSearchText}
             onTextSearchChange={(e) => {
               this.setState({

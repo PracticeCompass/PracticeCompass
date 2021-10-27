@@ -523,7 +523,7 @@ class PhysiciansDetails extends Component {
 
                 <br />
               </TabStripTab>
-              <TabStripTab title="Insurance">
+              <TabStripTab title="Plan">
                 <div className="accordion" id="accordionExample">
                   <div
                     className="card bg-light mb-3"

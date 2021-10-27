@@ -392,7 +392,7 @@ class Insurance extends Component {
                     this.props.setInsuranceDetailExpanded();
                   }}
                 >
-                  Insurance Details
+                  Plan Details
                 </ButtonComponent>
               </div>
             </div>

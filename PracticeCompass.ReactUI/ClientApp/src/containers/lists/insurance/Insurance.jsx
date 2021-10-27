@@ -40,9 +40,9 @@ class Insurance extends Component {
       <Fragment>
         <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
           <PanelBarItem
+          expanded={this.state.InsuranceListExpanded}
             id="insuranceList"
-            expanded={this.state.InsuranceListExpanded}
-            title="INSURANCE LIST"
+            title="PLAN LIST"
           >
             <InsuranceList
              setInsuranceDetailExpanded={this.setInsuranceDetailExpanded}
@@ -52,7 +52,7 @@ class Insurance extends Component {
           <PanelBarItem
             id="insuranceDetail"
             expanded={this.state.InsuranceDetailExpanded}
-            title="INSURANCE DETAILS"
+            title="PLAN DETAILS"
           >
             <InsuranceDetails
               setInsuranceExpanded={this.setInsuranceExpanded}
