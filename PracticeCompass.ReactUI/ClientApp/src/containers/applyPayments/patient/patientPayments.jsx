@@ -995,6 +995,7 @@ class PatientPayments extends Component {
                     display: "flex",
                     flexFlow: "row nowrap",
                     marginTop: "10px",
+                    marginLeft:"10px"
                   }}
                 >
                   <ButtonComponent
@@ -1002,9 +1003,9 @@ class PatientPayments extends Component {
                     look="outline"
                     icon="edit"
                     type="edit"
-                    onClick={this.patientGridSearch}
+                    onClick={this.savePatientPaymentDetails}
                   >
-                    Search
+                    Save
                   </ButtonComponent>
                 </div>
 
