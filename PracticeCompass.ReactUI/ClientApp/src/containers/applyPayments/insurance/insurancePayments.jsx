@@ -136,24 +136,48 @@ class insurancePayments extends Component {
   // patientsearch = () => {
   //     this.props.getPatientList(this.state.patientSearchText);
   // };
-  toggleInsuranceDialog = () => {
-    if (this.state.insuranceVisible) {
+  toggleInsuranceDialog = (isDetails =false) => {
+    if (this.state.insuranceVisible || this.state.insuranceDetailsVisible) {
       this.setState({
         insuranceSearchText: null,
       });
       this.props.resetInsuranceList();
     }
-    this.setState({
-      insuranceVisible: !this.state.insuranceVisible,
-    });
+    if (this.state.insuranceVisible || this.state.insuranceDetailsVisible) {
+      this.setState({
+        insuranceVisible: false,
+        insuranceDetailsVisible: false
+      });
+    } else {
+      if(isDetails){
+        this.setState({
+          insuranceDetailsVisible: !this.state.insuranceDetailsVisible
+        });
+      }else{
+        this.setState({
+          insuranceVisible: !this.state.insuranceVisible
+        });
+      }
+
+    }
   };
   onInsuranceDoubleClick = async (event) => {
-    await this.setState({
-      insuranceSelectedState: event.dataItem.sortName,
-      insuranceIDSelectedState: event.dataItem.entitySID,
-      insuranceNameSelected: event.dataItem.sortName,
-      insuranceID: event.dataItem.entitySID,
-    });
+    debugger;
+    if (this.state.insuranceVisible) {
+      await this.setState({
+        insuranceSelectedState: event.dataItem.sortName,
+        insuranceIDSelectedState: event.dataItem.entitySID,
+        insuranceNameSelected: event.dataItem.sortName,
+        insuranceID: event.dataItem.entitySID,
+      });
+    } else if (this.state.insuranceDetailsVisible) {
+      await this.setState({
+        insuranceDetailsSelectedState: event.dataItem.sortName,
+        insuranceDetailsIDSelectedState: event.dataItem.entitySID,
+        insuranceDetailsNameSelected: event.dataItem.sortName,
+        insuranceDetailsID: event.dataItem.entitySID,
+      });
+    }
     this.props.SaveLookups(event.dataItem.entitySID, "Insurance");
     //this.selectInsurance();
     this.toggleInsuranceDialog();
@@ -163,10 +187,17 @@ class insurancePayments extends Component {
       event.startRowIndex,
       event.endRowIndex + 1
     );
-    this.setState({
-      insuranceSelectedState: selectedDataItems[0].sortName,
-      insuranceIDSelectedState: selectedDataItems[0].entitySID,
-    });
+    if (this.state.insuranceVisible) {
+      this.setState({
+        insuranceSelectedState: selectedDataItems[0].sortName,
+        insuranceIDSelectedState: selectedDataItems[0].entitySID,
+      });
+    } else if (this.state.insuranceDetailsVisible) {
+      this.setState({
+        insuranceDetailsSelectedState: selectedDataItems[0].sortName,
+        insuranceDetailsIDSelectedState: selectedDataItems[0].entitySID,
+      });
+    }
   };
   insuranceSearch = async (refreshData, skip) => {
     this.props.getinsuranceList(this.state.insuranceSearchText, refreshData,
@@ -177,15 +208,28 @@ class insurancePayments extends Component {
       event.startRowIndex,
       event.endRowIndex + 1
     );
-    this.setState({
-      insuranceSelectedState: selectedDataItems[0].sortName,
-      insuranceIDSelectedState: selectedDataItems[0].entitySID,
-    });
+    if (this.state.insuranceVisible) {
+      this.setState({
+        insuranceSelectedState: selectedDataItems[0].sortName,
+        insuranceIDSelectedState: selectedDataItems[0].entitySID,
+      });
+    } else if (this.state.insuranceDetailsVisible) {
+      this.setState({
+        insuranceDetailsSelectedState: selectedDataItems[0].sortName,
+        insuranceDetailsIDSelectedState: selectedDataItems[0].entitySID,
+      });
+    }
   };
   cancelInsuranceDialog = () => {
-    this.setState({
-      insuranceSelectedState: null,
-    });
+    if (this.state.insuranceVisible) {
+      this.setState({
+        insuranceSelectedState: null,
+      });
+    } else if (this.state.insuranceDetailsVisible) {
+      this.setState({
+        insuranceDetailsSelectedState: null,
+      });
+    }
     this.toggleInsuranceDialog();
   };
   onSortChange = () => { };
@@ -352,29 +396,30 @@ class insurancePayments extends Component {
                 cancelDialog={this.cancelPracticeDialog}
               ></FindDialogComponent>
             )}
-          {this.state.insuranceVisible && (
-            <FindDialogComponent
-              title="Insurance Search"
-              placeholder="Enter Plan Company Name"
-              searcTextBoxValue={this.state.insuranceSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  insuranceSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.insuranceSearch}
-              dataItemKey="entitySID"
-              data={this.props.insuranceList}
-              columns={insurancePatientColumns}
-              onSelectionChange={this.onInsuranceSelectionChange}
-              onRowDoubleClick={this.onInsuranceDoubleClick}
-              onKeyDown={this.onInsuranceKeyDown}
-              idGetterLookup={idGetterInsurance}
-              toggleDialog={this.cancelInsuranceDialog}
-              cancelDialog={this.cancelInsuranceDialog}
-              getNextData={true}
-            ></FindDialogComponent>
-          )}
+          {(this.state.insuranceVisible ||
+            this.state.insuranceDetailsVisible) && (
+              <FindDialogComponent
+                title="Insurance Search"
+                placeholder="Enter Plan Company Name"
+                searcTextBoxValue={this.state.insuranceSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    insuranceSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.insuranceSearch}
+                dataItemKey="entitySID"
+                data={this.props.insuranceList}
+                columns={insurancePatientColumns}
+                onSelectionChange={this.onInsuranceSelectionChange}
+                onRowDoubleClick={this.onInsuranceDoubleClick}
+                onKeyDown={this.onInsuranceKeyDown}
+                idGetterLookup={idGetterInsurance}
+                toggleDialog={this.cancelInsuranceDialog}
+                cancelDialog={this.cancelInsuranceDialog}
+                getNextData={true}
+              ></FindDialogComponent>
+            )}
           <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
             <PanelBarItem
               id="InsurancePaymentSearch"
@@ -659,7 +704,7 @@ class insurancePayments extends Component {
                       </div>
                       <div style={{ display: "flex", flexFlow: "row" }}>
                         <div style={{ float: "left", marginLeft: "5px" }}>
-                          <label className="userInfoLabel">Insurance </label>
+                          <label className="userInfoLabel">Plan </label>
                         </div>
                         <div
                           className="insuranceStyle"
@@ -671,19 +716,19 @@ class insurancePayments extends Component {
                             textField="entityName"
                             dataItemKey="entityId"
                             defaultValue={{
-                              entityId: this.state.insuranceID,
-                              entityName: this.state.insuranceNameSelected,
+                              entityId: this.state.insuranceDetailsID,
+                              entityName: this.state.insuranceDetailsNameSelected,
                             }}
                             value={{
-                              entityId: this.state.insuranceID,
-                              entityName: this.state.insuranceNameSelected,
+                              entityId: this.state.insuranceDetailsID,
+                              entityName: this.state.insuranceDetailsNameSelected,
                             }}
                             onChange={(e) =>
                               this.setState({
-                                insuranceSelectedState: e.value?.entityName,
-                                insuranceIDSelectedState: e.value?.entityId,
-                                insuranceNameSelected: e.value?.entityName,
-                                insuranceID: e.value?.entityId,
+                                insuranceDetailsSelectedState: e.value?.entityName,
+                                insuranceDetailsIDSelectedState: e.value?.entityId,
+                                insuranceDetailsNameSelected: e.value?.entityName,
+                                insuranceDetailsID: e.value?.entityId,
                               })
                             }
                           ></DropDown>
@@ -694,7 +739,7 @@ class insurancePayments extends Component {
                             icon="search"
                             type="search"
                             classButton="infraBtn-primary find-button"
-                            onClick={this.toggleInsuranceDialog}
+                            onClick={()=>this.toggleInsuranceDialog(true)}
                             style={{ marginTop: "0px" }}
                           >
                             Find
