@@ -102,12 +102,23 @@ namespace PracticeCompass.Messaging.Parsing
                             var era = GetERAInformation(transactionEnvelope, InternalSeparator);
                             if (era != null)
                             {
+                                var referencequalifiers= new List<string> { "0B", "1B", "1D", "1H", "1L", "1W", "28", "6P", "9A", "9C", "BB", "CCR", "CE", "EA", "F8", "G1", "G2", "IG", "SY" };
+                                var messagereferences = (from s in segments where s.Name == "REF" && referencequalifiers.Contains(s[1]) select s).ToList();
+                                for (int f = 0; f < messagereferences.Count; f++)
+                                {
+                                    era.ERAReferences.Add(new ERAReference
+                                    {
+                                        ReferenceID= messagereferences[f][2],
+                                        ReferenceIDQualifier= messagereferences[f][1]
+                                    });
+                                }
                                 era.Interchangedata = interchangedata;
                                 eRaList.Add(era);
                             }
                         }
                     }
                 }
+
                 this.unitOfWork.ERATransactionRepository.SaveTransactions(eRaList);
                 return eRaList;
             }
@@ -126,7 +137,7 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 throw new Exception("no financial information segment (BPR) found.");
             }
-            eRa.financialInformation.HandlingMethod =financialInformationSegment[1];
+            eRa.financialInformation.HandlingMethod = financialInformationSegment[1];
             if (!string.IsNullOrEmpty(financialInformationSegment[2]) && decimal.TryParse(financialInformationSegment[2], out decimal financialAmount))
             {
                 eRa.financialInformation.TotalPaidAmount = financialAmount;
@@ -144,7 +155,7 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 eRa.financialInformation.AccountNumber = financialInformationSegment[6];
             }
-            eRa.financialInformation.senderAccountNbrQualifier= financialInformationSegment[8];
+            eRa.financialInformation.senderAccountNbrQualifier = financialInformationSegment[8];
             eRa.financialInformation.DfiNumber = financialInformationSegment[7];
             eRa.financialInformation.senderAccountNumber = financialInformationSegment[9];
             eRa.financialInformation.CompanyId = financialInformationSegment[10];
@@ -281,11 +292,11 @@ namespace PracticeCompass.Messaging.Parsing
                 if (claimDetailedLoops == null || claimDetailedLoops.Count == 0)
                 {
                     throw new Exception("claim detailed loops  (CLP) not found");
-                } 
+                }
                 var claimDetail = new ClaimDetails();
                 for (int j = 0; j < claimDetailedLoops.Count; j++)
                 {
-                   
+
                     List<Segment> claimChildSegments = childSegments.GetRange(childSegments.IndexOf(claimDetailedLoops[j]),
                         j == (claimDetailedLoops.Count - 1) ? childSegments.Count - childSegments.IndexOf(claimDetailedLoops[j])
                             : childSegments.IndexOf(claimDetailedLoops[j + 1]) - childSegments.IndexOf(claimDetailedLoops[j]));
@@ -294,7 +305,7 @@ namespace PracticeCompass.Messaging.Parsing
                         throw new Exception("No child segments found for claim loop");
                     }
                     claimDetail.PatientAccountNumber = claimDetailedLoops[j][1];
-                    claimDetail.Status = GetClaimStatusFromCode(claimDetailedLoops[j][2]);
+                    claimDetail.Status = claimDetailedLoops[j][2];
                     if (!string.IsNullOrEmpty(claimDetailedLoops[j][3])
                         && decimal.TryParse(claimDetailedLoops[j][3], out decimal claimBilled))
                     {
@@ -313,13 +324,17 @@ namespace PracticeCompass.Messaging.Parsing
                     }
                     if (!string.IsNullOrEmpty(claimDetailedLoops[j][6]))
                     {
-                        claimDetail.Type = GetClaimTypeFromCode(claimDetailedLoops[j][6]);
+                        claimDetail.Type = claimDetailedLoops[j][6];
                     }
                     if (string.IsNullOrEmpty(claimDetailedLoops[j][7]))
                     {
                         throw new Exception("Payer identifier (CLP[7]) mandatory");
                     }
-                    claimDetail.PayerControlId = claimDetailedLoops[j][7];
+                    claimDetail.FacilityTypeCode = claimDetailedLoops[j].Fields.Count >= 8 ? claimDetailedLoops[j][8] : "";
+                    claimDetail.FacilityTypeCode = claimDetailedLoops[j].Fields.Count >= 9 ? claimDetailedLoops[j][9] : "";
+                    claimDetail.DiagnosisRelatedGroupCode = claimDetailedLoops[j].Fields.Count >= 11 ? claimDetailedLoops[j][11] : "";
+                    claimDetail.DiagnosisRelatedGroupWeight = (claimDetailedLoops[j].Fields.Count >= 12 && !string.IsNullOrEmpty(claimDetailedLoops[j][12])) ? decimal.Parse(claimDetailedLoops[j][12]) : 0;
+                    claimDetail.DischargeFraction = (claimDetailedLoops[j].Fields.Count >= 13 && !string.IsNullOrEmpty(claimDetailedLoops[j][13])) ? decimal.Parse(claimDetailedLoops[j][13]) : 0;
                     var patientSegment = (from s in claimChildSegments where s.Name == "NM1" && s[1] == "QC" && s[2] == "1" select s).FirstOrDefault();
                     if (patientSegment == null)
                     {
@@ -331,7 +346,7 @@ namespace PracticeCompass.Messaging.Parsing
                     claimDetail.Patient.Suffix = patientSegment[7];
                     if (!string.IsNullOrEmpty(patientSegment[8]))
                     {
-                       // claimDetail.Patient.Qualifier = GetPatientIdentifierFromCode(patientSegment[8]);
+                        // claimDetail.Patient.Qualifier = GetPatientIdentifierFromCode(patientSegment[8]);
                         claimDetail.Patient.Qualifier = patientSegment[8];
                         claimDetail.Patient.Identifier = patientSegment[9];
                     }
@@ -354,7 +369,7 @@ namespace PracticeCompass.Messaging.Parsing
                         claimDetail.Provider.FirstName = providerSegment[4];
                         claimDetail.Provider.MiddleName = providerSegment[5];
                         claimDetail.Provider.Suffix = providerSegment[7];
-                        claimDetail.Provider.IDCodeQualifier= providerSegment[8];
+                        claimDetail.Provider.IDCodeQualifier = providerSegment[8];
                         if (!string.IsNullOrEmpty(providerSegment[8]) && providerSegment[8] == "XX")
                         {
                             claimDetail.Provider.NPI = providerSegment[9];
@@ -815,6 +830,7 @@ namespace PracticeCompass.Messaging.Parsing
                                             select s).FirstOrDefault();
             if (renderingProviderSegment != null)
             {
+
                 var type = GetSecondaryProviderType(renderingProviderSegment[1]);
                 if (type == ProviderSecIdentifierType.NPI)
                 {
@@ -858,7 +874,7 @@ namespace PracticeCompass.Messaging.Parsing
             var adjustment = new ClaimAdjustment();
             if (!string.IsNullOrEmpty(segment[1]))
             {
-               // adjustment.Type = GetClaimAdjustmentType(segment[1]);
+                // adjustment.Type = GetClaimAdjustmentType(segment[1]);
                 adjustment.Type = segment[1];
             }
             // Up to 6 adjustment  each one 3 elements per segment
@@ -892,7 +908,7 @@ namespace PracticeCompass.Messaging.Parsing
             string[] components = content.Split(separator.ToCharArray());
             if (components.Length > 0)
             {
-                procedure.Qualifier =components[0];
+                procedure.Qualifier = components[0];
             }
             if (components.Length > 1)
             {
