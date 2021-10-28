@@ -16,7 +16,7 @@ Create or Alter   PROCEDURE [dbo].[uspInsurancePaymentGet]
     @PracticeID int , @InsuranceID int
 AS
 BEGIN
-select [dbo].[Payment].[PaymentSID] , Practice.SortName as PracticeName , PostDate , Source , Entity.SortName as PayorName,
+select [dbo].[Payment].[PaymentSID] , Practice.SortName as PracticeName , CONVERT(varchar,PostDate,101) as PostDate  , Source , Entity.SortName as PayorName,
 LookupCode.Description as paymentClass , Amount , PayMethod.Description as PayMethod , FullyApplied , Voucher , 
 case when CreateMethod='M' then 'Manual'
      when CreateMethod='E' then 'ERS ERA - Electronic Remittance Advice'
@@ -28,7 +28,7 @@ inner join Entity on Payment.PayorID = Entity.EntitySID
 left outer join LookupCode on LookupCode.LookupCode=Payment.class and LookupType='PayClass'
  left outer join LookupCode as PayMethod on [dbo].[Payment].Method = PayMethod.LookupCode and  PayMethod.LookupType='PayMethod'
  where Payment.Source = 'I' and 
- ((@PracticeID is null or @PracticeID=0 or Payment.PracticeID=@PracticeID) OR
- (@InsuranceID is null or @InsuranceID=0 or Payment.PayorID=@InsuranceID))
+ (@PracticeID is null or @PracticeID=0 or Payment.PracticeID=@PracticeID) and
+ (@InsuranceID is null or @InsuranceID=0 or Payment.PayorID=@InsuranceID)
  END
 
