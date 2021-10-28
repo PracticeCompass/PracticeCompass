@@ -12,9 +12,10 @@ import config from "../../config";
 export const getPatientPayments =
   (PracticeID, PatientID) => async (dispatch, getState) => {
     try {
+      debugger;
       dispatch(uiStartLoading());
       dispatch(setPatientPayments([]));
-      if (PracticeID == null && PatientID == null) return;
+      // if (PracticeID == null && PatientID == null) return;
       const resp = await axios({
         method: "GET",
         url: `${config.baseUrl}/payment/PatientPaymentGet?PracticeID=${PracticeID}&PatientID=${PatientID}`,
@@ -35,7 +36,7 @@ export const getInsurancePayments =
     try {
       dispatch(uiStartLoading());
       dispatch(setInsurancePayments([]));
-      if (PracticeID == null && InsuranceID == null) return;
+      // if (PracticeID == null && InsuranceID == null) return;
       const resp = await axios({
         method: "GET",
         url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}`,

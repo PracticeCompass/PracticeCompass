@@ -347,7 +347,7 @@ class PatientPayments extends Component {
   };
   patientPaymentGridSearch = () => {
     //this.props.getPatientPayments(142690, 886880)
-    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.guarantorID);
+    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.patientGuarantorID?.entityId);
   }
   onPatientPaymentGridSelectionChange = (event) => {
     this.setState({
