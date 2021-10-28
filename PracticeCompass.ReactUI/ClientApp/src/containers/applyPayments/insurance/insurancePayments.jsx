@@ -136,7 +136,7 @@ class insurancePayments extends Component {
   // patientsearch = () => {
   //     this.props.getPatientList(this.state.patientSearchText);
   // };
-  toggleInsuranceDialog = (isDetails =false) => {
+  toggleInsuranceDialog = (isDetails = false) => {
     if (this.state.insuranceVisible || this.state.insuranceDetailsVisible) {
       this.setState({
         insuranceSearchText: null,
@@ -149,11 +149,11 @@ class insurancePayments extends Component {
         insuranceDetailsVisible: false
       });
     } else {
-      if(isDetails){
+      if (isDetails) {
         this.setState({
           insuranceDetailsVisible: !this.state.insuranceDetailsVisible
         });
-      }else{
+      } else {
         this.setState({
           insuranceVisible: !this.state.insuranceVisible
         });
@@ -162,7 +162,6 @@ class insurancePayments extends Component {
     }
   };
   onInsuranceDoubleClick = async (event) => {
-    debugger;
     if (this.state.insuranceVisible) {
       await this.setState({
         insuranceSelectedState: event.dataItem.sortName,
@@ -511,7 +510,7 @@ class insurancePayments extends Component {
                     icon="search"
                     type="search"
                     classButton="infraBtn-primary find-button"
-                    onClick={this.toggleInsuranceDialog}
+                    onClick={() => this.toggleInsuranceDialog(false)}
                     style={{ marginTop: "0px" }}
                   >
                     Find
@@ -648,134 +647,201 @@ class insurancePayments extends Component {
               title="Plan Payment Details"
             >
               <div
-                style={{ display: "flex", flexFlow: "row", marginTop: "10px" }}
+                style={{
+                  marginTop: "5px",
+                  
+                  width: "100%",
+                }}
               >
-                <TabStrip
-                  className="userManagmentTabStrip"
-                  selected={this.state.tabSelected}
-                  onSelect={this.handleTabSelect}
-                  style={{ width: "100%" }}
+
+                <div
+                  style={{
+                    marginTop: "5px",
+                    width: "100%",
+                  }}
                 >
-                  <TabStripTab title="Payment Details" selected={"true"}>
+                  <div style={{ display: "flex", flexFlow: "row" }}>
+                    <div style={{ marginLeft: "42px" }}>
+                      <label className="userInfoLabel">Practice </label>
+                    </div>
+                    <div className="PracticeStyle">
+                      <DropDown
+                        className="unifyHeight"
+                        data={this.props.dropDownPractices}
+                        textField="entityName"
+                        dataItemKey="entityId"
+                        defaultValue={this.state.subInsurancePracticeID}
+                        value={this.state.subInsurancePracticeID}
+                        onChange={(e) =>
+                          this.setState({
+                            subInsurancePracticeID: {
+                              entityName: e.value?.entityName,
+                              entityId: e.value?.entityId,
+                            },
+                          })
+                        }
+                      ></DropDown>
+                    </div>
+                    <div style={{ float: "left" }}>
+                      <ButtonComponent
+                        icon="search"
+                        type="search"
+                        classButton="infraBtn-primary find-button"
+                        style={{ marginTop: "0px" }}
+                        onClick={(e) =>
+                          this.setState({
+                            practiceVisibleSubInsurance: true,
+                          })
+                        }
+                      >
+                        Find
+                      </ButtonComponent>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexFlow: "row" }}>
+                    <div style={{ float: "left", marginLeft: "5px" }}>
+                      <label className="userInfoLabel">Plan Company </label>
+                    </div>
                     <div
+                      className="insuranceStyle"
+                      style={{ float: "left" }}
+                    >
+                      <DropDown
+                        className="unifyHeight"
+                        data={this.props.dropDownInsurance}
+                        textField="entityName"
+                        dataItemKey="entityId"
+                        defaultValue={{
+                          entityId: this.state.insuranceDetailsID,
+                          entityName: this.state.insuranceDetailsNameSelected,
+                        }}
+                        value={{
+                          entityId: this.state.insuranceDetailsID,
+                          entityName: this.state.insuranceDetailsNameSelected,
+                        }}
+                        onChange={(e) =>
+                          this.setState({
+                            insuranceDetailsSelectedState: e.value?.entityName,
+                            insuranceDetailsIDSelectedState: e.value?.entityId,
+                            insuranceDetailsNameSelected: e.value?.entityName,
+                            insuranceDetailsID: e.value?.entityId,
+                          })
+                        }
+                      ></DropDown>
+                    </div>
+                    <div style={{ float: "left" }}>
+                      <ButtonComponent
+                        look="outline"
+                        icon="search"
+                        type="search"
+                        classButton="infraBtn-primary find-button"
+                        onClick={() => this.toggleInsuranceDialog(true)}
+                        style={{ marginTop: "0px" }}
+                      >
+                        Find
+                      </ButtonComponent>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexFlow: "row" }}>
+                    <div style={{ float: "left", marginLeft: "58px" }}>
+                      <label className="userInfoLabel">Class </label>
+                    </div>
+                    <div
+                      className="insuranceStyle"
+                      style={{ float: "left" }}
+                    >
+                      <DropDown
+                        className="unifyHeight"
+                        data={this.props.paymentClass}
+                        textField="description"
+                        dataItemKey="lookupCode"
+                        value={this.state.payment_calss}
+                        onChange={(e) =>
+                          this.setState({
+                            payment_calss: e.value,
+                          })
+                        }
+                      ></DropDown>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexFlow: "row" }}>
+                    <div style={{ float: "left", marginLeft: "40px" }}>
+                      <label className="userInfoLabel">Amount </label>
+                    </div>
+                    <div style={{ float: "left", width: "100px" }}>
+                      <TextBox
+                        type="numeric"
+                        format="c2"
+                        className="unifyHeight"
+                        value={this.state.units}
+                        onChange={(e) =>
+                          this.setState({
+                            units: e.value,
+                          })
+                        }
+                      ></TextBox>
+                    </div>
+                    <div style={{ float: "left", marginLeft: "10px" }}>
+                      <label className="userInfoLabel">Txn Date </label>
+                    </div>
+                    <div style={{ float: "left", width: "132px" }}>
+                      <DatePickerComponent
+                        id="planEndDate"
+                        name="planEndDate"
+                        className="unifyHeight"
+                        placeholder="MM/DD/YYYY"
+                        format="M/dd/yyyy"
+                        value={
+                          this.state.currentInsurance != null &&
+                            this.state.currentInsurance.endDate
+                            ? new Date(this.state.currentInsurance.endDate)
+                            : null
+                        }
+                        onChange={(e) =>
+                          this.setState({ PlanEndDate: e.value })
+                        }
+                      ></DatePickerComponent>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexFlow: "row" }}>
+                    <fieldset
+                      className="fieldsetStyle"
                       style={{
+                        width: "540px",
                         marginTop: "5px",
-                        marginBottom: "30px",
-                        width: "100%",
+                        height: "85px",
+                        marginLeft:"10px"
                       }}
                     >
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ marginLeft: "14px" }}>
-                          <label className="userInfoLabel">Practice </label>
+                      <legend
+                        className="legendStyle"
+                        style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                      >
+                        Payment Method
+                      </legend>
+                      <div className="row" style={{ marginLeft: "5px" }}>
+                        <div style={{ float: "left", marginLeft: "24px" }}>
+                          <label className="userInfoLabel">Method</label>
                         </div>
-                        <div className="PracticeStyle">
+                        <div style={{ float: "left", width: "215px" }}>
                           <DropDown
                             className="unifyHeight"
-                            data={this.props.dropDownPractices}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.subInsurancePracticeID}
-                            value={this.state.subInsurancePracticeID}
+                            data={methodList}
+                            textField="label"
+                            dataItemKey="value"
+                            value={this.state.method}
                             onChange={(e) =>
                               this.setState({
-                                subInsurancePracticeID: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
-                                },
+                                method: e.value,
                               })
                             }
                           ></DropDown>
                         </div>
-                        <div style={{ float: "left" }}>
-                          <ButtonComponent
-                            icon="search"
-                            type="search"
-                            classButton="infraBtn-primary find-button"
-                            style={{ marginTop: "0px" }}
-                            onClick={(e) =>
-                              this.setState({
-                                practiceVisibleSubInsurance: true,
-                              })
-                            }
-                          >
-                            Find
-                          </ButtonComponent>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left", marginLeft: "5px" }}>
-                          <label className="userInfoLabel">Plan </label>
-                        </div>
-                        <div
-                          className="insuranceStyle"
-                          style={{ float: "left" }}
-                        >
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownInsurance}
-                            textField="entityName"
-                            dataItemKey="entityId"
-                            defaultValue={{
-                              entityId: this.state.insuranceDetailsID,
-                              entityName: this.state.insuranceDetailsNameSelected,
-                            }}
-                            value={{
-                              entityId: this.state.insuranceDetailsID,
-                              entityName: this.state.insuranceDetailsNameSelected,
-                            }}
-                            onChange={(e) =>
-                              this.setState({
-                                insuranceDetailsSelectedState: e.value?.entityName,
-                                insuranceDetailsIDSelectedState: e.value?.entityId,
-                                insuranceDetailsNameSelected: e.value?.entityName,
-                                insuranceDetailsID: e.value?.entityId,
-                              })
-                            }
-                          ></DropDown>
-                        </div>
-                        <div style={{ float: "left" }}>
-                          <ButtonComponent
-                            look="outline"
-                            icon="search"
-                            type="search"
-                            classButton="infraBtn-primary find-button"
-                            onClick={()=>this.toggleInsuranceDialog(true)}
-                            style={{ marginTop: "0px" }}
-                          >
-                            Find
-                          </ButtonComponent>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left", marginLeft: "31px" }}>
-                          <label className="userInfoLabel">Class </label>
-                        </div>
-                        <div
-                          className="insuranceStyle"
-                          style={{ float: "left" }}
-                        >
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.paymentClass}
-                            textField="description"
-                            dataItemKey="lookupCode"
-                            value={this.state.payment_calss}
-                            onChange={(e) =>
-                              this.setState({
-                                payment_calss: e.value,
-                              })
-                            }
-                          ></DropDown>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <div style={{ float: "left", marginLeft: "13px" }}>
-                          <label className="userInfoLabel">Amount </label>
+                        <div style={{ float: "left", marginLeft: "12px" }}>
+                          <label className="userInfoLabel">Voucher </label>
                         </div>
                         <div style={{ float: "left", width: "100px" }}>
                           <TextBox
-                            type="numeric"
-                            format="c2"
                             className="unifyHeight"
                             value={this.state.units}
                             onChange={(e) =>
@@ -785,170 +851,111 @@ class insurancePayments extends Component {
                             }
                           ></TextBox>
                         </div>
-                        <div style={{ float: "left", marginLeft: "10px" }}>
-                          <label className="userInfoLabel">Txn Date </label>
+                      </div>
+                      <div className="row" style={{ marginLeft: "5px" }}>
+                        <div style={{ float: "left", marginLeft: "5px" }}>
+                          <label className="userInfoLabel">
+                            Credit Card
+                          </label>
                         </div>
-                        <div style={{ float: "left", width: "132px" }}>
-                          <DatePickerComponent
-                            id="planEndDate"
-                            name="planEndDate"
+                        <div style={{ float: "left", width: "215px" }}>
+                          <DropDown
                             className="unifyHeight"
-                            placeholder="MM/DD/YYYY"
-                            format="M/dd/yyyy"
-                            value={
-                              this.state.currentInsurance != null &&
-                                this.state.currentInsurance.endDate
-                                ? new Date(this.state.currentInsurance.endDate)
-                                : null
-                            }
+                            data={creditCared}
+                            textField="value"
+                            dataItemKey="code"
+                            value={this.state.creditCard}
                             onChange={(e) =>
-                              this.setState({ PlanEndDate: e.value })
+                              this.setState({
+                                creditCard: e.value,
+                              })
                             }
-                          ></DatePickerComponent>
+                          ></DropDown>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "12px" }}>
+                          <label className="userInfoLabel">
+                            Authorization Code
+                          </label>
+                        </div>
+                        <div style={{ float: "left", width: "100px" }}>
+                          <TextBox
+                            className="unifyHeight"
+                            value={this.state.units}
+                            onChange={(e) =>
+                              this.setState({
+                                units: e.value,
+                              })
+                            }
+                          ></TextBox>
                         </div>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row" }}>
-                        <fieldset
-                          className="fieldsetStyle"
-                          style={{
-                            width: "700px",
-                            marginTop: "5px",
-                            height: "130px",
-                          }}
-                        >
-                          <legend
-                            className="legendStyle"
-                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                          >
-                            Payment Method
-                          </legend>
-                          <div className="row" style={{ marginLeft: "5px" }}>
-                            <div style={{ float: "left", marginLeft: "24px" }}>
-                              <label className="userInfoLabel">Method</label>
-                            </div>
-                            <div style={{ float: "left", width: "215px" }}>
-                              <DropDown
-                                className="unifyHeight"
-                                data={methodList}
-                                textField="label"
-                                dataItemKey="value"
-                                value={this.state.method}
-                                onChange={(e) =>
-                                  this.setState({
-                                    method: e.value,
-                                  })
-                                }
-                              ></DropDown>
-                            </div>
-                            <div style={{ float: "left", marginLeft: "12px" }}>
-                              <label className="userInfoLabel">Voucher </label>
-                            </div>
-                            <div style={{ float: "left", width: "100px" }}>
-                              <TextBox
-                                className="unifyHeight"
-                                value={this.state.units}
-                                onChange={(e) =>
-                                  this.setState({
-                                    units: e.value,
-                                  })
-                                }
-                              ></TextBox>
-                            </div>
-                          </div>
-                          <div className="row" style={{ marginLeft: "5px" }}>
-                            <div style={{ float: "left", marginLeft: "5px" }}>
-                              <label className="userInfoLabel">
-                                Credit Card
-                              </label>
-                            </div>
-                            <div style={{ float: "left", width: "215px" }}>
-                              <DropDown
-                                className="unifyHeight"
-                                data={creditCared}
-                                textField="value"
-                                dataItemKey="code"
-                                value={this.state.creditCard}
-                                onChange={(e) =>
-                                  this.setState({
-                                    creditCard: e.value,
-                                  })
-                                }
-                              ></DropDown>
-                            </div>
-                            <div style={{ float: "left", marginLeft: "12px" }}>
-                              <label className="userInfoLabel">
-                                Authorization Code
-                              </label>
-                            </div>
-                            <div style={{ float: "left", width: "100px" }}>
-                              <TextBox
-                                className="unifyHeight"
-                                value={this.state.units}
-                                onChange={(e) =>
-                                  this.setState({
-                                    units: e.value,
-                                  })
-                                }
-                              ></TextBox>
-                            </div>
-                          </div>
-                        </fieldset>
-                      </div>
-                    </div>
-                  </TabStripTab>
-                  <TabStripTab title="Payment Assignment">
+                    </fieldset>
+                  </div>
+                </div>
+                <div
+                  className="rowHeight"
+                  style={{
+                    display: "flex",
+                    flexFlow: "row nowrap",
+                    marginTop: "10px",
+                    marginLeft: "10px"
+                  }}
+                >
+                  <ButtonComponent
+                    classButton="infraBtn-primary action-button"
+                    look="outline"
+                    icon="edit"
+                    type="edit"
+                    onClick={this.savePatientPaymentDetails}
+                  >
+                    Save
+                  </ButtonComponent>
+                </div>
+
+                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                  <div className="accordion" id="accordionExample">
                     <div
+                      className="card bg-light mb-3"
                       style={{
-                        display: "flex",
-                        flexFlow: "row",
-                        width: "100%",
+                        marginLeft: "10px",
+                        marginRight: "10px",
+                        marginTop: "5px",
                       }}
                     >
-                      <div className="accordion" id="accordionExample">
-                        <div
-                          className="card bg-light mb-3"
-                          style={{
-                            marginLeft: "10px",
-                            marginRight: "10px",
-                            marginTop: "5px",
-                          }}
-                        >
-                          <div
-                            id="collapseOne"
-                            className="collapse show"
-                            aria-labelledby="headingOne"
-                            data-parent="#accordionExample"
-                          >
-                            <GridComponent
-                              id="insurancePayment"
-                              columns={insuranceAssignmentColumns}
-                              skip={0}
-                              take={21}
-                              // onSelectionChange={this.onClaimGridSelectionChange}
-                              // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
-                              // getSelectedItems={this.getSelectedClaims}
-                              // selectionMode="multiple"
-                              DATA_ITEM_KEY="paymentSID"
-                              idGetter={idGetterInsurancePaymentID}
-                              // data={this.props.Claims}
-                              // totalCount={
-                              //   this.props.Claims != null && this.props.Claims.length > 0
-                              //     ? this.props.Claims[0].totalCount
-                              //     : this.props.Claims.length
-                              // }
-                              height="700px"
-                              width="100%"
-                              //hasCheckBox={true}
-                              sortColumns={[]}
-                              onSortChange={this.onSortChange}
-                              pageChange={this.pageChange}
-                            ></GridComponent>
-                          </div>
-                        </div>
+                      <div
+                        id="collapseOne"
+                        className="collapse show"
+                        aria-labelledby="headingOne"
+                        data-parent="#accordionExample"
+                      >
+                        <GridComponent
+                          id="insurancePayment"
+                          columns={insuranceAssignmentColumns}
+                          skip={0}
+                          take={21}
+                          // onSelectionChange={this.onClaimGridSelectionChange}
+                          // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                          // getSelectedItems={this.getSelectedClaims}
+                          // selectionMode="multiple"
+                          DATA_ITEM_KEY="paymentSID"
+                          idGetter={idGetterInsurancePaymentID}
+                          // data={this.props.Claims}
+                          // totalCount={
+                          //   this.props.Claims != null && this.props.Claims.length > 0
+                          //     ? this.props.Claims[0].totalCount
+                          //     : this.props.Claims.length
+                          // }
+                          height="700px"
+                          width="100%"
+                          //hasCheckBox={true}
+                          sortColumns={[]}
+                          onSortChange={this.onSortChange}
+                          pageChange={this.pageChange}
+                        ></GridComponent>
                       </div>
                     </div>
-                  </TabStripTab>
-                </TabStrip>
+                  </div>
+                </div>
               </div>
             </PanelBarItem>
             <PanelBarItem

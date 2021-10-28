@@ -50,7 +50,6 @@ const idGetterPatientPaymentID = getter(DATA_ITEM_KEY_PATIENT_PAYMENT);
 const DATA_ITEM_KEY_Physician = "entitySID";
 const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
 function mapStateToProps(state) {
-  debugger;
   return {
     patientList: state.patients.patientList,
     insuranceList: state.patients.insuranceList,
@@ -99,12 +98,11 @@ class PatientPayments extends Component {
     dostype: null,
     dos: null,
     payment_calss: null,
-    guarantorSelectedState: null,
-    guarantorIDSelectedState: null,
-    guarantorSelected: null,
-    guarantorID: null,
+    patientGuarantorID: null,
+    patientDetailsGuarantorID: null,
     guarantorSearchText: null,
     guarantorVisible: false,
+    guarantorDetailsVisible: false,
     insuranceVisible: false,
     insuranceSearchText: null,
     insuranceSelectedState: null,
@@ -317,16 +315,29 @@ class PatientPayments extends Component {
       skip
     );
   };
-  toggleGuarantorDialog = () => {
-    if (this.state.guarantorVisible) {
+  toggleGuarantorDialog = (isDetails = false) => {
+    if (this.state.guarantorVisible || this.state.guarantorDetailsVisible) {
       this.setState({
         guarantorSearchText: null,
       });
       this.props.resetGuarantorList();
     }
-    this.setState({
-      guarantorVisible: !this.state.guarantorVisible,
-    });
+    if (this.state.guarantorVisible || this.state.guarantorDetailsVisible) {
+      this.setState({
+        guarantorDetailsVisible: false,
+        guarantorVisible:false
+      });
+    }else{
+    if (isDetails) {
+      this.setState({
+        guarantorDetailsVisible: !this.state.guarantorDetailsVisible,
+      });
+    } else {
+      this.setState({
+        guarantorVisible: !this.state.guarantorVisible,
+      });
+    }
+  }
   };
   cancelGuarantorDialog = () => {
     this.setState({
@@ -334,70 +345,9 @@ class PatientPayments extends Component {
     });
     this.toggleGuarantorDialog();
   };
-  physicianSearch = (refreshdata, skip) => {
-    this.props.getPhysicianList(
-      this.state.physicianSearchText,
-      refreshdata,
-      skip
-    );
-  };
-  setSelectedPhysican = (entitySID, sortName) => {
-    this.setState({
-      subPatientPhysicianID: {
-        entityName: sortName,
-        entityId: entitySID,
-      },
-    });
-
-  };
-  onPhysicianSelectionChange = (event) => {
-    var selectedDataItems = event.dataItems.slice(
-      event.startRowIndex,
-      event.endRowIndex + 1
-    );
-    this.setSelectedPhysican(
-      selectedDataItems[0].entitySID,
-      selectedDataItems[0].sortName
-    );
-  };
-  onPhysicianDoubleClick = async (event) => {
-    this.setSelectedPhysican(event.dataItem.entitySID, event.dataItem.sortName);
-    this.props.SaveLookups(event.dataItem.entitySID, "Physician");
-    //this.selectPatient();
-    this.togglePhysicianDialog();
-  };
-  onPhysicianKeyDown = (event) => {
-    var selectedDataItems = event.dataItems.slice(
-      event.startRowIndex,
-      event.endRowIndex + 1
-    );
-    this.setSelectedPhysican(
-      selectedDataItems ? selectedDataItems[0].entitySID : null,
-      selectedDataItems ? selectedDataItems[0].sortName : null
-    );
-  };
-  cancelPhysicianDialog = () => {
-    this.setState({
-      physicianSearchText: null,
-    });
-    this.togglePhysicianDialog();
-  };
-  togglePhysicianDialog = () => {
-    if (
-      this.state.physicianVisibleSubPatient
-    ) {
-      this.setState({
-        physicianSearchText: null,
-      });
-      this.props.resetPhysicianList();
-    }
-    this.setState({
-      physicianVisibleSubPatient: false
-    });
-  };
   patientPaymentGridSearch = () => {
     //this.props.getPatientPayments(142690, 886880)
-    this.props.getPatientPayments(this.state.patientPracticeID?.entityId,this.state.guarantorID);
+    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.guarantorID);
   }
   onPatientPaymentGridSelectionChange = (event) => {
     this.setState({
@@ -423,18 +373,28 @@ class PatientPayments extends Component {
       event.startRowIndex,
       event.endRowIndex + 1
     );
-    this.setState({
-      guarantorSelectedState: selectedDataItems[0].sortName,
-      guarantorIDSelectedState: selectedDataItems[0].entitySID,
-    });
+    this.setGuarantorItem(selectedDataItems[0].entitySID,selectedDataItems[0].sortName);
   };
+  setGuarantorItem = (entityId,entityName) => {
+    if (this.state.guarantorVisible){
+      this.setState({
+        patientGuarantorID:{
+          entityId,entityName
+        }
+      })
+    }
+    else if(this.state.guarantorDetailsVisible){
+      this.setState({
+        patientDetailsGuarantorID:{
+          entityId,entityName
+        }
+      })
+
+    }
+  }
   onGuarantorDoubleClick = async (event) => {
-    await this.setState({
-      guarantorSelectedState: event.dataItem.sortName,
-      guarantorIDSelectedState: event.dataItem.entitySID,
-      guarantorSelected: event.dataItem.sortName,
-      guarantorID: event.dataItem.entitySID,
-    });
+
+    this.setGuarantorItem(event.dataItem.entitySID,event.dataItem.sortName);
     this.props.SaveLookups(event.dataItem.entitySID, "Guarantor");
     //this.selectGuarantor();
     this.toggleGuarantorDialog();
@@ -444,10 +404,7 @@ class PatientPayments extends Component {
       event.startRowIndex,
       event.endRowIndex + 1
     );
-    this.setState({
-      guarantorSelectedState: selectedDataItems[0].sortName,
-      guarantorIDSelectedState: selectedDataItems[0].entitySID,
-    });
+    this.setGuarantorItem(selectedDataItems[0].entitySID,selectedDataItems[0].sortName);
   };
   render() {
     return (
@@ -515,7 +472,7 @@ class PatientPayments extends Component {
                 cancelDialog={this.cancelPracticeDialog}
               ></FindDialogComponent>
             )}
-          {this.state.guarantorVisible && (
+          {(this.state.guarantorVisible || this.state.guarantorDetailsVisible) && (
             <FindDialogComponent
               title="Guarantor Search"
               placeholder="Enter Guarantor Name"
@@ -597,20 +554,14 @@ class PatientPayments extends Component {
                         data={this.props.dropDownGuarantors}
                         textField="entityName"
                         dataItemKey="entityId"
-                        defaultValue={{
-                          entityId: this.state.guarantorID,
-                          entityName: this.state.guarantorSelected,
-                        }}
-                        value={{
-                          entityId: this.state.guarantorID,
-                          entityName: this.state.guarantorSelected,
-                        }}
+                        defaultValue={this.state.patientGuarantorID}
+                        value={this.state.patientGuarantorID}
                         onChange={(e) =>
                           this.setState({
-                            guarantorSelectedState: e.value?.entityName,
-                            guarantorIDSelectedState: e.value?.entityId,
-                            guarantorSelected: e.value?.entityName,
-                            guarantorID: e.value?.entityId,
+                            patientGuarantorID: {
+                              entityName: e.value?.entityName,
+                              entityId: e.value?.entityId,
+                            }
                           })
                         }
                       ></DropDown>
@@ -620,7 +571,7 @@ class PatientPayments extends Component {
                         icon="search"
                         type="search"
                         classButton="infraBtn-primary find-button"
-                        onClick={this.toggleGuarantorDialog}
+                        onClick={()=>this.toggleGuarantorDialog(false)}
                         style={{ marginTop: "0px" }}
                       >
                         Find
@@ -769,7 +720,6 @@ class PatientPayments extends Component {
               <div
                 style={{
                   marginTop: "5px",
-                  marginBottom: "30px",
                   width: "100%",
                 }}
               >
@@ -822,20 +772,14 @@ class PatientPayments extends Component {
                       data={this.props.dropDownGuarantors}
                       textField="entityName"
                       dataItemKey="entityId"
-                      defaultValue={{
-                        entityId: this.state.guarantorDetailsSID,
-                        entityName: this.state.guarantorDetailsSSelected,
-                      }}
-                      value={{
-                        entityId: this.state.guarantorDetailsSID,
-                        entityName: this.state.guarantorDetailsSSelected,
-                      }}
+                      defaultValue={this.state.patientDetailsGuarantorID}
+                      value={this.state.patientDetailsGuarantorID}
                       onChange={(e) =>
                         this.setState({
-                          guarantorDetailsSelectedState: e.value?.entityName,
-                          guarantorDetailsSIDSelectedState: e.value?.entityId,
-                          guarantorDetailsSSelected: e.value?.entityName,
-                          guarantorDetailsSID: e.value?.entityId,
+                          patientDetailsGuarantorID: {
+                            entityName: e.value?.entityName,
+                            entityId: e.value?.entityId,
+                          }
                         })
                       }
                     ></DropDown>
@@ -845,7 +789,7 @@ class PatientPayments extends Component {
                       icon="search"
                       type="search"
                       classButton="infraBtn-primary find-button"
-                      onClick={this.toggleGuarantorDialog}
+                      onClick={()=>this.toggleGuarantorDialog(true)}
                       style={{ marginTop: "0px" }}
                     >
                       Find
@@ -916,7 +860,7 @@ class PatientPayments extends Component {
                     style={{
                       width: "540px",
                       marginTop: "5px",
-                      height: "78px",
+                      height: "85px",
                       marginLeft: "10px"
                     }}
                   >
@@ -1005,7 +949,7 @@ class PatientPayments extends Component {
                     display: "flex",
                     flexFlow: "row nowrap",
                     marginTop: "10px",
-                    marginLeft:"10px"
+                    marginLeft: "10px"
                   }}
                 >
                   <ButtonComponent
