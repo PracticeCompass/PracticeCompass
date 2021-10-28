@@ -402,6 +402,24 @@ namespace PracticeCompass.Messaging.Parsing
                         eRa.Payer.NbrFunctionCode = payercommunication[1];
                         eRa.Payer.ClaimContactCommunicationsNbr = payercommunication[4];
                     }
+                    var supplementalAmountSegments = (from s in claimChildSegments where s.Name == "AMT" select s).ToList();
+                    if (supplementalAmountSegments != null && supplementalAmountSegments.Count > 0)
+                    {
+                        for (int s = 0; s < supplementalAmountSegments.Count; s++)
+                        {
+                            var supplementalAmnt = new ServiceLineSupplementalAmount();
+                            if (!string.IsNullOrEmpty(supplementalAmountSegments[s][1]))
+                            {
+                                supplementalAmnt.Type = supplementalAmountSegments[s][1];
+                                decimal amount = -1;
+                                if (!string.IsNullOrEmpty(supplementalAmountSegments[s][2]) && decimal.TryParse(supplementalAmountSegments[s][2], out amount))
+                                {
+                                    supplementalAmnt.Amount = amount;
+                                }
+                            }
+                            eRa.SupplementalAmounts.Add(supplementalAmnt);
+                        }
+                    }
                     var statementFromDateSegment = (from s in claimChildSegments where s.Name == "DTM" && s[1] == "232" select s).FirstOrDefault();
                     if (statementFromDateSegment != null && !string.IsNullOrEmpty(statementFromDateSegment[2]))
                     {
@@ -823,6 +841,12 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 serviceLine.ControlNumber = controlNumberSegment[2];
             }
+            var ChargeIndustryCode = (from s in serviceLineChildSegments where s.Name == "LQ"  select s).FirstOrDefault();
+            if (ChargeIndustryCode != null )
+            {
+                serviceLine.ChargeIndustryCodes.CodeListQualifierCode = ChargeIndustryCode[1];
+                serviceLine.ChargeIndustryCodes.IndustryCode = ChargeIndustryCode[2];
+            }
             var renderingProviderIds = new List<string> { "0B", "1A", "1B", "1C", "1D", "1G", "1H", "1J", "D3", "G2", "LU", "HPI", "SY", "TJ" };
             var renderingProviderSegment = (from s
                                                 in serviceLineChildSegments
@@ -842,24 +866,7 @@ namespace PracticeCompass.Messaging.Parsing
                     serviceLine.RenderingProvider.SecondaryIdentifiers.Add(id);
                 }
             }
-            var supplementalAmountSegments = (from s in serviceLineChildSegments where s.Name == "AMT" select s).ToList();
-            if (supplementalAmountSegments != null && supplementalAmountSegments.Count > 0)
-            {
-                for (int i = 0; i < supplementalAmountSegments.Count; i++)
-                {
-                    var supplementalAmnt = new ServiceLineSupplementalAmount();
-                    if (!string.IsNullOrEmpty(supplementalAmountSegments[i][1]))
-                    {
-                        supplementalAmnt.Type = GetServiceLineSupplementalAmount(supplementalAmountSegments[i][1]);
-                        decimal amount = -1;
-                        if (!string.IsNullOrEmpty(supplementalAmountSegments[i][2]) && decimal.TryParse(supplementalAmountSegments[i][2], out amount))
-                        {
-                            supplementalAmnt.Amount = amount;
-                        }
-                    }
-                    serviceLine.SupplementalAmounts.Add(supplementalAmnt);
-                }
-            }
+            
             var adjustmentSegments = (from s in serviceLineChildSegments where s.Name == "CAS" select s).ToList();
             for (int i = 0; i < adjustmentSegments.Count; i++)
             {

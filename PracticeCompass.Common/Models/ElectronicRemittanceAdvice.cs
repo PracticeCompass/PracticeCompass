@@ -13,6 +13,7 @@ namespace PracticeCompass.Common.Models
         public List<ClaimHeaderGroup> ClaimHeaderGroups { set; get; }
         public List<ERAReference> ERAReferences { set; get; }
         public List<ProviderAdjustment> ProviderAdjustments { set; get; }
+        public List<ServiceLineSupplementalAmount> SupplementalAmounts { set; get; }
         public ElectronicRemittanceAdvice()
         {
             this.Interchangedata = new InterchangeData();
@@ -23,6 +24,7 @@ namespace PracticeCompass.Common.Models
             this.Payee = new PayeeIdentifier();
             this.ClaimHeaderGroups = new List<ClaimHeaderGroup>();
             this.ProviderAdjustments = new List<ProviderAdjustment>();
+            this.SupplementalAmounts = new List<ServiceLineSupplementalAmount>();
         }
     }
 }
