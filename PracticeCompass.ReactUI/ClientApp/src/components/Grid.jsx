@@ -6,13 +6,15 @@ import {
   GridColumn as Column,
   getSelectedState,
   getSelectedStateFromKeyDown,
+  GridToolbar
 } from "@progress/kendo-react-grid";
 import { getter } from "@progress/kendo-react-common";
 import { Slider, NumericTextBox } from "@progress/kendo-react-inputs";
 import { filterBy, orderBy } from "@progress/kendo-data-query";
-import { MyPager, CurrencyCell, CustomCell,cellWithIcon } from "./GridData.js";
+import { MyPager, CurrencyCell, CustomCell, cellWithIcon,MyCommandCell } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
+
 import $ from "jquery";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
@@ -40,6 +42,19 @@ class ColumnNameCell extends React.Component {
   }
 }
 class GridComponent extends React.Component {
+  editField = "inEdit";
+  CommandCell = (props) => (
+    <MyCommandCell
+      {...props}
+      edit={this.enterEdit}
+      remove={this.remove}
+      add={this.add}
+      discard={this.discard}
+      update={this.update}
+      cancel={this.cancel}
+      editField={this.editField}
+    />
+  );
   MyCustomCell = (props) => {
     return <CustomCell {...props} myProp={this.props} />;
   };
@@ -77,7 +92,7 @@ class GridComponent extends React.Component {
         take: event.page.take,
       });
       this.props.pageChange(event.page.skip, event.page.take);
-    } catch (error) {}
+    } catch (error) { }
   };
   onColumnReorder = async (event) => {
     //localStorage.setItem(this.props.id, JSON.stringify(event.columns));
@@ -86,9 +101,9 @@ class GridComponent extends React.Component {
       JSON.stringify(event.columns)
     );
   };
-  componentDidUpdate(prevProps){
-    if (prevProps.data !== null && this.props.data !=null && prevProps.data.length > this.props.data .length ) {
-      this.setState({skip:0})
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== null && this.props.data != null && prevProps.data.length > this.props.data.length) {
+      this.setState({ skip: 0 })
     }
   }
   componentDidMount() {
@@ -118,7 +133,7 @@ class GridComponent extends React.Component {
       });
     }
   }
-  cellClick = () => {};
+  cellClick = () => { };
   handleResize = () => {
     if (this.grid.offsetWidth < this.minGridWidth && !this.state.setMinWidth) {
       this.setState({
@@ -195,12 +210,78 @@ class GridComponent extends React.Component {
     let width = this.state.setMinWidth
       ? minWidth
       : minWidth +
-        (this.state.gridCurrent - this.minGridWidth) /
-          this.props.columns.length;
+      (this.state.gridCurrent - this.minGridWidth) /
+      this.props.columns.length;
     if (width > COLUMN_MIN) width -= ADJUST_PADDING;
     return width;
   };
-
+  remove = (dataItem) => {
+    // const newData = deleteItem(dataItem);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  add = (dataItem) => {
+    dataItem.inEdit = true;
+    // const newData = insertItem(dataItem);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  update = (dataItem) => {
+    dataItem.inEdit = false;
+    // const newData = updateItem(dataItem);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  discard = () => {
+    // const newData = [...this.state.data];
+    // newData.splice(0, 1);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  cancel = (dataItem) => {
+    // const originalItem = getItems().find(
+    //   (p) => p.ProductID === dataItem.ProductID
+    // );
+    // const newData = this.state.data.map((item) =>
+    //   item.ProductID === originalItem.ProductID ? originalItem : item
+    // );
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  enterEdit = (dataItem) => {
+    // let newData = this.state.data.map((item) =>
+    //   item.ProductID === dataItem.ProductID ? { ...item, inEdit: true } : item
+    // );
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  itemChange = (event) => {
+    const field = event.field || "";
+    // const newData = this.state.data.map((item) =>
+    //   item.ProductID === event.dataItem.ProductID
+    //     ? { ...item, [field]: event.value }
+    //     : item
+    // );
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  addNew = () => {
+    // const newDataItem = {
+    //   inEdit: true,
+    //   Discontinued: false,
+    //   ProductID: new Date().getMilliseconds(),
+    // };
+    // this.setState({
+    //   data: [newDataItem, ...this.state.data],
+    // });
+  };
   render() {
     let Columns = this.props.columns.sort((a, b) =>
       a.orderIndex > b.orderIndex ? 1 : -1
@@ -247,12 +328,12 @@ class GridComponent extends React.Component {
             data={
               this.props.data
                 ? this.props.data
-                    .slice(this.state.skip, this.state.take + this.state.skip)
-                    .map((item) => ({
-                      ...item,
-                      [SELECTED_FIELD]:
-                        this.state.selectedState[this.props.idGetter(item)],
-                    }))
+                  .slice(this.state.skip, this.state.take + this.state.skip)
+                  .map((item) => ({
+                    ...item,
+                    [SELECTED_FIELD]:
+                      this.state.selectedState[this.props.idGetter(item)],
+                  }))
                 : []
             }
             skip={this.state.skip}
@@ -260,7 +341,19 @@ class GridComponent extends React.Component {
             total={this.props.data ? this.props.data.length : 0}
             pageable={true}
             onPageChange={this.pageChange}
+            editField={this.props.isEditable && this.editField}
           >
+            {this.props.isEditable && (
+              <GridToolbar>
+                <button
+                  title="Add new"
+                  className="k-button k-primary"
+                  onClick={this.addNew}
+                >
+                  Add new
+                </button>
+              </GridToolbar>
+            )}
             {this.state.hasCheckBox && (
               <Column
                 field={SELECTED_FIELD}
@@ -282,15 +375,19 @@ class GridComponent extends React.Component {
                       column.type == "currency"
                         ? CurrencyCell
                         : column.iscellWithIcon
-                        ? cellWithIcon
-                        : column.isCustomCell
-                        ? this.MyCustomCell
-                        : column.showToolTip && ColumnNameCell
+                          ? cellWithIcon
+                          : column.isCustomCell
+                            ? this.MyCustomCell
+                            : column.showToolTip && ColumnNameCell
                     }
                   />
                 );
-              
-              })}
+
+              })
+              }
+              { this.props.isEditable && (
+              <Column cell={this.CommandCell} width="240px" />
+              )}
           </Grid>
         </Tooltip>
       </div>

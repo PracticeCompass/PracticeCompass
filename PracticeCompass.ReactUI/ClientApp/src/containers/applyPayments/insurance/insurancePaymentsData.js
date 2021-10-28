@@ -148,18 +148,6 @@ export const insuranceAssignmentColumns = [
     orderIndex: 7,
   },
   {
-    field: "createdUser",
-    title: "Created User",
-    minWidth: 150,
-    orderIndex: 8,
-  },
-  {
-    field: "lastUser",
-    title: "Last Edited User",
-    minWidth: 150,
-    orderIndex: 9,
-  },
-  {
     field: "id",
     title: "ID",
     minWidth: 50,

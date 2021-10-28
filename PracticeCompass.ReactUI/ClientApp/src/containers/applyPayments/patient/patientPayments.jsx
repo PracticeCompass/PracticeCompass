@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { guarantorColumns, PhysicianColumns, patientPaymentColumns } from "./patientPaymentsData";
+import { guarantorColumns, applyPatientPaymentColumns, patientPaymentColumns } from "./patientPaymentsData";
 import {
   insuranceColumns,
   methodList,
@@ -325,19 +325,19 @@ class PatientPayments extends Component {
     if (this.state.guarantorVisible || this.state.guarantorDetailsVisible) {
       this.setState({
         guarantorDetailsVisible: false,
-        guarantorVisible:false
-      });
-    }else{
-    if (isDetails) {
-      this.setState({
-        guarantorDetailsVisible: !this.state.guarantorDetailsVisible,
+        guarantorVisible: false
       });
     } else {
-      this.setState({
-        guarantorVisible: !this.state.guarantorVisible,
-      });
+      if (isDetails) {
+        this.setState({
+          guarantorDetailsVisible: !this.state.guarantorDetailsVisible,
+        });
+      } else {
+        this.setState({
+          guarantorVisible: !this.state.guarantorVisible,
+        });
+      }
     }
-  }
   };
   cancelGuarantorDialog = () => {
     this.setState({
@@ -373,20 +373,20 @@ class PatientPayments extends Component {
       event.startRowIndex,
       event.endRowIndex + 1
     );
-    this.setGuarantorItem(selectedDataItems[0].entitySID,selectedDataItems[0].sortName);
+    this.setGuarantorItem(selectedDataItems[0].entitySID, selectedDataItems[0].sortName);
   };
-  setGuarantorItem = (entityId,entityName) => {
-    if (this.state.guarantorVisible){
+  setGuarantorItem = (entityId, entityName) => {
+    if (this.state.guarantorVisible) {
       this.setState({
-        patientGuarantorID:{
-          entityId,entityName
+        patientGuarantorID: {
+          entityId, entityName
         }
       })
     }
-    else if(this.state.guarantorDetailsVisible){
+    else if (this.state.guarantorDetailsVisible) {
       this.setState({
-        patientDetailsGuarantorID:{
-          entityId,entityName
+        patientDetailsGuarantorID: {
+          entityId, entityName
         }
       })
 
@@ -394,7 +394,7 @@ class PatientPayments extends Component {
   }
   onGuarantorDoubleClick = async (event) => {
 
-    this.setGuarantorItem(event.dataItem.entitySID,event.dataItem.sortName);
+    this.setGuarantorItem(event.dataItem.entitySID, event.dataItem.sortName);
     this.props.SaveLookups(event.dataItem.entitySID, "Guarantor");
     //this.selectGuarantor();
     this.toggleGuarantorDialog();
@@ -404,7 +404,74 @@ class PatientPayments extends Component {
       event.startRowIndex,
       event.endRowIndex + 1
     );
-    this.setGuarantorItem(selectedDataItems[0].entitySID,selectedDataItems[0].sortName);
+    this.setGuarantorItem(selectedDataItems[0].entitySID, selectedDataItems[0].sortName);
+  };
+  remove = (dataItem) => {
+    // const newData = deleteItem(dataItem);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  add = (dataItem) => {
+    dataItem.inEdit = true;
+    // const newData = insertItem(dataItem);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  update = (dataItem) => {
+    dataItem.inEdit = false;
+    // const newData = updateItem(dataItem);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  discard = () => {
+    // const newData = [...this.state.data];
+    // newData.splice(0, 1);
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  cancel = (dataItem) => {
+    // const originalItem = getItems().find(
+    //   (p) => p.ProductID === dataItem.ProductID
+    // );
+    // const newData = this.state.data.map((item) =>
+    //   item.ProductID === originalItem.ProductID ? originalItem : item
+    // );
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  enterEdit = (dataItem) => {
+    // let newData = this.state.data.map((item) =>
+    //   item.ProductID === dataItem.ProductID ? { ...item, inEdit: true } : item
+    // );
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  itemChange = (event) => {
+    const field = event.field || "";
+    // const newData = this.state.data.map((item) =>
+    //   item.ProductID === event.dataItem.ProductID
+    //     ? { ...item, [field]: event.value }
+    //     : item
+    // );
+    // this.setState({
+    //   data: newData,
+    // });
+  };
+  addNew = () => {
+    // const newDataItem = {
+    //   inEdit: true,
+    //   Discontinued: false,
+    //   ProductID: new Date().getMilliseconds(),
+    // };
+    // this.setState({
+    //   data: [newDataItem, ...this.state.data],
+    // });
   };
   render() {
     return (
@@ -571,7 +638,7 @@ class PatientPayments extends Component {
                         icon="search"
                         type="search"
                         classButton="infraBtn-primary find-button"
-                        onClick={()=>this.toggleGuarantorDialog(false)}
+                        onClick={() => this.toggleGuarantorDialog(false)}
                         style={{ marginTop: "0px" }}
                       >
                         Find
@@ -635,9 +702,9 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                  // onClick={() => {
-                  //     this.setState({ visibleSaveFilter: true });
-                  // }}
+                    onClick={() => {
+                      this.setPatientPaymentDetailExpanded()
+                    }}
                   >
                     Add
                   </ButtonComponent>
@@ -789,7 +856,7 @@ class PatientPayments extends Component {
                       icon="search"
                       type="search"
                       classButton="infraBtn-primary find-button"
-                      onClick={()=>this.toggleGuarantorDialog(true)}
+                      onClick={() => this.toggleGuarantorDialog(true)}
                       style={{ marginTop: "0px" }}
                     >
                       Find
@@ -1028,7 +1095,7 @@ class PatientPayments extends Component {
                     onSelect={this.handleTabSelect}
                     style={{ width: "100%" }}
                   >
-                    <TabStripTab title="Payment Assignment" selected={"true"}>
+                    <TabStripTab title="Apply Patient Payments Assignment" selected={"true"}>
                       <div
                         style={{
                           display: "flex",
@@ -1080,7 +1147,95 @@ class PatientPayments extends Component {
                         </div>
                       </div>
                     </TabStripTab>
-                    <TabStripTab title="Patient Payment Details"></TabStripTab>
+                    <TabStripTab title="Apply Patient Payments Details">
+                      <div
+                        style={{
+                          // display: "flex",
+                          // flexFlow: "row",
+                          width: "100%",
+                        }}
+                      >
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                          <div style={{ float: "left", marginLeft: "14px" }}>
+                            <label className="userInfoLabel">Amount </label>
+                          </div>
+                          <div style={{ float: "left", width: "100px" }}>
+                            <TextBox
+                              type="numeric"
+                              format="c2"
+                              className="unifyHeight"
+                              value={this.state.amountApply}
+                              onChange={(e) =>
+                                this.setState({
+                                  amountApply: e.value,
+                                })
+                              }
+                            ></TextBox>
+                          </div>
+                          <div style={{ float: "left", marginLeft: "10px" }}>
+                            <label className="userInfoLabel">Remaining </label>
+                          </div>
+                          <div style={{ float: "left", width: "132px" }}>
+                            <TextBox
+                              type="numeric"
+                              format="c2"
+                              className="unifyHeight"
+                              value={this.state.remaining}
+                              onChange={(e) =>
+                                this.setState({
+                                  remaining: e.value,
+                                })
+                              }
+                            ></TextBox>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                          <div className="accordion" id="accordionExample">
+                            <div
+                              className="card bg-light mb-3"
+                              style={{
+                                marginLeft: "10px",
+                                marginRight: "10px",
+                                marginTop: "5px",
+                              }}
+                            >
+                              <div
+                                id="collapseOne"
+                                className="collapse show"
+                                aria-labelledby="headingOne"
+                                data-parent="#accordionExample"
+                              >
+                                <GridComponent
+                                  id="insurancePayment"
+                                  columns={applyPatientPaymentColumns}
+                                  skip={0}
+                                  take={21}
+                                  isEditable={true}
+                                  // onSelectionChange={this.onClaimGridSelectionChange}
+                                  // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                                  // getSelectedItems={this.getSelectedClaims}
+                                  // selectionMode="multiple"
+                                  DATA_ITEM_KEY="paymentSID"
+                                  idGetter={idGetterPatientPaymentID}
+                                  data={[{}]}
+                                  // totalCount={
+                                  //   this.props.Claims != null && this.props.Claims.length > 0
+                                  //     ? this.props.Claims[0].totalCount
+                                  //     : this.props.Claims.length
+                                  // }
+                                  height="700px"
+                                  width="100%"
+                                  //hasCheckBox={true}
+                                  sortColumns={[]}
+                                  onSortChange={this.onSortChange}
+                                  pageChange={this.pageChange}
+                                ></GridComponent>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TabStripTab>
                   </TabStrip>
                 </div>
               </div>
