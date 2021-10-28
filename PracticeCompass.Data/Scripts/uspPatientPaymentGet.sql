@@ -28,7 +28,7 @@ inner join Entity on Payment.PayorID = Entity.EntitySID
 left outer join LookupCode on LookupCode.LookupCode=Payment.class and LookupType='PayClass'
  left outer join LookupCode as PayMethod on [dbo].[Payment].Method = PayMethod.LookupCode and  PayMethod.LookupType='PayMethod'
  where Payment.Source = 'G' and 
- (@PracticeID is null or @PracticeID=0 or Payment.PracticeID=@PracticeID) and
- (@PatientID is null or @PatientID=0 or Payment.PayorID=@PatientID)
+ ((@PracticeID is null or @PracticeID=0 or Payment.PracticeID=@PracticeID) or
+ (@PatientID is null or @PatientID=0 or Payment.PayorID=@PatientID))
  END
 

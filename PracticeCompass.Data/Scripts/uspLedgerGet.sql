@@ -9,7 +9,7 @@ GO
 -- =============================================
 
 -- Description:	Get Ledger Grid Data
--- exec uspLedgerGet @PatientID =1162
+-- exec uspLedgerGet @PatientID =1118
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspLedgerGet] 
 	-- Add the parameters for the stored procedure here
