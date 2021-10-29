@@ -12,7 +12,6 @@ import config from "../../config";
 export const getPatientPayments =
   (PracticeID, PatientID) => async (dispatch, getState) => {
     try {
-      debugger;
       dispatch(uiStartLoading());
       dispatch(setPatientPayments([]));
       // if (PracticeID == null && PatientID == null) return;

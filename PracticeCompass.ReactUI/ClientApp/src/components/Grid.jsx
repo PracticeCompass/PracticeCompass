@@ -11,7 +11,7 @@ import {
 import { getter } from "@progress/kendo-react-common";
 import { Slider, NumericTextBox } from "@progress/kendo-react-inputs";
 import { filterBy, orderBy } from "@progress/kendo-data-query";
-import { MyPager, CurrencyCell, CustomCell, cellWithIcon,MyCommandCell } from "./GridData.js";
+import { MyPager, CurrencyCell, CustomCell, cellWithIcon } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 
@@ -42,19 +42,6 @@ class ColumnNameCell extends React.Component {
   }
 }
 class GridComponent extends React.Component {
-  editField = "inEdit";
-  CommandCell = (props) => (
-    <MyCommandCell
-      {...props}
-      edit={this.enterEdit}
-      remove={this.remove}
-      add={this.add}
-      discard={this.discard}
-      update={this.update}
-      cancel={this.cancel}
-      editField={this.editField}
-    />
-  );
   MyCustomCell = (props) => {
     return <CustomCell {...props} myProp={this.props} />;
   };
@@ -341,19 +328,7 @@ class GridComponent extends React.Component {
             total={this.props.data ? this.props.data.length : 0}
             pageable={true}
             onPageChange={this.pageChange}
-            editField={this.props.isEditable && this.editField}
           >
-            {this.props.isEditable && (
-              <GridToolbar>
-                <button
-                  title="Add new"
-                  className="k-button k-primary"
-                  onClick={this.addNew}
-                >
-                  Add new
-                </button>
-              </GridToolbar>
-            )}
             {this.state.hasCheckBox && (
               <Column
                 field={SELECTED_FIELD}
@@ -385,9 +360,6 @@ class GridComponent extends React.Component {
 
               })
               }
-              { this.props.isEditable && (
-              <Column cell={this.CommandCell} width="240px" />
-              )}
           </Grid>
         </Tooltip>
       </div>

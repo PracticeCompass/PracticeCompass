@@ -9,10 +9,17 @@ import {
   PracticeColumns,
   insuranceAssignmentColumns,
   DOSFilter,
+  applyPlanPaymentColumns,
+  guarantorColumns
 } from "./insurancePaymentsData";
+import {
+  getguarantorList,
+  resetGuarantorList
+} from "../../../redux/actions/claimList";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
+import EditableGrid from "../../../components/editableGrid"
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
 import DatePickerComponent from "../../../components/DatePicker";
@@ -39,11 +46,16 @@ const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 const DATA_ITEM_KEY_INSURANCE_PAYMENT = "paymentSID";
 const idGetterInsurancePaymentID = getter(DATA_ITEM_KEY_INSURANCE_PAYMENT);
+
+const DATA_ITEM_KEY_Apply_PLAN_PAYMENT = "id";
+const idGetterApplyPlanPaymentID = getter(DATA_ITEM_KEY_Apply_PLAN_PAYMENT);
+
 function mapStateToProps(state) {
   return {
     insuranceList: state.patients.insuranceList,
-    guarantorList: state.claimList.guarantorList,
     dropDownInsurance: state.lookups.insurances,
+    guarantorList: state.claimList.guarantorList,
+    dropDownGuarantors: state.lookups.guarantors,
     dropDownPractices: state.lookups.practices,
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
@@ -54,6 +66,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     // getPatientList: (name) => dispatch(getpatientList(name)),
+    getguarantorList: (name, refreshData, skip) =>
+      dispatch(getguarantorList(name, refreshData, skip)),
+    resetGuarantorList: () => dispatch(resetGuarantorList()),
     getinsuranceList: (name, refreshData,
       skip) => dispatch(getinsuranceList(name, refreshData,
         skip)),
@@ -94,13 +109,14 @@ class insurancePayments extends Component {
     practiceVisibleSubPatient: false,
     practiceVisibleInsurance: false,
     practiceVisibleSubInsurance: false,
-
+    guarantorVisible: false,
     patientPracticeID: null,
     insurancePracticeID: null,
     subPatientPracticeID: null,
     subInsurancePracticeID: null,
     practiceSearchText: null,
-    fullyApplied: false
+    fullyApplied: false,
+    guarantorSearchText: null,
   };
   handleSelect = (e) => {
     this.setState({
@@ -352,6 +368,81 @@ class insurancePayments extends Component {
     });
     this.setInsurancePaymentDetailsExpanded();
   };
+  guarantorsearch = (refreshData, skip) => {
+    this.props.getguarantorList(
+      this.state.guarantorSearchText,
+      refreshData,
+      skip
+    );
+  };
+  toggleGuarantorDialog = (isDetails = false) => {
+    if (this.state.guarantorVisible || this.state.guarantorDetailsVisible) {
+      this.setState({
+        guarantorSearchText: null,
+      });
+      this.props.resetGuarantorList();
+    }
+    if (this.state.guarantorVisible || this.state.guarantorDetailsVisible) {
+      this.setState({
+        guarantorDetailsVisible: false,
+        guarantorVisible: false
+      });
+    } else {
+      if (isDetails) {
+        this.setState({
+          guarantorDetailsVisible: !this.state.guarantorDetailsVisible,
+        });
+      } else {
+        this.setState({
+          guarantorVisible: !this.state.guarantorVisible,
+        });
+      }
+    }
+  };
+  cancelGuarantorDialog = () => {
+    this.setState({
+      guarantorSelectedState: null,
+    });
+    this.toggleGuarantorDialog();
+  };
+  onGuarantorSelectionChange = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setGuarantorItem(selectedDataItems[0].entitySID, selectedDataItems[0].sortName);
+  };
+  setGuarantorItem = (entityId, entityName) => {
+    if (this.state.guarantorVisible) {
+      this.setState({
+        patientGuarantorID: {
+          entityId, entityName
+        }
+      })
+    }
+    else if (this.state.guarantorDetailsVisible) {
+      this.setState({
+        patientDetailsGuarantorID: {
+          entityId, entityName
+        }
+      })
+
+    }
+  }
+  onGuarantorDoubleClick = async (event) => {
+
+    this.setGuarantorItem(event.dataItem.entitySID, event.dataItem.sortName);
+    this.props.SaveLookups(event.dataItem.entitySID, "Guarantor");
+    //this.selectGuarantor();
+    this.toggleGuarantorDialog();
+  };
+  onGuarantorKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setGuarantorItem(selectedDataItems[0].entitySID, selectedDataItems[0].sortName);
+  };
   render() {
     return (
       <Fragment>
@@ -370,6 +461,28 @@ class insurancePayments extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {(this.state.guarantorVisible || this.state.guarantorDetailsVisible) && (
+            <FindDialogComponent
+              title="Guarantor Search"
+              placeholder="Enter Guarantor Name"
+              searcTextBoxValue={this.state.guarantorSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  guarantorSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.guarantorsearch}
+              dataItemKey="entitySID"
+              data={this.props.guarantorList}
+              columns={guarantorColumns}
+              onSelectionChange={this.onGuarantorSelectionChange}
+              onRowDoubleClick={this.onGuarantorDoubleClick}
+              onKeyDown={this.onGuarantorKeyDown}
+              idGetterLookup={idGetterInsurance}
+              toggleDialog={this.cancelGuarantorDialog}
+              cancelDialog={this.cancelGuarantorDialog}
+            ></FindDialogComponent>
+          )}
           {(this.state.practiceVisiblePatient ||
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
@@ -398,7 +511,7 @@ class insurancePayments extends Component {
           {(this.state.insuranceVisible ||
             this.state.insuranceDetailsVisible) && (
               <FindDialogComponent
-                title="Insurance Search"
+                title="Plan Search"
                 placeholder="Enter Plan Company Name"
                 searcTextBoxValue={this.state.insuranceSearchText}
                 onTextSearchChange={(e) => {
@@ -649,7 +762,7 @@ class insurancePayments extends Component {
               <div
                 style={{
                   marginTop: "5px",
-                  
+
                   width: "100%",
                 }}
               >
@@ -810,7 +923,7 @@ class insurancePayments extends Component {
                         width: "540px",
                         marginTop: "5px",
                         height: "85px",
-                        marginLeft:"10px"
+                        marginLeft: "10px"
                       }}
                     >
                       <legend
@@ -972,14 +1085,246 @@ class insurancePayments extends Component {
                   onSelect={this.handleTabSelect}
                   style={{ width: "100%" }}
                 >
-                  <TabStripTab title="Payment Details" selected={"true"}>
+                  <TabStripTab title="Apply Patient Payments Details">
                     <div
                       style={{
-                        marginTop: "5px",
-                        marginBottom: "30px",
+                        // display: "flex",
+                        // flexFlow: "row",
                         width: "100%",
                       }}
-                    ></div>
+                    >
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                        <div style={{ float: "left", marginLeft: "14px" }}>
+                          <label className="userInfoLabel">Amount </label>
+                        </div>
+                        <div style={{ float: "left", width: "100px" }}>
+                          <TextBox
+                            type="numeric"
+                            format="c2"
+                            className="unifyHeight"
+                            value={this.state.amountApply}
+                            onChange={(e) =>
+                              this.setState({
+                                amountApply: e.value,
+                              })
+                            }
+                          ></TextBox>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "10px" }}>
+                          <label className="userInfoLabel">Remaining </label>
+                        </div>
+                        <div style={{ float: "left", width: "132px" }}>
+                          <TextBox
+                            type="numeric"
+                            format="c2"
+                            className="unifyHeight"
+                            value={this.state.remaining}
+                            onChange={(e) =>
+                              this.setState({
+                                remaining: e.value,
+                              })
+                            }
+                          ></TextBox>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                        <fieldset
+                          className="fieldsetStyle"
+                          style={{
+                            width: "540px",
+                            marginTop: "5px",
+                            height: "110px",
+                            marginLeft: "10px"
+                          }}
+                        >
+                          {/* <legend
+                            className="legendStyle"
+                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                          >
+                            Payment Method
+                          </legend> */}
+                          <div className="row nowrap rowHeight">
+                            <div style={{ textAlign: "right", marginLeft: "66px" }}>
+                              <label className="userInfoLabel">Claim# </label>
+                            </div>
+                            <div style={{ width: "120px" }}>
+                              <TextBox
+                                type="text"
+                                className="unifyHeight"
+                                value={this.state.billNumber}
+                                onChange={(e) =>
+                                  this.setState({
+                                    billNumber: e.value,
+                                  })
+                                }
+                              ></TextBox>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+                            <div style={{ float: "left", marginLeft: "5px" }}>
+                              <label className="userInfoLabel">Plan Company</label>
+                            </div>
+                            <div
+                              className="insuranceStyle"
+                              style={{
+                                float: "left",
+                                width: "314px",
+                                marginLeft: "3px",
+                              }}
+                            >
+                              <DropDown
+                                className="unifyHeight"
+                                data={this.props.dropDownInsurance}
+                                textField="entityName"
+                                dataItemKey="entityId"
+                                defaultValue={{
+                                  entityId: this.state.insuranceApplyID,
+                                  entityName: this.state.insuranceApplyNameSelected,
+                                }}
+                                value={{
+                                  entityId: this.state.insuranceApplyID,
+                                  entityName: this.state.insuranceApplyNameSelected,
+                                }}
+                                onChange={(e) =>
+                                  this.setState({
+                                    insuranceApplySelectedState: e.value?.entityName,
+                                    insuranceApplyIDSelectedState: e.value?.entityId,
+                                    insuranceApplyNameSelected: e.value?.entityName,
+                                    insuranceApplyID: e.value?.entityId,
+                                  })
+                                }
+                              ></DropDown>
+                            </div>
+                            <div style={{ float: "left" }}>
+                              <ButtonComponent
+                                look="outline"
+                                icon="search"
+                                type="search"
+                                classButton="infraBtn-primary find-button"
+                                onClick={() => this.toggleInsuranceDialog(false)}
+                                style={{ marginTop: "0px" }}
+                              >
+                                Find
+                              </ButtonComponent>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+
+                            <div style={{ marginLeft: "31px" }}>
+                              <label className="userInfoLabel">Guarantor</label>
+                            </div>
+                            <div className="GuarantorStyle">
+                              <DropDown
+                                className="unifyHeight"
+                                data={this.props.dropDownGuarantors}
+                                textField="entityName"
+                                dataItemKey="entityId"
+                                defaultValue={this.state.patientApplyGuarantorID}
+                                value={this.state.patientApplyGuarantorID}
+                                onChange={(e) =>
+                                  this.setState({
+                                    patientApplyGuarantorID: {
+                                      entityName: e.value?.entityName,
+                                      entityId: e.value?.entityId,
+                                    }
+                                  })
+                                }
+                              ></DropDown>
+                            </div>
+                            <div>
+                              <ButtonComponent
+                                icon="search"
+                                type="search"
+                                classButton="infraBtn-primary find-button"
+                                onClick={() => this.toggleGuarantorDialog(false)}
+                                style={{ marginTop: "0px" }}
+                              >
+                                Find
+                              </ButtonComponent>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+                            <div style={{ width: "57px", marginLeft: "36px" }}>
+                              <label className="userInfoLabel">Txn Date </label>
+                            </div>
+                            <div style={{ width: "147px" }}>
+                              <DropDown
+                                data={DOSFilter}
+                                textField="text"
+                                dataItemKey="id"
+                                className="unifyHeight"
+                                id="tins"
+                                name="tins"
+                                value={this.state.txnDatetype}
+                                onChange={(e) => this.setState({ txnDatetype: e.value })}
+                              ></DropDown>
+                            </div>
+                            <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                              <DatePickerComponent
+                                className="unifyHeight"
+                                placeholder="MM/DD/YYYY"
+                                format="M/dd/yyyy"
+                                value={this.state.txnDate}
+                                onChange={(e) => this.setState({ txnDate: e.value })}
+                              ></DatePickerComponent>
+                            </div>
+                            <div>
+                              <ButtonComponent
+                                icon="search"
+                                type="search"
+                                classButton="infraBtn-primary"
+                                onClick={() => this.findClaim(false)}
+                                style={{ marginTop: "0px" }}
+                              >
+                                Find Claim
+                              </ButtonComponent>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                        <div className="accordion" id="accordionExample">
+                          <div
+                            className="card bg-light mb-3"
+                            style={{
+                              marginLeft: "10px",
+                              marginRight: "10px",
+                              marginTop: "5px",
+                            }}
+                          >
+                            <div
+                              id="collapseOne"
+                              className="collapse show"
+                              aria-labelledby="headingOne"
+                              data-parent="#accordionExample"
+                            >
+                              <EditableGrid
+                                data={[]}
+                                id="applyedPatient"
+                                skip={0}
+                                take={21}
+                                height="700px"
+                                width="100%"
+                                editColumn={"paymentSID"}
+                                DATA_ITEM_KEY="paymentSID"
+                                idGetter={idGetterApplyPlanPaymentID}
+                                onSelectionChange={this.onApplyPaymentGridSelectionChange}
+                                onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
+                                columns={applyPlanPaymentColumns}
+                                onSortChange={this.onSortChange}
+                                // pageChange={this.pageChange}
+                                isEditable={true}
+                              // totalCount={
+                              //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                              //     ? this.props.patientApplys[0].totalCount
+                              //     : this.props.patientApplys.length
+                              // }
+                              ></EditableGrid>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </TabStripTab>
                   <TabStripTab title="Payment Assignment">
                     <div

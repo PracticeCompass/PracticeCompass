@@ -1746,7 +1746,7 @@ class ClaimList extends Component {
         )}
         {this.state.insuranceVisible && (
           <FindDialogComponent
-            title="Insurance Search"
+            title="Plan Search"
             placeholder="Enter Plan Company Name"
             searcTextBoxValue={this.state.insuranceSearchText}
             onTextSearchChange={(e) => {
