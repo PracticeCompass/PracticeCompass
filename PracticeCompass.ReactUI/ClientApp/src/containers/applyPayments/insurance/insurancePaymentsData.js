@@ -155,6 +155,76 @@ export const insuranceAssignmentColumns = [
     hide: true,
   },
 ];
+export const guarantorColumns = [
+  {
+    field: "sortName",
+    title: "Guarantor Name",
+    //minWidth: "100px",
+  },
+];
+export const applyPlanPaymentColumns = [
+  {
+    field: "paymentSID",
+    title: "ID",
+    minWidth: 50,
+    orderIndex: 0,
+    hide: true,
+  },
+  {
+    field: "dos",
+    title: "Dos",
+    editor:"date",
+    minWidth: 50,
+    orderIndex: 1,
+  },
+  {
+    field: "cpt",
+    title: "Cpt",
+    minWidth: 50,
+    orderIndex: 2,
+  },
+  {
+    field: "modifier",
+    title: "Modifier/ICD",
+    minWidth: 50,
+    orderIndex: 3,
+  },
+  {
+    field: "balanace",
+    title: "Balanace",
+    minWidth: 50,
+    editor:"numeric",
+    orderIndex: 4,
+  },
+  {
+    field: "payment",
+    title: "Balanace",
+    minWidth: 50,
+    orderIndex: 5,
+    editor:"numeric",
+  },
+  {
+    field: "adjustment",
+    title: "Adjustment",
+    minWidth: 50,
+    orderIndex: 6,
+    editor:"numeric",
+  },
+  {
+    field: "remaining",
+    title: "Remaining",
+    minWidth: 50,
+    orderIndex: 7,
+    editor:"numeric",
+  },
+  {
+    field: "balanace",
+    title: "Move to next plan",
+    minWidth: 50,
+    editor:"bool",
+    orderIndex: 8,
+  },
+]
 export const DOSFilter = [
   {
     id: "0",

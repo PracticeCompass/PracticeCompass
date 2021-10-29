@@ -13,6 +13,7 @@ import { PanelBar, PanelBarItem } from "@progress/kendo-react-layout";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
+import EditableGrid from "../../../components/editableGrid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
 import CheckboxComponent from "../../../components/Checkbox"
@@ -46,6 +47,9 @@ const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 
 const DATA_ITEM_KEY_PATIENT_PAYMENT = "paymentSID";
 const idGetterPatientPaymentID = getter(DATA_ITEM_KEY_PATIENT_PAYMENT);
+
+const DATA_ITEM_KEY_Apply_PATIENT_PAYMENT = "id";
+const idGetterApplyPatientPaymentID = getter(DATA_ITEM_KEY_Apply_PATIENT_PAYMENT);
 
 const DATA_ITEM_KEY_Physician = "entitySID";
 const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
@@ -406,73 +410,12 @@ class PatientPayments extends Component {
     );
     this.setGuarantorItem(selectedDataItems[0].entitySID, selectedDataItems[0].sortName);
   };
-  remove = (dataItem) => {
-    // const newData = deleteItem(dataItem);
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  add = (dataItem) => {
-    dataItem.inEdit = true;
-    // const newData = insertItem(dataItem);
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  update = (dataItem) => {
-    dataItem.inEdit = false;
-    // const newData = updateItem(dataItem);
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  discard = () => {
-    // const newData = [...this.state.data];
-    // newData.splice(0, 1);
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  cancel = (dataItem) => {
-    // const originalItem = getItems().find(
-    //   (p) => p.ProductID === dataItem.ProductID
-    // );
-    // const newData = this.state.data.map((item) =>
-    //   item.ProductID === originalItem.ProductID ? originalItem : item
-    // );
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  enterEdit = (dataItem) => {
-    // let newData = this.state.data.map((item) =>
-    //   item.ProductID === dataItem.ProductID ? { ...item, inEdit: true } : item
-    // );
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  itemChange = (event) => {
-    const field = event.field || "";
-    // const newData = this.state.data.map((item) =>
-    //   item.ProductID === event.dataItem.ProductID
-    //     ? { ...item, [field]: event.value }
-    //     : item
-    // );
-    // this.setState({
-    //   data: newData,
-    // });
-  };
-  addNew = () => {
-    // const newDataItem = {
-    //   inEdit: true,
-    //   Discontinued: false,
-    //   ProductID: new Date().getMilliseconds(),
-    // };
-    // this.setState({
-    //   data: [newDataItem, ...this.state.data],
-    // });
-  };
+  onApplyPaymentGridSelectionChange = () => {
+
+  }
+  onApplyPaymentGridDoubleSelectionChange = () => {
+
+  }
   render() {
     return (
       <Fragment>
@@ -772,11 +715,22 @@ class PatientPayments extends Component {
                         //hasCheckBox={true}
                         sortColumns={[]}
                         onSortChange={this.onSortChange}
-                        pageChange={this.pageChange}
+                      // pageChange={this.pageChange}
                       ></GridComponent>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
+                <ButtonComponent
+                  icon="search"
+                  type="search"
+                  classButton="infraBtn-primary"
+                  onClick={() => this.Apply()}
+                  style={{ marginTop: "0px" }}
+                >
+                  Apply
+                </ButtonComponent>
               </div>
             </PanelBarItem>
             <PanelBarItem
@@ -1068,7 +1022,7 @@ class PatientPayments extends Component {
                           //hasCheckBox={true}
                           sortColumns={[]}
                           onSortChange={this.onSortChange}
-                          pageChange={this.pageChange}
+                        // pageChange={this.pageChange}
                         ></GridComponent>
                       </div>
                     </div>
@@ -1095,58 +1049,6 @@ class PatientPayments extends Component {
                     onSelect={this.handleTabSelect}
                     style={{ width: "100%" }}
                   >
-                    <TabStripTab title="Apply Patient Payments Assignment" selected={"true"}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexFlow: "row",
-                          width: "100%",
-                        }}
-                      >
-                        <div className="accordion" id="accordionExample">
-                          <div
-                            className="card bg-light mb-3"
-                            style={{
-                              marginLeft: "10px",
-                              marginRight: "10px",
-                              marginTop: "5px",
-                            }}
-                          >
-                            <div
-                              id="collapseOne"
-                              className="collapse show"
-                              aria-labelledby="headingOne"
-                              data-parent="#accordionExample"
-                            >
-                              <GridComponent
-                                id="insurancePayment"
-                                columns={insuranceAssignmentColumns}
-                                skip={0}
-                                take={21}
-                                // onSelectionChange={this.onClaimGridSelectionChange}
-                                // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
-                                // getSelectedItems={this.getSelectedClaims}
-                                // selectionMode="multiple"
-                                DATA_ITEM_KEY="paymentSID"
-                                idGetter={idGetterPatientPaymentID}
-                                // data={this.props.Claims}
-                                // totalCount={
-                                //   this.props.Claims != null && this.props.Claims.length > 0
-                                //     ? this.props.Claims[0].totalCount
-                                //     : this.props.Claims.length
-                                // }
-                                height="700px"
-                                width="100%"
-                                //hasCheckBox={true}
-                                sortColumns={[]}
-                                onSortChange={this.onSortChange}
-                                pageChange={this.pageChange}
-                              ></GridComponent>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </TabStripTab>
                     <TabStripTab title="Apply Patient Payments Details">
                       <div
                         style={{
@@ -1205,37 +1107,87 @@ class PatientPayments extends Component {
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
                               >
-                                <GridComponent
-                                  id="insurancePayment"
-                                  columns={applyPatientPaymentColumns}
+                                <EditableGrid
+                                  data={[]}
+                                  id="applyedPatient"
                                   skip={0}
                                   take={21}
-                                  isEditable={true}
-                                  // onSelectionChange={this.onClaimGridSelectionChange}
-                                  // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
-                                  // getSelectedItems={this.getSelectedClaims}
-                                  // selectionMode="multiple"
-                                  DATA_ITEM_KEY="paymentSID"
-                                  idGetter={idGetterPatientPaymentID}
-                                  data={[{}]}
-                                  // totalCount={
-                                  //   this.props.Claims != null && this.props.Claims.length > 0
-                                  //     ? this.props.Claims[0].totalCount
-                                  //     : this.props.Claims.length
-                                  // }
                                   height="700px"
                                   width="100%"
-                                  //hasCheckBox={true}
-                                  sortColumns={[]}
+                                  editColumn={"paymentSID"}
+                                  DATA_ITEM_KEY="paymentSID"
+                                  idGetter={idGetterApplyPatientPaymentID}
+                                  onSelectionChange={this.onApplyPaymentGridSelectionChange}
+                                  onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
+                                  columns={applyPatientPaymentColumns}
                                   onSortChange={this.onSortChange}
-                                  pageChange={this.pageChange}
-                                ></GridComponent>
+                                  // pageChange={this.pageChange}
+                                  isEditable={true}
+                                // totalCount={
+                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                //     ? this.props.patientApplys[0].totalCount
+                                //     : this.props.patientApplys.length
+                                // }
+                                ></EditableGrid>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </TabStripTab>
+                    <TabStripTab title="Apply Patient Payments Assignment" selected={"true"}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexFlow: "row",
+                          width: "100%",
+                        }}
+                      >
+                        <div className="accordion" id="accordionExample">
+                          <div
+                            className="card bg-light mb-3"
+                            style={{
+                              marginLeft: "10px",
+                              marginRight: "10px",
+                              marginTop: "5px",
+                            }}
+                          >
+                            <div
+                              id="collapseOne"
+                              className="collapse show"
+                              aria-labelledby="headingOne"
+                              data-parent="#accordionExample"
+                            >
+                              <GridComponent
+                                id="insurancePayment"
+                                columns={insuranceAssignmentColumns}
+                                skip={0}
+                                take={21}
+                                // onSelectionChange={this.onClaimGridSelectionChange}
+                                // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                                // getSelectedItems={this.getSelectedClaims}
+                                // selectionMode="multiple"
+                                DATA_ITEM_KEY="paymentSID"
+                                idGetter={idGetterPatientPaymentID}
+                                // data={this.props.Claims}
+                                // totalCount={
+                                //   this.props.Claims != null && this.props.Claims.length > 0
+                                //     ? this.props.Claims[0].totalCount
+                                //     : this.props.Claims.length
+                                // }
+                                height="700px"
+                                width="100%"
+                                //hasCheckBox={true}
+                                sortColumns={[]}
+                                onSortChange={this.onSortChange}
+                              // pageChange={this.pageChange}
+                              ></GridComponent>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TabStripTab>
+
                   </TabStrip>
                 </div>
               </div>

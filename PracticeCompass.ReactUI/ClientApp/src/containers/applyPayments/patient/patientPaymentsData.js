@@ -49,10 +49,19 @@ export const guarantorColumns = [
     //minWidth: "100px",
   },
 ];
+
 export const applyPatientPaymentColumns = [
+  {
+    field: "paymentSID",
+    title: "ID",
+    minWidth: 50,
+    orderIndex: 0,
+    hide: true,
+  },
   {
     field: "dos",
     title: "Dos",
+    editor:"date",
     minWidth: 50,
     orderIndex: 1,
   },
@@ -72,6 +81,7 @@ export const applyPatientPaymentColumns = [
     field: "balanace",
     title: "Balanace",
     minWidth: 50,
+    editor:"numeric",
     orderIndex: 4,
   },
   {
@@ -79,20 +89,24 @@ export const applyPatientPaymentColumns = [
     title: "Balanace",
     minWidth: 50,
     orderIndex: 5,
+    editor:"numeric",
   },
   {
     field: "adjustment",
     title: "Adjustment",
     minWidth: 50,
     orderIndex: 6,
+    editor:"numeric",
   },
   {
     field: "remaining",
     title: "Remaining",
     minWidth: 50,
-    orderIndex: 6,
+    orderIndex: 7,
+    editor:"numeric",
   }
 ]
+
 export const patientPaymentColumns = [
   {
     field: "payorName",
