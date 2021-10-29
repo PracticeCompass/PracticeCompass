@@ -61,6 +61,21 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
         [HttpGet]
+        [Route("api/payment/PaymentAssignmentGet")]
+        public List<PaymentAssignment> PaymentAssignmentGet(int PaymentSID)
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetPaymentAssignment(PaymentSID);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<PaymentAssignment>();
+            }
+        }
+        [HttpGet]
         [Route("api/payment/PaymentClassGet")]
         public List<PaymentClass> PaymentClassGet()
         {

@@ -8,7 +8,7 @@ GO
 
 -- =============================================
 
--- Description:	Get Insurance Payment Grid Data
+-- Description:	Get Payment Details Data on select from grid
 -- exec uspInsurancePaymentDetailsGet @PaymentSID =572430 
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspInsurancePaymentDetailsGet] 

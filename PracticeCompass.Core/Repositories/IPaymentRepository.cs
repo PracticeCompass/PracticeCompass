@@ -10,5 +10,6 @@ namespace PracticeCompass.Core.Repositories
         List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied);
         List<PaymentClass> GetPaymentClass();
         List<PaymentDetails> GetPaymentDetails(int PaymentSID);
+        List<PaymentAssignment> GetPaymentAssignment(int PaymentSID);
     }
 }

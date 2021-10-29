@@ -47,3 +47,4 @@ uspPatientPaymentGet.sql
 uspInsurancePaymentGet.sql
 uspPayClassGet.sql
 uspInsurancePaymentDetailsGet.sql
+uspPaymentAssignmentGet
