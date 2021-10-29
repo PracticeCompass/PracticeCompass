@@ -6,8 +6,8 @@ namespace PracticeCompass.Core.Repositories
 {
     public interface IPaymentRepository:IRepository<Payment>
     {
-        List<Payment> GetInsurancePayment(int PracticeID , int PatientID);
-        List<Payment> GetPatientPayment(int PracticeID, int PatientID);
+        List<Payment> GetInsurancePayment(int PracticeID , int PatientID, int DateType, string Datevalue, bool Fullyapplied);
+        List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied);
         List<PaymentClass> GetPaymentClass();
         List<PaymentDetails> GetPaymentDetails(int PaymentSID);
     }

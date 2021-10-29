@@ -17,11 +17,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/InsurancePaymentGet")]
-        public List<Payment> InsurancePaymentGet(int PracticeID, int InsuranceID)
+        public List<Payment> InsurancePaymentGet(int PracticeID, int InsuranceID,int DateType ,string Datevalue , bool Fullyapplied = false)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetInsurancePayment(PracticeID, InsuranceID);
+                return unitOfWork.PaymentRepository.GetInsurancePayment(PracticeID, InsuranceID, DateType,Datevalue , Fullyapplied);
 
             }
             catch (Exception ex)
@@ -32,11 +32,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/PatientPaymentGet")]
-        public List<Payment> PatientPaymentGet(int PracticeID, int PatientID)
+        public List<Payment> PatientPaymentGet(int PracticeID, int PatientID, int DateType , string Datevalue, bool Fullyapplied = false)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetPatientPayment(PracticeID, PatientID);
+                return unitOfWork.PaymentRepository.GetPatientPayment(PracticeID, PatientID, DateType, Datevalue, Fullyapplied);
 
             }
             catch (Exception ex)

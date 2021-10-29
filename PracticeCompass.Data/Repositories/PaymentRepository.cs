@@ -47,15 +47,15 @@ namespace PracticeCompass.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public List<Payment> GetInsurancePayment(int PracticeID, int InsuranceID)
+        public List<Payment> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue, bool Fullyapplied)
         {
-            var data = this.db.QueryMultiple("uspInsurancePaymentGet", new { @PracticeID = PracticeID, @InsuranceID = InsuranceID }, commandType: CommandType.StoredProcedure);
+            var data = this.db.QueryMultiple("uspInsurancePaymentGet", new { @PracticeID = PracticeID, @InsuranceID = InsuranceID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
             return data.Read<Payment>().ToList();
         }
 
-        public List<Payment> GetPatientPayment(int PracticeID, int PatientID)
+        public List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied)
         {
-            var data = this.db.QueryMultiple("uspPatientPaymentGet", new { @PracticeID = PracticeID , @PatientID = PatientID }, commandType: CommandType.StoredProcedure);
+            var data = this.db.QueryMultiple("uspPatientPaymentGet", new { @PracticeID = PracticeID , @PatientID = PatientID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
             return data.Read<Payment>().ToList();
         }
 
