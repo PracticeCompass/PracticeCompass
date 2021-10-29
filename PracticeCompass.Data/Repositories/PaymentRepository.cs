@@ -59,6 +59,12 @@ namespace PracticeCompass.Data.Repositories
             return data.Read<Payment>().ToList();
         }
 
+        public List<PaymentDetails> GetPaymentDetails(int PaymentSID)
+        {
+            var data = this.db.QueryMultiple("uspInsurancePaymentDetailsGet", new { @PaymentSID = PaymentSID }, commandType: CommandType.StoredProcedure);
+            return data.Read<PaymentDetails>().ToList();
+        }
+
         public List<PaymentClass> GetPaymentClass()
         {
             var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);
