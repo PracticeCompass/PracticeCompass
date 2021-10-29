@@ -14,6 +14,7 @@ import { filterBy, orderBy } from "@progress/kendo-data-query";
 import { MyPager, CurrencyCell, CustomCell, cellWithIcon, MyCommandCell } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
+import ButtonComponent from "./Button"
 import $ from "jquery";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
@@ -255,14 +256,14 @@ class EditableGrid extends React.Component {
                                 : []
                             :
                             this.props.data
-                            ? this.props.data
-                              .slice(this.state.skip, this.state.take + this.state.skip)
-                              .map((item) => ({
-                                ...item,
-                                [SELECTED_FIELD]:
-                                  this.state.selectedState[this.props.idGetter(item)],
-                              }))
-                            : []
+                                ? this.props.data
+                                    .slice(this.state.skip, this.state.take + this.state.skip)
+                                    .map((item) => ({
+                                        ...item,
+                                        [SELECTED_FIELD]:
+                                            this.state.selectedState[this.props.idGetter(item)],
+                                    }))
+                                : []
                     }
 
                     skip={this.state.skip}
@@ -277,9 +278,14 @@ class EditableGrid extends React.Component {
                     {this.props.isEditable && (
                         <GridToolbar>
                             <div id="toolBar" onClick={this.closeEdit}>
-                                <button title="Add new" className="k-button k-primary" onClick={this.addRecord}>
-                                    Add new
-                                </button>
+                                <ButtonComponent
+                                    type="edit"
+                                    icon="edit"
+                                    classButton="infraBtn-primary"
+                                    onClick={this.addRecord}
+                                >
+                                    Add New
+                                </ButtonComponent>
                             </div>
                         </GridToolbar>
                     )}

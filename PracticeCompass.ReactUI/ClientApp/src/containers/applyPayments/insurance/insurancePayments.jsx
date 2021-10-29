@@ -443,6 +443,12 @@ class insurancePayments extends Component {
     );
     this.setGuarantorItem(selectedDataItems[0].entitySID, selectedDataItems[0].sortName);
   };
+  onApplyPaymentGridSelectionChange = () => {
+
+  }
+  onApplyPaymentGridDoubleSelectionChange = () => {
+
+  }
   render() {
     return (
       <Fragment>
@@ -1255,8 +1261,8 @@ class insurancePayments extends Component {
                                 className="unifyHeight"
                                 id="tins"
                                 name="tins"
-                                value={this.state.txnDatetype}
-                                onChange={(e) => this.setState({ txnDatetype: e.value })}
+                                value={this.state.txnApplyDatetype}
+                                onChange={(e) => this.setState({ txnApplyDatetype: e.value })}
                               ></DropDown>
                             </div>
                             <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -1264,8 +1270,8 @@ class insurancePayments extends Component {
                                 className="unifyHeight"
                                 placeholder="MM/DD/YYYY"
                                 format="M/dd/yyyy"
-                                value={this.state.txnDate}
-                                onChange={(e) => this.setState({ txnDate: e.value })}
+                                value={this.state.txnApplyDate}
+                                onChange={(e) => this.setState({ txnApplyDate: e.value })}
                               ></DatePickerComponent>
                             </div>
                             <div>
@@ -1323,6 +1329,17 @@ class insurancePayments extends Component {
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%",marginBottom:"10px" }}>
+                        <ButtonComponent
+                          icon="search"
+                          type="search"
+                          classButton="infraBtn-primary"
+                          onClick={() => this.Apply()}
+                          style={{ marginTop: "0px" }}
+                        >
+                          Apply
+                        </ButtonComponent>
                       </div>
                     </div>
                   </TabStripTab>

@@ -216,7 +216,14 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 7,
     editor:"numeric",
-  }
+  },
+  {
+    field: "balanace",
+    title: "Move to next plan",
+    minWidth: 50,
+    editor:"bool",
+    orderIndex: 8,
+  },
 ]
 export const DOSFilter = [
   {

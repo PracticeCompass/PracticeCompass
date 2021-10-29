@@ -715,11 +715,22 @@ class PatientPayments extends Component {
                         //hasCheckBox={true}
                         sortColumns={[]}
                         onSortChange={this.onSortChange}
-                        // pageChange={this.pageChange}
+                      // pageChange={this.pageChange}
                       ></GridComponent>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
+                <ButtonComponent
+                  icon="search"
+                  type="search"
+                  classButton="infraBtn-primary"
+                  onClick={() => this.Apply()}
+                  style={{ marginTop: "0px" }}
+                >
+                  Apply
+                </ButtonComponent>
               </div>
             </PanelBarItem>
             <PanelBarItem
@@ -1011,7 +1022,7 @@ class PatientPayments extends Component {
                           //hasCheckBox={true}
                           sortColumns={[]}
                           onSortChange={this.onSortChange}
-                          // pageChange={this.pageChange}
+                        // pageChange={this.pageChange}
                         ></GridComponent>
                       </div>
                     </div>
@@ -1112,11 +1123,11 @@ class PatientPayments extends Component {
                                   onSortChange={this.onSortChange}
                                   // pageChange={this.pageChange}
                                   isEditable={true}
-                                  // totalCount={
-                                  //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                                  //     ? this.props.patientApplys[0].totalCount
-                                  //     : this.props.patientApplys.length
-                                  // }
+                                // totalCount={
+                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                //     ? this.props.patientApplys[0].totalCount
+                                //     : this.props.patientApplys.length
+                                // }
                                 ></EditableGrid>
                               </div>
                             </div>
@@ -1169,7 +1180,7 @@ class PatientPayments extends Component {
                                 //hasCheckBox={true}
                                 sortColumns={[]}
                                 onSortChange={this.onSortChange}
-                                // pageChange={this.pageChange}
+                              // pageChange={this.pageChange}
                               ></GridComponent>
                             </div>
                           </div>
