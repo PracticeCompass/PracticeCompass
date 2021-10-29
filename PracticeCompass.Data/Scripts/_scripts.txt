@@ -48,3 +48,4 @@ uspInsurancePaymentGet.sql
 uspPayClassGet.sql
 uspInsurancePaymentDetailsGet.sql
 uspPaymentAssignmentGet
+uspPaymentInsertUpdate

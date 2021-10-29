@@ -70,6 +70,29 @@ namespace PracticeCompass.Data.Repositories
             return data.Read<PaymentAssignment>().ToList();
         }
 
+        public bool InsertUpdatePayment(string prrowid, int PaymentSID, int PracticeID, string PostDate, string Source, int PayorID, string Class, float Amount, string Method,
+            string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod,int LastUser,int CreateUser)
+        {
+            var data = this.db.QueryMultiple("uspPaymentInsertUpdate", new {
+                @prrowid = prrowid,
+                @PaymentSID = PaymentSID,
+                @PracticeID= PracticeID,
+                @PostDate= PostDate,
+                @Source= Source,
+                @PayorID= PayorID,
+                @Class= Class,
+                @Amount= Amount,
+                @Method= Method,
+                @CreditCard= CreditCard,
+                @AuthorizationCode= AuthorizationCode,
+                @Voucher= Voucher,
+                @LastUser= LastUser,
+                @CreateUser= CreateUser,
+                @CreateMethod= CreateMethod
+            }, commandType: CommandType.StoredProcedure);
+            return true;
+        }
+
         public List<PaymentClass> GetPaymentClass()
         {
             var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);
