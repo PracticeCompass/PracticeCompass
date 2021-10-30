@@ -218,10 +218,10 @@ export const applyPlanPaymentColumns = [
     editor:"numeric",
   },
   {
-    field: "balanace",
+    field: "MoveToNextPlan",
     title: "Move to next plan",
     minWidth: 50,
-    editor:"bool",
+    editor:"boolean",
     orderIndex: 8,
   },
 ]

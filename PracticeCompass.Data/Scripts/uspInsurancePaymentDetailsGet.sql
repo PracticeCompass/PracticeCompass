@@ -32,7 +32,7 @@ inner join Entity on Payment.PayorID = Entity.EntitySID
 left outer join LookupCode on LookupCode.LookupCode=Payment.class and LookupType='PayClass'
  left outer join LookupCode as PayMethod on [dbo].[Payment].Method = PayMethod.LookupCode and  PayMethod.LookupType='PayMethod'
  left outer join LookupCode as CreditCard on Payment.CreditCard=CreditCard.LookupCode and  CreditCard.LookupType='CreditCard'
- where PaymentSID = 572430
+ where PaymentSID = @PaymentSID
 
  END
 
