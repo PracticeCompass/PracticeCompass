@@ -17,7 +17,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/ChargeDetails/ChargeActivityGet")]
-        public List<ChargeActivity> ChargeActivityGet(int ChargeSID)
+        public List<ChargeActivityDTO> ChargeActivityGet(int ChargeSID)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<ChargeActivity>();
+                return new List<ChargeActivityDTO>();
             }
         }
         [HttpGet]

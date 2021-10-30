@@ -41,14 +41,14 @@ namespace PracticeCompass.Data.Repositories
             return data.Read<ChargeDetails>().FirstOrDefault();
         }
 
-        public List<ChargeActivity> ChargeActivityGet(int ChargeSID)
+        public List<ChargeActivityDTO> ChargeActivityGet(int ChargeSID)
         {
             var data = this.db.QueryMultiple("uspChargeActivityGet", new
             {
                 @ChargeSID = ChargeSID,
             },
                commandType: CommandType.StoredProcedure);
-            return data.Read<ChargeActivity>().ToList();
+            return data.Read<ChargeActivityDTO>().ToList();
         }
 
         public Task<int> CountAsync(Expression<Func<ChargeDetails, bool>> predicate)
