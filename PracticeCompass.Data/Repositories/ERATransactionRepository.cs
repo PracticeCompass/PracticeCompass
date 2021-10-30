@@ -606,7 +606,6 @@ namespace PracticeCompass.Data.Repositories
             }
             catch (Exception e)
             {
-                var cc = e;
                 return "";
             }
         }

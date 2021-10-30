@@ -44,7 +44,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/ClaimDetails/ChargeGridGet")]
-        public List<Charge> ChargeGridGet(int ClaimSID)
+        public List<ChargeDTO> ChargeGridGet(int ClaimSID)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<Charge>();
+                return new List<ChargeDTO>();
             }
         }
         [HttpGet]

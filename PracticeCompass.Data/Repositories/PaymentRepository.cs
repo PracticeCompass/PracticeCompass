@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Z.Dapper.Plus;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Repositories;
+using System.Transactions;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -55,7 +57,7 @@ namespace PracticeCompass.Data.Repositories
 
         public List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied)
         {
-            var data = this.db.QueryMultiple("uspPatientPaymentGet", new { @PracticeID = PracticeID , @PatientID = PatientID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
+            var data = this.db.QueryMultiple("uspPatientPaymentGet", new { @PracticeID = PracticeID, @PatientID = PatientID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
             return data.Read<Payment>().ToList();
         }
 
@@ -71,24 +73,25 @@ namespace PracticeCompass.Data.Repositories
         }
 
         public bool InsertUpdatePayment(string prrowid, int PaymentSID, int PracticeID, string PostDate, string Source, int PayorID, string Class, float Amount, string Method,
-            string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod,int LastUser,int CreateUser)
+            string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod, int LastUser, int CreateUser)
         {
-            var data = this.db.QueryMultiple("uspPaymentInsertUpdate", new {
+            var data = this.db.QueryMultiple("uspPaymentInsertUpdate", new
+            {
                 @prrowid = prrowid,
                 @PaymentSID = PaymentSID,
-                @PracticeID= PracticeID,
-                @PostDate= PostDate,
-                @Source= Source,
-                @PayorID= PayorID,
-                @Class= Class,
-                @Amount= Amount,
-                @Method= Method,
-                @CreditCard= CreditCard,
-                @AuthorizationCode= AuthorizationCode,
-                @Voucher= Voucher,
-                @LastUser= LastUser,
-                @CreateUser= CreateUser,
-                @CreateMethod= CreateMethod
+                @PracticeID = PracticeID,
+                @PostDate = PostDate,
+                @Source = Source,
+                @PayorID = PayorID,
+                @Class = Class,
+                @Amount = Amount,
+                @Method = Method,
+                @CreditCard = CreditCard,
+                @AuthorizationCode = AuthorizationCode,
+                @Voucher = Voucher,
+                @LastUser = LastUser,
+                @CreateUser = CreateUser,
+                @CreateMethod = CreateMethod
             }, commandType: CommandType.StoredProcedure);
             return true;
         }
@@ -100,8 +103,13 @@ namespace PracticeCompass.Data.Repositories
         }
         public List<InsurancePayment> GetInsurancePaymentforApply(int GuarantorID, int DOSType, string DOSvalue, int InsuranceID, string ClaimIcnNumber)
         {
-            var data = this.db.QueryMultiple("uspInsurancePaymentGetforApply", new { @GuarantorID=GuarantorID, @DOSType= DOSType,
-            @DOSvalue= DOSvalue,@InsuranceID= InsuranceID,@ClaimIcnNumber= ClaimIcnNumber
+            var data = this.db.QueryMultiple("uspInsurancePaymentGetforApply", new
+            {
+                @GuarantorID = GuarantorID,
+                @DOSType = DOSType,
+                @DOSvalue = DOSvalue,
+                @InsuranceID = InsuranceID,
+                @ClaimIcnNumber = ClaimIcnNumber
             }, commandType: CommandType.StoredProcedure);
             return data.Read<InsurancePayment>().ToList();
         }
@@ -110,7 +118,28 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);
             return data.Read<PaymentClass>().ToList();
         }
-
+        public bool ApplyPayment(int ChargeSID, List<ChargeActivity> ChargeActivities, List<PaymentAssignment> PaymentAssignments,
+            List<PlanClaimCharge> PlanClaimCharges, List<Charge> Charges)
+        {
+            using var txScope = new TransactionScope();
+            this.db.BulkUpdate(Charges);
+            var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
+           "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
+           ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +
+           ",@DNPracticeID,@Pro2SrcPDB,@pro2created,@pro2modified)";
+            var ChargeActivity = this.db.Execute(ChargeActivitySQL, ChargeActivities);
+            var PaymentAssignmentSQL = "INSERT INTO [dbo].[PaymentAssignment] VALUES " +
+           "(@prrowid,@PaymentSID,@ChargeSID,@ActivityCount,@AccountSID,@JournalSID,@PostDate,@Amount,@PatientBilled" +
+           ",@PatientStatement,@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@CreditedPlanID,@Pro2SrcPDB" +
+           ",@pro2created,@pro2modified)";
+            var PaymentAssignment = this.db.Execute(PaymentAssignmentSQL, PaymentAssignments);
+            var PlanClaimChargeSQL = "INSERT INTO [dbo].[PlanClaimCharge] VALUES " +
+           "(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@LineItem,@ChargeSID,@BilledAmount,@TimeStamp,@LastUser" +
+           ",@CreateStamp,@CreateUser,@PatReceipts,@InsReceipts,@Pro2SrcPDB,@pro2created,@pro2modified)";
+            var PlanClaimCharge = this.db.Execute(PlanClaimChargeSQL, PlanClaimCharges);
+            txScope.Complete();
+            return true;
+        }
         public void Remove(Payment entity)
         {
             throw new NotImplementedException();

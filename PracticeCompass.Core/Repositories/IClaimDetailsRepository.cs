@@ -8,7 +8,7 @@ namespace PracticeCompass.Core.Repositories
     {
         List<ClaimDetails> ClaimDetailsGet(int ClaimSID, int PracticeID);
         List<ClaimNote> ClaimNotesGet(int ClaimSID);
-        List<Charge> ChargeGridGet(int ClaimSID);
+        List<ChargeDTO> ChargeGridGet(int ClaimSID);
         List<SubmissionHistory> ClaimSubmissionHistoryGet(int ClaimSID);
 
     }
