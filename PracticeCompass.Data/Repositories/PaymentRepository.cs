@@ -92,7 +92,12 @@ namespace PracticeCompass.Data.Repositories
             }, commandType: CommandType.StoredProcedure);
             return true;
         }
+        public List<PatientPayment> GetPatientPaymentforApply(int PatientID)
+        {
 
+            var data = this.db.QueryMultiple("uspPatientPaymentGetforApply", new { @PatientID = PatientID }, commandType: CommandType.StoredProcedure);
+            return data.Read<PatientPayment>().ToList();
+        }
         public List<PaymentClass> GetPaymentClass()
         {
             var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);

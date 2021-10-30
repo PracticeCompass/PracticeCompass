@@ -75,6 +75,23 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<PaymentAssignment>();
             }
         }
+        [HttpGet]
+        [Route("api/payment/ApplyPatientPaymentGet")]
+        public List<PatientPayment> ApplyPatientPaymentGet(int PatientID)
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetPatientPaymentforApply(PatientID);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<PatientPayment>();
+            }
+        }
+        [HttpGet]
+        [Route("api/payment/PaymentSave")]
         public bool PaymentSave(int PaymentSID,int PracticeID ,string PostDate, string Source,int PayorID , string Class,float Amount ,string Method,
             string CreditCard,string AuthorizationCode ,string Voucher, string CreateMethod,int CurrentUser)
         {
