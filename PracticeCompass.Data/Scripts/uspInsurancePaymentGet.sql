@@ -39,12 +39,15 @@ LookupCode.Description as paymentClass , Amount , PayMethod.Description as PayMe
 case when CreateMethod=''M'' then ''Manual''
      when CreateMethod=''E'' then ''ERS ERA - Electronic Remittance Advice''
 	 when CreateMethod=''A'' then ''ESR -Electronic Statement Remittance''
-	 else '''' end as CreateMethod
+	 else '''' end as CreateMethod,
+	 (Amount-m.assigmentamount) as Remaining
 from Payment inner join Practice on 
 Payment.practiceID = Practice.PracticeID
 inner join Entity on Payment.PayorID = Entity.EntitySID
 left outer join LookupCode on LookupCode.LookupCode=Payment.class and LookupType=''PayClass''
  left outer join LookupCode as PayMethod on [dbo].[Payment].Method = PayMethod.LookupCode and  PayMethod.LookupType=''PayMethod''
+  left outer join (select SUM(amount) as assigmentamount ,PaymentSID as assigmentPaymentSID from PaymentAssignment group by PaymentSID )m 
+ on m.assigmentPaymentSID = Payment.PaymentSID
  where Payment.Source = ''I'' and 
  ('+convert(varchar,@PracticeID,10)+' is null or '+convert(varchar,@PracticeID,10)+'=0 or Payment.PracticeID='+convert(varchar,@PracticeID,10)+') and
  ('+convert(varchar,@InsuranceID,10)+' is null or '+convert(varchar,@InsuranceID,10)+'=0 or Payment.PayorID='+convert(varchar,@InsuranceID,10)+')'
