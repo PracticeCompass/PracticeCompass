@@ -9,7 +9,7 @@ namespace PracticeCompass.Core.Repositories
         List<Payment> GetInsurancePayment(int PracticeID , int PatientID, int DateType, string Datevalue, bool Fullyapplied);
         List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied);
         List<PaymentClass> GetPaymentClass();
-        List<PaymentDetails> GetPaymentDetails(int PaymentSID);
+        PaymentDetails GetPaymentDetails(int PaymentSID);
         List<PaymentAssignment> GetPaymentAssignment(int PaymentSID);
         bool InsertUpdatePayment(string prrowid, int PaymentSID, int PracticeID, string PostDate, string Source, int PayorID, string Class, float Amount, string Method,
             string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod, int LastUser, int CreateUser);

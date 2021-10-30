@@ -6,6 +6,8 @@ import {
   GET_PAYMENT_CLASS_FAILED,
   GET_INSURANCE_PAYMENTS,
   GET_INSURANCE_PAYMENTS_FAILED,
+  GET_PAYMENT_ASSIGNMENT,
+  GET_PAYMENT_ASSIGNMENT_FAILS
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../config";
@@ -31,14 +33,14 @@ export const getPatientPayments =
     }
   };
 export const getInsurancePayments =
-  (PracticeID, InsuranceID) => async (dispatch, getState) => {
+  (PracticeID, InsuranceID,DateType,Datevalue,Fullyapplied) => async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       dispatch(setInsurancePayments([]));
       // if (PracticeID == null && InsuranceID == null) return;
       const resp = await axios({
         method: "GET",
-        url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}`,
+        url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}&DateType=${DateType}&Datevalue=${Datevalue}&Fullyapplied=${Fullyapplied}`,
       });     
       dispatch(setInsurancePayments(resp.data||[]));
     } catch (error) {
@@ -68,6 +70,47 @@ export const GetPaymentClass = () => async (dispatch, getState) => {
     });
   }
 };
+export const GetPaymentDetails=(PaymentSID)=>async(dispatch,getState)=>{
+  try {
+    dispatch(uiStartLoading());
+    // if (PracticeID == null && InsuranceID == null) return;
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/payment/PaymentDetailsGet?PaymentSID=${PaymentSID}`,
+    });    
+    return resp.data;
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: GET_INSURANCE_PAYMENTS_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+}
+export const getPaymentAssignments =
+  (PaymentSID) => async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      dispatch(setPaymentAssignments([]));
+      // if (PracticeID == null && PatientID == null) return;
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/payment/PaymentAssignmentGet?PaymentSID=${PaymentSID}`,
+      });
+      debugger;
+      dispatch(setPaymentAssignments(resp.data||[]));
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_PAYMENT_ASSIGNMENT_FAILS,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 export const setPaymentClass = (paymentClass) => {
   return {
     type: GET_PAYMENT_CLASS,
@@ -87,4 +130,12 @@ export const setInsurancePayments = (payments) => {
     payload: payments,
   };
 };
+
+export const setPaymentAssignments = (payments) => {
+  return {
+    type: GET_PAYMENT_ASSIGNMENT,
+    payload: payments,
+  };
+};
+
 

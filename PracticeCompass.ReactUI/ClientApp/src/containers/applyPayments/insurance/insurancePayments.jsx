@@ -36,7 +36,9 @@ import {
   resetPracticeList,
 } from "../../../redux/actions/patient";
 import {
-  getInsurancePayments
+  getInsurancePayments,
+  GetPaymentDetails,
+  getPaymentAssignments
 } from "../../../redux/actions/payments";
 import $ from "jquery";
 
@@ -60,6 +62,7 @@ function mapStateToProps(state) {
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
     insurancePayments: state.payments.insurancePayemnts,
+    paymentAssignments: state.payments.paymentAssignments
   };
 }
 
@@ -77,7 +80,9 @@ function mapDispatchToProps(dispatch) {
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
     resetPracticeList: () => dispatch(resetPracticeList()),
-    getInsurancePayments: (PracticeID, PatientID) => dispatch(getInsurancePayments(PracticeID, PatientID))
+    getInsurancePayments: (PracticeID, PatientID, DateType, Datevalue, Fullyapplied) => dispatch(getInsurancePayments(PracticeID, PatientID, DateType, Datevalue, Fullyapplied)),
+    GetPaymentDetails: (PaymentSID) => dispatch(GetPaymentDetails(PaymentSID)),
+    getPaymentAssignments:(PaymentSID) => dispatch(getPaymentAssignments(PaymentSID)),
 
   };
 }
@@ -142,7 +147,7 @@ class insurancePayments extends Component {
       methodSelected: e.selected,
     });
   };
-  getInsuranceFilters(filter) {
+  async getInsuranceFilters(filter) {
     if (filter !== undefined) filter = "";
     return `${config.baseUrl}/Filters/FiltersGet?Entity=paymentInsurance&DisplayName=${filter}`;
   }
@@ -349,9 +354,9 @@ class insurancePayments extends Component {
   practiceSearch = () => {
     this.props.getPracticeList(this.state.practiceSearchText);
   };
-  insurancePaymentGridSearch = () => {
-    //this.props.getInsurancePayments(73835 , 916497);
-    this.props.getInsurancePayments(this.state.insurancePracticeID?.entityId, this.state.insuranceID);
+  insurancePaymentGridSearch = async () => {
+    this.props.getInsurancePayments(this.state.insurancePracticeID ? this.state.insurancePracticeID.entityId : null, this.state.insuranceID,
+      this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false);
   }
   onInsurancePaymentGridSelectionChange = (event) => {
     this.setState({
@@ -360,14 +365,71 @@ class insurancePayments extends Component {
         : event.dataItems[event.endRowIndex]
     });
   };
-  onInsurancePaymentGridDoubleSelectionChange = (event) => {
-    this.setState({
-      InsurancePaymentDetails: event.dataItems == null || event.dataItems.length == 0
-        ? event.dataItem
-        : event.dataItems[event.endRowIndex]
-    });
+  onInsurancePaymentGridDoubleSelectionChange = async (event) => {
+    let InsurancePaymentDetails = event.dataItems == null || event.dataItems.length == 0
+      ? event.dataItem
+      : event.dataItems[event.endRowIndex];
+     this.props.getPaymentAssignments(InsurancePaymentDetails.paymentSID);
+    InsurancePaymentDetails = await this.props.GetPaymentDetails(InsurancePaymentDetails.paymentSID);
+    if (InsurancePaymentDetails) {
+      if (InsurancePaymentDetails.practiceID !=null && (this.props.dropDownPractices == null ||
+        this.props.dropDownPractices.filter(
+          (x) => x.entityId ==InsurancePaymentDetails.practiceID
+        ).length == 0)) {
+        await this.props.SaveLookups(
+          InsurancePaymentDetails?.practiceID,
+          "Practice"
+        );
+      }
+      this.setState({
+        InsurancePaymentDetails,
+        paymentSID:InsurancePaymentDetails.paymentSID,
+        subInsurancePracticeID: {
+          entityName: InsurancePaymentDetails?.practiceName,
+          entityId: InsurancePaymentDetails?.practiceID,
+        },
+        insuranceDetailsID:InsurancePaymentDetails?.payorID,
+        insuranceDetailsNameSelected:InsurancePaymentDetails?.payorName,
+        payment_calss:{
+          description:InsurancePaymentDetails?.paymentClass,
+          lookupCode:InsurancePaymentDetails?.paymentClasscode
+        },
+        amountDetails:InsurancePaymentDetails?.amount,
+        txnDataDetails:InsurancePaymentDetails?new Date(InsurancePaymentDetails?.postDate):null,
+        methodDetails:{
+          label:InsurancePaymentDetails?.payMethod,
+          value:InsurancePaymentDetails?.paymentmethodcode
+        },
+        voucherdetails:InsurancePaymentDetails?.voucher,
+        authorizationCode:InsurancePaymentDetails?.authorizationCode,
+        creditCardDetails:{
+          code: InsurancePaymentDetails?.creditCard,
+          value: InsurancePaymentDetails?.creditCardname
+        }
+
+      });
+    } else {
+      this.resetInsuranceDetails();
+    }
     this.setInsurancePaymentDetailsExpanded();
   };
+  resetInsuranceDetails(){
+    this.setState({
+      InsurancePaymentDetails:null,
+      paymentSID:null,
+      subInsurancePracticeID: null,
+      insuranceDetailsID:null,
+      insuranceDetailsNameSelected:null,
+      payment_calss:null,
+      amountDetails:null,
+      txnDataDetails:null,
+      methodDetails:null,
+      voucherdetails:null,
+      authorizationCode:null,
+      creditCardDetails:null
+
+    });
+  }
   guarantorsearch = (refreshData, skip) => {
     this.props.getguarantorList(
       this.state.guarantorSearchText,
@@ -689,7 +751,11 @@ class insurancePayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                    onClick={this.setInsurancePaymentDetailsExpanded}
+                    onClick={()=>{
+                      this.resetInsuranceDetails();
+                      this.setInsurancePaymentDetailsExpanded();
+                    }
+                  }
                   >
                     Add
                   </ButtonComponent>
@@ -892,10 +958,10 @@ class insurancePayments extends Component {
                         type="numeric"
                         format="c2"
                         className="unifyHeight"
-                        value={this.state.units}
+                        value={this.state.amountDetails}
                         onChange={(e) =>
                           this.setState({
-                            units: e.value,
+                            amountDetails: e.value,
                           })
                         }
                       ></TextBox>
@@ -911,13 +977,10 @@ class insurancePayments extends Component {
                         placeholder="MM/DD/YYYY"
                         format="M/dd/yyyy"
                         value={
-                          this.state.currentInsurance != null &&
-                            this.state.currentInsurance.endDate
-                            ? new Date(this.state.currentInsurance.endDate)
-                            : null
+                          this.state.txnDataDetails
                         }
                         onChange={(e) =>
-                          this.setState({ PlanEndDate: e.value })
+                          this.setState({ txnDataDetails: e.value })
                         }
                       ></DatePickerComponent>
                     </div>
@@ -948,10 +1011,10 @@ class insurancePayments extends Component {
                             data={methodList}
                             textField="label"
                             dataItemKey="value"
-                            value={this.state.method}
+                            value={this.state.methodDetails}
                             onChange={(e) =>
                               this.setState({
-                                method: e.value,
+                                methodDetails: e.value,
                               })
                             }
                           ></DropDown>
@@ -962,10 +1025,10 @@ class insurancePayments extends Component {
                         <div style={{ float: "left", width: "100px" }}>
                           <TextBox
                             className="unifyHeight"
-                            value={this.state.units}
+                            value={this.state.voucherdetails}
                             onChange={(e) =>
                               this.setState({
-                                units: e.value,
+                                voucherdetails: e.value,
                               })
                             }
                           ></TextBox>
@@ -983,10 +1046,10 @@ class insurancePayments extends Component {
                             data={creditCared}
                             textField="value"
                             dataItemKey="code"
-                            value={this.state.creditCard}
+                            value={this.state.creditCardDetails}
                             onChange={(e) =>
                               this.setState({
-                                creditCard: e.value,
+                                creditCardDetails: e.value,
                               })
                             }
                           ></DropDown>
@@ -999,10 +1062,10 @@ class insurancePayments extends Component {
                         <div style={{ float: "left", width: "100px" }}>
                           <TextBox
                             className="unifyHeight"
-                            value={this.state.units}
+                            value={this.state.authorizationCode}
                             onChange={(e) =>
                               this.setState({
-                                units: e.value,
+                                authorizationCode: e.value,
                               })
                             }
                           ></TextBox>
@@ -1330,7 +1393,7 @@ class insurancePayments extends Component {
                           </div>
                         </div>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%",marginBottom:"10px" }}>
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
                         <ButtonComponent
                           icon="search"
                           type="search"

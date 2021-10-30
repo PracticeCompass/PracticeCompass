@@ -47,7 +47,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/PaymentDetailsGet")]
-        public List<PaymentDetails> PaymentDetailsGet(int PaymentSID)
+        public PaymentDetails PaymentDetailsGet(int PaymentSID)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<PaymentDetails>();
+                return new PaymentDetails();
             }
         }
         [HttpGet]

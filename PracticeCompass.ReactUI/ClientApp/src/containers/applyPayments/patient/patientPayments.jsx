@@ -721,17 +721,7 @@ class PatientPayments extends Component {
                   </div>
                 </div>
               </div>
-              <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
-                <ButtonComponent
-                  icon="search"
-                  type="search"
-                  classButton="infraBtn-primary"
-                  onClick={() => this.Apply()}
-                  style={{ marginTop: "0px" }}
-                >
-                  Apply
-                </ButtonComponent>
-              </div>
+
             </PanelBarItem>
             <PanelBarItem
               id="PatientPaymentDetailsSearch"
@@ -1132,6 +1122,17 @@ class PatientPayments extends Component {
                               </div>
                             </div>
                           </div>
+                        </div>
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
+                          <ButtonComponent
+                            icon="search"
+                            type="search"
+                            classButton="infraBtn-primary"
+                            onClick={() => this.Apply()}
+                            style={{ marginTop: "0px" }}
+                          >
+                            Apply
+                          </ButtonComponent>
                         </div>
                       </div>
                     </TabStripTab>
