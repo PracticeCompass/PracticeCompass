@@ -50,3 +50,4 @@ uspInsurancePaymentDetailsGet.sql
 uspPaymentAssignmentGet
 uspPaymentInsertUpdate
 uspPatientPaymentGetforApply.sql
+uspInsurancePaymentGetforApply.sql

@@ -91,6 +91,21 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
         [HttpGet]
+        [Route("api/payment/ApplyInsurancePaymentGet")]
+        public List<InsurancePayment> ApplyInsurancePaymentGet(int GuarantorID,int DOSType,string DOSvalue, int InsuranceID, string ClaimIcnNumber)
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetInsurancePaymentforApply(GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<InsurancePayment>();
+            }
+        }
+        [HttpGet]
         [Route("api/payment/PaymentSave")]
         public bool PaymentSave(int PaymentSID,int PracticeID ,string PostDate, string Source,int PayorID , string Class,float Amount ,string Method,
             string CreditCard,string AuthorizationCode ,string Voucher, string CreateMethod,int CurrentUser)

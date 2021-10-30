@@ -14,5 +14,6 @@ namespace PracticeCompass.Core.Repositories
         bool InsertUpdatePayment(string prrowid, int PaymentSID, int PracticeID, string PostDate, string Source, int PayorID, string Class, float Amount, string Method,
             string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod, int LastUser, int CreateUser);
         List<PatientPayment> GetPatientPaymentforApply(int PatientID);
+        List<InsurancePayment> GetInsurancePaymentforApply(int GuarantorID, int DOSType, string DOSvalue, int InsuranceID, string ClaimIcnNumber);
     }
 }
