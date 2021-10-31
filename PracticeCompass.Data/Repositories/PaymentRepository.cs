@@ -185,6 +185,26 @@ namespace PracticeCompass.Data.Repositories
                     pro2created = DateTime.Now,
                     pro2modified = DateTime.Now
                 });
+
+                //PaymentAssignment
+                var PaymentAssignmentMAXRowID = practiceCompassHelper.GetMAXprrowid("PaymentAssignment", PaymentAssignments.Count() != 0 ? PaymentAssignments[PaymentAssignments.Count() - 1].prrowid : "0");
+                var PAmaxactivitycount = practiceCompassHelper.GetMAXColumnid("PaymentAssignment", "ActivityCount",
+                 PaymentAssignments.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? PaymentAssignments[PaymentAssignments.Count() - 1].ActivityCount.Value : 0);
+                PaymentAssignments.Add(new PaymentAssignment
+                {
+                    prrowid = PaymentAssignmentMAXRowID,
+                    PaymentSID = paymentmodel.PaymentSID,
+                    ChargeSID = paymentmodel.ChargeSID,
+                    ActivityCount = PAmaxactivitycount,
+                    Amount = paymentmodel.AmountPaid,
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = "medman",
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now
+                });
             }
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);

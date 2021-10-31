@@ -11,7 +11,7 @@ namespace PracticeCompass.Core.Models
         public int? AccountSID { get; set; }
         public int? JournalSID { get; set; }
         public DateTime? PostDate { get; set; }
-        public decimal? Amount { get; set; }
+        public float? Amount { get; set; }
         public string PatientBilled { get; set; }
         public string PatientStatement { get; set; }
         public string TimeStamp { get; set; }
