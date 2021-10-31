@@ -89,9 +89,9 @@ class EditableGrid extends React.Component {
             JSON.stringify(event.columns)
         );
     };
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (prevProps.data !== null && this.props.data != null && prevProps.data.length > this.props.data.length) {
-            this.setState({ skip: 0 })
+           await this.setState({ skip: 0})
         }
     }
     componentDidMount() {
@@ -246,8 +246,8 @@ class EditableGrid extends React.Component {
 
                     data={
                         this.props.isEditable ?
-                            this.state.data
-                                ? this.state.data
+                            this.props.data
+                                ? this.props.data
                                     .slice(this.state.skip, this.state.take + this.state.skip)
                                     .map((item) => ({
                                         ...item,
@@ -275,7 +275,7 @@ class EditableGrid extends React.Component {
                     onRowClick={this.props.isEditable && this.rowClick}
                     onItemChange={this.props.isEditable && this.itemChange}
                 >
-                    {this.props.isEditable && (
+                    {/* {this.props.isEditable && (
                         <GridToolbar>
                             <div id="toolBar" onClick={this.closeEdit}>
                                 <ButtonComponent
@@ -288,7 +288,7 @@ class EditableGrid extends React.Component {
                                 </ButtonComponent>
                             </div>
                         </GridToolbar>
-                    )}
+                    )} */}
                     {this.state.hasCheckBox && (
                         <Column
                             field={SELECTED_FIELD}

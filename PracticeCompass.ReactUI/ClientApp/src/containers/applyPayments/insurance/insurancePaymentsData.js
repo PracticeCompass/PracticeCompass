@@ -117,7 +117,7 @@ export const insuranceAssignmentColumns = [
     orderIndex: 2,
   },
   {
-    field: "patient",
+    field: "sortName",
     title: "Patient",
     minWidth: 200,
     orderIndex: 3,

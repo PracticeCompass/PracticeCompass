@@ -7,7 +7,9 @@ import {
   GET_INSURANCE_PAYMENTS,
   GET_INSURANCE_PAYMENTS_FAILED,
   GET_PAYMENT_ASSIGNMENT,
-  GET_PAYMENT_ASSIGNMENT_FAILS
+  GET_PAYMENT_ASSIGNMENT_FAILS,
+  GET_APPLY_PATIENT_PAYMENTS,
+  GET_APPLY_PATIENT_PAYMENTS_FAILS
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../config";
@@ -99,7 +101,6 @@ export const getPaymentAssignments =
         method: "GET",
         url: `${config.baseUrl}/payment/PaymentAssignmentGet?PaymentSID=${PaymentSID}`,
       });
-      debugger;
       dispatch(setPaymentAssignments(resp.data||[]));
     } catch (error) {
       console.log("error ==> ", error);
@@ -111,6 +112,59 @@ export const getPaymentAssignments =
       dispatch(uiStopLoading());
     }
   };
+export const savePayment =
+(PaymentSID,PracticeID,PostDate,Source,PayorID,Class,Amount,Method,CreditCard,AuthorizationCode,Voucher,CreateMethod,CurrentUser)=>
+ async(dispatch,getState)=>{
+  try {
+    dispatch(uiStartLoading());
+    // if (PracticeID == null && PatientID == null) return;
+    debugger;
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/payment/PaymentSave?PaymentSID=${PaymentSID}&PracticeID=${PracticeID}&PostDate=${PostDate}&Source=${Source}&PayorID=${PayorID}&Class=${Class}&Amount=${Amount}&Method=${Method}&CreditCard=${CreditCard}&AuthorizationCode=${AuthorizationCode}&Voucher=${Voucher}&CreateMethod=${CreateMethod}&CurrentUser=${CurrentUser}`,
+    });
+    return resp.data;
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: GET_PAYMENT_ASSIGNMENT_FAILS,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+}
+
+export const getApplyPatientPayments =
+  (PatientID) => async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      dispatch(setApplyPatientPayments([]));
+      // if (PracticeID == null && PatientID == null) return;
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/payment/ApplyPatientPaymentGet?PatientID=${PatientID}`,
+      });
+      debugger
+      dispatch(setApplyPatientPayments(resp.data||[]));
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_APPLY_PATIENT_PAYMENTS_FAILS,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
+  
+  export const setApplyPatientPayments = (applyPatientPayments) => {
+    return {
+      type: GET_APPLY_PATIENT_PAYMENTS,
+      payload: applyPatientPayments,
+    };
+  };
+
 export const setPaymentClass = (paymentClass) => {
   return {
     type: GET_PAYMENT_CLASS,
