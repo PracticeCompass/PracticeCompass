@@ -89,14 +89,14 @@ namespace PracticeCompass.Data.Repositories
                commandType: CommandType.StoredProcedure);
             return data.Read<ClaimNote>().ToList();
         }
-        public List<Charge> ChargeGridGet(int ClaimSID)
+        public List<ChargeDTO> ChargeGridGet(int ClaimSID)
         {
             var data = this.db.QueryMultiple("uspChargeGridGet", new
             {
                 @ClaimSID = ClaimSID
             },
               commandType: CommandType.StoredProcedure);
-            return data.Read<Charge>().ToList();
+            return data.Read<ChargeDTO>().ToList();
         }
         public List<SubmissionHistory> ClaimSubmissionHistoryGet(int ClaimSID)
         {

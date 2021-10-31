@@ -6,7 +6,7 @@ namespace PracticeCompass.Core.Repositories
 {
     public interface IChargeDetailsRepository : IRepository<ChargeDetails>
     {
-        public List<ChargeActivity> ChargeActivityGet(int ChargeSID);
+        public List<ChargeActivityDTO> ChargeActivityGet(int ChargeSID);
         public ChargeDetails ChargeDetailsGet(int ChargeSID);
         public List<ICD10> ICD10PopupGet(string filter,int skip);
         public List<Modifier> ModifierGet();

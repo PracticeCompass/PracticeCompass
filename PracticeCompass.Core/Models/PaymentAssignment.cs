@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PracticeCompass.Core.Models
 {
     public class PaymentAssignment
     {
-        public PaymentAssignment()
-        {
-        }
-
-        public int PaymentSID { get; set; }
-        public int ChargeSID { get; set; }
-        public int ActivityCount { get; set; }
-        public int AccountSID { get; set; }
-        public string SortName { get; set; }
-        public string PostDate { get; set; }
-        public float Amount { get; set; }
+        public string prrowid { get; set; }
+        public int? PaymentSID { get; set; }
+        public int? ChargeSID { get; set; }
+        public int? ActivityCount { get; set; }
+        public int? AccountSID { get; set; }
+        public int? JournalSID { get; set; }
+        public DateTime? PostDate { get; set; }
+        public decimal? Amount { get; set; }
         public string PatientBilled { get; set; }
         public string PatientStatement { get; set; }
+        public string TimeStamp { get; set; }
+        public int? LastUser { get; set; }
+        public string CreateStamp { get; set; }
+        public int? CreateUser { get; set; }
+        public int? CreditedPlanID { get; set; }
+        public string Pro2SrcPDB { get; set; }
+        public DateTime? pro2created { get; set; }
+        public DateTime? pro2modified { get; set; }
     }
 }

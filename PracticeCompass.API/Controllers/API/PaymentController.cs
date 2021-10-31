@@ -62,7 +62,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/PaymentAssignmentGet")]
-        public List<PaymentAssignment> PaymentAssignmentGet(int PaymentSID)
+        public List<PaymentAssignmentDTO> PaymentAssignmentGet(int PaymentSID)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<PaymentAssignment>();
+                return new List<PaymentAssignmentDTO>();
             }
         }
         [HttpGet]

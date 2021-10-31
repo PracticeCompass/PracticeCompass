@@ -37,7 +37,11 @@ import {
   resetPhysicianList,
   getPhysicianList,
 } from "../../../redux/actions/claimList";
-import { getPatientPayments } from "../../../redux/actions/payments"
+import {
+  getPatientPayments, getPaymentAssignments, GetPaymentDetails,
+  savePayment,
+  getApplyPatientPayments
+} from "../../../redux/actions/payments"
 const DATA_ITEM_KEY_PATIENT = "patientListgridID";
 const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
@@ -53,6 +57,10 @@ const idGetterApplyPatientPaymentID = getter(DATA_ITEM_KEY_Apply_PATIENT_PAYMENT
 
 const DATA_ITEM_KEY_Physician = "entitySID";
 const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
+
+const DATA_ITEM_KEY_INSURANCE_Details_PAYMENT = "chargeSID";
+const idGetterInsuranceDetailsPaymentID = getter(DATA_ITEM_KEY_INSURANCE_Details_PAYMENT);
+
 function mapStateToProps(state) {
   return {
     patientList: state.patients.patientList,
@@ -66,7 +74,9 @@ function mapStateToProps(state) {
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
     physicians: state.claimList.physicians,
-    patientPayments: state.payments.patientPayments
+    patientPayments: state.payments.patientPayments,
+    paymentAssignments: state.payments.paymentAssignments,
+    applyPatientPayments: state.payments.applyPatientPayments
   };
 }
 
@@ -84,7 +94,12 @@ function mapDispatchToProps(dispatch) {
     getPhysicianList: (name, refreshdata, skip) =>
       dispatch(getPhysicianList(name, refreshdata, skip)),
     resetPhysicianList: () => dispatch(resetPhysicianList()),
-    getPatientPayments: (PracticeID, PatientID) => dispatch(getPatientPayments(PracticeID, PatientID))
+    getPatientPayments: (PracticeID, PatientID, DateType, Datevalue, Fullyapplied) => dispatch(getPatientPayments(PracticeID, PatientID, DateType, Datevalue, Fullyapplied)),
+    getPaymentAssignments: (PaymentSID) => dispatch(getPaymentAssignments(PaymentSID)),
+    GetPaymentDetails: (PaymentSID) => dispatch(GetPaymentDetails(PaymentSID)),
+    getApplyPatientPayments: (patientID) => dispatch(getApplyPatientPayments(patientID)),
+    savePayment: (PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser) =>
+      dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser))
   };
 }
 
@@ -138,6 +153,7 @@ class PatientPayments extends Component {
     subInsurancePracticeID: null,
     practiceSearchText: null,
     physicianSearchText: null,
+    applyPatientPayments:[]
   };
   handleSelect = (e) => {
     this.setState({
@@ -351,26 +367,28 @@ class PatientPayments extends Component {
   };
   patientPaymentGridSearch = () => {
     //this.props.getPatientPayments(142690, 886880)
-    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.patientGuarantorID?.entityId);
+    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.patientGuarantorID?.entityId,
+      this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false);
   }
-  onPatientPaymentGridSelectionChange = (event) => {
+  onPatientPaymentGridSelectionChange = async (event) => {
     this.setState({
       patientPaymentDetails: event.dataItems == null || event.dataItems.length == 0
         ? event.dataItem
         : event.dataItems[event.endRowIndex]
     });
   };
-  onPatientPaymentGridDoubleSelectionChange = (event) => {
-    this.setState({
-      patientPaymentDetails: event.dataItems == null || event.dataItems.length == 0
-        ? event.dataItem
-        : event.dataItems[event.endRowIndex]
-    });
-    this.setPatientPaymentDetailExpanded();
+  onPatientPaymentGridDoubleSelectionChange = async (event) => {
+    let patientPaymentDetails = event.dataItems == null || event.dataItems.length == 0
+      ? event.dataItem
+      : event.dataItems[event.endRowIndex];
+    patientPaymentDetails = await this.EditPaymentPatient(patientPaymentDetails);
   };
   setPatientPaymentDetailExpanded = () => {
     //$("#patient").children("span").trigger("click");
     $("#PatientPaymentDetailsSearch").children("span").trigger("click");
+  };
+  setApplyPatientPaymentExpanded = () => {
+    $("#ApplyPatientPayment").children("span").trigger("click");
   };
   onGuarantorSelectionChange = (event) => {
     var selectedDataItems = event.dataItems.slice(
@@ -415,6 +433,176 @@ class PatientPayments extends Component {
   }
   onApplyPaymentGridDoubleSelectionChange = () => {
 
+  }
+  async EditPaymentPatient(patientPaymentDetails) {
+    if (patientPaymentDetails == null) {
+      this.setState({
+        warning: true,
+        message: "Please Select Payment to Edit.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    this.props.getPaymentAssignments(patientPaymentDetails.paymentSID);
+    patientPaymentDetails = await this.props.GetPaymentDetails(patientPaymentDetails.paymentSID);
+    if (patientPaymentDetails) {
+      if (patientPaymentDetails.practiceID != null && (this.props.dropDownPractices == null ||
+        this.props.dropDownPractices.filter(
+          (x) => x.entityId == patientPaymentDetails.practiceID
+        ).length == 0)) {
+        await this.props.SaveLookups(
+          patientPaymentDetails?.practiceID,
+          "Practice"
+        );
+      }
+      if (patientPaymentDetails.payorID != null && (this.props.dropDownGuarantors == null ||
+        this.props.dropDownGuarantors.filter(
+          (x) => x.entityId == patientPaymentDetails.payorID
+        ).length == 0)) {
+        this.props.SaveLookups(patientPaymentDetails?.payorID, "Guarantor");
+      }
+      this.setState({
+        patientPaymentDetails,
+        paymentSID: patientPaymentDetails.paymentSID,
+        subInsurancePracticeID: {
+          entityName: patientPaymentDetails?.practiceName,
+          entityId: patientPaymentDetails?.practiceID,
+        },
+        patientDetailsGuarantorID: {
+          entityName: patientPaymentDetails?.payorName,
+          entityId: patientPaymentDetails?.payorID
+        },
+        payment_calss: {
+          description: patientPaymentDetails?.paymentClass,
+          lookupCode: patientPaymentDetails?.paymentClasscode
+        },
+        amountDetails: patientPaymentDetails?.amount,
+        txnDataDetails: patientPaymentDetails ? new Date(patientPaymentDetails?.postDate) : null,
+        methodDetails: {
+          label: patientPaymentDetails?.payMethod,
+          value: patientPaymentDetails?.paymentmethodcode
+        },
+        voucherdetails: patientPaymentDetails?.voucher,
+        authorizationCode: patientPaymentDetails?.authorizationCode,
+        creditCardDetails: {
+          code: patientPaymentDetails?.creditCard,
+          value: patientPaymentDetails?.creditCardname
+        }
+      });
+    } else {
+      this.resetPatientDetails();
+    }
+    this.setPatientPaymentDetailExpanded();
+    return patientPaymentDetails;
+  }
+  resetPatientDetails=()=>{
+    this.setState({
+      patientPaymentDetails:null,
+      paymentSID: null,
+      subInsurancePracticeID: null,
+      patientDetailsGuarantorID: null,
+      payment_calss: null,
+      amountDetails: null,
+      txnDataDetails:  null,
+      methodDetails: null,
+      voucherdetails: null,
+      authorizationCode: null,
+      creditCardDetails: null
+    });
+  }
+  savePatientPaymentDetails = async () => {
+    let resp = await this.props.savePayment(this.state.paymentSID ?? 0, this.state.subInsurancePracticeID?.entityId, this.state.txnDataDetails ? new Date(this.state.txnDataDetails).toLocaleDateString() : null,
+      "G", this.state.patientDetailsGuarantorID?.entityId, this.state.payment_calss?this.state.payment_calss.lookupCode:null, this.state.amountDetails, this.state.methodDetails?this.state.methodDetails.value:null,
+      this.state.creditCardDetails?this.state.creditCardDetails.code:null, this.state.authorizationCode, this.state.voucherdetails, "M", 1)
+    if (resp) {
+      this.setState({
+        success: true,
+        message: "Save Payment succefully.",
+      });
+      setTimeout(() => {
+        this.setState({
+          success: false,
+        });
+      }, this.state.timer);
+    } else {
+      this.setState({
+        error: true,
+        message: "Save Payment failed.",
+      });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+    }
+  }
+  closeNotification = () => {
+    this.setState({
+      success: false,
+      error: false,
+      warning: false,
+      info: false,
+      none: false,
+    });
+  };
+  onInsuranceDetailsGridSelectionChange = (event) => {
+    //this.setApplyInsurancePaymentExpanded();
+  }
+  onInsuranceDetailsGridDoubleSelectionChange = (event) => {
+    // this.setApplyInsurancePaymentExpanded();
+  }
+  ApplyPatientPayment=async ()=>{
+    if (this.state.patientPaymentDetails == null) {
+      this.setState({
+        warning: true,
+        message: "Please Select Payment to Apply.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    //this.props.getPaymentAssignments(3260);
+    
+    this.props.getPaymentAssignments(this.state.patientPaymentDetails.paymentSID);
+   //let applyData= await this.props.getApplyPatientPayments(3260);
+    let applyData= await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
+    this.setState({
+      applyPatientPayments:applyData
+    });
+    this.setApplyPatientPaymentExpanded();
+  }
+  applyItemChanged=(event)=>{
+
+    if(this.state.patientPaymentDetails ==null) return;
+
+    const field = event.field || '';
+    const inEditID = event.dataItem["chargeSID"];
+    let data = this.state.applyPatientPayments.map(item => item["chargeSID"] === inEditID ? {
+        ...item,
+        [field]: event.value,
+    } : item);
+   
+   let rowIndex=data.findIndex(item => item["chargeSID"] === inEditID );
+   data[rowIndex]["amount"]=data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"]+data[rowIndex]["patientPaid"]);
+
+    let sum = data.reduce(function(prev, current) {
+      return prev + +current["patientPaid"]
+    }, 0);
+
+    if(field == "patientPaid"){
+        this.state.patientPaymentDetails.remaining=this.state.patientPaymentDetails.amount- sum;
+    }
+
+    this.setState({
+      applyPatientPayments:data
+    });
   }
   render() {
     return (
@@ -602,8 +790,8 @@ class PatientPayments extends Component {
                         className="unifyHeight"
                         id="tins"
                         name="tins"
-                        value={this.state.dostype}
-                        onChange={(e) => this.setState({ dostype: e.value })}
+                        value={this.state.txnDatetype}
+                        onChange={(e) => this.setState({ txnDatetype: e.value })}
                       ></DropDown>
                     </div>
                     <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -611,8 +799,8 @@ class PatientPayments extends Component {
                         className="unifyHeight"
                         placeholder="MM/DD/YYYY"
                         format="M/dd/yyyy"
-                        value={this.state.dos}
-                        onChange={(e) => this.setState({ dos: e.value })}
+                        value={this.state.txnDate}
+                        onChange={(e) => this.setState({ txnDate: e.value })}
                       ></DatePickerComponent>
                     </div>
                     <div>
@@ -657,9 +845,10 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                  // onClick={() => {
-                  //     this.setState({ visibleSaveFilter: true });
-                  // }}
+                    onClick={() => {
+                      this.ApplyPatientPayment();
+                    }
+                    }
                   >
                     Apply
                   </ButtonComponent>
@@ -669,9 +858,9 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                  // onClick={() => {
-                  //     this.setState({ visibleSaveFilter: true });
-                  // }}
+                    onClick={() => {
+                      this.EditPaymentPatient(this.state.patientPaymentDetails);
+                    }}
                   >
                     Edit
                   </ButtonComponent>
@@ -735,8 +924,8 @@ class PatientPayments extends Component {
                 }}
               >
 
-                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
-                  <div style={{ marginLeft: "15px" }}>
+                <div style={{ display: "flex", flexFlow: "row" }}>
+                  <div style={{ marginLeft: "16px" }}>
                     <label className="userInfoLabel">Practice </label>
                   </div>
                   <div className="PracticeStyle">
@@ -745,11 +934,11 @@ class PatientPayments extends Component {
                       data={this.props.dropDownPractices}
                       textField="entityName"
                       dataItemKey="entityId"
-                      defaultValue={this.state.subPatientPracticeID}
-                      value={this.state.subPatientPracticeID}
+                      defaultValue={this.state.subInsurancePracticeID}
+                      value={this.state.subInsurancePracticeID}
                       onChange={(e) =>
                         this.setState({
-                          subPatientPracticeID: {
+                          subInsurancePracticeID: {
                             entityName: e.value?.entityName,
                             entityId: e.value?.entityId,
                           },
@@ -764,13 +953,14 @@ class PatientPayments extends Component {
                       classButton="infraBtn-primary find-button"
                       style={{ marginTop: "0px" }}
                       onClick={(e) =>
-                        this.setState({ practiceVisibleSubPatient: true })
+                        this.setState({
+                          practiceVisibleSubInsurance: true,
+                        })
                       }
                     >
                       Find
                     </ButtonComponent>
                   </div>
-
                 </div>
                 <div style={{ display: "flex", flexFlow: "row nowrap" }}>
 
@@ -807,7 +997,7 @@ class PatientPayments extends Component {
                     </ButtonComponent>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                <div style={{ display: "flex", flexFlow: "row" }}>
                   <div style={{ float: "left", marginLeft: "32px" }}>
                     <label className="userInfoLabel">Class </label>
                   </div>
@@ -829,7 +1019,7 @@ class PatientPayments extends Component {
                     ></DropDown>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                <div style={{ display: "flex", flexFlow: "row" }}>
                   <div style={{ float: "left", marginLeft: "14px" }}>
                     <label className="userInfoLabel">Amount </label>
                   </div>
@@ -838,10 +1028,10 @@ class PatientPayments extends Component {
                       type="numeric"
                       format="c2"
                       className="unifyHeight"
-                      value={this.state.units}
+                      value={this.state.amountDetails}
                       onChange={(e) =>
                         this.setState({
-                          units: e.value,
+                          amountDetails: e.value,
                         })
                       }
                     ></TextBox>
@@ -856,16 +1046,16 @@ class PatientPayments extends Component {
                       className="unifyHeight"
                       placeholder="MM/DD/YYYY"
                       format="M/dd/yyyy"
-                      value={this.state.txnDate}
+                      value={
+                        this.state.txnDataDetails
+                      }
                       onChange={(e) =>
-                        this.setState({
-                          txnDate: e.value,
-                        })
+                        this.setState({ txnDataDetails: e.value })
                       }
                     ></DatePickerComponent>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                <div style={{ display: "flex", flexFlow: "row" }}>
                   <fieldset
                     className="fieldsetStyle"
                     style={{
@@ -881,7 +1071,7 @@ class PatientPayments extends Component {
                     >
                       Payment Method
                     </legend>
-                    <div className="row nowrap" style={{ marginLeft: "5px" }}>
+                    <div className="row" style={{ marginLeft: "5px" }}>
                       <div style={{ float: "left", marginLeft: "24px" }}>
                         <label className="userInfoLabel">Method</label>
                       </div>
@@ -891,10 +1081,10 @@ class PatientPayments extends Component {
                           data={methodList}
                           textField="label"
                           dataItemKey="value"
-                          value={this.state.method}
+                          value={this.state.methodDetails}
                           onChange={(e) =>
                             this.setState({
-                              method: e.value,
+                              methodDetails: e.value,
                             })
                           }
                         ></DropDown>
@@ -905,10 +1095,10 @@ class PatientPayments extends Component {
                       <div style={{ float: "left", width: "100px" }}>
                         <TextBox
                           className="unifyHeight"
-                          value={this.state.units}
+                          value={this.state.voucherdetails}
                           onChange={(e) =>
                             this.setState({
-                              units: e.value,
+                              voucherdetails: e.value,
                             })
                           }
                         ></TextBox>
@@ -926,10 +1116,10 @@ class PatientPayments extends Component {
                           data={creditCared}
                           textField="value"
                           dataItemKey="code"
-                          value={this.state.creditCard}
+                          value={this.state.creditCardDetails}
                           onChange={(e) =>
                             this.setState({
-                              creditCard: e.value,
+                              creditCardDetails: e.value,
                             })
                           }
                         ></DropDown>
@@ -942,10 +1132,10 @@ class PatientPayments extends Component {
                       <div style={{ float: "left", width: "100px" }}>
                         <TextBox
                           className="unifyHeight"
-                          value={this.state.units}
+                          value={this.state.authorizationCode}
                           onChange={(e) =>
                             this.setState({
-                              units: e.value,
+                              authorizationCode: e.value,
                             })
                           }
                         ></TextBox>
@@ -995,24 +1185,24 @@ class PatientPayments extends Component {
                           columns={insuranceAssignmentColumns}
                           skip={0}
                           take={21}
-                          // onSelectionChange={this.onClaimGridSelectionChange}
-                          // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                          onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
+                          onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
                           // getSelectedItems={this.getSelectedClaims}
                           // selectionMode="multiple"
-                          DATA_ITEM_KEY="paymentSID"
-                          idGetter={idGetterPatientPaymentID}
-                          // data={this.props.Claims}
-                          // totalCount={
-                          //   this.props.Claims != null && this.props.Claims.length > 0
-                          //     ? this.props.Claims[0].totalCount
-                          //     : this.props.Claims.length
-                          // }
-                          height="700px"
+                          DATA_ITEM_KEY="chargeSID"
+                          idGetter={idGetterInsuranceDetailsPaymentID}
+                          data={this.props.paymentAssignments}
+                          totalCount={
+                            this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
+                              ? this.props.paymentAssignments[0].totalCount
+                              : this.props.paymentAssignments.length
+                          }
+                          height="579px"
                           width="100%"
                           //hasCheckBox={true}
                           sortColumns={[]}
                           onSortChange={this.onSortChange}
-                        // pageChange={this.pageChange}
+                          pageChange={this.pageChange}
                         ></GridComponent>
                       </div>
                     </div>
@@ -1056,12 +1246,13 @@ class PatientPayments extends Component {
                               type="numeric"
                               format="c2"
                               className="unifyHeight"
-                              value={this.state.amountApply}
+                              value={this.state.patientPaymentDetails?.amount}
                               onChange={(e) =>
                                 this.setState({
                                   amountApply: e.value,
                                 })
                               }
+                              disabled={true}
                             ></TextBox>
                           </div>
                           <div style={{ float: "left", marginLeft: "10px" }}>
@@ -1072,12 +1263,13 @@ class PatientPayments extends Component {
                               type="numeric"
                               format="c2"
                               className="unifyHeight"
-                              value={this.state.remaining}
+                              value={this.state.patientPaymentDetails?.remaining==null?this.state.patientPaymentDetails?.amount : this.state.patientPaymentDetails?.remaining}
                               onChange={(e) =>
                                 this.setState({
                                   remaining: e.value,
                                 })
                               }
+                              disabled={true}
                             ></TextBox>
                           </div>
                         </div>
@@ -1098,19 +1290,20 @@ class PatientPayments extends Component {
                                 data-parent="#accordionExample"
                               >
                                 <EditableGrid
-                                  data={[]}
+                                  data={this.state.applyPatientPayments}
                                   id="applyedPatient"
                                   skip={0}
                                   take={21}
-                                  height="700px"
+                                  height="579px"
                                   width="100%"
-                                  editColumn={"paymentSID"}
-                                  DATA_ITEM_KEY="paymentSID"
+                                  editColumn={"chargeSID"}
+                                  DATA_ITEM_KEY="chargeSID"
                                   idGetter={idGetterApplyPatientPaymentID}
                                   onSelectionChange={this.onApplyPaymentGridSelectionChange}
                                   onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
                                   columns={applyPatientPaymentColumns}
                                   onSortChange={this.onSortChange}
+                                  itemChange={this.applyItemChanged}
                                   // pageChange={this.pageChange}
                                   isEditable={true}
                                 // totalCount={
@@ -1128,7 +1321,7 @@ class PatientPayments extends Component {
                             icon="search"
                             type="search"
                             classButton="infraBtn-primary"
-                            onClick={() => this.Apply()}
+                            // onClick={() => this.setApplyPatientPaymentExpanded}
                             style={{ marginTop: "0px" }}
                           >
                             Apply
@@ -1160,28 +1353,28 @@ class PatientPayments extends Component {
                               data-parent="#accordionExample"
                             >
                               <GridComponent
-                                id="insurancePayment"
+                                id="applyInsurancePayment"
                                 columns={insuranceAssignmentColumns}
                                 skip={0}
                                 take={21}
-                                // onSelectionChange={this.onClaimGridSelectionChange}
-                                // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                                onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
+                                onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
                                 // getSelectedItems={this.getSelectedClaims}
                                 // selectionMode="multiple"
-                                DATA_ITEM_KEY="paymentSID"
-                                idGetter={idGetterPatientPaymentID}
-                                // data={this.props.Claims}
-                                // totalCount={
-                                //   this.props.Claims != null && this.props.Claims.length > 0
-                                //     ? this.props.Claims[0].totalCount
-                                //     : this.props.Claims.length
-                                // }
-                                height="700px"
+                                DATA_ITEM_KEY="chargeSID"
+                                idGetter={idGetterInsuranceDetailsPaymentID}
+                                data={this.props.paymentAssignments}
+                                totalCount={
+                                  this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
+                                    ? this.props.paymentAssignments[0].totalCount
+                                    : this.props.paymentAssignments.length
+                                }
+                                height="579px"
                                 width="100%"
                                 //hasCheckBox={true}
                                 sortColumns={[]}
                                 onSortChange={this.onSortChange}
-                              // pageChange={this.pageChange}
+                                pageChange={this.pageChange}
                               ></GridComponent>
                             </div>
                           </div>

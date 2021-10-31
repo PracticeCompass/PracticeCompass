@@ -337,3 +337,11 @@ PracticeCompass.Data/Scripts/__tmp_uspClaimfillingGet.sql.txt
 Publish
 PracticeCompass.Data/Scripts/__tmp_uspPatientPaymentGet.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspInsurancePaymentGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspInsurancePaymentDetailsGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspInsurancePaymentGetforApply.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspPatientPaymentGetforApply.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspPaymentAssignmentGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspPaymentInsertUpdate.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspPayClassGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspPayClassGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspPayClassGet.sql.txt
