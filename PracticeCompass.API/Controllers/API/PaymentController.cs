@@ -146,11 +146,11 @@ namespace PracticeCompass.API.Controllers.API
             try
             {
                 ApplyPaymentModel applyPaymentModel1 = new ApplyPaymentModel();
-                applyPaymentModel1.ChargeSID = 7;
+                applyPaymentModel1.ChargeSID = 3507;
                 applyPaymentModel1.AmountPaid = 10;
                 applyPaymentModel1.Adjustment = 20;
                 ApplyPaymentModel applyPaymentModel2 = new ApplyPaymentModel();
-                applyPaymentModel2.ChargeSID = 30;
+                applyPaymentModel2.ChargeSID = 3509;
                 applyPaymentModel2.AmountPaid = 25;
                 applyPaymentModel2.Adjustment = 40;
                 applyPaymentModel.Add(applyPaymentModel1);

@@ -9,7 +9,7 @@ namespace PracticeCompass.Data.Utilities
         public PracticeCompassHelper(IDbConnection _db)
 
         { this.db = _db; }
-        private string GetMAXprrowid(string tableName, string lastprrowid)
+        public string GetMAXprrowid(string tableName, string lastprrowid)
         {
             try
             {
@@ -36,12 +36,16 @@ namespace PracticeCompass.Data.Utilities
                 return "";
             }
         }
-        private int GetMAXColumnid(string tableName, string ColumnName)
+        public int GetMAXColumnid(string tableName, string ColumnName, int lastMaxID=0, string WhereCondition="")
         {
             try
             {
+                if (lastMaxID != 0)
+                {
+                    return lastMaxID+ 1;
+                }
                 int maxcolumnid = 1;
-                string sql = string.Format("SELECT MAX({0}) from [{1}]", ColumnName, tableName);
+                string sql = string.Format("SELECT MAX({0}) from [{1}] {2}", ColumnName, tableName, WhereCondition);
                 var columnid = db.ExecuteScalar(sql);
                 if (columnid != null)
                     maxcolumnid= (int)columnid + 1;

@@ -129,14 +129,62 @@ namespace PracticeCompass.Data.Repositories
             string sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
-            
+            var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
+
             foreach (var paymentmodel in applyPaymentModel)
             {
-              var chargerow = Charges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
+                // update Charge
+                var chargerow = Charges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
                 chargerow.GuarantorReceipts = paymentmodel.AmountPaid;
                 chargerow.Adjustments = paymentmodel.Adjustment;
                 chargerow.pro2modified = DateTime.Now;
 
+                // ChargeActivity
+                string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
+                int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
+                     ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0
+                     , string.Format("Where ChargeSID = {0}", paymentmodel.ChargeSID.ToString()));
+                ChargeActivities.Add(new Core.Models.ChargeActivity
+                {
+                    prrowid = ChargeActivityMAXRowID,
+                    ChargeSID = paymentmodel.ChargeSID,
+                    ActivityCount = maxactivitycount,
+                    Amount = paymentmodel.AmountPaid,
+                    ActivityType = "PMT",
+                    SourceType = paymentmodel.PaymentType,
+                    SourceID = paymentmodel.PayorID,
+                    CreateMethod = "M",
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = "medman",
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now
+                });
+
+                ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
+                 maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
+                     ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0
+                     , string.Format("Where ChargeSID = {0}",paymentmodel.ChargeSID.ToString()));
+                ChargeActivities.Add(new Core.Models.ChargeActivity
+                {
+                    prrowid = ChargeActivityMAXRowID,
+                    ChargeSID = paymentmodel.ChargeSID,
+                    ActivityCount = maxactivitycount,
+                    Amount = paymentmodel.Adjustment,
+                    ActivityType = "ADJ",
+                    SourceType = paymentmodel.PaymentType,
+                    SourceID = paymentmodel.PayorID,
+                    CreateMethod = "M",
+                    TimeStamp = DateTime.Now.ToString(),
+                    LastUser = 88,
+                    CreateStamp = DateTime.Now.ToString(),
+                    CreateUser = 88,
+                    Pro2SrcPDB = "medman",
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now
+                });
             }
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
