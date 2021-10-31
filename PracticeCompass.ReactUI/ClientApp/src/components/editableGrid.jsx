@@ -333,15 +333,7 @@ class EditableGrid extends React.Component {
         });
     };
     itemChange = event => {
-        const field = event.field || '';
-        const inEditID = event.dataItem[this.props.editColumn];
-        const data = this.state.data.map(item => item[this.props.editColumn] === inEditID ? {
-            ...item,
-            [field]: event.value
-        } : item);
-        this.setState({
-            data
-        });
+        this.props.itemChange(event);
     };
     closeEdit = event => {
         if (event.target === event.currentTarget) {

@@ -8,7 +8,9 @@ import {
   GET_PAYMENT_ASSIGNMENT,
   GET_PAYMENT_ASSIGNMENT_FAILS,
   GET_APPLY_PATIENT_PAYMENTS,
-  GET_APPLY_PATIENT_PAYMENTS_FAILS
+  GET_APPLY_PATIENT_PAYMENTS_FAILS,
+  GET_APPLY_PLAN_PAYMENTS,
+  GET_APPLY_PLAN_PAYMENTS_FAILS
 } from "../actionTypes/actionTypes";
 
 const INITIAL_STATE = {
@@ -18,10 +20,12 @@ const INITIAL_STATE = {
   insurancePayemntsFailed: false,
   paymentClass: [],
   paymentClassFailed: false,
-  paymentAssignments:[],
-  paymentAssignmentFailed:false,
-  applyPatientPayments:[],
-  applyPatientPaymentsFailed:false
+  paymentAssignments: [],
+  paymentAssignmentFailed: false,
+  applyPatientPayments: [],
+  applyPatientPaymentsFailed: false,
+  applyPlanPayments: [],
+  applyPlanPaymentsFailed: false
 };
 
 export function paymentsReducer(state = INITIAL_STATE, action) {
@@ -46,6 +50,10 @@ export function paymentsReducer(state = INITIAL_STATE, action) {
       return { ...state, applyPatientPayments: action.payload };
     case GET_APPLY_PATIENT_PAYMENTS_FAILS:
       return { ...state, applyPatientPaymentsFailed: action.payload };
+    case GET_APPLY_PLAN_PAYMENTS:
+      return { ...state, applyPlanPayments: action.payload };
+    case GET_APPLY_PLAN_PAYMENTS_FAILS:
+      return { ...state, applyPlanPaymentsFailed: action.payload };
     default:
       return state;
   }

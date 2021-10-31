@@ -52,6 +52,7 @@ const GetItemHtml = (items) => {
         value={props.value ?? 0}
         maxLength={props.max}
         onChange={props.onChange}
+        disabled={props.disabled ?? false}
         placeholder={props.placeholder}
       />
     );

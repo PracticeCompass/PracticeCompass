@@ -164,58 +164,64 @@ export const guarantorColumns = [
 ];
 export const applyPlanPaymentColumns = [
   {
-    field: "paymentSID",
+    field: "chargeSID",
     title: "ID",
     minWidth: 50,
     orderIndex: 0,
     hide: true,
+    editable:false
   },
   {
-    field: "dos",
+    field: "fromServiceDate",
     title: "Dos",
     editor:"date",
     minWidth: 50,
     orderIndex: 1,
+    editable:false
   },
   {
-    field: "cpt",
+    field: "procedureCode",
     title: "Cpt",
     minWidth: 50,
     orderIndex: 2,
+    editable:false
   },
   {
-    field: "modifier",
+    field: "modifier1",
     title: "Modifier/ICD",
     minWidth: 50,
     orderIndex: 3,
+    editable:false
   },
   {
-    field: "balanace",
+    field: "chargeBalance",
     title: "Balanace",
     minWidth: 50,
     editor:"numeric",
     orderIndex: 4,
+    editable:false
   },
   {
-    field: "payment",
-    title: "Balanace",
+    field: "patientPaid",
+    title: "Patient Paid",
     minWidth: 50,
     orderIndex: 5,
     editor:"numeric",
   },
   {
-    field: "adjustment",
+    field: "adjustments",
     title: "Adjustment",
     minWidth: 50,
     orderIndex: 6,
     editor:"numeric",
   },
   {
-    field: "remaining",
+    field: "amount",
     title: "Remaining",
     minWidth: 50,
     orderIndex: 7,
     editor:"numeric",
+    editable:false
   },
   {
     field: "MoveToNextPlan",

@@ -9,19 +9,22 @@ import {
   GET_PAYMENT_ASSIGNMENT,
   GET_PAYMENT_ASSIGNMENT_FAILS,
   GET_APPLY_PATIENT_PAYMENTS,
-  GET_APPLY_PATIENT_PAYMENTS_FAILS
+  GET_APPLY_PATIENT_PAYMENTS_FAILS,
+  GET_APPLY_PLAN_PAYMENTS,
+  GET_APPLY_PLAN_PAYMENTS_FAILS
+
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../config";
 export const getPatientPayments =
-  (PracticeID, PatientID) => async (dispatch, getState) => {
+  (PracticeID, PatientID,DateType,Datevalue,Fullyapplied) => async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       dispatch(setPatientPayments([]));
       // if (PracticeID == null && PatientID == null) return;
       const resp = await axios({
         method: "GET",
-        url: `${config.baseUrl}/payment/PatientPaymentGet?PracticeID=${PracticeID}&PatientID=${PatientID}`,
+        url: `${config.baseUrl}/payment/PatientPaymentGet?PracticeID=${PracticeID}&PatientID=${PatientID}&DateType=${DateType}&Datevalue=${Datevalue}&Fullyapplied=${Fullyapplied}`,
       });
       dispatch(setPatientPayments(resp.data||[]));
     } catch (error) {
@@ -118,7 +121,6 @@ export const savePayment =
   try {
     dispatch(uiStartLoading());
     // if (PracticeID == null && PatientID == null) return;
-    debugger;
     const resp = await axios({
       method: "GET",
       url: `${config.baseUrl}/payment/PaymentSave?PaymentSID=${PaymentSID}&PracticeID=${PracticeID}&PostDate=${PostDate}&Source=${Source}&PayorID=${PayorID}&Class=${Class}&Amount=${Amount}&Method=${Method}&CreditCard=${CreditCard}&AuthorizationCode=${AuthorizationCode}&Voucher=${Voucher}&CreateMethod=${CreateMethod}&CurrentUser=${CurrentUser}`,
@@ -145,8 +147,8 @@ export const getApplyPatientPayments =
         method: "GET",
         url: `${config.baseUrl}/payment/ApplyPatientPaymentGet?PatientID=${PatientID}`,
       });
-      debugger
       dispatch(setApplyPatientPayments(resp.data||[]));
+      return resp.data;
     } catch (error) {
       console.log("error ==> ", error);
       dispatch({
@@ -158,6 +160,37 @@ export const getApplyPatientPayments =
     }
   };
   
+  export const getApplyInsurancePayment =
+  (GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber) => async (dispatch, getState) => {
+    try {
+      debugger;
+      dispatch(uiStartLoading());
+      dispatch(setApplyPlanPayments([]));
+      // if (PracticeID == null && PatientID == null) return;
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/payment/ApplyInsurancePaymentGet?GuarantorID=${GuarantorID}&DOSType=${DOSType}&DOSvalue=${DOSvalue}&InsuranceID=${InsuranceID}&ClaimIcnNumber=${ClaimIcnNumber}`,
+      });
+      dispatch(setApplyPlanPayments(resp.data||[]));
+      return resp.data;
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_APPLY_PLAN_PAYMENTS_FAILS,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
+  export const setApplyPlanPayments = (applyPayments) => {
+    return {
+      type: GET_APPLY_PLAN_PAYMENTS,
+      payload: applyPayments,
+    };
+  };
+
+
   export const setApplyPatientPayments = (applyPatientPayments) => {
     return {
       type: GET_APPLY_PATIENT_PAYMENTS,

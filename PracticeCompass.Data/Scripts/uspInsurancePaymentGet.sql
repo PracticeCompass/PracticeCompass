@@ -34,7 +34,7 @@ Declare  @SQL varchar(max), @Datefilter varchar(50) ,@Fullyappliedfilter varchar
 		else 'and (FullyApplied = ''N'')'
 		end
 
-set @SQL='select [dbo].[Payment].[PaymentSID] , Practice.SortName as PracticeName , CONVERT(varchar,PostDate,101) as PostDate  , Source , Entity.SortName as PayorName,
+set @SQL='select [dbo].[Payment].[PaymentSID] , Practice.SortName as PracticeName , CONVERT(varchar,PostDate,101) as PostDate  , Source , Entity.SortName as PayorName,Entity.EntitySID as payorID,
 LookupCode.Description as paymentClass , Amount , PayMethod.Description as PayMethod , FullyApplied , Voucher , 
 case when CreateMethod=''M'' then ''Manual''
      when CreateMethod=''E'' then ''ERS ERA - Electronic Remittance Advice''

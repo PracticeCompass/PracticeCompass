@@ -37,9 +37,11 @@ import {
   resetPhysicianList,
   getPhysicianList,
 } from "../../../redux/actions/claimList";
-import { getPatientPayments, getPaymentAssignments, GetPaymentDetails ,
+import {
+  getPatientPayments, getPaymentAssignments, GetPaymentDetails,
   savePayment,
-  getApplyPatientPayments} from "../../../redux/actions/payments"
+  getApplyPatientPayments
+} from "../../../redux/actions/payments"
 const DATA_ITEM_KEY_PATIENT = "patientListgridID";
 const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
@@ -55,8 +57,11 @@ const idGetterApplyPatientPaymentID = getter(DATA_ITEM_KEY_Apply_PATIENT_PAYMENT
 
 const DATA_ITEM_KEY_Physician = "entitySID";
 const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
+
+const DATA_ITEM_KEY_INSURANCE_Details_PAYMENT = "chargeSID";
+const idGetterInsuranceDetailsPaymentID = getter(DATA_ITEM_KEY_INSURANCE_Details_PAYMENT);
+
 function mapStateToProps(state) {
-  debugger;
   return {
     patientList: state.patients.patientList,
     insuranceList: state.patients.insuranceList,
@@ -71,7 +76,7 @@ function mapStateToProps(state) {
     physicians: state.claimList.physicians,
     patientPayments: state.payments.patientPayments,
     paymentAssignments: state.payments.paymentAssignments,
-    applyPatientPayments:state.payments.applyPatientPayments
+    applyPatientPayments: state.payments.applyPatientPayments
   };
 }
 
@@ -89,12 +94,12 @@ function mapDispatchToProps(dispatch) {
     getPhysicianList: (name, refreshdata, skip) =>
       dispatch(getPhysicianList(name, refreshdata, skip)),
     resetPhysicianList: () => dispatch(resetPhysicianList()),
-    getPatientPayments: (PracticeID, PatientID) => dispatch(getPatientPayments(PracticeID, PatientID)),
+    getPatientPayments: (PracticeID, PatientID, DateType, Datevalue, Fullyapplied) => dispatch(getPatientPayments(PracticeID, PatientID, DateType, Datevalue, Fullyapplied)),
     getPaymentAssignments: (PaymentSID) => dispatch(getPaymentAssignments(PaymentSID)),
     GetPaymentDetails: (PaymentSID) => dispatch(GetPaymentDetails(PaymentSID)),
-    getApplyPatientPayments:(patientID)=>dispatch(getApplyPatientPayments(patientID)),
+    getApplyPatientPayments: (patientID) => dispatch(getApplyPatientPayments(patientID)),
     savePayment: (PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser) =>
-    dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser))
+      dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser))
   };
 }
 
@@ -148,6 +153,7 @@ class PatientPayments extends Component {
     subInsurancePracticeID: null,
     practiceSearchText: null,
     physicianSearchText: null,
+    applyPatientPayments:[]
   };
   handleSelect = (e) => {
     this.setState({
@@ -361,10 +367,10 @@ class PatientPayments extends Component {
   };
   patientPaymentGridSearch = () => {
     //this.props.getPatientPayments(142690, 886880)
-    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.patientGuarantorID?.entityId);
+    this.props.getPatientPayments(this.state.patientPracticeID?.entityId, this.state.patientGuarantorID?.entityId,
+      this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false);
   }
   onPatientPaymentGridSelectionChange = async (event) => {
-    debugger;
     this.setState({
       patientPaymentDetails: event.dataItems == null || event.dataItems.length == 0
         ? event.dataItem
@@ -488,15 +494,30 @@ class PatientPayments extends Component {
         }
       });
     } else {
-      this.resetInsuranceDetails();
+      this.resetPatientDetails();
     }
     this.setPatientPaymentDetailExpanded();
     return patientPaymentDetails;
   }
+  resetPatientDetails=()=>{
+    this.setState({
+      patientPaymentDetails:null,
+      paymentSID: null,
+      subInsurancePracticeID: null,
+      patientDetailsGuarantorID: null,
+      payment_calss: null,
+      amountDetails: null,
+      txnDataDetails:  null,
+      methodDetails: null,
+      voucherdetails: null,
+      authorizationCode: null,
+      creditCardDetails: null
+    });
+  }
   savePatientPaymentDetails = async () => {
     let resp = await this.props.savePayment(this.state.paymentSID ?? 0, this.state.subInsurancePracticeID?.entityId, this.state.txnDataDetails ? new Date(this.state.txnDataDetails).toLocaleDateString() : null,
-      "G", this.state.insuranceDetailsID, this.state.payment_calss?.payment_calss, this.state.amountDetails, this.state.methodDetails?.value,
-      this.state.creditCardDetails?.code, this.state.authorizationCode, this.state.voucherdetails, "M", 1)
+      "G", this.state.patientDetailsGuarantorID?.entityId, this.state.payment_calss?this.state.payment_calss.lookupCode:null, this.state.amountDetails, this.state.methodDetails?this.state.methodDetails.value:null,
+      this.state.creditCardDetails?this.state.creditCardDetails.code:null, this.state.authorizationCode, this.state.voucherdetails, "M", 1)
     if (resp) {
       this.setState({
         success: true,
@@ -504,7 +525,7 @@ class PatientPayments extends Component {
       });
       setTimeout(() => {
         this.setState({
-          warning: false,
+          success: false,
         });
       }, this.state.timer);
     } else {
@@ -514,7 +535,7 @@ class PatientPayments extends Component {
       });
       setTimeout(() => {
         this.setState({
-          warning: false,
+          error: false,
         });
       }, this.state.timer);
     }
@@ -528,6 +549,61 @@ class PatientPayments extends Component {
       none: false,
     });
   };
+  onInsuranceDetailsGridSelectionChange = (event) => {
+    //this.setApplyInsurancePaymentExpanded();
+  }
+  onInsuranceDetailsGridDoubleSelectionChange = (event) => {
+    // this.setApplyInsurancePaymentExpanded();
+  }
+  ApplyPatientPayment=async ()=>{
+    if (this.state.patientPaymentDetails == null) {
+      this.setState({
+        warning: true,
+        message: "Please Select Payment to Apply.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    //this.props.getPaymentAssignments(3260);
+    
+    this.props.getPaymentAssignments(this.state.patientPaymentDetails.paymentSID);
+   //let applyData= await this.props.getApplyPatientPayments(3260);
+    let applyData= await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
+    this.setState({
+      applyPatientPayments:applyData
+    });
+    this.setApplyPatientPaymentExpanded();
+  }
+  applyItemChanged=(event)=>{
+
+    if(this.state.patientPaymentDetails ==null) return;
+
+    const field = event.field || '';
+    const inEditID = event.dataItem["chargeSID"];
+    let data = this.state.applyPatientPayments.map(item => item["chargeSID"] === inEditID ? {
+        ...item,
+        [field]: event.value,
+    } : item);
+   
+   let rowIndex=data.findIndex(item => item["chargeSID"] === inEditID );
+   data[rowIndex]["amount"]=data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"]+data[rowIndex]["patientPaid"]);
+
+    let sum = data.reduce(function(prev, current) {
+      return prev + +current["patientPaid"]
+    }, 0);
+
+    if(field == "patientPaid"){
+        this.state.patientPaymentDetails.remaining=this.state.patientPaymentDetails.amount- sum;
+    }
+
+    this.setState({
+      applyPatientPayments:data
+    });
+  }
   render() {
     return (
       <Fragment>
@@ -714,8 +790,8 @@ class PatientPayments extends Component {
                         className="unifyHeight"
                         id="tins"
                         name="tins"
-                        value={this.state.dostype}
-                        onChange={(e) => this.setState({ dostype: e.value })}
+                        value={this.state.txnDatetype}
+                        onChange={(e) => this.setState({ txnDatetype: e.value })}
                       ></DropDown>
                     </div>
                     <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -723,8 +799,8 @@ class PatientPayments extends Component {
                         className="unifyHeight"
                         placeholder="MM/DD/YYYY"
                         format="M/dd/yyyy"
-                        value={this.state.dos}
-                        onChange={(e) => this.setState({ dos: e.value })}
+                        value={this.state.txnDate}
+                        onChange={(e) => this.setState({ txnDate: e.value })}
                       ></DatePickerComponent>
                     </div>
                     <div>
@@ -769,25 +845,10 @@ class PatientPayments extends Component {
                     type="edit"
                     icon="edit"
                     classButton="infraBtn-primary action-button"
-                  onClick={() => 
-                    {
-                      if (this.state.patientPaymentDetails == null) {
-                        this.setState({
-                          warning: true,
-                          message: "Please Select Payment to Apply.",
-                        });
-                        setTimeout(() => {
-                          this.setState({
-                            warning: false,
-                          });
-                        }, this.state.timer);
-                        return;
-                      }
-                      //this.props.getApplyPatientPayments(3260);
-                      this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
-                      this.setApplyPatientPaymentExpanded();
+                    onClick={() => {
+                      this.ApplyPatientPayment();
                     }
-                  }
+                    }
                   >
                     Apply
                   </ButtonComponent>
@@ -798,7 +859,7 @@ class PatientPayments extends Component {
                     icon="edit"
                     classButton="infraBtn-primary action-button"
                     onClick={() => {
-                        this.EditPaymentPatient(this.state.patientPaymentDetails);
+                      this.EditPaymentPatient(this.state.patientPaymentDetails);
                     }}
                   >
                     Edit
@@ -1124,24 +1185,24 @@ class PatientPayments extends Component {
                           columns={insuranceAssignmentColumns}
                           skip={0}
                           take={21}
-                          // onSelectionChange={this.onClaimGridSelectionChange}
-                          // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                          onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
+                          onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
                           // getSelectedItems={this.getSelectedClaims}
                           // selectionMode="multiple"
-                          DATA_ITEM_KEY="paymentSID"
-                          idGetter={idGetterPatientPaymentID}
-                          // data={this.props.Claims}
-                          // totalCount={
-                          //   this.props.Claims != null && this.props.Claims.length > 0
-                          //     ? this.props.Claims[0].totalCount
-                          //     : this.props.Claims.length
-                          // }
-                          height="700px"
+                          DATA_ITEM_KEY="chargeSID"
+                          idGetter={idGetterInsuranceDetailsPaymentID}
+                          data={this.props.paymentAssignments}
+                          totalCount={
+                            this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
+                              ? this.props.paymentAssignments[0].totalCount
+                              : this.props.paymentAssignments.length
+                          }
+                          height="579px"
                           width="100%"
                           //hasCheckBox={true}
                           sortColumns={[]}
                           onSortChange={this.onSortChange}
-                        // pageChange={this.pageChange}
+                          pageChange={this.pageChange}
                         ></GridComponent>
                       </div>
                     </div>
@@ -1191,6 +1252,7 @@ class PatientPayments extends Component {
                                   amountApply: e.value,
                                 })
                               }
+                              disabled={true}
                             ></TextBox>
                           </div>
                           <div style={{ float: "left", marginLeft: "10px" }}>
@@ -1201,12 +1263,13 @@ class PatientPayments extends Component {
                               type="numeric"
                               format="c2"
                               className="unifyHeight"
-                              value={this.state.remaining}
+                              value={this.state.patientPaymentDetails?.remaining==null?this.state.patientPaymentDetails?.amount : this.state.patientPaymentDetails?.remaining}
                               onChange={(e) =>
                                 this.setState({
                                   remaining: e.value,
                                 })
                               }
+                              disabled={true}
                             ></TextBox>
                           </div>
                         </div>
@@ -1227,7 +1290,7 @@ class PatientPayments extends Component {
                                 data-parent="#accordionExample"
                               >
                                 <EditableGrid
-                                  data={this.props.applyPatientPayments}
+                                  data={this.state.applyPatientPayments}
                                   id="applyedPatient"
                                   skip={0}
                                   take={21}
@@ -1240,6 +1303,7 @@ class PatientPayments extends Component {
                                   onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
                                   columns={applyPatientPaymentColumns}
                                   onSortChange={this.onSortChange}
+                                  itemChange={this.applyItemChanged}
                                   // pageChange={this.pageChange}
                                   isEditable={true}
                                 // totalCount={
@@ -1289,28 +1353,28 @@ class PatientPayments extends Component {
                               data-parent="#accordionExample"
                             >
                               <GridComponent
-                                id="insurancePayment"
+                                id="applyInsurancePayment"
                                 columns={insuranceAssignmentColumns}
                                 skip={0}
                                 take={21}
-                                // onSelectionChange={this.onClaimGridSelectionChange}
-                                // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                                onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
+                                onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
                                 // getSelectedItems={this.getSelectedClaims}
                                 // selectionMode="multiple"
-                                DATA_ITEM_KEY="paymentSID"
-                                idGetter={idGetterPatientPaymentID}
-                                // data={this.props.Claims}
-                                // totalCount={
-                                //   this.props.Claims != null && this.props.Claims.length > 0
-                                //     ? this.props.Claims[0].totalCount
-                                //     : this.props.Claims.length
-                                // }
-                                height="700px"
+                                DATA_ITEM_KEY="chargeSID"
+                                idGetter={idGetterInsuranceDetailsPaymentID}
+                                data={this.props.paymentAssignments}
+                                totalCount={
+                                  this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
+                                    ? this.props.paymentAssignments[0].totalCount
+                                    : this.props.paymentAssignments.length
+                                }
+                                height="579px"
                                 width="100%"
                                 //hasCheckBox={true}
                                 sortColumns={[]}
                                 onSortChange={this.onSortChange}
-                              // pageChange={this.pageChange}
+                                pageChange={this.pageChange}
                               ></GridComponent>
                             </div>
                           </div>
