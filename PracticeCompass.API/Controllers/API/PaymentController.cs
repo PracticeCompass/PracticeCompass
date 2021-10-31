@@ -139,5 +139,37 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<PaymentClass>();
             }
         }
+        [HttpGet]
+        [Route("api/payment/ApplyPayment")]
+        public bool ApplyPayment(List<ApplyPaymentModel> applyPaymentModel)
+        {
+            try
+            {
+                ApplyPaymentModel applyPaymentModel1 = new ApplyPaymentModel();
+                applyPaymentModel1.ChargeSID = 7;
+                applyPaymentModel1.AmountPaid = 10;
+                applyPaymentModel1.Adjustment = 20;
+                ApplyPaymentModel applyPaymentModel2 = new ApplyPaymentModel();
+                applyPaymentModel2.ChargeSID = 30;
+                applyPaymentModel2.AmountPaid = 25;
+                applyPaymentModel2.Adjustment = 40;
+                applyPaymentModel.Add(applyPaymentModel1);
+                applyPaymentModel.Add(applyPaymentModel2);
+                unitOfWork.PaymentRepository.ApplyPayment(applyPaymentModel);
+                // Get List of Rows
+                // Scope tranaction
+                // update charge
+                // ChargeActivity
+                // PaymentAssignment
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+
     }
 }

@@ -118,9 +118,26 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);
             return data.Read<PaymentClass>().ToList();
         }
-        public bool ApplyPayment(int ChargeSID, List<ChargeActivity> ChargeActivities, List<PaymentAssignment> PaymentAssignments,
-            List<PlanClaimCharge> PlanClaimCharges, List<Charge> Charges)
+        public bool ApplyPayment(List<ApplyPaymentModel> applyPaymentModel)
         {
+            var ChargeActivities = new List<ChargeActivity>();
+            var Charges = new List<Charge>();
+            var PaymentAssignments= new List<PaymentAssignment>();
+            var PlanClaimCharges = new List<PlanClaimCharge>();
+
+           var chargeIDs= applyPaymentModel.Select(x => x.ChargeSID);
+            string sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
+            var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
+            Charges = Chargesresults.Read<Charge>().ToList();
+            
+            foreach (var paymentmodel in applyPaymentModel)
+            {
+              var chargerow = Charges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
+                chargerow.GuarantorReceipts = paymentmodel.AmountPaid;
+                chargerow.Adjustments = paymentmodel.Adjustment;
+                chargerow.pro2modified = DateTime.Now;
+
+            }
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
             var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
