@@ -202,8 +202,8 @@ export const applyPlanPaymentColumns = [
     editable:false
   },
   {
-    field: "patientPaid",
-    title: "Patient Paid",
+    field: "insurancePaid",
+    title: "Plan Paid",
     minWidth: 50,
     orderIndex: 5,
     editor:"numeric",

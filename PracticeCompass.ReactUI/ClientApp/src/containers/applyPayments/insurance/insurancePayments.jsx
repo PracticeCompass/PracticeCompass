@@ -40,7 +40,8 @@ import {
   GetPaymentDetails,
   getPaymentAssignments,
   savePayment,
-  getApplyInsurancePayment
+  getApplyInsurancePayment,
+  ApplyPayments
 } from "../../../redux/actions/payments";
 import $ from "jquery";
 
@@ -90,7 +91,8 @@ function mapDispatchToProps(dispatch) {
     getPaymentAssignments: (PaymentSID) => dispatch(getPaymentAssignments(PaymentSID)),
     savePayment: (PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser) =>
       dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser)),
-    getApplyInsurancePayment:(GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber)=>dispatch(getApplyInsurancePayment(GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber))
+    getApplyInsurancePayment: (GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber) => dispatch(getApplyInsurancePayment(GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber)),
+    ApplyPayments: (list) => dispatch(ApplyPayments(list))
 
   };
 }
@@ -130,7 +132,7 @@ class insurancePayments extends Component {
     practiceSearchText: null,
     fullyApplied: false,
     guarantorSearchText: null,
-    applyPlanPayments:[]
+    applyPlanPayments: []
   };
   handleSelect = (e) => {
     this.setState({
@@ -368,10 +370,14 @@ class insurancePayments extends Component {
       this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false);
   }
   onInsurancePaymentGridSelectionChange = (event) => {
+    let InsurancePaymentDetails = event.dataItems == null || event.dataItems.length == 0
+      ? event.dataItem
+      : event.dataItems[event.endRowIndex]
+    if (InsurancePaymentDetails.remaining == null) {
+      InsurancePaymentDetails.remaining = this.state.InsurancePaymentDetails.amount
+    }
     this.setState({
-      InsurancePaymentDetails: event.dataItems == null || event.dataItems.length == 0
-        ? event.dataItem
-        : event.dataItems[event.endRowIndex]
+      InsurancePaymentDetails
     });
   };
   onInsurancePaymentGridDoubleSelectionChange = async (event) => {
@@ -586,15 +592,16 @@ class insurancePayments extends Component {
       none: false,
     });
   };
-  findClaim=async()=>{
+  findClaim = async () => {
     debugger;
     //(GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber)
-    let applyData= await this.props.getApplyInsurancePayment(this.state.patientApplyGuarantorID,this.state.txnApplyDatetype,this.state.txnApplyDate?new Date(this.state.txnApplyDate) :null,this.state.insuranceApplyID,this.state.billNumber);
+    let applyData = await this.props.getApplyInsurancePayment(this.state.patientApplyGuarantorID, this.state.txnApplyDatetype, this.state.txnApplyDate ? new Date(this.state.txnApplyDate) : null, this.state.insuranceApplyID, this.state.billNumber);
     this.setState({
-      applyPlanPayments:applyData
+      applyPlanPayments: applyData,
+      applyPlanPaymentsbackup:applyData
     });
   }
-  ApplyInsurancePayment=async ()=>{
+  ApplyInsurancePayment = async () => {
     if (this.state.InsurancePaymentDetails == null) {
       this.setState({
         warning: true,
@@ -610,36 +617,76 @@ class insurancePayments extends Component {
     //this.props.getPaymentAssignments(3260);
 
     this.props.getPaymentAssignments(this.state.InsurancePaymentDetails.paymentSID);
-   //let applyData= await this.props.getApplyPatientPayments(3260);
+    //let applyData= await this.props.getApplyPatientPayments(3260);
 
     this.setApplyInsurancePaymentExpanded();
   }
 
-  applyItemChanged=(event)=>{
-
-    if(this.state.InsurancePaymentDetails ==null) return;
+  applyItemChanged = (event) => {
+     debugger;
+    if (this.state.InsurancePaymentDetails == null || this.state.applyPlanPayments ==null ) return;
 
     const field = event.field || '';
     const inEditID = event.dataItem["chargeSID"];
+    let rowIndex = this.state.applyPlanPayments.findIndex(item => item["chargeSID"] === inEditID);
+    let backUpData = { ...this.state.applyPlanPaymentsbackup[rowIndex] };
     let data = this.state.applyPlanPayments.map(item => item["chargeSID"] === inEditID ? {
-        ...item,
-        [field]: event.value,
+      ...item,
+      [field]: event.value,
+      isEdit: true
     } : item);
-   
-   let rowIndex=data.findIndex(item => item["chargeSID"] === inEditID );
-   data[rowIndex]["amount"]=data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"]+data[rowIndex]["patientPaid"]);
 
-    let sum = data.reduce(function(prev, current) {
-      return prev + +current["patientPaid"]
-    }, 0);
+    data[rowIndex]["amount"] = data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"] + data[rowIndex]["insurancePaid"]);
 
-    if(field == "patientPaid"){
-        this.state.InsurancePaymentDetails.remaining=this.state.InsurancePaymentDetails.amount- sum;
+    // let sum = data.reduce(function (prev, current) {
+    //   return prev + +current["insurancePaid"]
+    // }, 0);
+
+    if (field == "insurancePaid") {
+      this.state.InsurancePaymentDetails.remaining = this.state.InsurancePaymentDetails.remaining - (data[rowIndex]["insurancePaid"] - backUpData["insurancePaid"]);
     }
-
+    let disableApply=false;
+    if(data[rowIndex]["amount"] <0 || this.state.InsurancePaymentDetails.remaining <0){
+        disableApply=true;
+    }
     this.setState({
-      applyPlanPayments:data
+      applyPlanPayments: data,disableApply
     });
+  }
+  ApplyListChanged = async () => {
+    if (this.state.applyPlanPayments != null && this.state.InsurancePaymentDetails != null) {
+      let list = this.state.applyPlanPayments.map(item => item.isEdit == true ? {
+        chargeSID: item.chargeSID,
+        paymentSID: this.state.InsurancePaymentDetails.paymentSID,
+        payorID: item.claimSID,
+        amountPaid: item.insurancePaid,
+        adjustment: item.adjustments,
+        PaymentType: "I"
+      } : null);
+      list = list.filter(i => i != null);
+      let result = await this.props.ApplyPayments(list);
+      if (result) {
+        this.setState({
+          success: true,
+          message: "Save Apply succefully.",
+        });
+        setTimeout(() => {
+          this.setState({
+            success: false,
+          });
+        }, this.state.timer);
+      } else {
+        this.setState({
+          error: true,
+          message: "Error Apply succefully.",
+        });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, this.state.timer);
+      }
+    }
   }
   render() {
     return (
@@ -1322,7 +1369,7 @@ class insurancePayments extends Component {
                             type="numeric"
                             format="c2"
                             className="unifyHeight"
-                            value={this.state.InsurancePaymentDetails?.remaining==null?this.state.InsurancePaymentDetails?.amount : this.state.InsurancePaymentDetails?.remaining}
+                            value={this.state.InsurancePaymentDetails?.remaining}
                             onChange={(e) =>
                               this.setState({
                                 remaining: e.value,
@@ -1510,8 +1557,8 @@ class insurancePayments extends Component {
                                 take={21}
                                 height="700px"
                                 width="100%"
-                                editColumn={"paymentSID"}
-                                DATA_ITEM_KEY="paymentSID"
+                                editColumn={"chargeSID"}
+                                DATA_ITEM_KEY="chargeSID"
                                 idGetter={idGetterApplyPlanPaymentID}
                                 onSelectionChange={this.onApplyPaymentGridSelectionChange}
                                 onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
@@ -1535,8 +1582,9 @@ class insurancePayments extends Component {
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary"
-                          // onClick={() => this.ApplyInsurancePayment}
+                          onClick={() => { this.ApplyListChanged() }}
                           style={{ marginTop: "0px" }}
+                          disabled={this.state.disableApply}
                         >
                           Apply
                         </ButtonComponent>

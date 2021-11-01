@@ -183,6 +183,32 @@ export const getApplyPatientPayments =
       dispatch(uiStopLoading());
     }
   };
+
+  export const ApplyPayments =
+  (list) => async (dispatch, getState) => {
+    try {
+      debugger;
+      dispatch(uiStartLoading());
+      // if (PracticeID == null && PatientID == null) return;
+     let  applyPaymentModel=[];
+     applyPaymentModel.push({ ChargeSID:"5" ,PaymentSID:"7"});
+      const resp = await axios({
+        method: "POST",
+        url: `${config.baseUrl}/payment/ApplyPayment`,
+        data: JSON.stringify(list)
+      });
+      return resp.data;
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_APPLY_PATIENT_PAYMENTS_FAILS,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
+  
   export const setApplyPlanPayments = (applyPayments) => {
     return {
       type: GET_APPLY_PLAN_PAYMENTS,

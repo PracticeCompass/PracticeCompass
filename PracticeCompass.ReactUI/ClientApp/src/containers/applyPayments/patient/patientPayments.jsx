@@ -40,7 +40,8 @@ import {
 import {
   getPatientPayments, getPaymentAssignments, GetPaymentDetails,
   savePayment,
-  getApplyPatientPayments
+  getApplyPatientPayments,
+  ApplyPayments
 } from "../../../redux/actions/payments"
 const DATA_ITEM_KEY_PATIENT = "patientListgridID";
 const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
@@ -99,7 +100,8 @@ function mapDispatchToProps(dispatch) {
     GetPaymentDetails: (PaymentSID) => dispatch(GetPaymentDetails(PaymentSID)),
     getApplyPatientPayments: (patientID) => dispatch(getApplyPatientPayments(patientID)),
     savePayment: (PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser) =>
-      dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser))
+      dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser)),
+      ApplyPayments:(list)=>dispatch(ApplyPayments(list))
   };
 }
 
@@ -574,7 +576,8 @@ class PatientPayments extends Component {
    //let applyData= await this.props.getApplyPatientPayments(3260);
     let applyData= await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
     this.setState({
-      applyPatientPayments:applyData
+      applyPatientPayments:applyData,
+      applyPatientPaymentsbackup:applyData
     });
     this.setApplyPatientPaymentExpanded();
   }
@@ -584,25 +587,69 @@ class PatientPayments extends Component {
 
     const field = event.field || '';
     const inEditID = event.dataItem["chargeSID"];
+    let rowIndex = this.state.applyPatientPayments.findIndex(item => item["chargeSID"] === inEditID);
+    let backUpData = { ...this.state.applyPatientPaymentsbackup[rowIndex] };
+
     let data = this.state.applyPatientPayments.map(item => item["chargeSID"] === inEditID ? {
         ...item,
         [field]: event.value,
+        isEdit: true
     } : item);
    
-   let rowIndex=data.findIndex(item => item["chargeSID"] === inEditID );
+
    data[rowIndex]["amount"]=data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"]+data[rowIndex]["patientPaid"]);
 
-    let sum = data.reduce(function(prev, current) {
-      return prev + +current["patientPaid"]
-    }, 0);
+    // let sum = data.reduce(function(prev, current) {
+    //   return prev + +current["patientPaid"]
+    // }, 0);
 
     if(field == "patientPaid"){
-        this.state.patientPaymentDetails.remaining=this.state.patientPaymentDetails.amount- sum;
+        this.state.patientPaymentDetails.remaining = this.state.patientPaymentDetails.remaining - (data[rowIndex]["patientPaid"] - backUpData["patientPaid"]);
+    }
+
+    let disableApply=false;
+    if(data[rowIndex]["amount"] <0 || this.state.patientPaymentDetails.remaining <0){
+        disableApply=true;
     }
 
     this.setState({
-      applyPatientPayments:data
+      applyPatientPayments:data,disableApply
     });
+  }
+  ApplyListChanged = async () => {
+    if (this.state.applyPatientPayments != null && this.state.patientPaymentDetails != null) {
+      let list = this.state.applyPatientPayments.map(item => item.isEdit == true ? {
+        chargeSID: item.chargeSID,
+        paymentSID: this.state.patientPaymentDetails.paymentSID,
+        payorID: item.claimSID,
+        amountPaid: item.patientPaid,
+        adjustment: item.adjustments,
+        PaymentType: "G"
+      } : null);
+      list = list.filter(i => i != null);
+      let result = await this.props.ApplyPayments(list);
+      if (result) {
+        this.setState({
+          success: true,
+          message: "Save Apply succefully.",
+        });
+        setTimeout(() => {
+          this.setState({
+            success: false,
+          });
+        }, this.state.timer);
+      } else {
+        this.setState({
+          error: true,
+          message: "Error Apply succefully.",
+        });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, this.state.timer);
+      }
+    }
   }
   render() {
     return (
