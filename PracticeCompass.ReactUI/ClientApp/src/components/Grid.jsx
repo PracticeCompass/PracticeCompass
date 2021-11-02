@@ -339,7 +339,6 @@ class GridComponent extends React.Component {
             {Columns &&
               Columns.map((column, index) => {
                 if (column.hide) return;
-
                 return (
                   <Column
                     field={column.field}

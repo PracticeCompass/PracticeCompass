@@ -61,33 +61,39 @@ export const insuranceColumns = [
     field: "amount",
     title: "Amount",
     type: "currency",
-    isCustomCell: true,
     minWidth: 100,
     orderIndex: 3,
+  },
+  {
+    field: "remaining",
+    title: "Remaining",
+    type: "currency",
+    minWidth: 100,
+    orderIndex: 4,
   },
   {
     field: "fullyApplied",
     title: "Applied",
     minWidth: 70,
-    orderIndex: 4,
+    orderIndex: 5,
   },
   {
     field: "practiceName",
     title: "Location",
     minWidth: 300,
-    orderIndex: 5,
+    orderIndex: 6,
   },
   {
     field: "payMethod",
     title: "Payment Method",
     minWidth: 150,
-    orderIndex: 6,
+    orderIndex: 7,
   },
   {
     field: "paymentClass",
     title: "Payment Class",
     minWidth: 150,
-    orderIndex: 7,
+    orderIndex: 8,
   },
   // {
   //   field: "notes",
@@ -106,7 +112,7 @@ export const insuranceColumns = [
 export const insuranceAssignmentColumns = [
   {
     field: "chargeSID",
-    title: "ChargeSID",
+    title: "Charge ID",
     minWidth: 100,
     orderIndex: 1,
   },
@@ -132,20 +138,28 @@ export const insuranceAssignmentColumns = [
   {
     field: "amount",
     title: "Amount",
+    type: "currency",
     minWidth: 100,
     orderIndex: 5,
+  },
+  {
+    field: "remaining",
+    title: "Remaining",
+    type: "currency",
+    minWidth: 100,
+    orderIndex: 6,
   },
   {
     field: "patientBilled",
     title: "Patient Billed",
     minWidth: 100,
-    orderIndex: 6,
+    orderIndex: 7,
   },
   {
     field: "patientStatement",
     title: "Patient Statement",
     minWidth: 150,
-    orderIndex: 7,
+    orderIndex: 8,
   },
   {
     field: "id",
@@ -198,6 +212,7 @@ export const applyPlanPaymentColumns = [
     title: "Balanace",
     minWidth: 50,
     editor:"numeric",
+    type:"currency",
     orderIndex: 4,
     editable:false
   },
@@ -207,6 +222,7 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 5,
     editor:"numeric",
+    //type:"currency",
   },
   {
     field: "adjustments",
@@ -214,6 +230,7 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 6,
     editor:"numeric",
+    //type:"currency",
   },
   {
     field: "amount",
@@ -221,6 +238,7 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 7,
     editor:"numeric",
+    type:"currency",
     editable:false
   },
   {
@@ -229,6 +247,8 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     editor:"boolean",
     orderIndex: 8,
+    isCustomCell:true,
+    type:"checkBox"
   },
 ]
 export const DOSFilter = [
@@ -247,5 +267,23 @@ export const DOSFilter = [
   {
     id: "3",
     text: "Newer than",
+  },
+];
+export const AmountFilter = [
+  {
+    id: "0",
+    text: "Any",
+  },
+  {
+    id: "1",
+    text: "Equal",
+  },
+  {
+    id: "2",
+    text: "greater than",
+  },
+  {
+    id: "3",
+    text: "less than",
   },
 ];

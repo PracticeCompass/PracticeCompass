@@ -203,7 +203,7 @@ class EditableGrid extends React.Component {
         if (width > COLUMN_MIN) width -= ADJUST_PADDING;
         return width;
     };
-
+     
     render() {
         let Columns = this.props.columns.sort((a, b) =>
             a.orderIndex > b.orderIndex ? 1 : -1
@@ -304,19 +304,19 @@ class EditableGrid extends React.Component {
                                 <Column
                                     field={column.field}
                                     title={column.title}
-                                    editor={column.editor}
                                     key={index}
                                     width={this.setWidth(column.minWidth)}
-                                    editable={column.editable}
                                     cell={
                                         column.type == "currency"
                                             ? CurrencyCell
                                             : column.iscellWithIcon
                                                 ? cellWithIcon
-                                                : column.isCustomCell
+                                                : column.isCustomCell 
                                                     ? this.MyCustomCell
                                                     : column.showToolTip && ColumnNameCell
                                     }
+                                    editable={column.editable}
+                                    editor={column.editor}
                                 />
                             );
 

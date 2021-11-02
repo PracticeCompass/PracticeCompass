@@ -577,7 +577,7 @@ class PatientPayments extends Component {
     let applyData= await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
     this.setState({
       applyPatientPayments:applyData,
-      applyPatientPaymentsbackup:applyData
+      applyPatientPaymentsbackup:[...applyData]
     });
     this.setApplyPatientPaymentExpanded();
   }
