@@ -71,7 +71,8 @@ class EraPayments extends Component {
     subPatientPracticeID: null,
     subInsurancePracticeID: null,
     practiceSearchText: null,
-    masterExpanded:true
+    masterExpanded:true,
+    posted:false
   };
 
 
@@ -169,7 +170,7 @@ class EraPayments extends Component {
     });
   };
   ERAPaymentGridSearch =()=>{
-    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted,this.state.amountType, this.state.checkNumber,this.state.amountType?.id)
+    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber,this.state.amountType?.id)
   }
   render() {
     return (

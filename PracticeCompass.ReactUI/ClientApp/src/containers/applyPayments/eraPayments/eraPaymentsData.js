@@ -35,7 +35,7 @@ export const PracticeColumns = [
 export const masterColumns = [
 
   {
-    field: "practicename",
+    field: "practiceName",
     title: "Practice Name",
     minWidth: 100,
     orderIndex: 0,
@@ -107,10 +107,12 @@ export const masterColumns = [
     orderIndex: 11,
   },
   {
-    field: "paymentfount",
-    title: "Payment Fount",
+    field: "paymentfound",
+    title: "Payment Found",
     minWidth: 110,
     orderIndex: 12,
+    isCustomCell:true,
+    type:"checkBox"
   },
   {
     field: "manualMatch",
