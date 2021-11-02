@@ -23,121 +23,118 @@ export const InsuranceCategory = [
     text: "3",
   },
 ];
-export const PhysicianColumns = [
-  {
-    field: "sortName",
-    title: "Physician Name",
-  },
-];
+
 export const PracticeColumns = [
   {
     field: "sortName",
     title: "Practice Name",
   },
 ];
-export const insurancePatientColumns = [
+
+
+export const masterColumns = [
+
   {
-    field: "sortName",
-    title: "Plan Company",
-    //minWidth: "100px",
-  },
-];
-export const guarantorColumns = [
-  {
-    field: "sortName",
-    title: "Guarantor Name",
-    //minWidth: "100px",
-  },
-];
-export const patientPaymentColumns = [
-  {
-    field: "id",
-    title: "ID",
-    minWidth: 60,
-  },
-  {
-    field: "patient",
-    title: "Patient",
-    minWidth: 180,
-  },
-  {
-    field: "depositDate",
-    title: "Deposit Date",
+    field: "practicename",
+    title: "Practice Name",
     minWidth: 100,
+    orderIndex: 0,
   },
   {
-    field: "amount",
-    title: "Amount",
-    minWidth: 150,
-  },
-  {
-    field: "applied",
-    title: "Applied",
-    minWidth: 80,
-  },
-  {
-    field: "onHold",
-    title: "OnHold",
-    minWidth: 70,
-  },
-  {
-    field: "location",
-    title: "Location",
-    minWidth: 150,
-  },
-  {
-    field: "user",
-    title: "User",
-    minWidth: 130,
-  },
-  {
-    field: "notes",
-    title: "Notes",
-  },
-];
-export const insuranceColumns = [
-  {
-    field: "id",
-    title: "ID",
-    minWidth: 60,
-  },
-  {
-    field: "insurance",
-    title: "Plan",
-    minWidth: 180,
-  },
-  {
-    field: "depositDate",
-    title: "Deposit Date",
+    field: "checkTraceNbr",
+    title: "Check Trace",
     minWidth: 100,
+    orderIndex: 1,
   },
   {
-    field: "amount",
-    title: "Amount",
+    field: "transHandlingCode",
+    title: "Trans Handling",
+    minWidth: 100,
+    orderIndex: 2,
+  },
+  {
+    field: "totalActualProviderPaymentAmt",
+    title: "Total Actual Provider Payment Amt",
+    minWidth: 170,
+    orderIndex: 3,
+  },
+  {
+    field: "paymentMethodCode",
+    title: "Payment Method",
+    minWidth: 120,
+    orderIndex: 4,
+  },
+  {
+    field: "paymentFormatCode",
+    title: "Payment Format",
+    minWidth: 120,
+    orderIndex: 5,
+  },
+  {
+    field: "senderBankAcctNbr",
+    title: "Sender Bank Acct",
     minWidth: 150,
+    orderIndex: 6,
   },
   {
-    field: "applied",
-    title: "Applied",
-    minWidth: 80,
-  },
-  {
-    field: "onHold",
-    title: "OnHold",
-    minWidth: 70,
-  },
-  {
-    field: "location",
-    title: "Location",
+    field: "senderBankAcctNbr",
+    title: "Sender Bank Acct",
     minWidth: 150,
+    orderIndex: 7,
   },
   {
-    field: "user",
-    title: "User",
-    minWidth: 130,
+    field: "remitPayerIdent",
+    title: "Remit Payer Ident",
+    minWidth: 150,
+    orderIndex: 8,
   },
   {
-    field: "notes",
-    title: "Notes",
+    field: "receiverAcctNbr",
+    title: "Receiver Acct",
+    minWidth: 100,
+    orderIndex: 9,
+  },
+  {
+    field: "checkIssueDate",
+    title: "Check Issue",
+    minWidth: 100,
+    orderIndex: 10,
+  },
+  {
+    field: "payerNameText",
+    title: "Payer Name",
+    minWidth: 100,
+    orderIndex: 11,
+  },
+  {
+    field: "paymentfount",
+    title: "Payment Fount",
+    minWidth: 110,
+    orderIndex: 12,
+  },
+  {
+    field: "manualMatch",
+    title: "Manual match",
+    minWidth: 110,
+    orderIndex: 13,
+  },
+  
+];
+export const AmountFilter = [
+  {
+    id: "0",
+    text: "Any",
+  },
+  {
+    id: "1",
+    text: "Equal",
+  },
+  {
+    id: "2",
+    text: "Greater than",
+  },
+  {
+    id: "3",
+    text: "Less than",
   },
 ];

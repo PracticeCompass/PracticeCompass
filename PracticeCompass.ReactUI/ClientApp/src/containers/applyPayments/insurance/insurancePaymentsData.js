@@ -187,7 +187,7 @@ export const applyPlanPaymentColumns = [
   },
   {
     field: "fromServiceDate",
-    title: "Dos",
+    title: "DOS",
     editor:"date",
     minWidth: 50,
     orderIndex: 1,
@@ -195,7 +195,7 @@ export const applyPlanPaymentColumns = [
   },
   {
     field: "procedureCode",
-    title: "Cpt",
+    title: "CPT",
     minWidth: 50,
     orderIndex: 2,
     editable:false
@@ -251,7 +251,7 @@ export const applyPlanPaymentColumns = [
     type:"checkBox"
   },
 ]
-export const DOSFilter = [
+export const  DOSFilter = [
   {
     id: "0",
     text: "Any",

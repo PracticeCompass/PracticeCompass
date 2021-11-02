@@ -11,7 +11,9 @@ import {
   GET_APPLY_PATIENT_PAYMENTS,
   GET_APPLY_PATIENT_PAYMENTS_FAILS,
   GET_APPLY_PLAN_PAYMENTS,
-  GET_APPLY_PLAN_PAYMENTS_FAILS
+  GET_APPLY_PLAN_PAYMENTS_FAILS,
+  GET_ERA_PAYMENTS,
+  GET_ERA_PAYMENTS_FAILS
 
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
@@ -31,6 +33,28 @@ export const getPatientPayments =
       console.log("error ==> ", error);
       dispatch({
         type: GET_PATIENT_PAYMENTS_FAILED,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
+
+  export const getERAPaymentHeader =
+  (PracticeID, IsPosted,  Amount,  CheckNumber,  AmountType) => async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      dispatch(setERAPayments([]));
+      // if (PracticeID == null && PatientID == null) return;
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/payment/ERAPaymentHeaderGet?PracticeID=${PracticeID}&IsPosted=${IsPosted}&Amount=${Amount}&CheckNumber=${CheckNumber}&AmountType=${AmountType}`,
+      });
+      dispatch(setERAPayments(resp.data||[]));
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_ERA_PAYMENTS,
         payload: error,
       });
     } finally {
@@ -215,7 +239,12 @@ export const getApplyPatientPayments =
     };
   };
 
-
+export const setERAPayments= (ERApayments)=>{
+  return {
+    type: GET_ERA_PAYMENTS,
+    payload: ERApayments,
+  };
+}
   export const setApplyPatientPayments = (applyPatientPayments) => {
     return {
       type: GET_APPLY_PATIENT_PAYMENTS,

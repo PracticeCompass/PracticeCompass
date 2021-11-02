@@ -60,7 +60,7 @@ export const applyPatientPaymentColumns = [
   },
   {
     field: "fromServiceDate",
-    title: "Dos",
+    title: "DOS",
     editor:"date",
     minWidth: 50,
     orderIndex: 1,
@@ -68,7 +68,7 @@ export const applyPatientPaymentColumns = [
   },
   {
     field: "procedureCode",
-    title: "Cpt",
+    title: "CPT",
     minWidth: 50,
     orderIndex: 2,
     editable:false
