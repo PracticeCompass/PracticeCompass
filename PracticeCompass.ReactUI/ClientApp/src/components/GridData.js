@@ -3,11 +3,12 @@ import { Slider, NumericTextBox } from '@progress/kendo-react-inputs';
 import { Pager } from "@progress/kendo-react-data-tools";
 import { useTableKeyboardNavigation } from "@progress/kendo-react-data-tools";
 import { Checkbox } from "@progress/kendo-react-inputs";
+import { Button } from "@progress/kendo-react-buttons";
 import DropDown from "./DropDown";
 export const MyPager = (props) => {
     const currentPage = Math.floor(props.skip / props.take) + 1;
     const totalPages = Math.ceil((props.total || 0) / props.take);
-    const totalTake= (props.skip+props.take)>props.total??0?props.total:props.skip+props.take;
+    const totalTake = (props.skip + props.take) > props.total ?? 0 ? props.total : props.skip + props.take;
     const handleChange = (e) => {
         if (props.onPageChange) {
             props.onPageChange({
@@ -31,7 +32,7 @@ export const MyPager = (props) => {
             <div className="row">
                 <div className="col-8">
                     <Pager
-                       style={{border:"none"}}
+                        style={{ border: "none" }}
                         skip={props.skip}
                         take={props.take}
                         total={props.total}
@@ -43,8 +44,8 @@ export const MyPager = (props) => {
                     />
                 </div>
 
-                <div className="col-4" style={{textAlign:"end"}}>
-                    <label style={{marginRight:"20px"}}>{`${props.total>0?props.skip+1+' - ':''}${totalTake} of ${props.totalCount??props.total} items`}</label></div>
+                <div className="col-4" style={{ textAlign: "end" }}>
+                    <label style={{ marginRight: "20px" }}>{`${props.total > 0 ? props.skip + 1 + ' - ' : ''}${totalTake} of ${props.totalCount ?? props.total} items`}</label></div>
             </div>
         </div>
     );
@@ -53,16 +54,16 @@ export const CurrencyCell = (props) => {
     return <td style={{ textAlign: "right" }}>{props.dataItem[props.field]}</td>;
 };
 export const cellWithIcon = (props) => {
-    return <td style={{color: "red"}}><span className="k-icon k-i-file-pdf k-i-pdf"></span></td>;
+    return <td style={{ color: "red" }}><span className="k-icon k-i-file-pdf k-i-pdf"></span></td>;
 };
 export const CustomCell = (props) => {
     const field = props.field || "";
     const value = props.dataItem[field];
     const navigationAttributes = useTableKeyboardNavigation(props.id);
     //let column = props.myProp.columns[props.columnIndex];
-    let column = props.myProp.columns.find(x=>x.field==field);
+    let column = props.myProp.columns.find(x => x.field == field);
 
-    if (column.type === "checkBox" ) {
+    if (column.type === "checkBox") {
         return (
             <td
                 colSpan={props.colSpan}
@@ -74,6 +75,29 @@ export const CustomCell = (props) => {
                 <Checkbox style={{ marginLeft: "35%" }} value={value} disabled={props.dataItem.inEdit != true} />
             </td>
         );
+    }
+    else if (column.type === "button") {
+        return (
+            <td
+                colSpan={props.colSpan}
+                role={"gridcell"}
+                aria-colindex={props.ariaColumnIndex}
+                aria-selected={props.isSelected}
+                {...navigationAttributes}
+            >
+                <Button
+                    icon={this.props.icon}
+                    className={"infraBtn " + this.props.classButton ?? "infraBtn-primary"}
+                    //   onClick={this.props.onClick}
+                    style={this.props.style}
+                    disabled={true}
+                >
+                    {this.props.children}
+                </Button>
+
+            </td>
+        );
+
     } else if (column.type === "dropDown") {
         return (
             <td

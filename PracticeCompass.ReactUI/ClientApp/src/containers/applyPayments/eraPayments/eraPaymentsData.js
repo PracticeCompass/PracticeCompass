@@ -34,10 +34,12 @@ export const PracticeColumns = [
 
 export const masterColumns = [
 
+
+
   {
     field: "practiceName",
     title: "Practice Name",
-    minWidth: 200,
+    minWidth: 250,
     orderIndex: 0,
   },
   {
@@ -72,26 +74,20 @@ export const masterColumns = [
   },
   {
     field: "senderBankAcctNbr",
-    title: "Sender Bank Acct",
+    title: "Sender Acct",
     minWidth: 150,
     orderIndex: 6,
-  },
-  {
-    field: "senderBankAcctNbr",
-    title: "Sender Bank Acct",
-    minWidth: 150,
-    orderIndex: 7,
-  },
-  {
-    field: "remitPayerIdent",
-    title: "Remit Payer Ident",
-    minWidth: 150,
-    orderIndex: 8,
   },
   {
     field: "receiverAcctNbr",
     title: "Receiver Acct",
     minWidth: 100,
+    orderIndex: 8,
+  },
+  {
+    field: "remitPayerIdent",
+    title: "Remit Payer Ident",
+    minWidth: 150,
     orderIndex: 9,
   },
   {
@@ -107,7 +103,7 @@ export const masterColumns = [
     orderIndex: 11,
   },
   {
-    field: "paymentfound",
+    field: "paymentFound",
     title: "Payment Found",
     minWidth: 110,
     orderIndex: 12,
@@ -119,8 +115,17 @@ export const masterColumns = [
     title: "Manual match",
     minWidth: 110,
     orderIndex: 13,
+    isCustomCell:true,
+    type:"button"
   },
   
+  {
+    field: "eRSPaymentSID",
+    title: "eRSPaymentSID",
+    minWidth: 250,
+    orderIndex: 0,
+    hide:true
+  },
 ];
 export const AmountFilter = [
   {

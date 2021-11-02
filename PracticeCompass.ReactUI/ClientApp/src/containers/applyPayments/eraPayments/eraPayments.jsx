@@ -31,7 +31,7 @@ import {
 import{getERAPaymentHeader} from  "../../../redux/actions/payments";
 import { AmountFilter } from "./eraPaymentsData"
 
-const DATA_ITEM_KEY_MASTER_PAYMENT = "Id";
+const DATA_ITEM_KEY_MASTER_PAYMENT = "eRSPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
@@ -170,7 +170,7 @@ class EraPayments extends Component {
     });
   };
   ERAPaymentGridSearch =()=>{
-    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber,this.state.amountType?this.state.amountType.id:null)
+    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber??"",this.state.amountType?this.state.amountType.id:null)
   }
   render() {
     return (
@@ -222,7 +222,7 @@ class EraPayments extends Component {
             <PanelBarItem
               id="MasterPaymentSearch"
               expanded={this.state.masterExpanded}
-              title="Master"
+              title="Payment Header"
             >
               <div style={{ width: "100%" }}>
                 <div
@@ -367,7 +367,7 @@ class EraPayments extends Component {
                         onRowDoubleClick={this.onInsurancePaymentGridDoubleSelectionChange}
                         // getSelectedItems={this.getSelectedClaims}
                         // selectionMode="multiple"
-                        DATA_ITEM_KEY="paymentSID"
+                        DATA_ITEM_KEY="eRSPaymentSID"
                         idGetter={idGetterMasterPaymentID}
                         data={this.props.eRApayments}
                         // totalCount={
@@ -390,7 +390,7 @@ class EraPayments extends Component {
             <PanelBarItem
               id="InsurancePaymentSearch"
               expanded={this.state.insurancePaymentExpanded}
-              title="Details"
+              title="Payment Transaction"
             ></PanelBarItem>
           </PanelBar>
         </div>
