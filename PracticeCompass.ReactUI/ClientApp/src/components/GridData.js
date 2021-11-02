@@ -59,8 +59,10 @@ export const CustomCell = (props) => {
     const field = props.field || "";
     const value = props.dataItem[field];
     const navigationAttributes = useTableKeyboardNavigation(props.id);
-    let column = props.myProp.columns[props.columnIndex];
-    if (column.type === "checkBox") {
+    //let column = props.myProp.columns[props.columnIndex];
+    let column = props.myProp.columns.find(x=>x.field==field);
+
+    if (column.type === "checkBox" ) {
         return (
             <td
                 colSpan={props.colSpan}
@@ -69,7 +71,7 @@ export const CustomCell = (props) => {
                 aria-selected={props.isSelected}
                 {...navigationAttributes}
             >
-                <Checkbox style={{ marginLeft: "35%" }} disabled={true} />
+                <Checkbox style={{ marginLeft: "35%" }} value={value} disabled={props.dataItem.inEdit != true} />
             </td>
         );
     } else if (column.type === "dropDown") {

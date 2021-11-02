@@ -38,7 +38,8 @@ export const getPatientPayments =
     }
   };
 export const getInsurancePayments =
-  (PracticeID, InsuranceID,DateType,Datevalue,Fullyapplied) => async (dispatch, getState) => {
+  (PracticeID, InsuranceID,DateType,Datevalue,Fullyapplied,amountType,
+    amountFilter) => async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       dispatch(setInsurancePayments([]));
@@ -163,7 +164,6 @@ export const getApplyPatientPayments =
   export const getApplyInsurancePayment =
   (GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber) => async (dispatch, getState) => {
     try {
-      debugger;
       dispatch(uiStartLoading());
       dispatch(setApplyPlanPayments([]));
       // if (PracticeID == null && PatientID == null) return;
@@ -187,7 +187,6 @@ export const getApplyPatientPayments =
   export const ApplyPayments =
   (list) => async (dispatch, getState) => {
     try {
-      debugger;
       dispatch(uiStartLoading());
       // if (PracticeID == null && PatientID == null) return;
      let  applyPaymentModel=[];
