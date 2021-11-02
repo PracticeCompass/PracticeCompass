@@ -225,6 +225,29 @@ namespace PracticeCompass.Data.Repositories
             txScope.Complete();
             return true;
         }
+
+        public List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType)
+        {
+            var data = this.db.QueryMultiple("uspERAPaymentHeaderGet", new
+            {
+                @PracticeID = PracticeID,
+                @IsPosted = IsPosted,
+                @Amount = Amount,
+                @CheckNumber = CheckNumber,
+                @AmountType = AmountType
+            }, commandType: CommandType.StoredProcedure);
+            var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
+            var results= data.Read<ERAPaymentHeader>().ToList();
+            foreach (var Paymentheader in results)
+            {
+                Paymentheader.TransHandlingCode = practiceCompassHelper.GetHandlingMethodFromCode(Paymentheader.TransHandlingCode).ToString();
+                Paymentheader.PaymentFormatCode = practiceCompassHelper.GetPaymentFormatFromCode(Paymentheader.PaymentFormatCode).ToString();
+            }
+
+            return results;
+                
+        }
+
         public void Remove(Payment entity)
         {
             throw new NotImplementedException();

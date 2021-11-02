@@ -59,7 +59,7 @@ namespace PracticeCompass.Data.Utilities
                 return 0;
             }
         }
-        public  static TransactionHandlingMethod GetHandlingMethodFromCode(string code)
+        public   TransactionHandlingMethod GetHandlingMethodFromCode(string code)
         {
             var method = TransactionHandlingMethod.None;
             switch (code)
@@ -88,7 +88,7 @@ namespace PracticeCompass.Data.Utilities
             }
             return method;
         }
-        public  static PaymentFormat GetPaymentFormatFromCode(string code)
+        public   PaymentFormat GetPaymentFormatFromCode(string code)
         {
             var qual = PaymentFormat.None;
             switch (code)

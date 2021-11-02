@@ -170,6 +170,21 @@ namespace PracticeCompass.API.Controllers.API
                 return false;
             }
         }
+        [HttpGet]
+        [Route("api/payment/ERAPaymentHeaderGet")]
+        public List<ERAPaymentHeader> ERAPaymentHeaderGet(int PracticeID ,string IsPosted, float Amount,string CheckNumber,string AmountType)
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetERAPaymentHeader(PracticeID,IsPosted,Amount,CheckNumber, AmountType);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<ERAPaymentHeader>();
+            }
+        }
 
     }
 }
