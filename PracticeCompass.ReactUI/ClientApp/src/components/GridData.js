@@ -91,7 +91,7 @@ export const CustomCell = (props) => {
                     style={props.style}
                     // disabled={true}
                 >
-                    {props.title} 
+                    {column.title} 
                 </Button>
 
             </td>

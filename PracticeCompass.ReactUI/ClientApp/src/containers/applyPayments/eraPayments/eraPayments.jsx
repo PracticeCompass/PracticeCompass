@@ -397,7 +397,7 @@ class EraPayments extends Component {
             <PanelBarItem
               id="InsurancePaymentSearch"
               expanded={this.state.insurancePaymentExpanded}
-              title="Payment Transaction"
+              title="Payment Transactions"
             ></PanelBarItem>
           </PanelBar>
         </div>

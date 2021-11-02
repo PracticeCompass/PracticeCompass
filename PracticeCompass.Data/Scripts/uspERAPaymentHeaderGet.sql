@@ -9,7 +9,7 @@ GO
 -- =============================================
 
 -- Description:	Get Insurance Payment Grid Data
--- exec [uspERAPaymentHeaderGet] @PracticeID =0 , @Amount=0,@CheckNumber='' , @IsPosted='r'
+-- exec [uspERAPaymentHeaderGet] @PracticeID =0 , @Amount=0,@CheckNumber='' , @IsPosted='r' , @AmountType=''
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspERAPaymentHeaderGet] 
 	-- Add the parameters for the stored procedure here
