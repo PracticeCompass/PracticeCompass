@@ -37,24 +37,24 @@ export const masterColumns = [
   {
     field: "practiceName",
     title: "Practice Name",
-    minWidth: 100,
+    minWidth: 200,
     orderIndex: 0,
   },
   {
     field: "checkTraceNbr",
     title: "Check Trace",
-    minWidth: 100,
+    minWidth: 150,
     orderIndex: 1,
   },
   {
     field: "transHandlingCode",
     title: "Trans Handling",
-    minWidth: 100,
+    minWidth: 200,
     orderIndex: 2,
   },
   {
     field: "totalActualProviderPaymentAmt",
-    title: "Total Actual Provider Payment Amt",
+    title: "Total Payment",
     minWidth: 170,
     orderIndex: 3,
   },

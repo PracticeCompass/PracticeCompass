@@ -170,7 +170,7 @@ class EraPayments extends Component {
     });
   };
   ERAPaymentGridSearch =()=>{
-    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber,this.state.amountType?.id)
+    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber,this.state.amountType?this.state.amountType.id:null)
   }
   render() {
     return (
@@ -282,8 +282,6 @@ class EraPayments extends Component {
                   </div>
                   <div style={{ width: "147px" }}>
                     <TextBox
-                      type="numeric"
-                      format="n2"
                       className="unifyHeight"
                       value={this.state.checkNumber}
                       onChange={(e) =>
@@ -293,20 +291,7 @@ class EraPayments extends Component {
                       }
                     ></TextBox>
                   </div>
-                  <div style={{ float: "left" }}>
-                    <CheckboxComponent
-                      style={{ marginRight: "5px" }}
-                      id="posted"
-                      label="Posted"
-                      value={this.state.posted}
-                      onChange={(e) => this.setState({ posted: e.value })}
-                    />
-                  </div>
-
-                </div>
-                <div className="rowHeight"
-                  style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-                  <div style={{ width: "57px", marginLeft: "36px" }}>
+                  <div style={{ width: "57px", marginLeft: "10px" }}>
                     <label className="userInfoLabel">Amount</label>
                   </div>
                   <div style={{ width: "147px" }}>
@@ -334,11 +319,16 @@ class EraPayments extends Component {
                       }
                     ></TextBox>
                   </div>
-                </div>
-                <div
-                style={{ display: "flex", flexFlow: "row", marginLeft: "15px" }}
-              >
-                <div style={{ float: "left" }}>
+                  <div style={{ float: "left" }}>
+                    <CheckboxComponent
+                      style={{ marginRight: "5px" }}
+                      id="posted"
+                      label="Posted"
+                      value={this.state.posted}
+                      onChange={(e) => this.setState({ posted: e.value })}
+                    />
+                  </div>
+                  <div style={{ float: "left",marginLeft:"10px" }}>
                   <ButtonComponent
                     icon="search"
                     type="search"
@@ -348,35 +338,9 @@ class EraPayments extends Component {
                     Search
                   </ButtonComponent>
                 </div>
-                {/* <div style={{ float: "left" }}>
-                  <ButtonComponent
-                    type="edit"
-                    icon="edit"
-                    classButton="infraBtn-primary action-button"
-                    onClick={() => {
-                      this.resetInsuranceDetails();
-                      this.setInsurancePaymentDetailsExpanded();
-                    }
-                    }
-                  >
-                    Add
-                  </ButtonComponent>
+
                 </div>
-                <div style={{ float: "left" }}>
-                  <ButtonComponent
-                    type="edit"
-                    icon="edit"
-                    classButton="infraBtn-primary action-button"
-                    onClick={() => {
-                      this.EditInsurance(this.state.InsurancePaymentDetails);
-                      //this.setInsurancePaymentDetailsExpanded();
-                    }
-                    }
-                  >
-                    Edit
-                  </ButtonComponent>
-                </div> */}
-              </div>
+
               </div>
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div className="accordion" id="accordionExample">
