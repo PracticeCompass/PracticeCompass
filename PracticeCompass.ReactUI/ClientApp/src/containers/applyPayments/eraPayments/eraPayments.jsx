@@ -357,6 +357,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
+                      style={{maxWidth: "1600px"}}
                     >
                       <GridComponent
                         id="insurancePayment"
