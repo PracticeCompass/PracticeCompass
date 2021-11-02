@@ -157,6 +157,7 @@ namespace PracticeCompass.Data.Repositories
                     TraceOrigCompanySupplCode = transactions[era].financialInformation.TraceOrigCompanySupplCode,
                     CheckTraceNbr = transactions[era].financialInformation.CheckTraceNbr,
                     TracePayerIdent = transactions[era].financialInformation.ReferenceIdentificationNumber,
+                    RecordStatus="r"
 
                 });
                 ERSPaymentParty.Add(new ERSPaymentParty

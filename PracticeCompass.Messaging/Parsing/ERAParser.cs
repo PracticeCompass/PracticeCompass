@@ -598,20 +598,7 @@ namespace PracticeCompass.Messaging.Parsing
             }
             return method;
         }
-        private static PaymentFormat GetPaymentFormatFromCode(string code)
-        {
-            var qual = PaymentFormat.None;
-            switch (code)
-            {
-                case "CCP":
-                    qual = PaymentFormat.CashConcentrationPlusAddenda;
-                    break;
-                case "CTX":
-                    qual = PaymentFormat.CorporateTradeExchange;
-                    break;
-            }
-            return qual;
-        }
+        
         private static DepositoryFinancialInstitutionType GetDfiDestinationQualifierFromCode(string code)
         {
             DepositoryFinancialInstitutionType qual = DepositoryFinancialInstitutionType.None;

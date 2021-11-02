@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using Dapper;
+using PracticeCompass.Common.Enums;
+
 namespace PracticeCompass.Data.Utilities
 {
     public class PracticeCompassHelper
@@ -56,6 +58,49 @@ namespace PracticeCompass.Data.Utilities
 
                 return 0;
             }
+        }
+        public  static TransactionHandlingMethod GetHandlingMethodFromCode(string code)
+        {
+            var method = TransactionHandlingMethod.None;
+            switch (code)
+            {
+                case "C":
+                    method = TransactionHandlingMethod.PaymentWithTransaction;
+                    break;
+                case "D":
+                    method = TransactionHandlingMethod.MakePaymentOnly;
+                    break;
+                case "H":
+                    method = TransactionHandlingMethod.NotificationOnly;
+                    break;
+                case "I":
+                    method = TransactionHandlingMethod.RemittanceInformationOnly;
+                    break;
+                case "P":
+                    method = TransactionHandlingMethod.Prenotification;
+                    break;
+                case "U":
+                    method = TransactionHandlingMethod.Split;
+                    break;
+                case "X":
+                    method = TransactionHandlingMethod.SplitOrTogether;
+                    break;
+            }
+            return method;
+        }
+        public  static PaymentFormat GetPaymentFormatFromCode(string code)
+        {
+            var qual = PaymentFormat.None;
+            switch (code)
+            {
+                case "CCP":
+                    qual = PaymentFormat.CashConcentrationPlusAddenda;
+                    break;
+                case "CTX":
+                    qual = PaymentFormat.CorporateTradeExchange;
+                    break;
+            }
+            return qual;
         }
 
     }
