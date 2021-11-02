@@ -172,6 +172,12 @@ class EraPayments extends Component {
   ERAPaymentGridSearch =()=>{
     this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber?this.state.checkNumber:"",this.state.amountType?this.state.amountType.id:null)
   }
+  onERAPaymentGridSelectionChange=()=>{
+
+  }
+  onERAPaymentGridDoubleSelectionChange=()=>{
+    
+  }
   render() {
     return (
       <Fragment>
@@ -364,8 +370,8 @@ class EraPayments extends Component {
                         columns={masterColumns}
                         skip={0}
                         take={21}
-                        onSelectionChange={this.onInsurancePaymentGridSelectionChange}
-                        onRowDoubleClick={this.onInsurancePaymentGridDoubleSelectionChange}
+                        onSelectionChange={this.onERAPaymentGridSelectionChange}
+                        onRowDoubleClick={this.onERAPaymentGridDoubleSelectionChange}
                         // getSelectedItems={this.getSelectedClaims}
                         // selectionMode="multiple"
                         DATA_ITEM_KEY="ersPaymentSID"
