@@ -89,7 +89,7 @@ export const CustomCell = (props) => {
                     className={"infraBtn " + props.classButton ?? "infraBtn-primary"}
                     //   onClick={this.props.onClick}
                     style={props.style}
-                    disabled={true}
+                    // disabled={true}
                 >
                     {props.title} 
                 </Button>
