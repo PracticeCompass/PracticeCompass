@@ -86,9 +86,9 @@ export const CustomCell = (props) => {
                 {...navigationAttributes}
             >
                 <Button
-                    className={"infraBtn infraBtn-primary"}
+                    className={"infraBtn infraBtn-primary gridbtn"}
                     //   onClick={this.props.onClick}
-                    style={props.style}
+                    style={{padding: "0px !important;"}}
                     // disabled={true}
                 >
                     {column.title} 

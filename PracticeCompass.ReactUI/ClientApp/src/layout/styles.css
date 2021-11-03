@@ -111,6 +111,9 @@ my-app {
   background-color: #2184da !important;
   border-color: #2184da !important;
 }
+.gridbtn{
+  padding: 0px !important;
+}
 .infraBtn-edit {
   color: #fff !important;
   background-color: #073938 !important;

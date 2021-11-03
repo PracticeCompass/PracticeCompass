@@ -105,6 +105,9 @@ body {
   background-color: #2184da !important;
   border-color: #2184da !important;
 }
+.gridbtn{
+  padding: 0px !important;
+}
 .ui-pnotify-action-button.btn.btn-default.primary,
 .infraBtn-edit {
   color: #fff !important;
