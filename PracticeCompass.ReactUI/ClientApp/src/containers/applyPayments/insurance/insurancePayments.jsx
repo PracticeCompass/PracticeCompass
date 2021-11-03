@@ -1615,7 +1615,7 @@ class insurancePayments extends Component {
                           classButton="infraBtn-primary"
                           onClick={() => { this.ApplyListChanged() }}
                           style={{ marginTop: "0px",marginLeft:"10px" }}
-                          disabled={this.state.disableApply}
+                          disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
                         >
                           Post
                         </ButtonComponent>

@@ -451,6 +451,18 @@ class EraPayments extends Component {
                     ></TextBox>
                   </div>
                 </div>
+                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                        <ButtonComponent
+                          icon="search"
+                          type="search"
+                          classButton="infraBtn-primary"
+                         // onClick={() => { this.ApplyListChanged() }}
+                          style={{ marginTop: "0px",marginLeft:"10px" }}
+                          // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
+                        >
+                          Post
+                        </ButtonComponent>
+                      </div>
                 <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                   <div className="accordion" id="accordionExample">
                     <div
