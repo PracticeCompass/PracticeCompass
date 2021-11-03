@@ -835,9 +835,6 @@ class insurancePayments extends Component {
                     Find
                   </ButtonComponent>
                 </div>
-
-              </div>
-              <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div style={{ float: "left", marginLeft: "5px" }}>
                   <label className="userInfoLabel">Plan Company</label>
                 </div>
@@ -885,6 +882,7 @@ class insurancePayments extends Component {
                   </ButtonComponent>
                 </div>
               </div>
+
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div style={{ width: "57px", marginLeft: "36px" }}>
                   <label className="userInfoLabel">Txn Date </label>
@@ -910,18 +908,8 @@ class insurancePayments extends Component {
                     onChange={(e) => this.setState({ txnDate: e.value })}
                   ></DatePickerComponent>
                 </div>
-                <div>
-                  <CheckboxComponent
-                    style={{ marginRight: "5px" }}
-                    id="isCopayExmpted"
-                    label="Fully Applied"
-                    value={this.state.fullyApplied}
-                    onChange={(e) => this.setState({ fullyApplied: e.value })}
-                  />
-                </div>
-              </div>
-              <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-                <div style={{ width: "57px", marginLeft: "36px" }}>
+
+                <div style={{ width: "57px", marginLeft: "10px" }}>
                   <label className="userInfoLabel">Amount</label>
                 </div>
                 <div style={{ width: "147px" }}>
@@ -948,6 +936,15 @@ class insurancePayments extends Component {
                           })
                         }
                     ></TextBox>
+                </div>
+                <div>
+                  <CheckboxComponent
+                    style={{ marginRight: "5px" }}
+                    id="isCopayExmpted"
+                    label="Fully Applied"
+                    value={this.state.fullyApplied}
+                    onChange={(e) => this.setState({ fullyApplied: e.value })}
+                  />
                 </div>
               </div>
               <div
