@@ -87,8 +87,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
     resetPracticeList: () => dispatch(resetPracticeList()),
-    getInsurancePayments: (PracticeID, PatientID, DateType, Datevalue, Fullyapplied ,amountType,
-      amountFilter) => dispatch(getInsurancePayments(PracticeID, PatientID, DateType, Datevalue, Fullyapplied,    amountType,
+    getInsurancePayments: (PracticeID, PatientID, DateType, Datevalue, Fullyapplied, amountType,
+      amountFilter) => dispatch(getInsurancePayments(PracticeID, PatientID, DateType, Datevalue, Fullyapplied, amountType,
         amountFilter)),
     GetPaymentDetails: (PaymentSID) => dispatch(GetPaymentDetails(PaymentSID)),
     getPaymentAssignments: (PaymentSID) => dispatch(getPaymentAssignments(PaymentSID)),
@@ -136,8 +136,8 @@ class insurancePayments extends Component {
     fullyApplied: false,
     guarantorSearchText: null,
     applyPlanPayments: [],
-    amountType:null,
-    amountFilter:null
+    amountType: null,
+    amountFilter: null
   };
   handleSelect = (e) => {
     this.setState({
@@ -372,7 +372,7 @@ class insurancePayments extends Component {
   };
   insurancePaymentGridSearch = async () => {
     this.props.getInsurancePayments(this.state.insurancePracticeID ? this.state.insurancePracticeID.entityId : null, this.state.insuranceID,
-      this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false,this.state.amountType,this.state.amountFilter);
+      this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false, this.state.amountType, this.state.amountFilter);
   }
   onInsurancePaymentGridSelectionChange = (event) => {
     let InsurancePaymentDetails = event.dataItems == null || event.dataItems.length == 0
@@ -445,7 +445,7 @@ class insurancePayments extends Component {
           lookupCode: InsurancePaymentDetails?.paymentClasscode
         },
         amountDetails: InsurancePaymentDetails?.amount,
-        remainingDetails:InsurancePaymentDetails?.remaining,
+        remainingDetails: InsurancePaymentDetails?.remaining,
         txnDataDetails: InsurancePaymentDetails ? new Date(InsurancePaymentDetails?.postDate) : null,
         methodDetails: {
           label: InsurancePaymentDetails?.payMethod,
@@ -603,7 +603,7 @@ class insurancePayments extends Component {
     let applyData = await this.props.getApplyInsurancePayment(this.state.patientApplyGuarantorID, this.state.txnApplyDatetype, this.state.txnApplyDate ? new Date(this.state.txnApplyDate) : null, this.state.insuranceApplyID, this.state.billNumber);
     this.setState({
       applyPlanPayments: applyData,
-      applyPlanPaymentsbackup:[...applyData]
+      applyPlanPaymentsbackup: [...applyData]
     });
   }
   ApplyInsurancePayment = async () => {
@@ -628,7 +628,7 @@ class insurancePayments extends Component {
   }
 
   applyItemChanged = (event) => {
-    if (this.state.InsurancePaymentDetails == null || this.state.applyPlanPayments ==null ) return;
+    if (this.state.InsurancePaymentDetails == null || this.state.applyPlanPayments == null) return;
 
     const field = event.field || '';
     const inEditID = event.dataItem["chargeSID"];
@@ -649,18 +649,18 @@ class insurancePayments extends Component {
     if (field == "insurancePaid") {
       this.state.InsurancePaymentDetails.remaining = this.state.InsurancePaymentDetails.remaining - (data[rowIndex]["insurancePaid"] - backUpData["insurancePaid"]);
     }
-    let disableApply=false;
-    if(data[rowIndex]["amount"] <0 || this.state.InsurancePaymentDetails.remaining <0){
-        disableApply=true;
+    let disableApply = false;
+    if (data[rowIndex]["amount"] < 0 || this.state.InsurancePaymentDetails.remaining < 0) {
+      disableApply = true;
     }
     this.setState({
-      applyPlanPayments: data,disableApply
+      applyPlanPayments: data, disableApply
     });
   }
   filterApplyListChanged = async () => {
     if (this.state.applyPlanPayments != null && this.state.InsurancePaymentDetails != null) {
-      let list = this.state.applyPlanPayments.filter(item => item.isEdit == true );
-      this.setState({filterApplyPlanPayments: list|| []});
+      let list = this.state.applyPlanPayments.filter(item => item.isEdit == true);
+      this.setState({ filterApplyPlanPayments: list || [] });
     }
   }
   ApplyListChanged = async () => {
@@ -925,17 +925,17 @@ class insurancePayments extends Component {
                   ></DropDown>
                 </div>
                 <div className="dateStyle" style={{ marginLeft: "5px" }}>
-                   <TextBox
-                        type="numeric"
-                        format="c2"
-                        className="unifyHeight"
-                        value={this.state.amountFilter}
-                        onChange={(e) =>
-                          this.setState({
-                            amountFilter: e.value,
-                          })
-                        }
-                    ></TextBox>
+                  <TextBox
+                    type="numeric"
+                    format="c2"
+                    className="unifyHeight"
+                    value={this.state.amountFilter}
+                    onChange={(e) =>
+                      this.setState({
+                        amountFilter: e.value,
+                      })
+                    }
+                  ></TextBox>
                 </div>
                 <div>
                   <CheckboxComponent
@@ -1064,314 +1064,333 @@ class insurancePayments extends Component {
                   }}
                 >
                   <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ marginLeft: "42px" }}>
-                      <label className="userInfoLabel">Practice </label>
-                    </div>
-                    <div className="PracticeStyle">
-                      <DropDown
-                        className="unifyHeight"
-                        data={this.props.dropDownPractices}
-                        textField="entityName"
-                        dataItemKey="entityId"
-                        defaultValue={this.state.subInsurancePracticeID}
-                        value={this.state.subInsurancePracticeID}
-                        onChange={(e) =>
-                          this.setState({
-                            subInsurancePracticeID: {
-                              entityName: e.value?.entityName,
-                              entityId: e.value?.entityId,
-                            },
-                          })
-                        }
-                      ></DropDown>
-                    </div>
                     <div style={{ float: "left" }}>
-                      <ButtonComponent
-                        icon="search"
-                        type="search"
-                        classButton="infraBtn-primary find-button"
-                        style={{ marginTop: "0px" }}
-                        onClick={(e) =>
-                          this.setState({
-                            practiceVisibleSubInsurance: true,
-                          })
-                        }
-                      >
-                        Find
-                      </ButtonComponent>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left", marginLeft: "5px" }}>
-                      <label className="userInfoLabel">Plan Company </label>
-                    </div>
-                    <div
-                      className="insuranceStyle"
-                      style={{ float: "left" }}
-                    >
-                      <DropDown
-                        className="unifyHeight"
-                        data={this.props.dropDownInsurance}
-                        textField="entityName"
-                        dataItemKey="entityId"
-                        defaultValue={{
-                          entityId: this.state.insuranceDetailsID,
-                          entityName: this.state.insuranceDetailsNameSelected,
-                        }}
-                        value={{
-                          entityId: this.state.insuranceDetailsID,
-                          entityName: this.state.insuranceDetailsNameSelected,
-                        }}
-                        onChange={(e) =>
-                          this.setState({
-                            insuranceDetailsSelectedState: e.value?.entityName,
-                            insuranceDetailsIDSelectedState: e.value?.entityId,
-                            insuranceDetailsNameSelected: e.value?.entityName,
-                            insuranceDetailsID: e.value?.entityId,
-                          })
-                        }
-                      ></DropDown>
-                    </div>
-                    <div style={{ float: "left" }}>
-                      <ButtonComponent
-                        look="outline"
-                        icon="search"
-                        type="search"
-                        classButton="infraBtn-primary find-button"
-                        onClick={() => this.toggleInsuranceDialog(true)}
-                        style={{ marginTop: "0px" }}
-                      >
-                        Find
-                      </ButtonComponent>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left", marginLeft: "58px" }}>
-                      <label className="userInfoLabel">Class </label>
-                    </div>
-                    <div
-                      className="insuranceStyle"
-                      style={{ float: "left" }}
-                    >
-                      <DropDown
-                        className="unifyHeight"
-                        data={this.props.paymentClass}
-                        textField="description"
-                        dataItemKey="lookupCode"
-                        value={this.state.payment_calss}
-                        onChange={(e) =>
-                          this.setState({
-                            payment_calss: e.value,
-                          })
-                        }
-                      ></DropDown>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left", marginLeft: "40px" }}>
-                      <label className="userInfoLabel">Amount </label>
-                    </div>
-                    <div style={{ float: "left", width: "100px" }}>
-                      <TextBox
-                        type="numeric"
-                        format="c2"
-                        className="unifyHeight"
-                        value={this.state.amountDetails}
-                        onChange={(e) =>
-                          this.setState({
-                            amountDetails: e.value,
-                          })
-                        }
-                      ></TextBox>
-                    </div>
-                    <div style={{ float: "left", marginLeft: "10px" }}>
-                      <label className="userInfoLabel">Amount </label>
-                    </div>
-                    <div style={{ float: "left", width: "100px" }}>
-                      <TextBox
-                        type="numeric"
-                        format="c2"
-                        className="unifyHeight"
-                        value={this.state.remainingDetails}
-                        onChange={(e) =>
-                          this.setState({
-                            remainingDetails: e.value,
-                          })
-                        }
-                      ></TextBox>
-                    </div>
-                    <div style={{ float: "left", marginLeft: "10px" }}>
-                      <label className="userInfoLabel">Txn Date </label>
-                    </div>
-                    <div style={{ float: "left", width: "132px" }}>
-                      <DatePickerComponent
-                        id="planEndDate"
-                        name="planEndDate"
-                        className="unifyHeight"
-                        placeholder="MM/DD/YYYY"
-                        format="M/dd/yyyy"
-                        value={
-                          this.state.txnDataDetails
-                        }
-                        onChange={(e) =>
-                          this.setState({ txnDataDetails: e.value })
-                        }
-                      ></DatePickerComponent>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <fieldset
-                      className="fieldsetStyle"
-                      style={{
-                        width: "540px",
-                        marginTop: "5px",
-                        height: "85px",
-                        marginLeft: "10px"
-                      }}
-                    >
-                      <legend
-                        className="legendStyle"
-                        style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                      >
-                        Payment Method
-                      </legend>
-                      <div className="row" style={{ marginLeft: "5px" }}>
-                        <div style={{ float: "left", marginLeft: "24px" }}>
-                          <label className="userInfoLabel">Method</label>
+                      <div style={{ display: "flex", flexFlow: "row" }}>
+                        <div style={{ marginLeft: "42px" }}>
+                          <label className="userInfoLabel">Practice </label>
                         </div>
-                        <div style={{ float: "left", width: "215px" }}>
+                        <div className="PracticeStyle">
                           <DropDown
                             className="unifyHeight"
-                            data={methodList}
-                            textField="label"
-                            dataItemKey="value"
-                            value={this.state.methodDetails}
+                            data={this.props.dropDownPractices}
+                            textField="entityName"
+                            dataItemKey="entityId"
+                            defaultValue={this.state.subInsurancePracticeID}
+                            value={this.state.subInsurancePracticeID}
                             onChange={(e) =>
                               this.setState({
-                                methodDetails: e.value,
+                                subInsurancePracticeID: {
+                                  entityName: e.value?.entityName,
+                                  entityId: e.value?.entityId,
+                                },
                               })
                             }
                           ></DropDown>
                         </div>
-                        <div style={{ float: "left", marginLeft: "12px" }}>
-                          <label className="userInfoLabel">Voucher </label>
-                        </div>
-                        <div style={{ float: "left", width: "100px" }}>
-                          <TextBox
-                            className="unifyHeight"
-                            value={this.state.voucherdetails}
-                            onChange={(e) =>
+                        <div style={{ float: "left" }}>
+                          <ButtonComponent
+                            icon="search"
+                            type="search"
+                            classButton="infraBtn-primary find-button"
+                            style={{ marginTop: "0px" }}
+                            onClick={(e) =>
                               this.setState({
-                                voucherdetails: e.value,
+                                practiceVisibleSubInsurance: true,
                               })
                             }
-                          ></TextBox>
+                          >
+                            Find
+                          </ButtonComponent>
                         </div>
                       </div>
-                      <div className="row" style={{ marginLeft: "5px" }}>
+                      <div style={{ display: "flex", flexFlow: "row" }}>
                         <div style={{ float: "left", marginLeft: "5px" }}>
-                          <label className="userInfoLabel">
-                            Credit Card
-                          </label>
+                          <label className="userInfoLabel">Plan Company </label>
                         </div>
-                        <div style={{ float: "left", width: "215px" }}>
+                        <div
+                          className="insuranceStyle"
+                          style={{ float: "left" }}
+                        >
                           <DropDown
                             className="unifyHeight"
-                            data={creditCared}
-                            textField="value"
-                            dataItemKey="code"
-                            value={this.state.creditCardDetails}
+                            data={this.props.dropDownInsurance}
+                            textField="entityName"
+                            dataItemKey="entityId"
+                            defaultValue={{
+                              entityId: this.state.insuranceDetailsID,
+                              entityName: this.state.insuranceDetailsNameSelected,
+                            }}
+                            value={{
+                              entityId: this.state.insuranceDetailsID,
+                              entityName: this.state.insuranceDetailsNameSelected,
+                            }}
                             onChange={(e) =>
                               this.setState({
-                                creditCardDetails: e.value,
+                                insuranceDetailsSelectedState: e.value?.entityName,
+                                insuranceDetailsIDSelectedState: e.value?.entityId,
+                                insuranceDetailsNameSelected: e.value?.entityName,
+                                insuranceDetailsID: e.value?.entityId,
                               })
                             }
                           ></DropDown>
                         </div>
-                        <div style={{ float: "left", marginLeft: "12px" }}>
-                          <label className="userInfoLabel">
-                            Authorization Code
-                          </label>
+                        <div style={{ float: "left" }}>
+                          <ButtonComponent
+                            look="outline"
+                            icon="search"
+                            type="search"
+                            classButton="infraBtn-primary find-button"
+                            onClick={() => this.toggleInsuranceDialog(true)}
+                            style={{ marginTop: "0px" }}
+                          >
+                            Find
+                          </ButtonComponent>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", flexFlow: "row" }}>
+                        <div style={{ float: "left", marginLeft: "58px" }}>
+                          <label className="userInfoLabel">Class </label>
+                        </div>
+                        <div
+                          className="insuranceStyle"
+                          style={{ float: "left" }}
+                        >
+                          <DropDown
+                            className="unifyHeight"
+                            data={this.props.paymentClass}
+                            textField="description"
+                            dataItemKey="lookupCode"
+                            value={this.state.payment_calss}
+                            onChange={(e) =>
+                              this.setState({
+                                payment_calss: e.value,
+                              })
+                            }
+                          ></DropDown>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "10px" }}>
+                          <label className="userInfoLabel">Txn Date </label>
+                        </div>
+                        <div className="dateStyle" style={{ float: "left"}}>
+                          <DatePickerComponent
+                            id="planEndDate"
+                            name="planEndDate"
+                            className="unifyHeight"
+                            placeholder="MM/DD/YYYY"
+                            format="M/dd/yyyy"
+                            value={
+                              this.state.txnDataDetails
+                            }
+                            onChange={(e) =>
+                              this.setState({ txnDataDetails: e.value })
+                            }
+                          ></DatePickerComponent>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", flexFlow: "row" }}>
+                        <div style={{ float: "left", marginLeft: "40px" }}>
+                          <label className="userInfoLabel">Amount </label>
                         </div>
                         <div style={{ float: "left", width: "100px" }}>
                           <TextBox
+                            type="numeric"
+                            format="c2"
                             className="unifyHeight"
-                            value={this.state.authorizationCode}
+                            value={this.state.amountDetails}
                             onChange={(e) =>
                               this.setState({
-                                authorizationCode: e.value,
+                                amountDetails: e.value,
                               })
                             }
                           ></TextBox>
                         </div>
+                        <div style={{ float: "left", marginLeft: "10px" }}>
+                          <label className="userInfoLabel">Remaining </label>
+                        </div>
+                        <div style={{ float: "left", width: "100px" }}>
+                          <TextBox
+                            type="numeric"
+                            format="c2"
+                            className="unifyHeight"
+                            value={this.state.remainingDetails}
+                            onChange={(e) =>
+                              this.setState({
+                                remainingDetails: e.value,
+                              })
+                            }
+                          ></TextBox>
+                        </div>
+                        <div style={{ float: "left", marginLeft:"40px" }}>
+                        <ButtonComponent
+                          classButton="infraBtn-primary action-button"
+                          look="outline"
+                          icon="edit"
+                          type="edit"
+                          onClick={() => this.saveInsurancePaymentDetails()}
+                        >
+                          Save
+                        </ButtonComponent>
+                        </div>
                       </div>
-                    </fieldset>
+                    </div>
+                    <div style={{ float: "left" }}>
+
+                      <div style={{ display: "flex", flexFlow: "row", marginLeft: "0px" }}>
+                        <fieldset
+                          className="fieldsetStyle"
+                          style={{
+                            width: "540px",
+                            marginTop: "5px",
+                            height: "85px",
+                            marginLeft: "10px"
+                          }}
+                        >
+                          <legend
+                            className="legendStyle"
+                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                          >
+                            Payment Method
+                          </legend>
+                          <div className="row" style={{ marginLeft: "5px" }}>
+                            <div style={{ float: "left", marginLeft: "24px" }}>
+                              <label className="userInfoLabel">Method</label>
+                            </div>
+                            <div style={{ float: "left", width: "215px" }}>
+                              <DropDown
+                                className="unifyHeight"
+                                data={methodList}
+                                textField="label"
+                                dataItemKey="value"
+                                value={this.state.methodDetails}
+                                onChange={(e) =>
+                                  this.setState({
+                                    methodDetails: e.value,
+                                  })
+                                }
+                              ></DropDown>
+                            </div>
+                            <div style={{ float: "left", marginLeft: "12px" }}>
+                              <label className="userInfoLabel">Voucher </label>
+                            </div>
+                            <div style={{ float: "left", width: "100px" }}>
+                              <TextBox
+                                className="unifyHeight"
+                                value={this.state.voucherdetails}
+                                onChange={(e) =>
+                                  this.setState({
+                                    voucherdetails: e.value,
+                                  })
+                                }
+                              ></TextBox>
+                            </div>
+                          </div>
+                          <div className="row" style={{ marginLeft: "5px" }}>
+                            <div style={{ float: "left", marginLeft: "5px" }}>
+                              <label className="userInfoLabel">
+                                Credit Card
+                              </label>
+                            </div>
+                            <div style={{ float: "left", width: "215px" }}>
+                              <DropDown
+                                className="unifyHeight"
+                                data={creditCared}
+                                textField="value"
+                                dataItemKey="code"
+                                value={this.state.creditCardDetails}
+                                onChange={(e) =>
+                                  this.setState({
+                                    creditCardDetails: e.value,
+                                  })
+                                }
+                              ></DropDown>
+                            </div>
+                            <div style={{ float: "left", marginLeft: "12px" }}>
+                              <label className="userInfoLabel">
+                                Authorization Code
+                              </label>
+                            </div>
+                            <div style={{ float: "left", width: "100px" }}>
+                              <TextBox
+                                className="unifyHeight"
+                                value={this.state.authorizationCode}
+                                onChange={(e) =>
+                                  this.setState({
+                                    authorizationCode: e.value,
+                                  })
+                                }
+                              ></TextBox>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
                   </div>
+
+
                 </div>
-                <div
-                  className="rowHeight"
+
+                <fieldset
+                  className="fieldsetStyle"
                   style={{
-                    display: "flex",
-                    flexFlow: "row nowrap",
-                    marginTop: "10px",
+                    width: "100%",
+                    marginTop: "5px",
+                    marginBottom: "5px",
+                    // height: "85px",
                     marginLeft: "10px"
                   }}
                 >
-                  <ButtonComponent
-                    classButton="infraBtn-primary action-button"
-                    look="outline"
-                    icon="edit"
-                    type="edit"
-                    onClick={() => this.saveInsurancePaymentDetails()}
+                  <legend
+                    className="legendStyle"
+                    style={{ paddingRight: "5px", paddingLeft: "5px" }}
                   >
-                    Save
-                  </ButtonComponent>
-                </div>
-
-                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                  <div className="accordion" id="accordionExample">
-                    <div
-                      className="card bg-light mb-3"
-                      style={{
-                        marginLeft: "10px",
-                        marginRight: "10px",
-                        marginTop: "5px",
-                      }}
-                    >
+                    Charge
+                  </legend>
+                  <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                    <div className="accordion" id="accordionExample">
                       <div
-                        id="collapseOne"
-                        className="collapse show"
-                        aria-labelledby="headingOne"
-                        data-parent="#accordionExample"
+                        className="card bg-light mb-3"
+                        style={{
+                          marginLeft: "10px",
+                          marginRight: "10px",
+                          marginTop: "5px",
+                        }}
                       >
-                        <GridComponent
-                          id="insurancePayment"
-                          columns={insuranceAssignmentColumns}
-                          skip={0}
-                          take={21}
-                          onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
-                          onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
-                          // getSelectedItems={this.getSelectedClaims}
-                          // selectionMode="multiple"
-                          DATA_ITEM_KEY="chargeSID"
-                          idGetter={idGetterInsuranceDetailsPaymentID}
-                          data={this.props.paymentAssignments}
-                          totalCount={
-                            this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
-                              ? this.props.paymentAssignments[0].totalCount
-                              : this.props.paymentAssignments.length
-                          }
-                          height="579px"
-                          width="100%"
-                          //hasCheckBox={true}
-                          sortColumns={[]}
-                          onSortChange={this.onSortChange}
-                          pageChange={this.pageChange}
-                        ></GridComponent>
+                        <div
+                          id="collapseOne"
+                          className="collapse show"
+                          aria-labelledby="headingOne"
+                          data-parent="#accordionExample"
+                        >
+                          <GridComponent
+                            id="insurancePayment"
+                            columns={insuranceAssignmentColumns}
+                            skip={0}
+                            take={21}
+                            onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
+                            onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
+                            // getSelectedItems={this.getSelectedClaims}
+                            // selectionMode="multiple"
+                            DATA_ITEM_KEY="chargeSID"
+                            idGetter={idGetterInsuranceDetailsPaymentID}
+                            data={this.props.paymentAssignments}
+                            totalCount={
+                              this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
+                                ? this.props.paymentAssignments[0].totalCount
+                                : this.props.paymentAssignments.length
+                            }
+                            height="579px"
+                            width="100%"
+                            //hasCheckBox={true}
+                            sortColumns={[]}
+                            onSortChange={this.onSortChange}
+                            pageChange={this.pageChange}
+                          ></GridComponent>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </fieldset>
+
               </div>
             </PanelBarItem>
             <PanelBarItem
@@ -1396,7 +1415,7 @@ class insurancePayments extends Component {
                         width: "100%",
                       }}
                     >
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%",marginBottom:"10px" }}>
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
                         <fieldset
                           className="fieldsetStyle"
                           style={{
@@ -1412,7 +1431,7 @@ class insurancePayments extends Component {
                           >
                             Payment Method
                           </legend> */}
-                          <div className="row nowrap rowHeight" style={{marginTop:"10px"}}>
+                          <div className="row nowrap rowHeight" style={{ marginTop: "10px" }}>
                             <div style={{ textAlign: "right", marginLeft: "66px" }}>
                               <label className="userInfoLabel">Claim# </label>
                             </div>
@@ -1550,14 +1569,30 @@ class insurancePayments extends Component {
                           ></TextBox>
                         </div>
                       </div>
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%"}}>
+                      <fieldset
+                          className="fieldsetStyle"
+                          style={{
+                            width: "1559px",
+                            marginTop: "5px",
+                            marginBottom: "5px",
+                            height: "435px",
+                            marginLeft: "10px"
+                          }}
+                        >
+                          <legend
+                            className="legendStyle"
+                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                          >
+                            Charge
+                          </legend>
+                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary"
                           onClick={() => { this.filterApplyListChanged() }}
-                          style={{ marginTop: "10px",marginLeft:"10px" }}
-                          disabled={this.state.applyPlanPayments== null || this.state.applyPlanPayments.filter(item=>item.isEdit).length==0}
+                          style={{ marginTop: "10px", marginLeft: "10px" }}
+                          disabled={this.state.applyPlanPayments == null || this.state.applyPlanPayments.filter(item => item.isEdit).length == 0}
                         >
                           Apply
                         </ButtonComponent>
@@ -1605,14 +1640,32 @@ class insurancePayments extends Component {
                           </div>
                         </div>
                       </div>
+                     
+                     </fieldset>
+                      <fieldset
+                          className="fieldsetStyle"
+                          style={{
+                            width: "1559px",
+                            marginTop: "5px",
+                            marginBottom: "30px",
+                            height: "435px",
+                            marginLeft: "10px"
+                          }}
+                        >
+                          <legend
+                            className="legendStyle"
+                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                          >
+                            Confirmation
+                          </legend>
                       <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary"
                           onClick={() => { this.ApplyListChanged() }}
-                          style={{ marginTop: "0px",marginLeft:"10px" }}
-                          disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
+                          style={{ marginTop: "0px", marginLeft: "10px" }}
+                          disabled={this.state.disableApply || (this.state.filterApplyPlanPayments == null || this.state.filterApplyPlanPayments.filter(item => item.isEdit).length == 0)}
                         >
                           Post
                         </ButtonComponent>
@@ -1648,8 +1701,8 @@ class insurancePayments extends Component {
                                 columns={applyPlanPaymentColumns}
                                 //itemChange={this.applyItemChanged}
                                 onSortChange={this.onSortChange}
-                                // pageChange={this.pageChange}
-                               // isEditable={true}
+                              // pageChange={this.pageChange}
+                              // isEditable={true}
                               // totalCount={
                               //   this.props.patientApplys != null && this.props.patientApplys.length > 0
                               //     ? this.props.patientApplys[0].totalCount
@@ -1660,7 +1713,7 @@ class insurancePayments extends Component {
                           </div>
                         </div>
                       </div>
-
+</fieldset>
                     </div>
                   </TabStripTab>
                   <TabStripTab title="Payment Assignment">
@@ -1671,48 +1724,65 @@ class insurancePayments extends Component {
                         width: "100%",
                       }}
                     >
-                      <div className="accordion" id="accordionExample">
-                        <div
-                          className="card bg-light mb-3"
-                          style={{
-                            marginLeft: "10px",
-                            marginRight: "10px",
-                            marginTop: "5px",
-                          }}
+                      <fieldset
+                        className="fieldsetStyle"
+                        style={{
+                          width: "100%",
+                          marginTop: "5px",
+                          marginBottom: "5px",
+                          // height: "85px",
+                          marginLeft: "10px"
+                        }}
+                      >
+                        <legend
+                          className="legendStyle"
+                          style={{ paddingRight: "5px", paddingLeft: "5px" }}
                         >
+                          Charge
+                        </legend>
+                        <div className="accordion" id="accordionExample">
                           <div
-                            id="collapseOne"
-                            className="collapse show"
-                            aria-labelledby="headingOne"
-                            data-parent="#accordionExample"
+                            className="card bg-light mb-3"
+                            style={{
+                              marginLeft: "10px",
+                              marginRight: "10px",
+                              marginTop: "5px",
+                            }}
                           >
-                            <GridComponent
-                              id="applyInsurancePayment"
-                              columns={insuranceAssignmentColumns}
-                              skip={0}
-                              take={21}
-                              onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
-                              onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
-                              // getSelectedItems={this.getSelectedClaims}
-                              // selectionMode="multiple"
-                              DATA_ITEM_KEY="chargeSID"
-                              idGetter={idGetterInsuranceDetailsPaymentID}
-                              data={this.props.paymentAssignments}
-                              totalCount={
-                                this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
-                                  ? this.props.paymentAssignments[0].totalCount
-                                  : this.props.paymentAssignments.length
-                              }
-                              height="579px"
-                              width="100%"
-                              //hasCheckBox={true}
-                              sortColumns={[]}
-                              onSortChange={this.onSortChange}
-                              pageChange={this.pageChange}
-                            ></GridComponent>
+                            <div
+                              id="collapseOne"
+                              className="collapse show"
+                              aria-labelledby="headingOne"
+                              data-parent="#accordionExample"
+                            >
+                              <GridComponent
+                                id="applyInsurancePayment"
+                                columns={insuranceAssignmentColumns}
+                                skip={0}
+                                take={21}
+                                onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
+                                onRowDoubleClick={this.onInsuranceDetailsGridDoubleSelectionChange}
+                                // getSelectedItems={this.getSelectedClaims}
+                                // selectionMode="multiple"
+                                DATA_ITEM_KEY="chargeSID"
+                                idGetter={idGetterInsuranceDetailsPaymentID}
+                                data={this.props.paymentAssignments}
+                                totalCount={
+                                  this.props.paymentAssignments != null && this.props.paymentAssignments.length > 0
+                                    ? this.props.paymentAssignments[0].totalCount
+                                    : this.props.paymentAssignments.length
+                                }
+                                height="579px"
+                                width="100%"
+                                //hasCheckBox={true}
+                                sortColumns={[]}
+                                onSortChange={this.onSortChange}
+                                pageChange={this.pageChange}
+                              ></GridComponent>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </fieldset>
                     </div>
                   </TabStripTab>
                 </TabStrip>

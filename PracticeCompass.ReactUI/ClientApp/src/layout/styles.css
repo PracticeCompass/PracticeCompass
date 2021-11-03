@@ -305,3 +305,6 @@ button {
 #accordionExample{
   width: 100% !important;
 }
+.k-item k-state-active k-tab-on-top{
+  color: black !important;
+}

@@ -351,3 +351,6 @@ legend {
 .k-menu.k-menu-horizontal:not(.k-context-menu) {
   padding: 0 !important;
 }
+.k-item k-state-active k-tab-on-top{
+  color: black !important;
+}

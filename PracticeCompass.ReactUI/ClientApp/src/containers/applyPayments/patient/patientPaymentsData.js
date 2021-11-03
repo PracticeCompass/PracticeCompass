@@ -218,3 +218,21 @@ export const insuranceColumns = [
     title: "Notes",
   },
 ];
+export const AmountFilter = [
+  {
+    id: "0",
+    text: "Any",
+  },
+  {
+    id: "1",
+    text: "Equal",
+  },
+  {
+    id: "2",
+    text: "greater than",
+  },
+  {
+    id: "3",
+    text: "less than",
+  },
+];

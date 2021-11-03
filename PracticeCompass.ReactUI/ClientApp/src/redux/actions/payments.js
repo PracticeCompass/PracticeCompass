@@ -19,7 +19,7 @@ import {
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../config";
 export const getPatientPayments =
-  (PracticeID, PatientID,DateType,Datevalue,Fullyapplied) => async (dispatch, getState) => {
+  (PracticeID, PatientID,DateType,Datevalue,Fullyapplied,amountType,amountFilter) => async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       dispatch(setPatientPayments([]));
