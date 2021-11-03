@@ -1398,8 +1398,8 @@ class PatientPayments extends Component {
                           </legend>
                           <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
                             <ButtonComponent
-                              icon="search"
-                              type="search"
+                              icon="edit"
+                              type="edit"
                               classButton="infraBtn-primary"
                               onClick={() => this.filterApplyListChanged}
                               style={{ marginTop: "0px" }}
@@ -1469,8 +1469,8 @@ class PatientPayments extends Component {
                           </legend>
                           <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
                             <ButtonComponent
-                              icon="search"
-                              type="search"
+                              icon="edit"
+                              type="edit"
                               classButton="infraBtn-primary"
                               onClick={() => this.ApplyListChanged}
                               style={{ marginTop: "0px" }}
