@@ -198,7 +198,22 @@ class EraPayments extends Component {
       ERAPaymentDetails
     });
   }
-  onERAPaymentGridDoubleSelectionChange = () => {
+  onERAPaymentGridDoubleSelectionChange = (event) => {
+    let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
+      ? event.dataItem
+      : event.dataItems[event.endRowIndex]
+    if (ERAPaymentDetails.practiceID != null) {
+      ERAPaymentDetails.detailsPracticeID =
+      {
+        entityId: ERAPaymentDetails.practiceID,
+        entityName: ERAPaymentDetails.practiceName,
+        
+      }
+    }
+
+    this.setState({
+      ERAPaymentDetails
+    });
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
   }
   onERADetailsPaymentGridSelectionChange = () => {
