@@ -21,6 +21,7 @@ AS
 BEGIN
 
 SELECT 
+	[ERSPaymentHeader].PracticeID,
        [ERSPaymentHeader].ERSPaymentSID
 	   ,[CheckTraceNbr]
       ,[TransHandlingCode]
@@ -30,7 +31,7 @@ SELECT
       ,[SenderBankAcctNbr]
       ,[RemitPayerIdent]
       ,[ReceiverAcctNbr]
-      ,[CheckIssueDate]
+	  ,CONVERT(varchar,CheckIssueDate,101) as CheckIssueDate
       ,[PayerNameText]
 	  ,Practice.SortName as PracticeName
 	  ,case when Payment.PaymentSID is null then 0

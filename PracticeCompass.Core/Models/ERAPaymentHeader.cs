@@ -11,6 +11,7 @@ namespace PracticeCompass.Core.Models
         }
 
         public int ERSPaymentSID { get; set; }
+        public int PracticeID { get; set; }
         public string CheckTraceNbr { get; set; }
         public string TransHandlingCode { get; set; }
         public float TotalActualProviderPaymentAmt { get; set; }

@@ -405,6 +405,25 @@ namespace PracticeCompass.Data.Repositories
                     #region modifiers segment SVC
                     for (var mod = 0; mod < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ServiceLineItems.Count; mod++)
                     {
+
+                        if (mod == 0)
+                        {//save DOS in date table
+                            string ClaimDateofserviceMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
+                            ERSClaimDates.Add(new ERSClaimDate  //050
+                            {
+                                TimeStamp = DateTime.Now.ToString(),
+                                LastUser = 88,
+                                CreateStamp = DateTime.Now.ToString(),
+                                CreateUser = 88,
+                                Pro2SrcPDB = "medman",
+                                pro2created = DateTime.Now,
+                                pro2modified = DateTime.Now,
+                                ClaimDate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ServiceLineItems[0].DateOfService,
+                                DateTimeQualifier = "472",
+                                ERSClaimSID = ERSClaimSID,
+                                prrowid = ClaimDateofserviceMAXRowID
+                            });
+                        }
                         string ChargeServiceInfoMAXRowID = GetMAXRowID("ERSChargeServiceInfo", ChargeServiceInfos.Count != 0 ? ChargeServiceInfos[ChargeServiceInfos.Count - 1].prrowid : "0");
 
                         string outpatientMAXRowID = GetMAXRowID("ERSMedicareOutpatAdj", outpatientlist.Count != 0 ? outpatientlist[outpatientlist.Count - 1].prrowid : "0");
