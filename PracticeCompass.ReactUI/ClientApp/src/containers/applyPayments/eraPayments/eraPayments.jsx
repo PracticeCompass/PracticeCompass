@@ -9,6 +9,7 @@ import {
   PracticeColumns,
 
 } from "./eraPaymentsData";
+import $ from "jquery";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
@@ -28,8 +29,8 @@ import {
   getPracticeList,
   resetPracticeList,
 } from "../../../redux/actions/patient";
-import{getERAPaymentHeader} from  "../../../redux/actions/payments";
-import { AmountFilter } from "./eraPaymentsData"
+import { getERAPaymentHeader } from "../../../redux/actions/payments";
+import { AmountFilter, detailsColumns } from "./eraPaymentsData"
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
@@ -47,12 +48,12 @@ function mapDispatchToProps(dispatch) {
   return {
 
     SaveLookups: (EntityValueID, EntityName) =>
-    dispatch(SaveLookups(EntityValueID, EntityName)),
+      dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
-   
+
     resetPracticeList: () => dispatch(resetPracticeList()),
-    getERAPaymentHeader:(PracticeID, IsPosted,  Amount,  CheckNumber,  AmountType)=>
-      dispatch(getERAPaymentHeader(PracticeID, IsPosted,  Amount,  CheckNumber,  AmountType))
+    getERAPaymentHeader: (PracticeID, IsPosted, Amount, CheckNumber, AmountType) =>
+      dispatch(getERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber, AmountType))
   };
 }
 
@@ -71,8 +72,8 @@ class EraPayments extends Component {
     subPatientPracticeID: null,
     subInsurancePracticeID: null,
     practiceSearchText: null,
-    masterExpanded:true,
-    posted:false
+    masterExpanded: true,
+    posted: false
   };
 
 
@@ -169,14 +170,28 @@ class EraPayments extends Component {
       practiceVisibleSubInsurance: false,
     });
   };
-  ERAPaymentGridSearch =()=>{
-    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId,this.state.posted?"p":"r",this.state.amountFilter, this.state.checkNumber?this.state.checkNumber:"",this.state.amountType?this.state.amountType.id:null)
+  ERAPaymentGridSearch = () => {
+    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r", this.state.amountFilter, this.state.checkNumber ? this.state.checkNumber : "", this.state.amountType ? this.state.amountType.id : null)
   }
-  onERAPaymentGridSelectionChange=()=>{
+  onERAPaymentGridSelectionChange = (event) => {
+    let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
+      ? event.dataItem
+      : event.dataItems[event.endRowIndex]
+    if (ERAPaymentDetails.remaining == null) {
+      ERAPaymentDetails.remaining = this.state.ERAPaymentDetails.amount
+    }
+    this.setState({
+      ERAPaymentDetails
+    });
+  }
+  onERAPaymentGridDoubleSelectionChange = () => {
+    $("#ERADetailsPaymentSearch").children("span").trigger("click");
+  }
+  onERADetailsPaymentGridSelectionChange = () => {
 
   }
-  onERAPaymentGridDoubleSelectionChange=()=>{
-    
+  onERADetailsPaymentGridDoubleSelectionChange = () => {
+
   }
   render() {
     return (
@@ -334,16 +349,16 @@ class EraPayments extends Component {
                       onChange={(e) => this.setState({ posted: e.value })}
                     />
                   </div>
-                  <div style={{ float: "left",marginLeft:"10px" }}>
-                  <ButtonComponent
-                    icon="search"
-                    type="search"
-                    classButton="infraBtn-primary action-button"
-                    onClick={this.ERAPaymentGridSearch}
-                  >
-                    Search
-                  </ButtonComponent>
-                </div>
+                  <div style={{ float: "left", marginLeft: "10px" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary action-button"
+                      onClick={this.ERAPaymentGridSearch}
+                    >
+                      Search
+                    </ButtonComponent>
+                  </div>
 
                 </div>
 
@@ -363,10 +378,10 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{maxWidth: "1600px"}}
+                      style={{ maxWidth: "1600px" }}
                     >
                       <GridComponent
-                        id="insurancePayment"
+                        id="ERAPayment"
                         columns={masterColumns}
                         skip={0}
                         take={21}
@@ -395,10 +410,94 @@ class EraPayments extends Component {
               </div>
             </PanelBarItem>
             <PanelBarItem
-              id="InsurancePaymentSearch"
+              id="ERADetailsPaymentSearch"
               expanded={this.state.insurancePaymentExpanded}
               title="Payment Transactions"
-            ></PanelBarItem>
+            >
+              <div style={{ width: "100%" }}>
+                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                  <div style={{ float: "left", marginLeft: "14px" }}>
+                    <label className="userInfoLabel">Amount </label>
+                  </div>
+                  <div style={{ float: "left", width: "100px" }}>
+                    <TextBox
+                      type="numeric"
+                      format="c2"
+                      className="unifyHeight"
+                      value={this.state.ERAPaymentDetails?.amount}
+                      onChange={(e) =>
+                        this.setState({
+                          amountApply: e.value,
+                        })
+                      }
+                      disabled={true}
+                    ></TextBox>
+                  </div>
+                  <div style={{ float: "left", marginLeft: "10px" }}>
+                    <label className="userInfoLabel">Remaining </label>
+                  </div>
+                  <div style={{ float: "left", width: "132px" }}>
+                    <TextBox
+                      type="numeric"
+                      format="c2"
+                      className="unifyHeight"
+                      value={this.state.ERAPaymentDetails?.remaining}
+                      onChange={(e) =>
+                        this.setState({
+                          remaining: e.value,
+                        })
+                      }
+                      disabled={true}
+                    ></TextBox>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+                  <div className="accordion" id="accordionExample">
+                    <div
+                      className="card bg-light mb-3"
+                      style={{
+                        marginLeft: "10px",
+                        marginRight: "10px",
+                        marginTop: "5px",
+                      }}
+                    >
+                      <div
+                        id="collapseOne"
+                        className="collapse show"
+                        aria-labelledby="headingOne"
+                        data-parent="#accordionExample"
+                        style={{ maxWidth: "1600px" }}
+                      >
+                        <GridComponent
+                          id="ERAPaymentDetails"
+                          columns={detailsColumns}
+                          skip={0}
+                          take={21}
+                          onSelectionChange={this.onERADetailsPaymentGridSelectionChange}
+                          onRowDoubleClick={this.onERADetailsPaymentGridDoubleSelectionChange}
+                          // getSelectedItems={this.getSelectedClaims}
+                          // selectionMode="multiple"
+                          DATA_ITEM_KEY="ersPaymentSID"
+                          idGetter={idGetterMasterPaymentID}
+                          data={[]}
+                          // totalCount={
+                          //   this.props.insurancePayments != null && this.props.insurancePayments.length > 0
+                          //     ? this.props.insurancePayments[0].totalCount
+                          //     : this.props.insurancePayments.length
+                          // }
+                          height="579px"
+                          width="100%"
+                          //hasCheckBox={true}
+                          sortColumns={[]}
+                          onSortChange={this.onSortChange}
+                          pageChange={this.pageChange}
+                        ></GridComponent>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PanelBarItem>
           </PanelBar>
         </div>
       </Fragment>

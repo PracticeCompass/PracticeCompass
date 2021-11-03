@@ -86,7 +86,7 @@ export const CustomCell = (props) => {
                 {...navigationAttributes}
             >
                 <Button
-                    className={"infraBtn " + props.classButton ?? "infraBtn-primary"}
+                    className={"infraBtn infraBtn-primary"}
                     //   onClick={this.props.onClick}
                     style={props.style}
                     // disabled={true}

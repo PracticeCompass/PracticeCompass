@@ -31,10 +31,58 @@ export const PracticeColumns = [
   },
 ];
 
-
+export const detailsColumns = [
+    {
+      field: "id",
+      title: "ID",
+      minWidth: 250,
+      orderIndex: 0,
+      hide:true
+    },
+    {
+      field: "patient",
+      title: "Patient",
+      minWidth: 150,
+      orderIndex: 1,
+    },
+    {
+      field: "dos",
+      title: "DOS",
+      minWidth: 100,
+      orderIndex: 2,
+    },
+    {
+      field: "cpt",
+      title: "CPT",
+      minWidth: 100,
+      orderIndex: 3,
+    },
+    {
+      field: "asking/amount",
+      title: "Asking / Amount",
+      minWidth: 100,
+      orderIndex: 4,
+    },
+    {
+      field: "adjustment1",
+      title: "Adjustment1",
+      minWidth: 100,
+      orderIndex: 5,
+    },
+    {
+      field: "adjustment2",
+      title: "Adjustment2",
+      minWidth: 100,
+      orderIndex: 6,
+    },
+    {
+      field: "adjustment3",
+      title: "Adjustment3",
+      minWidth: 100,
+      orderIndex: 7,
+    },
+]
 export const masterColumns = [
-
-
 
   {
     field: "practiceName",
