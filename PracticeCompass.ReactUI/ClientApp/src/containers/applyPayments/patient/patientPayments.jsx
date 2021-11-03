@@ -1265,7 +1265,7 @@ class PatientPayments extends Component {
                     className="legendStyle"
                     style={{ paddingRight: "5px", paddingLeft: "5px" }}
                   >
-                    Charge
+                    Assignement Payment
                   </legend>
 
 
@@ -1394,7 +1394,7 @@ class PatientPayments extends Component {
                             className="legendStyle"
                             style={{ paddingRight: "5px", paddingLeft: "5px" }}
                           >
-                            Charge
+                            Assignement Payment
                           </legend>
                           <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%", marginBottom: "10px" }}>
                             <ButtonComponent
@@ -1547,7 +1547,7 @@ class PatientPayments extends Component {
                             className="legendStyle"
                             style={{ paddingRight: "5px", paddingLeft: "5px" }}
                           >
-                            Charge
+                            Assignement Payment
                           </legend>
                           <div className="accordion" id="accordionExample">
                             <div

@@ -16,6 +16,7 @@ import GridComponent from "../../../components/Grid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
 import CheckboxComponent from "../../../components/Checkbox";
+import DatePickerComponent from "../../../components/DatePicker"
 import config from "../../../config";
 import SaveFilterComponent from "../../common/saveFilter";
 import FindDialogComponent from "../../common/findDialog";
@@ -30,7 +31,7 @@ import {
   resetPracticeList,
 } from "../../../redux/actions/patient";
 import { getERAPaymentHeader } from "../../../redux/actions/payments";
-import { AmountFilter, detailsColumns } from "./eraPaymentsData"
+import { AmountFilter, detailsColumns, Days } from "./eraPaymentsData"
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
@@ -73,7 +74,10 @@ class EraPayments extends Component {
     subInsurancePracticeID: null,
     practiceSearchText: null,
     masterExpanded: true,
-    posted: false
+    posted: false,
+    receiverAccount: null,
+    senderAccount: null,
+    checkIssue: null
   };
 
 
@@ -115,6 +119,7 @@ class EraPayments extends Component {
       });
     }
   };
+  onSortChange = () => { };
   onPracticeSelectionChange = (event) => {
     var selectedDataItems = event.dataItems.slice(
       event.startRowIndex,
@@ -171,15 +176,24 @@ class EraPayments extends Component {
     });
   };
   ERAPaymentGridSearch = () => {
-    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r", this.state.amountFilter, this.state.checkNumber ? this.state.checkNumber : "", this.state.amountType ? this.state.amountType.id : null)
+    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r",
+      this.state.amountFilter, this.state.checkNumber ? this.state.checkNumber : "",
+      this.state.amountType ? this.state.amountType.id : null, this.state.senderAccount, this.state.receiverAccount,
+      this.state.checkIssue, this.state.day?.id)
   }
   onERAPaymentGridSelectionChange = (event) => {
     let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
       ? event.dataItem
       : event.dataItems[event.endRowIndex]
-    if (ERAPaymentDetails.remaining == null) {
-      ERAPaymentDetails.remaining = this.state.ERAPaymentDetails.amount
+    if (ERAPaymentDetails.practiceID != null) {
+      ERAPaymentDetails.detailsPracticeID =
+      {
+        entityId: ERAPaymentDetails.practiceID,
+        entityName: ERAPaymentDetails.practiceName,
+        
+      }
     }
+
     this.setState({
       ERAPaymentDetails
     });
@@ -254,7 +268,7 @@ class EraPayments extends Component {
                     width: "100%",
                   }}
                 >
-                  <div style={{ marginLeft: "45px" }}>
+                  <div style={{ marginLeft: "50px" }}>
                     <label className="userInfoLabel">Practice </label>
                   </div>
                   <div className="PracticeStyle">
@@ -288,7 +302,34 @@ class EraPayments extends Component {
                       Find
                     </ButtonComponent>
                   </div>
-
+                  <div style={{ marginLeft: "10px" }}>
+                    <label className="userInfoLabel">Sender Account </label>
+                  </div>
+                  <div style={{ width: "147px" }}>
+                    <TextBox
+                      className="unifyHeight"
+                      value={this.state.senderAccount}
+                      onChange={(e) =>
+                        this.setState({
+                          senderAccount: e.value,
+                        })
+                      }
+                    ></TextBox>
+                  </div>
+                  <div style={{ marginLeft: "10px" }}>
+                    <label className="userInfoLabel">Receiver Account </label>
+                  </div>
+                  <div style={{ width: "147px" }}>
+                    <TextBox
+                      className="unifyHeight"
+                      value={this.state.receiverAccount}
+                      onChange={(e) =>
+                        this.setState({
+                          receiverAccount: e.value,
+                        })
+                      }
+                    ></TextBox>
+                  </div>
                 </div>
                 <div
                   className="rowHeight"
@@ -299,7 +340,7 @@ class EraPayments extends Component {
                   }}
                 >
                   <div style={{ marginLeft: "5px" }}>
-                    <label className="userInfoLabel">Check Number </label>
+                    <label className="userInfoLabel">Virtual Number</label>
                   </div>
                   <div style={{ width: "147px" }}>
                     <TextBox
@@ -340,6 +381,39 @@ class EraPayments extends Component {
                       }
                     ></TextBox>
                   </div>
+                  <div style={{ marginLeft: "10px" }}>
+                    <label className="userInfoLabel">Check Issue </label>
+                  </div>
+                  <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                    <DatePickerComponent
+                      className="unifyHeight"
+                      placeholder="MM/DD/YYYY"
+                      format="M/dd/yyyy"
+                      value={this.state.checkIssue}
+                      onChange={(e) => this.setState({ checkIssue: e.value })}
+                    ></DatePickerComponent>
+                  </div>
+                  <div style={{ marginLeft: "10px" }}>
+                    <label className="userInfoLabel">±</label>
+                  </div>
+                  <div style={{ width: "100px" }}>
+                    <DropDown
+                      className="unifyHeight"
+                      data={Days}
+                      textField="text"
+                      dataItemKey="id"
+                      defaultValue={Days[0]}
+                      value={this.state.day}
+                      onChange={(e) =>
+                        this.setState({
+                          day: {
+                            id: e.value?.id,
+                            text: e.value?.text,
+                          },
+                        })
+                      }
+                    ></DropDown>
+                  </div>
                   <div style={{ float: "left" }}>
                     <CheckboxComponent
                       style={{ marginRight: "5px" }}
@@ -357,6 +431,19 @@ class EraPayments extends Component {
                       onClick={this.ERAPaymentGridSearch}
                     >
                       Search
+                    </ButtonComponent>
+                  </div>
+                  <div style={{ float: "left" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary"
+                      style={{ marginTop: "0px" }}
+                    // onClick={(e) =>
+                    //   this.setState({ practiceVisibleInsurance: true })
+                    // }
+                    >
+                      Manual Match
                     </ButtonComponent>
                   </div>
 
@@ -416,32 +503,49 @@ class EraPayments extends Component {
             >
               <div style={{ width: "100%" }}>
                 <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                  <div style={{ float: "left", marginLeft: "14px" }}>
-                    <label className="userInfoLabel">Amount </label>
+                  <div style={{ marginLeft: "50px" }}>
+                    <label className="userInfoLabel">Practice </label>
                   </div>
-                  <div style={{ float: "left", width: "100px" }}>
-                    <TextBox
-                      type="numeric"
-                      format="c2"
+                  <div className="PracticeStyle">
+                    <DropDown
                       className="unifyHeight"
-                      value={this.state.ERAPaymentDetails?.amount}
+                      data={this.props.dropDownPractices}
+                      textField="entityName"
+                      dataItemKey="entityId"
+                      defaultValue={this.state.ERAPaymentDetails?.detailsPracticeID}
+                      value={this.state.ERAPaymentDetails?.detailsPracticeID}
                       onChange={(e) =>
                         this.setState({
-                          amountApply: e.value,
+                          detailsPracticeID: {
+                            entityName: e.value?.entityName,
+                            entityId: e.value?.entityId,
+                          },
                         })
                       }
-                      disabled={true}
-                    ></TextBox>
+                    ></DropDown>
+                  </div>
+                  <div style={{ float: "left" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary find-button"
+                      style={{ marginTop: "0px" }}
+                      onClick={(e) =>
+                        this.setState({ practiceVisibleSubInsurance: true })
+                      }
+                    >
+                      Find
+                    </ButtonComponent>
                   </div>
                   <div style={{ float: "left", marginLeft: "10px" }}>
-                    <label className="userInfoLabel">Remaining </label>
+                    <label className="userInfoLabel">Total Payment </label>
                   </div>
                   <div style={{ float: "left", width: "132px" }}>
                     <TextBox
                       type="numeric"
                       format="c2"
                       className="unifyHeight"
-                      value={this.state.ERAPaymentDetails?.remaining}
+                      value={this.state.ERAPaymentDetails?.totalActualProviderPaymentAmt}
                       onChange={(e) =>
                         this.setState({
                           remaining: e.value,
@@ -450,19 +554,17 @@ class EraPayments extends Component {
                       disabled={true}
                     ></TextBox>
                   </div>
+                  <ButtonComponent
+                    icon="edit"
+                    type="edit"
+                    classButton="infraBtn-primary"
+                    // onClick={() => { this.ApplyListChanged() }}
+                    style={{ marginTop: "2px", marginLeft: "10px" }}
+                  // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
+                  >
+                    Post
+                  </ButtonComponent>
                 </div>
-                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                        <ButtonComponent
-                          icon="search"
-                          type="search"
-                          classButton="infraBtn-primary"
-                         // onClick={() => { this.ApplyListChanged() }}
-                          style={{ marginTop: "0px",marginLeft:"10px" }}
-                          // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
-                        >
-                          Post
-                        </ButtonComponent>
-                      </div>
                 <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                   <div className="accordion" id="accordionExample">
                     <div

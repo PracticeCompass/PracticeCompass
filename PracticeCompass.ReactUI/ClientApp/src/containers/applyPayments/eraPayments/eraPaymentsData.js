@@ -40,6 +40,13 @@ export const detailsColumns = [
       hide:true
     },
     {
+      field: "claim",
+      title: "Claim #",
+      minWidth: 120,
+      orderIndex: 0,
+      hide:true
+    },
+    {
       field: "patient",
       title: "Patient",
       minWidth: 150,
@@ -53,7 +60,7 @@ export const detailsColumns = [
     },
     {
       field: "cpt",
-      title: "CPT",
+      title: "CPT/ICD10",
       minWidth: 100,
       orderIndex: 3,
     },
@@ -81,97 +88,111 @@ export const detailsColumns = [
       minWidth: 100,
       orderIndex: 7,
     },
+    {
+      field: "suggestion",
+      title: "Suggestion",
+      minWidth: 100,
+      orderIndex: 8,
+      isCustomCell:true,
+      type:"dropDown",
+      data:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
+    },
 ]
 export const masterColumns = [
 
   {
     field: "practiceName",
     title: "Practice Name",
-    minWidth: 250,
+    minWidth: 300,
     orderIndex: 0,
-  },
-  {
-    field: "checkTraceNbr",
-    title: "Check Trace",
-    minWidth: 150,
-    orderIndex: 1,
-  },
-  {
-    field: "transHandlingCode",
-    title: "Trans Handling",
-    minWidth: 200,
-    orderIndex: 2,
+    showToolTip:true
   },
   {
     field: "totalActualProviderPaymentAmt",
     title: "Total Payment",
-    minWidth: 170,
+    minWidth: 90,
+    orderIndex: 1,
+    type:"currency"
+  },
+  {
+    field: "checkTraceNbr",
+    title: "Virtual Number",
+    minWidth: 150,
+    orderIndex: 2,
+  },
+  {
+    field: "checkIssueDate",
+    title: "Check Issue",
+    minWidth: 130,
     orderIndex: 3,
   },
   {
-    field: "paymentMethodCode",
-    title: "Payment Method",
-    minWidth: 120,
+    field: "payerNameText",
+    title: "Payer Name",
+    minWidth: 170,
     orderIndex: 4,
-  },
-  {
-    field: "paymentFormatCode",
-    title: "Payment Format",
-    minWidth: 120,
-    orderIndex: 5,
+    showToolTip:true
   },
   {
     field: "senderBankAcctNbr",
     title: "Sender Acct",
     minWidth: 150,
-    orderIndex: 6,
+    orderIndex: 5,
   },
   {
     field: "receiverAcctNbr",
     title: "Receiver Acct",
     minWidth: 100,
-    orderIndex: 8,
-  },
-  {
-    field: "remitPayerIdent",
-    title: "Remit Payer Ident",
-    minWidth: 150,
-    orderIndex: 9,
-  },
-  {
-    field: "checkIssueDate",
-    title: "Check Issue",
-    minWidth: 100,
-    orderIndex: 10,
-  },
-  {
-    field: "payerNameText",
-    title: "Payer Name",
-    minWidth: 100,
-    orderIndex: 11,
+    orderIndex: 6,
   },
   {
     field: "paymentFound",
     title: "Payment Found",
     minWidth: 110,
-    orderIndex: 12,
+    orderIndex: 7,
     isCustomCell:true,
     type:"checkBox"
   },
   {
     field: "manualMatch",
-    title: "Manual match",
-    minWidth: 110,
-    orderIndex: 13,
+    title: "Manual Match",
+    minWidth: 150,
+    orderIndex: 8,
     isCustomCell:true,
     type:"button"
   },
-  
+  {
+    field: "transHandlingCode",
+    title: "Trans Handling",
+    minWidth: 200,
+    orderIndex: 9,
+    showToolTip:true
+  },
+  {
+    field: "paymentMethodCode",
+    title: "Payment Method",
+    minWidth: 120,
+    orderIndex: 10,
+  },
+  {
+    field: "paymentFormatCode",
+    title: "Payment Format",
+    minWidth: 120,
+    orderIndex: 11,
+    showToolTip:true
+  },
+
+  {
+    field: "remitPayerIdent",
+    title: "Remit Payer Ident",
+    minWidth: 150,
+    orderIndex: 12,
+  },
   {
     field: "eRSPaymentSID",
     title: "eRSPaymentSID",
     minWidth: 250,
-    orderIndex: 0,
+    orderIndex: 13,
     hide:true
   },
 ];
@@ -193,3 +214,16 @@ export const AmountFilter = [
     text: "Less than",
   },
 ];
+export const Days=[
+  { id: "0", text: "0"},
+  { id: "1", text: "1"},
+  { id: "2", text: "2"},
+  { id: "3", text: "3"},
+  { id: "4", text: "4"},
+  { id: "5", text: "5"},
+  { id: "6", text: "6"},
+  { id: "7", text: "7"},
+  { id: "8", text: "8"},
+  { id: "9", text: "9"},
+  { id: "10", text: "10"},
+]

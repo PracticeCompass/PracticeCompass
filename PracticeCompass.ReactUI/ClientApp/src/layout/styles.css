@@ -308,3 +308,7 @@ button {
 .k-item k-state-active k-tab-on-top{
   color: black !important;
 }
+.k-tabstrip-top > .k-tabstrip-items .k-item.k-state-hover, .k-tabstrip-top > .k-tabstrip-items .k-item.k-state-active {
+  border-bottom-color: transparent;
+  color: darkblue;
+}

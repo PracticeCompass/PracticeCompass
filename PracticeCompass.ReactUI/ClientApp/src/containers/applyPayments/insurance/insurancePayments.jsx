@@ -379,7 +379,7 @@ class insurancePayments extends Component {
       ? event.dataItem
       : event.dataItems[event.endRowIndex]
     if (InsurancePaymentDetails.remaining == null) {
-      InsurancePaymentDetails.remaining = this.state.InsurancePaymentDetails.amount
+      InsurancePaymentDetails.remaining = InsurancePaymentDetails.amount
     }
     this.setState({
       InsurancePaymentDetails
@@ -1343,7 +1343,7 @@ class insurancePayments extends Component {
                     className="legendStyle"
                     style={{ paddingRight: "5px", paddingLeft: "5px" }}
                   >
-                    Charge
+                    Assignement Payment
                   </legend>
                   <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
                     <div className="accordion" id="accordionExample">
@@ -1583,7 +1583,7 @@ class insurancePayments extends Component {
                             className="legendStyle"
                             style={{ paddingRight: "5px", paddingLeft: "5px" }}
                           >
-                            Charge
+                            Assignement Payment
                           </legend>
                       <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
                         <ButtonComponent
@@ -1738,7 +1738,7 @@ class insurancePayments extends Component {
                           className="legendStyle"
                           style={{ paddingRight: "5px", paddingLeft: "5px" }}
                         >
-                          Charge
+                          Assignement Payment
                         </legend>
                         <div className="accordion" id="accordionExample">
                           <div
