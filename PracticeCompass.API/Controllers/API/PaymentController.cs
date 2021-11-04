@@ -185,6 +185,21 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<ERAPaymentHeader>();
             }
         }
+        [HttpGet]
+        [Route("api/payment/ERAPaymentDetailsGet")]
+        public List<ERAPaymentDetail> ERAPaymentDetailsGet(int ERSPaymentSID)
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetERAPaymentDetails(ERSPaymentSID);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<ERAPaymentDetail>();
+            }
+        }
 
     }
 }

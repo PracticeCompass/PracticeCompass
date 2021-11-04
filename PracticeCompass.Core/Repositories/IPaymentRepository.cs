@@ -18,5 +18,7 @@ namespace PracticeCompass.Core.Repositories
         bool ApplyPayment(List<ApplyPaymentModel> applyPaymentModel);
         List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType);
 
+        List<ERAPaymentDetail> GetERAPaymentDetails(int ERSPaymentSID);
+
     }
 }
