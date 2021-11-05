@@ -172,11 +172,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/ERAPaymentHeaderGet")]
-        public List<ERAPaymentHeader> ERAPaymentHeaderGet(int PracticeID ,string IsPosted, float Amount,string CheckNumber="",string AmountType="")
+        public List<ERAPaymentHeader> ERAPaymentHeaderGet(int PracticeID ,string IsPosted, float Amount,string CheckNumber,string AmountType, string SenderAccount ,string ReceiverAccount, string PostDate , string Days )
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetERAPaymentHeader(PracticeID,IsPosted,Amount,CheckNumber != null?CheckNumber:"", AmountType);
+                return unitOfWork.PaymentRepository.GetERAPaymentHeader(PracticeID,IsPosted,Amount,CheckNumber != null?CheckNumber:"", AmountType, SenderAccount , ReceiverAccount , PostDate , Days);
 
             }
             catch (Exception ex)

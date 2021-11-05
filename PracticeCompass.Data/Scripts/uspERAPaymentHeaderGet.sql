@@ -16,7 +16,11 @@ Create or Alter   PROCEDURE [dbo].[uspERAPaymentHeaderGet]
     @PracticeID int , @IsPosted varchar(1), 
 @Amount float,
 @CheckNumber varchar(50),
-@AmountType varchar(20)
+@AmountType varchar(20),
+@SenderAccount varchar(20),
+@ReceiverAccount varchar(20),
+@PostDate varchar(20),
+@Days  varchar(3)
 AS
 BEGIN
 
