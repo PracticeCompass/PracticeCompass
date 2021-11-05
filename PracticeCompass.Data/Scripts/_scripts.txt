@@ -52,3 +52,4 @@ uspPaymentInsertUpdate.sql
 uspPatientPaymentGetforApply.sql
 uspInsurancePaymentGetforApply.sql
 uspERAPaymentHeaderGet.sql
+uspERAPaymentDetailsGet.sql
