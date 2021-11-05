@@ -24,9 +24,9 @@ Create or Alter   PROCEDURE [dbo].[uspERAPaymentHeaderGet]
 AS
 BEGIN
 
-Declare @CheckIssueDatefrom datetime, @CheckIssueDateto datetime
-set @CheckIssueDatefrom = @PostDate+@Days
-set @CheckIssueDateto = @PostDate-@Days
+--Declare @CheckIssueDatefrom datetime, @CheckIssueDateto datetime
+--set @CheckIssueDatefrom = @PostDate+@Days
+--set @CheckIssueDateto = @PostDate-@Days
 
 
 

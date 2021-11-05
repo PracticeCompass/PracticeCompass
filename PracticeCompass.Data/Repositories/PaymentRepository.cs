@@ -226,7 +226,7 @@ namespace PracticeCompass.Data.Repositories
             return true;
         }
 
-        public List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, string SenderAccount, string ReceiverAccount, string PostDate, string Days)
+        public List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, string SenderAccount, string ReceiverAccount, string PostDate, int Days)
         {
             var data = this.db.QueryMultiple("uspERAPaymentHeaderGet", new
             {
