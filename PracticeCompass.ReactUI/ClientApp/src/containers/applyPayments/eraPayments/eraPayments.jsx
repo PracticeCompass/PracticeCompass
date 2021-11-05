@@ -30,7 +30,7 @@ import {
   getPracticeList,
   resetPracticeList,
 } from "../../../redux/actions/patient";
-import { getERAPaymentHeader } from "../../../redux/actions/payments";
+import { getERAPaymentHeader,GetERAPaymentDetails } from "../../../redux/actions/payments";
 import { AmountFilter, detailsColumns, Days } from "./eraPaymentsData"
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
@@ -51,10 +51,10 @@ function mapDispatchToProps(dispatch) {
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
-
+    GetERAPaymentDetails:(PaymentSID)=>dispatch(GetERAPaymentDetails(PaymentSID)),
     resetPracticeList: () => dispatch(resetPracticeList()),
-    getERAPaymentHeader: (PracticeID, IsPosted, Amount, CheckNumber, AmountType) =>
-      dispatch(getERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber, AmountType))
+    getERAPaymentHeader: (PracticeID, IsPosted, Amount, CheckNumber, AmountType,SenderAccount,ReceiverAccount,PostDate,Days) =>
+      dispatch(getERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber, AmountType,SenderAccount,ReceiverAccount,PostDate,Days))
   };
 }
 
@@ -77,7 +77,8 @@ class EraPayments extends Component {
     posted: false,
     receiverAccount: null,
     senderAccount: null,
-    checkIssue: null
+    checkIssue: null,
+    transactionHeader:"Payment Transactions "
   };
 
 
@@ -179,7 +180,7 @@ class EraPayments extends Component {
     this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r",
       this.state.amountFilter, this.state.checkNumber ? this.state.checkNumber : "",
       this.state.amountType ? this.state.amountType.id : null, this.state.senderAccount, this.state.receiverAccount,
-      this.state.checkIssue, this.state.day?.id)
+      this.state.checkIssue?new Date(this.state.checkIssue).toLocaleDateString():null, this.state.day?.id??0)
   }
   onERAPaymentGridSelectionChange = (event) => {
     let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
@@ -198,7 +199,7 @@ class EraPayments extends Component {
       ERAPaymentDetails
     });
   }
-  onERAPaymentGridDoubleSelectionChange = (event) => {
+  onERAPaymentGridDoubleSelectionChange =async (event) => {
     let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
       ? event.dataItem
       : event.dataItems[event.endRowIndex]
@@ -210,10 +211,20 @@ class EraPayments extends Component {
         
       }
     }
-
-    this.setState({
-      ERAPaymentDetails
+    let header="Payment Transactions ";
+    if(ERAPaymentDetails && ERAPaymentDetails.detailsPracticeID !=null){
+      header=header+"----Practice: "+ ERAPaymentDetails.detailsPracticeID.entityName+"     ";
+    }
+    if(ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt !=null){
+      header=header+"----Total Payment: "+ ERAPaymentDetails.totalActualProviderPaymentAmt;
+    }
+    
+    debugger;
+   await this.setState({
+      ERAPaymentDetails,
+      transactionHeader:header
     });
+    let eRAPayments = await this.props.GetERAPaymentDetails(ERAPaymentDetails.ersPaymentSID);
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
   }
   onERADetailsPaymentGridSelectionChange = () => {
@@ -222,6 +233,7 @@ class EraPayments extends Component {
   onERADetailsPaymentGridDoubleSelectionChange = () => {
 
   }
+
   render() {
     return (
       <Fragment>
@@ -283,7 +295,7 @@ class EraPayments extends Component {
                     width: "100%",
                   }}
                 >
-                  <div style={{ marginLeft: "50px" }}>
+                  <div style={{ marginLeft: "8px" }}>
                     <label className="userInfoLabel">Practice </label>
                   </div>
                   <div className="PracticeStyle">
@@ -355,7 +367,7 @@ class EraPayments extends Component {
                   }}
                 >
                   <div style={{ marginLeft: "5px" }}>
-                    <label className="userInfoLabel">Virtual Number</label>
+                    <label className="userInfoLabel">Voucher</label>
                   </div>
                   <div style={{ width: "147px" }}>
                     <TextBox
@@ -429,6 +441,9 @@ class EraPayments extends Component {
                       }
                     ></DropDown>
                   </div>
+                  <div style={{ marginLeft: "2px" }}>
+                    <label className="userInfoLabel">Days</label>
+                  </div>
                   <div style={{ float: "left" }}>
                     <CheckboxComponent
                       style={{ marginRight: "5px" }}
@@ -480,7 +495,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ maxWidth: "1600px" }}
+                      style={{ maxWidth: "100%" }}
                     >
                       <GridComponent
                         id="ERAPayment"
@@ -511,14 +526,15 @@ class EraPayments extends Component {
                 </div>
               </div>
             </PanelBarItem>
+
             <PanelBarItem
               id="ERADetailsPaymentSearch"
               expanded={this.state.insurancePaymentExpanded}
-              title="Payment Transactions"
+              title={this.state.transactionHeader } 
             >
               <div style={{ width: "100%" }}>
                 <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                  <div style={{ marginLeft: "50px" }}>
+                  {/* <div style={{ marginLeft: "50px" }}>
                     <label className="userInfoLabel">Practice </label>
                   </div>
                   <div className="PracticeStyle">
@@ -568,7 +584,7 @@ class EraPayments extends Component {
                       }
                       disabled={true}
                     ></TextBox>
-                  </div>
+                  </div> */}
                   <ButtonComponent
                     icon="edit"
                     type="edit"
@@ -595,7 +611,7 @@ class EraPayments extends Component {
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
-                        style={{ maxWidth: "1600px" }}
+                        style={{ maxWidth: "100%" }}
                       >
                         <GridComponent
                           id="ERAPaymentDetails"

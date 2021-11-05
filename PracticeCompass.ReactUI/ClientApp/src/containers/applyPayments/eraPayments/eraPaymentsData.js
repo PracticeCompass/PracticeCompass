@@ -116,7 +116,7 @@ export const masterColumns = [
   },
   {
     field: "checkTraceNbr",
-    title: "Virtual Number",
+    title: "Voucher",
     minWidth: 150,
     orderIndex: 2,
   },
@@ -135,14 +135,14 @@ export const masterColumns = [
   },
   {
     field: "senderBankAcctNbr",
-    title: "Sender Acct",
+    title: "Sender Acctount",
     minWidth: 150,
     orderIndex: 5,
   },
   {
     field: "receiverAcctNbr",
-    title: "Receiver Acct",
-    minWidth: 100,
+    title: "Receiver Acctount",
+    minWidth: 150,
     orderIndex: 6,
   },
   {

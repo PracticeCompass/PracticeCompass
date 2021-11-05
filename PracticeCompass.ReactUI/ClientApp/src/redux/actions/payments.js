@@ -41,14 +41,14 @@ export const getPatientPayments =
   };
 
   export const getERAPaymentHeader =
-  (PracticeID, IsPosted,  Amount,  CheckNumber,  AmountType) => async (dispatch, getState) => {
+  (PracticeID, IsPosted,  Amount,  CheckNumber,  AmountType,SenderAccount,ReceiverAccount,PostDate,Days) => async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       dispatch(setERAPayments([]));
       // if (PracticeID == null && PatientID == null) return;
       const resp = await axios({
         method: "GET",
-        url: `${config.baseUrl}/payment/ERAPaymentHeaderGet?PracticeID=${PracticeID}&IsPosted=${IsPosted}&Amount=${Amount}&CheckNumber=${CheckNumber}&AmountType=${AmountType}`,
+        url: `${config.baseUrl}/payment/ERAPaymentHeaderGet?PracticeID=${PracticeID}&IsPosted=${IsPosted}&Amount=${Amount}&CheckNumber=${CheckNumber}&AmountType=${AmountType}&SenderAccount=${SenderAccount}&ReceiverAccount=${ReceiverAccount}&PostDate=${PostDate}&Days=${Days}`,
       });
       dispatch(setERAPayments(resp.data||[]));
     } catch (error) {
@@ -100,6 +100,25 @@ export const GetPaymentClass = () => async (dispatch, getState) => {
     });
   }
 };
+export const GetERAPaymentDetails=(PaymentSID)=>async(dispatch,getState)=>{
+  try {
+    dispatch(uiStartLoading());
+    // if (PracticeID == null && InsuranceID == null) return;
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/payment/ERAPaymentDetailsGet?PaymentSID=${PaymentSID}`,
+    });    
+    return resp.data;
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: GET_INSURANCE_PAYMENTS_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+}
 export const GetPaymentDetails=(PaymentSID)=>async(dispatch,getState)=>{
   try {
     dispatch(uiStartLoading());
