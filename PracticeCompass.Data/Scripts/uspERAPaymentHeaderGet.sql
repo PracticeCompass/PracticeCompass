@@ -54,8 +54,9 @@ SELECT
 		(@CheckNumber='' or [ERSPaymentHeader].CheckTraceNbr=@CheckNumber )and
 		(@Amount=0 or [ERSPaymentHeader].TotalActualProviderPaymentAmt = @Amount )) and
 		(@SenderAccount='' or ERSPaymentHeader.SenderBankAcctNbr = @SenderAccount) and 
-		(@ReceiverAccount='' or ERSPaymentHeader.ReceiverAcctNbr= @ReceiverAccount) and
+		(@ReceiverAccount='' or ERSPaymentHeader.ReceiverAcctNbr= @ReceiverAccount) 
 		--(@PostDate='' or CheckIssueDate between @CheckIssueDatefrom and @CheckIssueDateto )
+		Order by [ERSPaymentHeader].ERSPaymentSID
 
 		
 
