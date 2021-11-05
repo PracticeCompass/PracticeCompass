@@ -100,13 +100,13 @@ export const GetPaymentClass = () => async (dispatch, getState) => {
     });
   }
 };
-export const GetERAPaymentDetails=(PaymentSID)=>async(dispatch,getState)=>{
+export const GetERAPaymentDetails=(ERSPaymentSID)=>async(dispatch,getState)=>{
   try {
     dispatch(uiStartLoading());
     // if (PracticeID == null && InsuranceID == null) return;
     const resp = await axios({
       method: "GET",
-      url: `${config.baseUrl}/payment/ERAPaymentDetailsGet?PaymentSID=${PaymentSID}`,
+      url: `${config.baseUrl}/payment/ERAPaymentDetailsGet?ERSPaymentSID=${ERSPaymentSID}`,
     });    
     return resp.data;
   } catch (error) {
