@@ -180,7 +180,7 @@ class EraPayments extends Component {
     this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r",
       this.state.amountFilter??0, this.state.checkNumber ? this.state.checkNumber : "",
       this.state.amountType ? this.state.amountType.id : null, this.state.senderAccount??"", this.state.receiverAccount??"",
-      this.state.checkIssue?new Date(this.state.checkIssue).toLocaleDateString():null, this.state.day?.id??0)
+      this.state.checkIssue?new Date(this.state.checkIssue).toLocaleDateString():"", this.state.day?.id??0)
   }
   onERAPaymentGridSelectionChange = (event) => {
     let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
