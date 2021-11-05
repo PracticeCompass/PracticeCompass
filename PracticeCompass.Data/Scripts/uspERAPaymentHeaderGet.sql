@@ -13,16 +13,22 @@ GO
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspERAPaymentHeaderGet] 
 	-- Add the parameters for the stored procedure here
-    @PracticeID int , @IsPosted varchar(1), 
+@PracticeID int , @IsPosted varchar(1), 
 @Amount float,
 @CheckNumber varchar(50),
 @AmountType varchar(20),
 @SenderAccount varchar(20),
 @ReceiverAccount varchar(20),
 @PostDate varchar(20),
-@Days  varchar(3)
+@Days  int
 AS
 BEGIN
+
+Declare @CheckIssueDatefrom datetime, @CheckIssueDateto datetime
+set @CheckIssueDatefrom = @PostDate+@Days
+set @CheckIssueDateto = @PostDate-@Days
+
+
 
 SELECT 
 	[ERSPaymentHeader].PracticeID,
@@ -46,7 +52,11 @@ SELECT
 		((@IsPosted = '' or [ERSPaymentHeader].RecordStatus=@IsPosted)and 
 		(@PracticeID=0 or  [ERSPaymentHeader].PracticeID= @PracticeID) and
 		(@CheckNumber='' or [ERSPaymentHeader].CheckTraceNbr=@CheckNumber )and
-		(@Amount=0 or [ERSPaymentHeader].TotalActualProviderPaymentAmt = @Amount ))
+		(@Amount=0 or [ERSPaymentHeader].TotalActualProviderPaymentAmt = @Amount )) and
+		(@SenderAccount='' or ERSPaymentHeader.SenderBankAcctNbr = @SenderAccount) and 
+		(@ReceiverAccount='' or ERSPaymentHeader.ReceiverAcctNbr= @ReceiverAccount) and
+		--(@PostDate='' or CheckIssueDate between @CheckIssueDatefrom and @CheckIssueDateto )
+
 		
 
 END
