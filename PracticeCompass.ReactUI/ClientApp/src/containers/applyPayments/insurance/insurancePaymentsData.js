@@ -214,7 +214,7 @@ export const applyPlanPaymentColumns = [
     editor:"numeric",
     type:"currency",
     orderIndex: 4,
-    editable:false
+    editable:false,
   },
   {
     field: "insurancePaid",
@@ -222,6 +222,8 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 5,
     editor:"numeric",
+    cell:"currency",
+    type:"currency",
     //type:"currency",
   },
   {
@@ -230,6 +232,8 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 6,
     editor:"numeric",
+    cell:"currency",
+    type:"currency",
     //type:"currency",
   },
   {
@@ -246,9 +250,10 @@ export const applyPlanPaymentColumns = [
     title: "Move to next plan",
     minWidth: 50,
     editor:"boolean",
-    orderIndex: 8,
     isCustomCell:true,
-    type:"checkBox"
+    type:"checkBox",
+    orderIndex: 8,
+    cell:"checkBox"
   },
 ]
 export const  DOSFilter = [

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from "react-redux";
 import { ComboBox } from '@progress/kendo-react-dropdowns';
+import TextBox from "./TextBox"
 function mapStateToProps(state) {
-    return {};
+  return {};
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-    };
+  return {
+  };
 }
-export class DropDownCell extends React.Component {
-  localizedData = [{value:"Accepted",text:"Accepted"},{value:"Denied",text:"Denied"},{value:"Zero Or Low Pay",text:"Zero Or Low Pay"}];
+export class CurrencyGridCell extends React.Component {
   handleChange = e => {
     if (this.props.onChange) {
       this.props.onChange({
@@ -18,7 +18,7 @@ export class DropDownCell extends React.Component {
         dataItem: this.props.dataItem,
         field: this.props.field,
         syntheticEvent: e.syntheticEvent,
-        value: e.value.value
+        value: e.value
       });
     }
   };
@@ -29,12 +29,18 @@ export class DropDownCell extends React.Component {
     } = this.props;
     const field = this.props.field || '';
     const dataValue = dataItem[field] === null ? '' : dataItem[field];
-    return <td>
-            {dataItem.inEdit ? <ComboBox style={{
-        width: "150px"
-      }} onChange={this.handleChange} value={this.localizedData.find(c => c.value === dataValue)} data={this.localizedData} textField="text" /> : dataValue?.toString()}
-          </td>;
+    return <td style={{textAlign:"right"}}>
+      {dataItem.inEdit?
+      <TextBox
+        type="numeric"
+        format="c2"
+        className="unifyHeight"
+        value={dataValue}
+        onChange={this.handleChange}
+      ></TextBox>:"$"+dataValue?.toString()}
+
+    </td>;
   }
 
 }
-export default connect(mapStateToProps, mapDispatchToProps)(DropDownCell);
+export default connect(mapStateToProps, mapDispatchToProps)(CurrencyGridCell);

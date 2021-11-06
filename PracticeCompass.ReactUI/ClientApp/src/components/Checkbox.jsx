@@ -30,6 +30,7 @@ class CheckboxComponent extends Component {
                 ? this.props.marginLeftStyle
                 : "10px",
             }}
+            disabled={this.props.disabled}
             defaultChecked={this.props.defaultChecked}
             value={this.props.value}
             label={this.props.label}

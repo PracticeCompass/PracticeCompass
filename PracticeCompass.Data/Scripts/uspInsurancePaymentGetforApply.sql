@@ -34,8 +34,8 @@ BEGIN
 set @SQL= 'select distinct Charge.ChargeSID ,CONVERT(varchar,ProcedureEvent.FromServiceDate,101) As FromServiceDate, 
  ProcedureEvent.ProcedureCode , [Procedure].Description AS ProcedureDescription ,
  Mod1.[Modifier] as Modifier1 ,  Diag1.DiagnosisCode as Diag1,
- (Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts) as ChargeBalance,
- Charge.Amount,
++ ''$'' +  Convert(varchar(50),(Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts)) as ChargeBalance,
++ ''$'' +  Convert(varchar(50),Charge.Amount) as Amount   ,
  charge.InsuranceReceipts as InsurancePaid, Charge.Adjustments , ClaimCharge.ClaimSID 
  from ProcedureEvent
 inner join [Procedure] on [Procedure].ProcedureCode = ProcedureEvent.ProcedureCode
