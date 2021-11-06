@@ -582,7 +582,6 @@ class PatientPayments extends Component {
     this.setApplyPatientPaymentExpanded();
   }
   applyItemChanged = (event) => {
-
     if (this.state.patientPaymentDetails == null) return;
 
     const field = event.field || '';
@@ -601,7 +600,8 @@ class PatientPayments extends Component {
       debugger
       let amount = Number(data[rowIndex]["amount"].replace("$", ""));
       let chargeBalance = Number(data[rowIndex]["chargeBalance"].replace("$", ""));
-      amount = chargeBalance - (data[rowIndex]["adjustments"] + data[rowIndex]["patientPaid"]);
+
+      chargeBalance  = amount - (data[rowIndex]["adjustments"] + data[rowIndex]["patientPaid"]);
       let remaining = this.state.patientPaymentDetails.remaining;
 
       if (field == "patientPaid") {
@@ -620,7 +620,7 @@ class PatientPayments extends Component {
         }, this.state.timer);
         return;
       }
-      data[rowIndex]["amount"] = "$" + amount;
+      data[rowIndex]["chargeBalance"] = "$" + chargeBalance;
       this.state.patientPaymentDetails.remaining = remaining;
     }
     this.setState({
@@ -628,7 +628,6 @@ class PatientPayments extends Component {
     });
   }
   filterApplyListChanged = async () => {
-    debugger;
     if (this.state.applyPatientPayments != null && this.state.patientPaymentDetails != null) {
       let list = this.state.applyPatientPayments.filter(item => item.isEdit == true);
       this.setState({ filterapplyPatientPayments: list || [] });

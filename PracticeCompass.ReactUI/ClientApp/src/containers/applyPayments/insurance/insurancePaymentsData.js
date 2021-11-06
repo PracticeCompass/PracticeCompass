@@ -208,8 +208,8 @@ export const applyPlanPaymentColumns = [
     editable:false
   },
   {
-    field: "chargeBalance",
-    title: "Balanace",
+    field: "amount",
+    title: "Amount",
     minWidth: 50,
     editor:"numeric",
     type:"currency",
@@ -237,7 +237,7 @@ export const applyPlanPaymentColumns = [
     //type:"currency",
   },
   {
-    field: "amount",
+    field: "chargeBalance",
     title: "Remaining",
     minWidth: 50,
     orderIndex: 7,

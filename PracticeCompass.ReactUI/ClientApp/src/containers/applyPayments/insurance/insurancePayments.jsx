@@ -642,11 +642,11 @@ class insurancePayments extends Component {
 
     let disableApply = false;
     if (field == "insurancePaid" || field == "adjustments") {
-      
+
       let amount = Number(data[rowIndex]["amount"].replace("$", ""));
       let chargeBalance = Number(data[rowIndex]["chargeBalance"].replace("$", ""));
 
-      amount = chargeBalance - (data[rowIndex]["adjustments"] + data[rowIndex]["insurancePaid"]);
+      chargeBalance = amount - (data[rowIndex]["adjustments"] + data[rowIndex]["insurancePaid"]);
       let remaining = this.state.InsurancePaymentDetails.remaining;
       if (field == "insurancePaid") {
         remaining = remaining - (data[rowIndex]["insurancePaid"] - backUpData["insurancePaid"]);
@@ -664,7 +664,7 @@ class insurancePayments extends Component {
         }, this.state.timer);
         return;
       }
-      data[rowIndex]["amount"] = "$" + amount;
+      data[rowIndex]["chargeBalance"] = "$" + chargeBalance;
       this.state.InsurancePaymentDetails.remaining = remaining;
     }
     this.setState({

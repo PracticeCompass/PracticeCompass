@@ -235,9 +235,8 @@ export const getApplyPatientPayments =
      let  applyPaymentModel=[];
      applyPaymentModel.push({ ChargeSID:"5" ,PaymentSID:"7"});
       const resp = await axios({
-        method: "POST",
-        url: `${config.baseUrl}/payment/ApplyPayment`,
-        data: JSON.stringify(list)
+        method: "Get",
+        url: `${config.baseUrl}/payment/ApplyPayment?applyPaymentModel=${JSON.stringify(list)}`
       });
       return resp.data;
     } catch (error) {
