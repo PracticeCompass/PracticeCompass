@@ -1,4 +1,4 @@
-USE [medman2]
+USE [medman]
 GO
 /****** Object:  StoredProcedure [dbo].[uspPatientPaymentGetforApply]    Script Date: 10/10/2021 10:29:33 AM ******/
 SET ANSI_NULLS ON
