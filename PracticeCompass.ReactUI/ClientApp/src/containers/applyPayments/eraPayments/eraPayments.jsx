@@ -30,11 +30,15 @@ import {
   getPracticeList,
   resetPracticeList,
 } from "../../../redux/actions/patient";
-import { getERAPaymentHeader,GetERAPaymentDetails } from "../../../redux/actions/payments";
+import { getERAPaymentHeader, GetERAPaymentDetails } from "../../../redux/actions/payments";
 import { AmountFilter, detailsColumns, Days } from "./eraPaymentsData"
+import  EditableGrid  from "../../../components/editableGrid"
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
+const DATA_ITEM_KEY_DETAILS_PAYMENT = "ChargeSID";
+const idGetterDetailsPaymentID = getter(DATA_ITEM_KEY_DETAILS_PAYMENT);
+
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 function mapStateToProps(state) {
@@ -51,10 +55,10 @@ function mapDispatchToProps(dispatch) {
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
-    GetERAPaymentDetails:(PaymentSID)=>dispatch(GetERAPaymentDetails(PaymentSID)),
+    GetERAPaymentDetails: (PaymentSID) => dispatch(GetERAPaymentDetails(PaymentSID)),
     resetPracticeList: () => dispatch(resetPracticeList()),
-    getERAPaymentHeader: (PracticeID, IsPosted, Amount, CheckNumber, AmountType,SenderAccount,ReceiverAccount,PostDate,Days) =>
-      dispatch(getERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber, AmountType,SenderAccount,ReceiverAccount,PostDate,Days))
+    getERAPaymentHeader: (PracticeID, IsPosted, Amount, CheckNumber, AmountType, SenderAccount, ReceiverAccount, PostDate, Days) =>
+      dispatch(getERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber, AmountType, SenderAccount, ReceiverAccount, PostDate, Days))
   };
 }
 
@@ -78,14 +82,25 @@ class EraPayments extends Component {
     receiverAccount: null,
     senderAccount: null,
     checkIssue: null,
-    transactionHeader:"Payment Transactions "
+    transactionHeader: "Payment Transactions "
   };
 
 
   getParacticesUrl(filter) {
     return `${config.baseUrl}/patient/PracticesGet?sortname=${filter}`;
   }
-
+  applyItemChanged = (event) => {
+    const field = event.field || '';
+    const inEditID = event.dataItem["ersChargeSID"];
+    let data = this.state.eRAPayments.map(item => item["ersChargeSID"] === inEditID ? {
+      ...item,
+      [field]: event.value,
+      isEdit: true
+    } : item);
+    this.setState({
+      eRAPayments:data
+    });
+  }
   practiceSearch = () => {
     this.props.getPracticeList(this.state.practiceSearchText);
   };
@@ -176,11 +191,12 @@ class EraPayments extends Component {
       practiceVisibleSubInsurance: false,
     });
   };
-  ERAPaymentGridSearch = () => {
+  ERAPaymentGridSearch = async () => {
+
     this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r",
-      this.state.amountFilter??0, this.state.checkNumber ? this.state.checkNumber : "",
-      this.state.amountType ? this.state.amountType.id : null, this.state.senderAccount??"", this.state.receiverAccount??"",
-      this.state.checkIssue?new Date(this.state.checkIssue).toLocaleDateString():"", this.state.day?.id??0)
+      this.state.amountFilter ?? 0, this.state.checkNumber ? this.state.checkNumber : "",
+      this.state.amountType ? this.state.amountType.id : null, this.state.senderAccount ?? "", this.state.receiverAccount ?? "",
+      this.state.checkIssue ? new Date(this.state.checkIssue).toLocaleDateString() : "", this.state.day?.id ?? 0)
   }
   onERAPaymentGridSelectionChange = (event) => {
     let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
@@ -191,7 +207,7 @@ class EraPayments extends Component {
       {
         entityId: ERAPaymentDetails.practiceID,
         entityName: ERAPaymentDetails.practiceName,
-        
+
       }
     }
 
@@ -199,7 +215,7 @@ class EraPayments extends Component {
       ERAPaymentDetails
     });
   }
-  onERAPaymentGridDoubleSelectionChange =async (event) => {
+  onERAPaymentGridDoubleSelectionChange = async (event) => {
     let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
       ? event.dataItem
       : event.dataItems[event.endRowIndex]
@@ -208,23 +224,25 @@ class EraPayments extends Component {
       {
         entityId: ERAPaymentDetails.practiceID,
         entityName: ERAPaymentDetails.practiceName,
-        
+
       }
     }
-    let header="Payment Transactions ";
-    if(ERAPaymentDetails && ERAPaymentDetails.detailsPracticeID !=null){
-      header=header+"----Practice: "+ ERAPaymentDetails.detailsPracticeID.entityName+"     ";
+    let header = "Payment Transactions ";
+    if (ERAPaymentDetails && ERAPaymentDetails.detailsPracticeID != null) {
+      header = header + "----Practice: " + ERAPaymentDetails.detailsPracticeID.entityName + "     ";
     }
-    if(ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt !=null){
-      header=header+"----Total Payment: "+ ERAPaymentDetails.totalActualProviderPaymentAmt;
+    if (ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt != null) {
+      header = header + "----Total Payment: " + ERAPaymentDetails.totalActualProviderPaymentAmt;
     }
-    
-    debugger;
-   await this.setState({
+    await this.setState({
       ERAPaymentDetails,
-      transactionHeader:header
+      transactionHeader: header
     });
-    let eRAPayments = await this.props.GetERAPaymentDetails(ERAPaymentDetails.ersPaymentSID);
+    //let eRAPayments = await this.props.GetERAPaymentDetails(1971933);
+    let eRADetailsPayments = await this.props.GetERAPaymentDetails(ERAPaymentDetails.ersPaymentSID);
+    this.setState({
+      eRADetailsPayments
+    });
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
   }
   onERADetailsPaymentGridSelectionChange = () => {
@@ -519,7 +537,7 @@ class EraPayments extends Component {
                         //hasCheckBox={true}
                         sortColumns={[]}
                         onSortChange={this.onSortChange}
-                        pageChange={this.pageChange}
+                      // pageChange={this.pageChange}
                       ></GridComponent>
                     </div>
                   </div>
@@ -530,7 +548,7 @@ class EraPayments extends Component {
             <PanelBarItem
               id="ERADetailsPaymentSearch"
               expanded={this.state.insurancePaymentExpanded}
-              title={this.state.transactionHeader } 
+              title={this.state.transactionHeader}
             >
               <div style={{ width: "100%" }}>
                 <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
@@ -613,30 +631,29 @@ class EraPayments extends Component {
                         data-parent="#accordionExample"
                         style={{ maxWidth: "100%" }}
                       >
-                        <GridComponent
+                        <EditableGrid
+                          data={this.state.eRADetailsPayments}
                           id="ERAPaymentDetails"
-                          columns={detailsColumns}
                           skip={0}
                           take={21}
-                          onSelectionChange={this.onERADetailsPaymentGridSelectionChange}
-                          onRowDoubleClick={this.onERADetailsPaymentGridDoubleSelectionChange}
-                          // getSelectedItems={this.getSelectedClaims}
-                          // selectionMode="multiple"
-                          DATA_ITEM_KEY="ersPaymentSID"
-                          idGetter={idGetterMasterPaymentID}
-                          data={[]}
-                          // totalCount={
-                          //   this.props.insurancePayments != null && this.props.insurancePayments.length > 0
-                          //     ? this.props.insurancePayments[0].totalCount
-                          //     : this.props.insurancePayments.length
-                          // }
                           height="579px"
                           width="100%"
-                          //hasCheckBox={true}
-                          sortColumns={[]}
+                          editColumn={"ersChargeSID"}
+                          DATA_ITEM_KEY="ersChargeSID"
+                          idGetter={idGetterDetailsPaymentID}
+                          onSelectionChange={this.onERADetailsPaymentGridSelectionChange}
+                          onRowDoubleClick={this.onERADetailsPaymentGridDoubleSelectionChange}
+                          columns={detailsColumns}
+                          itemChange={this.applyItemChanged}
                           onSortChange={this.onSortChange}
-                          pageChange={this.pageChange}
-                        ></GridComponent>
+                          // pageChange={this.pageChange}
+                          isEditable={true}
+                        // totalCount={
+                        //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                        //     ? this.props.patientApplys[0].totalCount
+                        //     : this.props.patientApplys.length
+                        // }
+                        ></EditableGrid>
                       </div>
                     </div>
                   </div>

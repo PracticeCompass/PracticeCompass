@@ -37,65 +37,73 @@ export const detailsColumns = [
       title: "ID",
       minWidth: 250,
       orderIndex: 0,
-      hide:true
+      hide:true,
+      editable:false
     },
     {
-      field: "claim",
+      field: "ersClaimSID",
       title: "Claim #",
       minWidth: 120,
       orderIndex: 0,
-      hide:true
+      editable:false
     },
     {
-      field: "patient",
+      field: "nameFirst",
       title: "Patient",
       minWidth: 150,
       orderIndex: 1,
+      editable:false
     },
     {
-      field: "dos",
+      field: "serviceDate",
       title: "DOS",
       minWidth: 100,
       orderIndex: 2,
+      editable:false
     },
     {
       field: "cpt",
       title: "CPT/ICD10",
       minWidth: 100,
       orderIndex: 3,
+      editable:false
     },
     {
-      field: "asking/amount",
+      field: "ersClaimAdjustmentreason",
       title: "Asking / Amount",
       minWidth: 100,
       orderIndex: 4,
+      editable:false
     },
     {
       field: "adjustment1",
       title: "Adjustment1",
       minWidth: 100,
       orderIndex: 5,
+      editable:false
     },
     {
       field: "adjustment2",
       title: "Adjustment2",
       minWidth: 100,
       orderIndex: 6,
+      editable:false
     },
     {
       field: "adjustment3",
       title: "Adjustment3",
       minWidth: 100,
       orderIndex: 7,
+      editable:false
     },
     {
       field: "suggestion",
       title: "Suggestion",
-      minWidth: 100,
+      minWidth: 150,
       orderIndex: 8,
-      isCustomCell:true,
-      type:"dropDown",
-      data:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
+      //isCustomCell:true,  
+      // editor:"dropDown",
+      dropDownList:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
     },
 ]
 export const masterColumns = [

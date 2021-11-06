@@ -16,6 +16,7 @@ import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 import ButtonComponent from "./Button"
 import $ from "jquery";
+import DropDownCell from "./DropDownCell"
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
 const COLUMN_MIN = 4;
@@ -307,6 +308,7 @@ class EditableGrid extends React.Component {
                                     key={index}
                                     width={this.setWidth(column.minWidth)}
                                     cell={
+                                        column.dropDownList?DropDownCell:
                                         column.type == "currency"
                                             ? CurrencyCell
                                             : column.iscellWithIcon
