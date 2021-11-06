@@ -26,6 +26,7 @@ import NotificationComponent from "../../common/notification";
 import PatientFindDialogComponent from "../../common/patientFindDialog";
 import { patientColumns } from "../../processPatients/patients/patient/patientData";
 import $ from "jquery";
+import Show_HideDialogComponent from "../../common/show_hideDialog";
 import {
   resetPatientList,
   getPracticeList,
@@ -373,11 +374,16 @@ class PatientPayments extends Component {
       this.state.txnDatetype ? this.state.txnDatetype.id : 0, this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null, this.state.fullyApplied ?? false, this.state.amountType, this.state.amountFilter);
   }
   onPatientPaymentGridSelectionChange = async (event) => {
+    let patientPaymentDetails = event.dataItems == null || event.dataItems.length == 0
+      ? event.dataItem
+      : event.dataItems[event.endRowIndex]
+    if (patientPaymentDetails.remaining == null) {
+      patientPaymentDetails.remaining = patientPaymentDetails.amount
+    }
     this.setState({
-      patientPaymentDetails: event.dataItems == null || event.dataItems.length == 0
-        ? event.dataItem
-        : event.dataItems[event.endRowIndex]
+      patientPaymentDetails
     });
+
   };
   onPatientPaymentGridDoubleSelectionChange = async (event) => {
     let patientPaymentDetails = event.dataItems == null || event.dataItems.length == 0
@@ -449,9 +455,14 @@ class PatientPayments extends Component {
       }, this.state.timer);
       return;
     }
+    let remaining = patientPaymentDetails.remaining;
     this.props.getPaymentAssignments(patientPaymentDetails.paymentSID);
     patientPaymentDetails = await this.props.GetPaymentDetails(patientPaymentDetails.paymentSID);
     if (patientPaymentDetails) {
+      patientPaymentDetails.remaining=remaining;
+      if (patientPaymentDetails.remaining == null) {
+        patientPaymentDetails.remaining = patientPaymentDetails.amount
+      }
       if (patientPaymentDetails.practiceID != null && (this.props.dropDownPractices == null ||
         this.props.dropDownPractices.filter(
           (x) => x.entityId == patientPaymentDetails.practiceID
@@ -483,6 +494,7 @@ class PatientPayments extends Component {
           lookupCode: patientPaymentDetails?.paymentClasscode
         },
         amountDetails: patientPaymentDetails?.amount,
+        remainingDetails:patientPaymentDetails?.remaining,
         txnDataDetails: patientPaymentDetails ? new Date(patientPaymentDetails?.postDate) : null,
         methodDetails: {
           label: patientPaymentDetails?.payMethod,
@@ -573,8 +585,8 @@ class PatientPayments extends Component {
     //this.props.getPaymentAssignments(3260);
 
     this.props.getPaymentAssignments(this.state.patientPaymentDetails.paymentSID);
-    let applyData = await this.props.getApplyPatientPayments(3260);
-    //let applyData = await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
+    //let applyData = await this.props.getApplyPatientPayments(3260);
+    let applyData = await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
     this.setState({
       applyPatientPayments: applyData,
       applyPatientPaymentsbackup: [...applyData]
@@ -668,6 +680,35 @@ class PatientPayments extends Component {
       }
     }
   }
+  toggleShowColumnsDialog = () => {
+    this.setState({ Show_HidePatientDialogVisible: false });
+  };
+  SaveColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HideDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      //localStorage.setItem("claimDetailsId", JSON.stringify(columns));
+      let GridColumns = await this.props.SaveGridColumns(
+        "claimDetailsId",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        claimListColumns: JSON.parse(GridColumns?.columns),
+        Show_HideDialogVisible: false,
+      });
+      setTimeout(() => {
+        this.setState({ refreshGrid: true });
+      }, 10);
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -708,7 +749,13 @@ class PatientPayments extends Component {
               cancelDialog={this.cancelPatientDialog}
             ></PatientFindDialogComponent>
           )}
-
+          {this.state.Show_HidePatientDialogVisible && (
+            <Show_HideDialogComponent
+              columns={this.state.patientPaymentColumns}
+              toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+              SaveColumnsShow={this.SaveColumnsShow}
+            ></Show_HideDialogComponent>
+          )}
           {(this.state.practiceVisiblePatient ||
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
@@ -950,6 +997,24 @@ class PatientPayments extends Component {
                     Edit
                   </ButtonComponent>
                 </div>
+                <div
+              style={{
+                float: "right",
+                position: "absolute",
+                marginRight: "10px",
+                right: "0",
+              }}
+            >
+              <ButtonComponent
+                type="add"
+                classButton="infraBtn-primary action-button"
+                onClick={() => {
+                  this.setState({ Show_HidePatientDialogVisible: true });
+                }}
+              >
+                Edit Grid
+              </ButtonComponent>
+            </div>
               </div>
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div className="accordion" id="accordionExample">
@@ -968,7 +1033,7 @@ class PatientPayments extends Component {
                       data-parent="#accordionExample"
                     >
                       <GridComponent
-                        id="insurancePayment"
+                        id="patientPayment"
                         columns={patientPaymentColumns}
                         skip={0}
                         take={21}
@@ -1148,6 +1213,7 @@ class PatientPayments extends Component {
                           type="numeric"
                           format="c2"
                           className="unifyHeight"
+                         
                           value={this.state.remainingDetails}
                           onChange={(e) =>
                             this.setState({

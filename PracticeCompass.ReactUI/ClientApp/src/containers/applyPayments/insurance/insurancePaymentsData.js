@@ -285,10 +285,10 @@ export const AmountFilter = [
   },
   {
     id: "2",
-    text: "greater than",
+    text: "Greater than",
   },
   {
     id: "3",
-    text: "less than",
+    text: "Less than",
   },
 ];

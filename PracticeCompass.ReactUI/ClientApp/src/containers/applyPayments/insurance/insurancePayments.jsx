@@ -411,10 +411,14 @@ class insurancePayments extends Component {
       }, this.state.timer);
       return;
     }
-
+    let remaining=InsurancePaymentDetails?.remaining;
     this.props.getPaymentAssignments(InsurancePaymentDetails.paymentSID);
     InsurancePaymentDetails = await this.props.GetPaymentDetails(InsurancePaymentDetails.paymentSID);
     if (InsurancePaymentDetails) {
+      InsurancePaymentDetails.remaining=remaining;
+      if (InsurancePaymentDetails.remaining == null) {
+        InsurancePaymentDetails.remaining = InsurancePaymentDetails.amount
+      }
       if (InsurancePaymentDetails.practiceID != null && (this.props.dropDownPractices == null ||
         this.props.dropDownPractices.filter(
           (x) => x.entityId == InsurancePaymentDetails.practiceID

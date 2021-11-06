@@ -13,7 +13,6 @@ function mapDispatchToProps(dispatch) {
 export class CurrencyGridCell extends React.Component {
   handleChange = e => {
     if (this.props.onChange) {
-      debugger;
       this.props.onChange({
         dataIndex: 0,
         dataItem: this.props.dataItem,
