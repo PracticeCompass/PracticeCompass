@@ -573,8 +573,8 @@ class PatientPayments extends Component {
     //this.props.getPaymentAssignments(3260);
 
     this.props.getPaymentAssignments(this.state.patientPaymentDetails.paymentSID);
-    //let applyData= await this.props.getApplyPatientPayments(3260);
-    let applyData = await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
+    let applyData = await this.props.getApplyPatientPayments(3260);
+    //let applyData = await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
     this.setState({
       applyPatientPayments: applyData,
       applyPatientPaymentsbackup: [...applyData]
@@ -596,27 +596,39 @@ class PatientPayments extends Component {
       isEdit: true
     } : item);
 
-
-    data[rowIndex]["amount"] = data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"] + data[rowIndex]["patientPaid"]);
-
-    // let sum = data.reduce(function(prev, current) {
-    //   return prev + +current["patientPaid"]
-    // }, 0);
-
-    if (field == "patientPaid") {
-      this.state.patientPaymentDetails.remaining = this.state.patientPaymentDetails.remaining - (data[rowIndex]["patientPaid"] - backUpData["patientPaid"]);
-    }
-
     let disableApply = false;
-    if (data[rowIndex]["amount"] < 0 || this.state.patientPaymentDetails.remaining < 0) {
-      disableApply = true;
-    }
+    if (field == "patientPaid" || field == "adjustments") {
+      debugger
+      let amount = Number(data[rowIndex]["amount"].replace("$", ""));
+      let chargeBalance = Number(data[rowIndex]["chargeBalance"].replace("$", ""));
+      amount = chargeBalance - (data[rowIndex]["adjustments"] + data[rowIndex]["patientPaid"]);
+      let remaining = this.state.patientPaymentDetails.remaining;
 
+      if (field == "patientPaid") {
+        remaining = remaining - (data[rowIndex]["patientPaid"] - backUpData["patientPaid"]);
+      }
+      if (amount < 0 || remaining < 0) {
+        disableApply = true;
+        this.setState({
+          warning: true,
+          message: "Payment is higher than remaining.",
+        });
+        setTimeout(() => {
+          this.setState({
+            warning: false,
+          });
+        }, this.state.timer);
+        return;
+      }
+      data[rowIndex]["amount"] = "$" + amount;
+      this.state.patientPaymentDetails.remaining = remaining;
+    }
     this.setState({
       applyPatientPayments: data, disableApply
     });
   }
   filterApplyListChanged = async () => {
+    debugger;
     if (this.state.applyPatientPayments != null && this.state.patientPaymentDetails != null) {
       let list = this.state.applyPatientPayments.filter(item => item.isEdit == true);
       this.setState({ filterapplyPatientPayments: list || [] });
@@ -1401,7 +1413,7 @@ class PatientPayments extends Component {
                               icon="edit"
                               type="edit"
                               classButton="infraBtn-primary"
-                              onClick={() => this.filterApplyListChanged}
+                              onClick={() => { this.filterApplyListChanged() }}
                               style={{ marginTop: "0px" }}
                             >
                               Apply
@@ -1474,6 +1486,7 @@ class PatientPayments extends Component {
                               classButton="infraBtn-primary"
                               onClick={() => this.ApplyListChanged}
                               style={{ marginTop: "0px" }}
+                              disabled={this.state.disableApply || (this.state.filterapplyPatientPayments == null || this.state.filterapplyPatientPayments.filter(item => item.isEdit).length == 0)}
                             >
                               Post
                             </ButtonComponent>

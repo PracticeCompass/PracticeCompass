@@ -51,7 +51,7 @@ export const MyPager = (props) => {
     );
 };
 export const CurrencyCell = (props) => {
-    return <td style={{ textAlign: "right" }}>{props.dataItem[props.field]}</td>;
+    return <td style={{ textAlign: "right" }}>{props.dataItem[props.field] == null || props.dataItem[props.field].toString().includes("$")?props.dataItem[props.field]:"$"+props.dataItem[props.field]}</td>;
 };
 export const cellWithIcon = (props) => {
     return <td style={{ color: "red" }}><span className="k-icon k-i-file-pdf k-i-pdf"></span></td>;

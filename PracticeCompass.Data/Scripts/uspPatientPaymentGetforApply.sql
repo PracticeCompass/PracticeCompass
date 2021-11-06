@@ -1,4 +1,4 @@
-USE [medman]
+USE [medman2]
 GO
 /****** Object:  StoredProcedure [dbo].[uspPatientPaymentGetforApply]    Script Date: 10/10/2021 10:29:33 AM ******/
 SET ANSI_NULLS ON
@@ -19,8 +19,8 @@ BEGIN
 select Charge.ChargeSID ,CONVERT(varchar,ProcedureEvent.FromServiceDate,101) As FromServiceDate, 
  ProcedureEvent.ProcedureCode , [Procedure].Description AS ProcedureDescription ,
  Mod1.[Modifier] as Modifier1 ,  Diag1.DiagnosisCode as Diag1,
- (Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts) as ChargeBalance,
- Charge.Amount,
+ + '$' +  Convert(varchar(50),(Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts)) as ChargeBalance,
+ + '$' +  Convert(varchar(50),Charge.Amount) as Amount,   
  charge.GuarantorReceipts as PatientPaid, Charge.Adjustments , Charge.PatientID
  from ProcedureEvent
 inner join [Procedure] on [Procedure].ProcedureCode = ProcedureEvent.ProcedureCode

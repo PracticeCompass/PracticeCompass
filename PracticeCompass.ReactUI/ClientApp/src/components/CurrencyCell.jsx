@@ -13,12 +13,13 @@ function mapDispatchToProps(dispatch) {
 export class CurrencyGridCell extends React.Component {
   handleChange = e => {
     if (this.props.onChange) {
+      debugger;
       this.props.onChange({
         dataIndex: 0,
         dataItem: this.props.dataItem,
         field: this.props.field,
         syntheticEvent: e.syntheticEvent,
-        value: e.value
+        value: e.value !=null ?e.value : 0
       });
     }
   };
@@ -35,7 +36,8 @@ export class CurrencyGridCell extends React.Component {
         type="numeric"
         format="c2"
         className="unifyHeight"
-        value={dataValue}
+        defaultValue={0}
+        value={dataValue??0}
         onChange={this.handleChange}
       ></TextBox>:"$"+dataValue?.toString()}
 

@@ -640,18 +640,32 @@ class insurancePayments extends Component {
       isEdit: true
     } : item);
 
-    data[rowIndex]["amount"] = data[rowIndex]["chargeBalance"] - (data[rowIndex]["adjustments"] + data[rowIndex]["insurancePaid"]);
-
-    // let sum = data.reduce(function (prev, current) {
-    //   return prev + +current["insurancePaid"]
-    // }, 0);
-
-    if (field == "insurancePaid") {
-      this.state.InsurancePaymentDetails.remaining = this.state.InsurancePaymentDetails.remaining - (data[rowIndex]["insurancePaid"] - backUpData["insurancePaid"]);
-    }
     let disableApply = false;
-    if (data[rowIndex]["amount"] < 0 || this.state.InsurancePaymentDetails.remaining < 0) {
-      disableApply = true;
+    if (field == "insurancePaid" || field == "adjustments") {
+      
+      let amount = Number(data[rowIndex]["amount"].replace("$", ""));
+      let chargeBalance = Number(data[rowIndex]["chargeBalance"].replace("$", ""));
+
+      amount = chargeBalance - (data[rowIndex]["adjustments"] + data[rowIndex]["insurancePaid"]);
+      let remaining = this.state.InsurancePaymentDetails.remaining;
+      if (field == "insurancePaid") {
+        remaining = remaining - (data[rowIndex]["insurancePaid"] - backUpData["insurancePaid"]);
+      }
+      if (amount < 0 || remaining < 0) {
+        disableApply = true;
+        this.setState({
+          warning: true,
+          message: "Payment is higher than remaining.",
+        });
+        setTimeout(() => {
+          this.setState({
+            warning: false,
+          });
+        }, this.state.timer);
+        return;
+      }
+      data[rowIndex]["amount"] = "$" + amount;
+      this.state.InsurancePaymentDetails.remaining = remaining;
     }
     this.setState({
       applyPlanPayments: data, disableApply
@@ -660,6 +674,7 @@ class insurancePayments extends Component {
   filterApplyListChanged = async () => {
     if (this.state.applyPlanPayments != null && this.state.InsurancePaymentDetails != null) {
       let list = this.state.applyPlanPayments.filter(item => item.isEdit == true);
+
       this.setState({ filterApplyPlanPayments: list || [] });
     }
   }
@@ -1171,7 +1186,7 @@ class insurancePayments extends Component {
                         <div style={{ float: "left", marginLeft: "10px" }}>
                           <label className="userInfoLabel">Txn Date </label>
                         </div>
-                        <div className="dateStyle" style={{ float: "left"}}>
+                        <div className="dateStyle" style={{ float: "left" }}>
                           <DatePickerComponent
                             id="planEndDate"
                             name="planEndDate"
@@ -1220,16 +1235,16 @@ class insurancePayments extends Component {
                             }
                           ></TextBox>
                         </div>
-                        <div style={{ float: "left", marginLeft:"40px" }}>
-                        <ButtonComponent
-                          classButton="infraBtn-primary action-button"
-                          look="outline"
-                          icon="edit"
-                          type="edit"
-                          onClick={() => this.saveInsurancePaymentDetails()}
-                        >
-                          Save
-                        </ButtonComponent>
+                        <div style={{ float: "left", marginLeft: "40px" }}>
+                          <ButtonComponent
+                            classButton="infraBtn-primary action-button"
+                            look="outline"
+                            icon="edit"
+                            type="edit"
+                            onClick={() => this.saveInsurancePaymentDetails()}
+                          >
+                            Save
+                          </ButtonComponent>
                         </div>
                       </div>
                     </div>
@@ -1570,150 +1585,150 @@ class insurancePayments extends Component {
                         </div>
                       </div>
                       <fieldset
-                          className="fieldsetStyle"
-                          style={{
-                            width: "1559px",
-                            marginTop: "5px",
-                            marginBottom: "5px",
-                            height: "435px",
-                            marginLeft: "10px"
-                          }}
+                        className="fieldsetStyle"
+                        style={{
+                          width: "1559px",
+                          marginTop: "5px",
+                          marginBottom: "5px",
+                          height: "435px",
+                          marginLeft: "10px"
+                        }}
+                      >
+                        <legend
+                          className="legendStyle"
+                          style={{ paddingRight: "5px", paddingLeft: "5px" }}
                         >
-                          <legend
-                            className="legendStyle"
-                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                          Assignement Payment
+                        </legend>
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                          <ButtonComponent
+                            icon="edit"
+                            type="edit"
+                            classButton="infraBtn-primary"
+                            onClick={() => { this.filterApplyListChanged() }}
+                            style={{ marginTop: "10px", marginLeft: "10px" }}
+                            disabled={this.state.applyPlanPayments == null || this.state.applyPlanPayments.filter(item => item.isEdit).length == 0}
                           >
-                            Assignement Payment
-                          </legend>
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                        <ButtonComponent
-                          icon="edit"
-                          type="edit"
-                          classButton="infraBtn-primary"
-                          onClick={() => { this.filterApplyListChanged() }}
-                          style={{ marginTop: "10px", marginLeft: "10px" }}
-                          disabled={this.state.applyPlanPayments == null || this.state.applyPlanPayments.filter(item => item.isEdit).length == 0}
-                        >
-                          Apply
-                        </ButtonComponent>
-                      </div>
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                        <div className="accordion" id="accordionExample">
-                          <div
-                            className="card bg-light mb-3"
-                            style={{
-                              marginLeft: "10px",
-                              marginRight: "10px",
-                              marginTop: "5px",
-                            }}
-                          >
+                            Apply
+                          </ButtonComponent>
+                        </div>
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                          <div className="accordion" id="accordionExample">
                             <div
-                              id="collapseOne"
-                              className="collapse show"
-                              aria-labelledby="headingOne"
-                              data-parent="#accordionExample"
+                              className="card bg-light mb-3"
+                              style={{
+                                marginLeft: "10px",
+                                marginRight: "10px",
+                                marginTop: "5px",
+                              }}
                             >
-                              <EditableGrid
-                                data={this.state.applyPlanPayments}
-                                id="applyedPatient"
-                                skip={0}
-                                take={10}
-                                height="350px"
-                                width="100%"
-                                editColumn={"chargeSID"}
-                                DATA_ITEM_KEY="chargeSID"
-                                idGetter={idGetterApplyPlanPaymentID}
-                                onSelectionChange={this.onApplyPaymentGridSelectionChange}
-                                onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
-                                columns={applyPlanPaymentColumns}
-                                itemChange={this.applyItemChanged}
-                                onSortChange={this.onSortChange}
-                                // pageChange={this.pageChange}
-                                isEditable={true}
-                              // totalCount={
-                              //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                              //     ? this.props.patientApplys[0].totalCount
-                              //     : this.props.patientApplys.length
-                              // }
-                              ></EditableGrid>
+                              <div
+                                id="collapseOne"
+                                className="collapse show"
+                                aria-labelledby="headingOne"
+                                data-parent="#accordionExample"
+                              >
+                                <EditableGrid
+                                  data={this.state.applyPlanPayments}
+                                  id="applyedPatient"
+                                  skip={0}
+                                  take={10}
+                                  height="350px"
+                                  width="100%"
+                                  editColumn={"chargeSID"}
+                                  DATA_ITEM_KEY="chargeSID"
+                                  idGetter={idGetterApplyPlanPaymentID}
+                                  onSelectionChange={this.onApplyPaymentGridSelectionChange}
+                                  onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
+                                  columns={applyPlanPaymentColumns}
+                                  itemChange={this.applyItemChanged}
+                                  onSortChange={this.onSortChange}
+                                  // pageChange={this.pageChange}
+                                  isEditable={true}
+                                // totalCount={
+                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                //     ? this.props.patientApplys[0].totalCount
+                                //     : this.props.patientApplys.length
+                                // }
+                                ></EditableGrid>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                     
-                     </fieldset>
+
+                      </fieldset>
                       <fieldset
-                          className="fieldsetStyle"
-                          style={{
-                            width: "1559px",
-                            marginTop: "5px",
-                            marginBottom: "30px",
-                            height: "435px",
-                            marginLeft: "10px"
-                          }}
+                        className="fieldsetStyle"
+                        style={{
+                          width: "1559px",
+                          marginTop: "5px",
+                          marginBottom: "30px",
+                          height: "435px",
+                          marginLeft: "10px"
+                        }}
+                      >
+                        <legend
+                          className="legendStyle"
+                          style={{ paddingRight: "5px", paddingLeft: "5px" }}
                         >
-                          <legend
-                            className="legendStyle"
-                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                          Confirmation
+                        </legend>
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                          <ButtonComponent
+                            icon="edit"
+                            type="edit"
+                            classButton="infraBtn-primary"
+                            onClick={() => { this.ApplyListChanged() }}
+                            style={{ marginTop: "0px", marginLeft: "10px" }}
+                            disabled={this.state.disableApply || (this.state.filterApplyPlanPayments == null || this.state.filterApplyPlanPayments.filter(item => item.isEdit).length == 0)}
                           >
-                            Confirmation
-                          </legend>
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                        <ButtonComponent
-                          icon="edit"
-                          type="edit"
-                          classButton="infraBtn-primary"
-                          onClick={() => { this.ApplyListChanged() }}
-                          style={{ marginTop: "0px", marginLeft: "10px" }}
-                          disabled={this.state.disableApply || (this.state.filterApplyPlanPayments == null || this.state.filterApplyPlanPayments.filter(item => item.isEdit).length == 0)}
-                        >
-                          Post
-                        </ButtonComponent>
-                      </div>
-                      <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
-                        <div className="accordion" id="accordionExample">
-                          <div
-                            className="card bg-light mb-3"
-                            style={{
-                              marginLeft: "10px",
-                              marginRight: "10px",
-                              marginTop: "5px",
-                            }}
-                          >
+                            Post
+                          </ButtonComponent>
+                        </div>
+                        <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                          <div className="accordion" id="accordionExample">
                             <div
-                              id="collapseOne"
-                              className="collapse show"
-                              aria-labelledby="headingOne"
-                              data-parent="#accordionExample"
+                              className="card bg-light mb-3"
+                              style={{
+                                marginLeft: "10px",
+                                marginRight: "10px",
+                                marginTop: "5px",
+                              }}
                             >
-                              <GridComponent
-                                data={this.state.filterApplyPlanPayments || []}
-                                id="applyedPatient"
-                                skip={0}
-                                take={10}
-                                height="350px"
-                                width="100%"
-                                editColumn={"chargeSID"}
-                                DATA_ITEM_KEY="chargeSID"
-                                idGetter={idGetterApplyPlanPaymentID}
-                                onSelectionChange={this.onApplyPaymentGridSelectionChange}
-                                onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
-                                columns={applyPlanPaymentColumns}
-                                //itemChange={this.applyItemChanged}
-                                onSortChange={this.onSortChange}
-                              // pageChange={this.pageChange}
-                              // isEditable={true}
-                              // totalCount={
-                              //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                              //     ? this.props.patientApplys[0].totalCount
-                              //     : this.props.patientApplys.length
-                              // }
-                              ></GridComponent>
+                              <div
+                                id="collapseOne"
+                                className="collapse show"
+                                aria-labelledby="headingOne"
+                                data-parent="#accordionExample"
+                              >
+                                <GridComponent
+                                  data={this.state.filterApplyPlanPayments || []}
+                                  id="applyedPatient"
+                                  skip={0}
+                                  take={10}
+                                  height="350px"
+                                  width="100%"
+                                  editColumn={"chargeSID"}
+                                  DATA_ITEM_KEY="chargeSID"
+                                  idGetter={idGetterApplyPlanPaymentID}
+                                  onSelectionChange={this.onApplyPaymentGridSelectionChange}
+                                  onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
+                                  columns={applyPlanPaymentColumns}
+                                  //itemChange={this.applyItemChanged}
+                                  onSortChange={this.onSortChange}
+                                // pageChange={this.pageChange}
+                                // isEditable={true}
+                                // totalCount={
+                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                //     ? this.props.patientApplys[0].totalCount
+                                //     : this.props.patientApplys.length
+                                // }
+                                ></GridComponent>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-</fieldset>
+                      </fieldset>
                     </div>
                   </TabStripTab>
                   <TabStripTab title="Payment Assignment">

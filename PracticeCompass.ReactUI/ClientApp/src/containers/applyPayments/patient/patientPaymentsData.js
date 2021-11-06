@@ -85,15 +85,19 @@ export const applyPatientPaymentColumns = [
     title: "Balanace",
     minWidth: 50,
     editor:"numeric",
+    type:"currency",
     orderIndex: 4,
-    editable:false
+    editable:false,
   },
   {
     field: "patientPaid",
-    title: "patient Paid",
+    title: "Patient Paid",
     minWidth: 50,
     orderIndex: 5,
     editor:"numeric",
+    cell:"currency",
+    type:"currency",
+    //type:"currency",
   },
   {
     field: "adjustments",
@@ -101,6 +105,9 @@ export const applyPatientPaymentColumns = [
     minWidth: 50,
     orderIndex: 6,
     editor:"numeric",
+    cell:"currency",
+    type:"currency",
+    //type:"currency",
   },
   {
     field: "amount",
@@ -108,8 +115,9 @@ export const applyPatientPaymentColumns = [
     minWidth: 50,
     orderIndex: 7,
     editor:"numeric",
+    type:"currency",
     editable:false
-  }
+  },
 ]
 
 export const patientPaymentColumns = [
