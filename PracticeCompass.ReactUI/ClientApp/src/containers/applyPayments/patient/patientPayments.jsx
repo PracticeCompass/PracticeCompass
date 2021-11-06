@@ -22,6 +22,7 @@ import config from "../../../config";
 import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
+import {GetGridColumns,SaveGridColumns} from "../../../redux/actions/GridColumns"
 import NotificationComponent from "../../common/notification";
 import PatientFindDialogComponent from "../../common/patientFindDialog";
 import { patientColumns } from "../../processPatients/patients/patient/patientData";
@@ -102,7 +103,10 @@ function mapDispatchToProps(dispatch) {
     getApplyPatientPayments: (patientID) => dispatch(getApplyPatientPayments(patientID)),
     savePayment: (PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser) =>
       dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser)),
-    ApplyPayments: (list) => dispatch(ApplyPayments(list))
+    ApplyPayments: (list) => dispatch(ApplyPayments(list)),
+    SaveGridColumns: (name, columns) =>
+    dispatch(SaveGridColumns(name, columns)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
   };
 }
 
@@ -156,8 +160,28 @@ class PatientPayments extends Component {
     subInsurancePracticeID: null,
     practiceSearchText: null,
     physicianSearchText: null,
-    applyPatientPayments: []
+    applyPatientPayments: [],
+    patientPaymentColumns:patientPaymentColumns,
+    insuranceAssignmentColumns:insuranceAssignmentColumns
   };
+  componentDidMount=()=>{
+    this.getGridColumns();
+  }
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false});
+    let currentColumns = await this.props.GetGridColumns('patientPayment');
+    let patientDetailsPayment = await this.props.GetGridColumns('patientDetailsPayment');
+    if(currentColumns !=null && currentColumns !=""){
+       currentColumns=JSON.parse(currentColumns?.columns) ?? patientPaymentColumns ;
+       this.setState({ patientPaymentColumns: currentColumns});
+    }
+    if(patientDetailsPayment != null && patientDetailsPayment !=""){
+      patientDetailsPayment=JSON.parse(patientDetailsPayment?.columns) ?? insuranceAssignmentColumns ;
+      this.setState({ insuranceAssignmentColumns: currentColumns});
+    }
+    this.setState({ refreshGrid: true});
+  }
+  
   handleSelect = (e) => {
     this.setState({
       type: e.selected == 0 ? "Patient" : "Insurance",
@@ -685,7 +709,7 @@ class PatientPayments extends Component {
   };
   SaveColumnsShow = async (columns) => {
     if (!columns.find((x) => x.hide != true)) {
-      this.setState({ Show_HideDialogVisible: false });
+      this.setState({ Show_HidePatientDialogVisible: false });
       this.setState({ warning: true, message: "Cann't hide all columns" });
       setTimeout(() => {
         this.setState({
@@ -695,18 +719,14 @@ class PatientPayments extends Component {
       return;
     } else {
       this.setState({ refreshGrid: false });
-      //localStorage.setItem("claimDetailsId", JSON.stringify(columns));
       let GridColumns = await this.props.SaveGridColumns(
-        "claimDetailsId",
+        "patientPayment",
         JSON.stringify(columns)
       );
       this.setState({
-        claimListColumns: JSON.parse(GridColumns?.columns),
-        Show_HideDialogVisible: false,
+        applyPatientPayments: JSON.parse(GridColumns?.columns),
+        Show_HidePatientDialogVisible: false,
       });
-      setTimeout(() => {
-        this.setState({ refreshGrid: true });
-      }, 10);
     }
   };
   render() {
@@ -1034,7 +1054,7 @@ class PatientPayments extends Component {
                     >
                       <GridComponent
                         id="patientPayment"
-                        columns={patientPaymentColumns}
+                        columns={this.state.patientPaymentColumns}
                         skip={0}
                         take={21}
                         onSelectionChange={this.onPatientPaymentGridSelectionChange}
@@ -1363,8 +1383,8 @@ class PatientPayments extends Component {
                           data-parent="#accordionExample"
                         >
                           <GridComponent
-                            id="insurancePayment"
-                            columns={insuranceAssignmentColumns}
+                            id="patientDetailsPayment"
+                            columns={this.state.insuranceAssignmentColumns}
                             skip={0}
                             take={21}
                             onSelectionChange={this.onInsuranceDetailsGridSelectionChange}

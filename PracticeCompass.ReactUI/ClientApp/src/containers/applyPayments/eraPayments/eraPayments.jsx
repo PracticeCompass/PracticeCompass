@@ -486,7 +486,7 @@ class EraPayments extends Component {
                       icon="search"
                       type="search"
                       classButton="infraBtn-primary"
-                      style={{ marginTop: "0px" }}
+                      style={{ height: "22px !important;" }}
                     // onClick={(e) =>
                     //   this.setState({ practiceVisibleInsurance: true })
                     // }
