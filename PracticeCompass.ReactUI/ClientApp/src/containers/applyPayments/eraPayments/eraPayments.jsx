@@ -92,13 +92,13 @@ class EraPayments extends Component {
   applyItemChanged = (event) => {
     const field = event.field || '';
     const inEditID = event.dataItem["ersChargeSID"];
-    let data = this.state.eRAPayments.map(item => item["ersChargeSID"] === inEditID ? {
+    let data = this.state.eRADetailsPayments.map(item => item["ersChargeSID"] === inEditID ? {
       ...item,
       [field]: event.value,
       isEdit: true
     } : item);
     this.setState({
-      eRAPayments:data
+      eRADetailsPayments:data
     });
   }
   practiceSearch = () => {
