@@ -33,6 +33,7 @@ left outer join [dbo].ProcedureEventDiag as Dag2 on Dag2.[ProcedureEventSID] = P
 --left outer join PendingCharge on ProcedureEvent.EncounterSID = PendingCharge.EncounterSID
 --left outer join Provider on Provider.ProviderID = PendingCharge.PerformingProviderID
 where ClaimCharge.ClaimSID=@ClaimSID
+Order by  ClaimCharge.ChargeSID 
 
 
 

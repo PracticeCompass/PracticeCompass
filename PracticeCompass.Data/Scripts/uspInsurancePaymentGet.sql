@@ -52,7 +52,7 @@ left outer join LookupCode on LookupCode.LookupCode=Payment.class and LookupType
  ('+convert(varchar,@PracticeID,10)+' is null or '+convert(varchar,@PracticeID,10)+'=0 or Payment.PracticeID='+convert(varchar,@PracticeID,10)+') and
  ('+convert(varchar,@InsuranceID,10)+' is null or '+convert(varchar,@InsuranceID,10)+'=0 or Payment.PayorID='+convert(varchar,@InsuranceID,10)+')'
 
- set @SQL = @SQL + @Datefilter + @Fullyappliedfilter
+ set @SQL = @SQL + @Datefilter + @Fullyappliedfilter + ' Order by Practice.SortName, [dbo].[Payment].[PaymentSID] '
  print @SQL
  exec(@SQL)
 

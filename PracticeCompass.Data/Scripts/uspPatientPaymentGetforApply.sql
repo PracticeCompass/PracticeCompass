@@ -28,5 +28,6 @@ inner join Charge on ProcedureEvent.ChargeSID = charge.ChargeSID
 left outer join ProcedureEventModifier as Mod1 on Mod1.ProcedureEventSID = ProcedureEvent.ProcedureEventSID and Mod1.[Order]=1
 left outer join ProcedureEventDiag as Diag1 on Diag1.ProcedureEventSID = ProcedureEvent.ProcedureEventSID and Diag1.[Order]=1
 where  (Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts) > 0 and Charge.PatientID=@PatientID  
+Order by Charge.ChargeSID
 
 END

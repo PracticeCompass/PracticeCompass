@@ -54,7 +54,7 @@ and
 ('+ convert(varchar, @GuarantorID,10) + '=0  or Charge.PatientID='+convert(varchar, @GuarantorID,10)+')'
 
 
-set @SQL = @SQL + @DOsfilter  + @insurancefilter  
+set @SQL = @SQL + @DOsfilter  + @insurancefilter + 'Order by Charge.ChargeSID'  
 print @SQL
  exec(@SQL)
 
