@@ -42,7 +42,7 @@ export const detailsColumns = [
     },
     {
       field: "ersClaimSID",
-      title: "Claim #",
+      title: "Claim",
       minWidth: 120,
       orderIndex: 0,
       editable:false
@@ -103,7 +103,8 @@ export const detailsColumns = [
       orderIndex: 8,
       //isCustomCell:true,  
       // editor:"dropDown",
-      dropDownList:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
+      cell:"dropDown",
+      //dropDownList:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
     },
 ]
 export const masterColumns = [

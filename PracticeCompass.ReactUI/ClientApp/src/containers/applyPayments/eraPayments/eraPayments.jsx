@@ -23,6 +23,7 @@ import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
+import { GetGridColumns, SaveGridColumns } from "../../../redux/actions/GridColumns"
 import {
   resetPatientList,
   resetInsuranceList,
@@ -32,7 +33,8 @@ import {
 } from "../../../redux/actions/patient";
 import { getERAPaymentHeader, GetERAPaymentDetails } from "../../../redux/actions/payments";
 import { AmountFilter, detailsColumns, Days } from "./eraPaymentsData"
-import  EditableGrid  from "../../../components/editableGrid"
+import EditableGrid from "../../../components/editableGrid"
+import Show_HideDialogComponent from "../../common/show_hideDialog";
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
@@ -51,7 +53,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-
+    SaveGridColumns: (name, columns) =>
+      dispatch(SaveGridColumns(name, columns)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
@@ -82,8 +86,27 @@ class EraPayments extends Component {
     receiverAccount: null,
     senderAccount: null,
     checkIssue: null,
-    transactionHeader: "Payment Transactions "
+    transactionHeader: "Payment Transactions ",
+    masterColumns:masterColumns,
+    detailsColumns:detailsColumns
   };
+  componentDidMount = () => {
+    this.getGridColumns();
+  }
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns('ERAPayment');
+    let ERAPaymentDetails = await this.props.GetGridColumns('ERAPaymentDetails');
+
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns)?? masterColumns;
+      this.setState({ masterColumns: currentColumns });
+    }
+    if(ERAPaymentDetails !=null && ERAPaymentDetails !=""){
+      ERAPaymentDetails = JSON.parse(ERAPaymentDetails?.columns) ?? detailsColumns;
+      this.setState({ detailsColumns: ERAPaymentDetails });
+    }
+  }
 
 
   getParacticesUrl(filter) {
@@ -98,7 +121,7 @@ class EraPayments extends Component {
       isEdit: true
     } : item);
     this.setState({
-      eRADetailsPayments:data
+      eRADetailsPayments: data
     });
   }
   practiceSearch = () => {
@@ -251,7 +274,53 @@ class EraPayments extends Component {
   onERADetailsPaymentGridDoubleSelectionChange = () => {
 
   }
-
+  toggleShowColumnsDialog = () => {
+    this.setState({ Show_HideERADialogVisible: false,Show_HideDetailsERADialogVisible:false});
+  };
+  SaveColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HideERADialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "ERAPayment",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        masterColumns: JSON.parse(GridColumns?.columns),
+        Show_HideERADialogVisible: false,
+      });
+    }
+  };
+  SaveDetailsERAColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HideDetailsERADialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "ERAPaymentDetails",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        detailsColumns: JSON.parse(GridColumns?.columns),
+        Show_HideDetailsERADialogVisible: false,
+      });
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -270,6 +339,20 @@ class EraPayments extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {this.state.Show_HideERADialogVisible && (
+            <Show_HideDialogComponent
+              columns={this.state.masterColumns}
+              toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+              SaveColumnsShow={this.SaveColumnsShow}
+            ></Show_HideDialogComponent>
+          )}
+          {this.state.Show_HideDetailsERADialogVisible && (
+            <Show_HideDialogComponent
+              columns={this.state.detailsColumns}
+              toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+              SaveColumnsShow={this.SaveDetailsERAColumnsShow}
+            ></Show_HideDialogComponent>
+          )}
           {(this.state.practiceVisiblePatient ||
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
@@ -494,7 +577,24 @@ class EraPayments extends Component {
                       Manual Match
                     </ButtonComponent>
                   </div>
-
+                  <div
+                    style={{
+                      float: "right",
+                      position: "absolute",
+                      marginRight: "10px",
+                      right: "0",
+                    }}
+                  >
+                    <ButtonComponent
+                      type="add"
+                      classButton="infraBtn-primary action-button"
+                      onClick={() => {
+                        this.setState({ Show_HideERADialogVisible: true });
+                      }}
+                    >
+                      Edit Grid
+                    </ButtonComponent>
+                  </div>
                 </div>
 
               </div>
@@ -517,7 +617,7 @@ class EraPayments extends Component {
                     >
                       <GridComponent
                         id="ERAPayment"
-                        columns={masterColumns}
+                        columns={this.state.masterColumns}
                         skip={0}
                         take={21}
                         onSelectionChange={this.onERAPaymentGridSelectionChange}
@@ -613,6 +713,24 @@ class EraPayments extends Component {
                   >
                     Post
                   </ButtonComponent>
+                  <div
+                    style={{
+                      float: "right",
+                      position: "absolute",
+                      marginRight: "10px",
+                      right: "0",
+                    }}
+                  >
+                    <ButtonComponent
+                      type="add"
+                      classButton="infraBtn-primary action-button"
+                      onClick={() => {
+                        this.setState({ Show_HideDetailsERADialogVisible: true });
+                      }}
+                    >
+                      Edit Grid
+                    </ButtonComponent>
+                  </div>
                 </div>
                 <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                   <div className="accordion" id="accordionExample">
@@ -643,7 +761,7 @@ class EraPayments extends Component {
                           idGetter={idGetterDetailsPaymentID}
                           onSelectionChange={this.onERADetailsPaymentGridSelectionChange}
                           onRowDoubleClick={this.onERADetailsPaymentGridDoubleSelectionChange}
-                          columns={detailsColumns}
+                          columns={this.state.detailsColumns}
                           itemChange={this.applyItemChanged}
                           onSortChange={this.onSortChange}
                           // pageChange={this.pageChange}

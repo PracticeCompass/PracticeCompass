@@ -310,10 +310,9 @@ class EditableGrid extends React.Component {
                                     key={index}
                                     width={this.setWidth(column.minWidth)}
                                     cell={
-                                        
                                         column.cell=="currency"?CurrencyGridCell:
                                         column.cell =="checkBox"? CheckBoxCell:
-                                        column.dropDownList?DropDownCell:
+                                        column.cell == "dropDown" ?DropDownCell:
                                         column.type == "currency"
                                             ? CurrencyCell
                                             : column.iscellWithIcon

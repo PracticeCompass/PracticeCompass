@@ -30,6 +30,7 @@ import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
+import { GetGridColumns, SaveGridColumns } from "../../../redux/actions/GridColumns"
 import {
   resetInsuranceList,
   getinsuranceList,
@@ -44,6 +45,7 @@ import {
   getApplyInsurancePayment,
   ApplyPayments
 } from "../../../redux/actions/payments";
+import Show_HideDialogComponent from "../../common/show_hideDialog";
 import $ from "jquery";
 
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
@@ -95,7 +97,10 @@ function mapDispatchToProps(dispatch) {
     savePayment: (PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser) =>
       dispatch(savePayment(PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method, CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser)),
     getApplyInsurancePayment: (GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber) => dispatch(getApplyInsurancePayment(GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber)),
-    ApplyPayments: (list) => dispatch(ApplyPayments(list))
+    ApplyPayments: (list) => dispatch(ApplyPayments(list)),
+    SaveGridColumns: (name, columns) =>
+      dispatch(SaveGridColumns(name, columns)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
 
   };
 }
@@ -137,8 +142,34 @@ class insurancePayments extends Component {
     guarantorSearchText: null,
     applyPlanPayments: [],
     amountType: null,
-    amountFilter: null
+    amountFilter: null,
+    insuranceColumns: insuranceColumns,
+    insuranceAssignmentColumns: insuranceAssignmentColumns,
+    applyPlanPaymentColumns:applyPlanPaymentColumns
   };
+  componentDidMount = () => {
+    this.getGridColumns();
+  }
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns('insurancePayment');
+    let patientDetailsPayment = await this.props.GetGridColumns('planDetailsPayment');
+    let applyedPlan = await this.props.GetGridColumns('applyedPlan');
+
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? insuranceColumns;
+      this.setState({ insuranceColumns: currentColumns });
+    }
+    if (patientDetailsPayment != null && patientDetailsPayment != "") {
+      patientDetailsPayment = JSON.parse(patientDetailsPayment?.columns) ?? insuranceAssignmentColumns;
+      this.setState({ insuranceAssignmentColumns: patientDetailsPayment });
+    }
+    if(applyedPlan !=null && applyedPlan !=""){
+      applyedPlan = JSON.parse(applyedPlan?.columns) ?? applyPlanPaymentColumns;
+      this.setState({ applyPlanPaymentColumns: applyedPlan });
+    }
+    this.setState({ refreshGrid: true });
+  }
   handleSelect = (e) => {
     this.setState({
       type: e.selected == 0 ? "Patient" : "Insurance",
@@ -411,11 +442,11 @@ class insurancePayments extends Component {
       }, this.state.timer);
       return;
     }
-    let remaining=InsurancePaymentDetails?.remaining;
+    let remaining = InsurancePaymentDetails?.remaining;
     this.props.getPaymentAssignments(InsurancePaymentDetails.paymentSID);
     InsurancePaymentDetails = await this.props.GetPaymentDetails(InsurancePaymentDetails.paymentSID);
     if (InsurancePaymentDetails) {
-      InsurancePaymentDetails.remaining=remaining;
+      InsurancePaymentDetails.remaining = remaining;
       if (InsurancePaymentDetails.remaining == null) {
         InsurancePaymentDetails.remaining = InsurancePaymentDetails.amount
       }
@@ -717,6 +748,75 @@ class insurancePayments extends Component {
       }
     }
   }
+  toggleShowColumnsDialog = () => {
+    this.setState({ Show_HidePlanDialogVisible: false, Show_HideChargeDialogVisible: false, Show_HideApplyDialogVisible: false });
+  };
+  SaveColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HidePlanDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "insurancePayment",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        insuranceColumns: JSON.parse(GridColumns?.columns),
+        Show_HidePlanDialogVisible: false,
+      });
+    }
+  };
+  SaveChargeColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HideChargeDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "planDetailsPayment",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        insuranceAssignmentColumns: JSON.parse(GridColumns?.columns),
+        Show_HideChargeDialogVisible: false,
+      });
+    }
+  };
+  SaveApplyColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HideApplyDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "applyedPlan",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        applyPlanPaymentColumns: JSON.parse(GridColumns?.columns),
+        Show_HideApplyDialogVisible: false,
+      });
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -735,6 +835,27 @@ class insurancePayments extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {this.state.Show_HidePlanDialogVisible && (
+            <Show_HideDialogComponent
+              columns={this.state.insuranceColumns}
+              toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+              SaveColumnsShow={this.SaveColumnsShow}
+            ></Show_HideDialogComponent>
+          )}
+          {this.state.Show_HideChargeDialogVisible && (
+            <Show_HideDialogComponent
+              columns={this.state.insuranceAssignmentColumns}
+              toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+              SaveColumnsShow={this.SaveChargeColumnsShow}
+            ></Show_HideDialogComponent>
+          )}
+          {this.state.Show_HideApplyDialogVisible && (
+            <Show_HideDialogComponent
+              columns={this.state.applyPlanPaymentColumns}
+              toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+              SaveColumnsShow={this.SaveApplyColumnsShow}
+            ></Show_HideDialogComponent>
+          )}
           {(this.state.guarantorVisible || this.state.guarantorDetailsVisible) && (
             <FindDialogComponent
               title="Guarantor Search"
@@ -1017,6 +1138,24 @@ class insurancePayments extends Component {
                     Edit
                   </ButtonComponent>
                 </div>
+                <div
+                  style={{
+                    float: "right",
+                    position: "absolute",
+                    marginRight: "10px",
+                    right: "0",
+                  }}
+                >
+                  <ButtonComponent
+                    type="add"
+                    classButton="infraBtn-primary action-button"
+                    onClick={() => {
+                      this.setState({ Show_HidePlanDialogVisible: true });
+                    }}
+                  >
+                    Edit Grid
+                  </ButtonComponent>
+                </div>
               </div>
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div className="accordion" id="accordionExample">
@@ -1036,7 +1175,7 @@ class insurancePayments extends Component {
                     >
                       <GridComponent
                         id="insurancePayment"
-                        columns={insuranceColumns}
+                        columns={this.state.insuranceColumns}
                         skip={0}
                         take={21}
                         onSelectionChange={this.onInsurancePaymentGridSelectionChange}
@@ -1364,6 +1503,26 @@ class insurancePayments extends Component {
                   >
                     Assignement Payment
                   </legend>
+                  <div style={{ display: "flex", flexFlow: "row", marginBottom: "4px", height: "20px" }}>
+                    <div
+                      style={{
+                        float: "right",
+                        position: "absolute",
+                        marginRight: "10px",
+                        right: "0",
+                      }}
+                    >
+                      <ButtonComponent
+                        type="add"
+                        classButton="infraBtn-primary action-button"
+                        onClick={() => {
+                          this.setState({ Show_HideChargeDialogVisible: true });
+                        }}
+                      >
+                        Edit Grid
+                      </ButtonComponent>
+                    </div>
+                  </div>
                   <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
                     <div className="accordion" id="accordionExample">
                       <div
@@ -1381,8 +1540,8 @@ class insurancePayments extends Component {
                           data-parent="#accordionExample"
                         >
                           <GridComponent
-                            id="insurancePayment"
-                            columns={insuranceAssignmentColumns}
+                            id="planDetailsPayment"
+                            columns={this.state.insuranceAssignmentColumns}
                             skip={0}
                             take={21}
                             onSelectionChange={this.onInsuranceDetailsGridSelectionChange}
@@ -1588,6 +1747,26 @@ class insurancePayments extends Component {
                           ></TextBox>
                         </div>
                       </div>
+                      <div style={{ display: "flex", flexFlow: "row", height: "20px" }}>
+                        <div
+                          style={{
+                            float: "right",
+                            position: "absolute",
+                            marginRight: "10px",
+                            right: "0",
+                          }}
+                        >
+                          <ButtonComponent
+                            type="add"
+                            classButton="infraBtn-primary action-button"
+                            onClick={() => {
+                              this.setState({ Show_HideApplyDialogVisible: true });
+                            }}
+                          >
+                            Edit Grid
+                          </ButtonComponent>
+                        </div>
+                      </div>
                       <fieldset
                         className="fieldsetStyle"
                         style={{
@@ -1644,7 +1823,7 @@ class insurancePayments extends Component {
                                   idGetter={idGetterApplyPlanPaymentID}
                                   onSelectionChange={this.onApplyPaymentGridSelectionChange}
                                   onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
-                                  columns={applyPlanPaymentColumns}
+                                  columns={this.state.applyPlanPaymentColumns}
                                   itemChange={this.applyItemChanged}
                                   onSortChange={this.onSortChange}
                                   // pageChange={this.pageChange}
@@ -1707,7 +1886,7 @@ class insurancePayments extends Component {
                               >
                                 <GridComponent
                                   data={this.state.filterApplyPlanPayments || []}
-                                  id="applyedPatient"
+                                  id="applyedPlan"
                                   skip={0}
                                   take={10}
                                   height="350px"
@@ -1717,7 +1896,7 @@ class insurancePayments extends Component {
                                   idGetter={idGetterApplyPlanPaymentID}
                                   onSelectionChange={this.onApplyPaymentGridSelectionChange}
                                   onRowDoubleClick={this.onApplyPaymentGridDoubleSelectionChange}
-                                  columns={applyPlanPaymentColumns}
+                                  columns={this.state.applyPlanPaymentColumns}
                                   //itemChange={this.applyItemChanged}
                                   onSortChange={this.onSortChange}
                                 // pageChange={this.pageChange}
@@ -1759,6 +1938,26 @@ class insurancePayments extends Component {
                         >
                           Assignement Payment
                         </legend>
+                        <div style={{ display: "flex", flexFlow: "row", marginBottom: "8px", height: "20px" }}>
+                          <div
+                            style={{
+                              float: "right",
+                              position: "absolute",
+                              marginRight: "28px",
+                              right: "0"
+                            }}
+                          >
+                            <ButtonComponent
+                              type="add"
+                              classButton="infraBtn-primary action-button"
+                              onClick={() => {
+                                this.setState({ Show_HideChargeDialogVisible: true });
+                              }}
+                            >
+                              Edit Grid
+                            </ButtonComponent>
+                          </div>
+                        </div>
                         <div className="accordion" id="accordionExample">
                           <div
                             className="card bg-light mb-3"
@@ -1775,8 +1974,8 @@ class insurancePayments extends Component {
                               data-parent="#accordionExample"
                             >
                               <GridComponent
-                                id="applyInsurancePayment"
-                                columns={insuranceAssignmentColumns}
+                                id="planDetailsPayment"
+                                columns={this.state.insuranceAssignmentColumns}
                                 skip={0}
                                 take={21}
                                 onSelectionChange={this.onInsuranceDetailsGridSelectionChange}

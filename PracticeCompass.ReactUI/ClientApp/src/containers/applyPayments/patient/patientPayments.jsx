@@ -758,7 +758,6 @@ class PatientPayments extends Component {
     }
   };
   SaveApplyColumnsShow = async (columns) => {
-    debugger;
     if (!columns.find((x) => x.hide != true)) {
       this.setState({ Show_HideApplyDialogVisible: false });
       this.setState({ warning: true, message: "Cann't hide all columns" });
