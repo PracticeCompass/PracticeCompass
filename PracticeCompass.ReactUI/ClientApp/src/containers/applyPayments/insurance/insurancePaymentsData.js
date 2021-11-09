@@ -64,6 +64,7 @@ export const insuranceColumns = [
     minWidth: 100,
     orderIndex: 3,
   },
+  
   {
     field: "remaining",
     title: "Remaining",
@@ -216,6 +217,7 @@ export const applyPlanPaymentColumns = [
     orderIndex: 4,
     editable:false,
   },
+  
   {
     field: "insurancePaid",
     title: "Plan Paid",
