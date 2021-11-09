@@ -1,7 +1,7 @@
 use medman
 
 
-IF (EXISTS (SELECT * 
+IF (Not EXISTS (SELECT * 
                  FROM INFORMATION_SCHEMA.TABLES 
                  WHERE TABLE_SCHEMA = 'medman' 
                  AND  TABLE_NAME = 'GridColumns'))
