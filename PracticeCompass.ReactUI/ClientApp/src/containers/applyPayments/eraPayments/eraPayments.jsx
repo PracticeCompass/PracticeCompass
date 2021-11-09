@@ -396,7 +396,7 @@ class EraPayments extends Component {
                     width: "100%",
                   }}
                 >
-                  <div style={{ marginLeft: "8px" }}>
+                  <div style={{ marginLeft: "12px" }}>
                     <label className="userInfoLabel">Practice </label>
                   </div>
                   <div className="PracticeStyle">
@@ -465,9 +465,10 @@ class EraPayments extends Component {
                     display: "flex",
                     flexFlow: "row",
                     width: "100%",
+                    marginBottom:"5px"
                   }}
                 >
-                  <div style={{ marginLeft: "5px" }}>
+                  <div style={{ marginLeft: "11px" }}>
                     <label className="userInfoLabel">Voucher</label>
                   </div>
                   <div style={{ width: "147px" }}>
@@ -581,7 +582,7 @@ class EraPayments extends Component {
                     style={{
                       float: "right",
                       position: "absolute",
-                      marginRight: "10px",
+                      marginRight: "12px",
                       right: "0",
                     }}
                   >
@@ -613,7 +614,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ maxWidth: "100%" }}
+                      style={{ width:window.innerWidth}}
                     >
                       <GridComponent
                         id="ERAPayment"

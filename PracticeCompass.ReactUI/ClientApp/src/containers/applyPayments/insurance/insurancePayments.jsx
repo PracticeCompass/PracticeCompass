@@ -1752,7 +1752,7 @@ class insurancePayments extends Component {
                           style={{
                             float: "right",
                             position: "absolute",
-                            marginRight: "10px",
+                            marginRight: "18px",
                             right: "0",
                           }}
                         >

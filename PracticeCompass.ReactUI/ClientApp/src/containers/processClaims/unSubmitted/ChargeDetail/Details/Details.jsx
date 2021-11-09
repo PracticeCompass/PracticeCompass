@@ -1600,7 +1600,7 @@ class Details extends Component {
                       style={{ display: "flex", flexFlow: "row" }}
                     >
                       <div style={{ float: "left" }}>
-                        <div style={{ float: "left", marginLeft: "21px" }}>
+                        <div style={{ float: "left", marginLeft: "49px" }}>
                           <label className="userInfoLabel">
                             Plan Portion
                           </label>
