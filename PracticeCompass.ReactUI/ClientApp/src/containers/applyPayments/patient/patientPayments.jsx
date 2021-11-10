@@ -1100,7 +1100,7 @@ class PatientPayments extends Component {
                   </ButtonComponent>
                 </div>
               </div>
-              <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?100:280)}}>
+              <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?105:285)}}>
                 <div className="accordion" id="accordionExample">
                   <div
                     className="card bg-light mb-3"
