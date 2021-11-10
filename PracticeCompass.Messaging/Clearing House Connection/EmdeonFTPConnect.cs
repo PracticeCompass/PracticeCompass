@@ -16,8 +16,9 @@ namespace PracticeCompass.Messaging.Clearing_House_Connection
                 process.EnableRaisingEvents = true;
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WorkingDirectory = @"C:\PracticeCompas\Config";
-                startInfo.FileName = @"C:\PracticeCompas\Config\Emdeon_connect";
+                startInfo.FileName = @"C:\PracticeCompas\Config\Emdeon_connect.bat";
                 startInfo.Arguments = @"C:\PracticeCompas\Config\Emdeon_send.txt";
+                //startInfo.Arguments = @"C:\PracticeCompas\Config\Emdeon_download.txt";
                 startInfo.UseShellExecute = false;
                 startInfo.CreateNoWindow = true;
                 startInfo.RedirectStandardOutput = true;
