@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { HashRouter, Switch, Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import ProcessClaims from "../containers/processClaims/ProcessClaims";
 import UnSubmitted from "../containers/processClaims/unSubmitted/UnSubmitted";
 import Rejections from "../containers/processClaims/rejections/Rejections";
@@ -15,7 +16,7 @@ import ApplyPayments from "../containers/applyPayments/ApplyPayments";
 import EraPayments from "../containers/applyPayments/eraPayments/eraPayments";
 import InsurancePayments from "../containers/applyPayments/insurance/insurancePayments";
 import PatientPayments from "../containers/applyPayments/patient/patientPayments";
-
+import {UiExpand} from "../redux/actions/ui"
 import AutomationTasks from "../containers/automationTasks/AutomationTasks";
 import Claims from "../containers/automationTasks/Claims";
 import ERA from "../containers/automationTasks/ERA";
@@ -23,11 +24,14 @@ import ERA from "../containers/automationTasks/ERA";
 import DrawerContainer from "./DrawerContainer";
 import "./styles.css";
 class Main extends Component {
+  setxpanded = (event) => {
+    this.props.UiExpand(event);
+  }
   render() {
     return (
       <React.Fragment>
         <HashRouter>
-          <DrawerContainer>
+          <DrawerContainer onexpand={this.setxpanded}>
             <Switch>
               <Route exact={true} path="/" component={ProcessClaims} />
               <Route
@@ -123,4 +127,15 @@ class Main extends Component {
     );
   }
 }
-export default Main;
+function mapStateToProps(state) {
+  return {
+
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    UiExpand:(value)=>dispatch(UiExpand(value))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

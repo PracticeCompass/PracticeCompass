@@ -1,7 +1,8 @@
-import { UI_START_LOADING, UI_STOP_LOADING } from "../actionTypes/actionTypes";
+import { UI_START_LOADING, UI_STOP_LOADING,UI_EXPAND } from "../actionTypes/actionTypes";
 
 const INITIAL_STATE = {
   isLoading: false,
+  UiExpand : true
 };
 
 export function uiReducer(state = INITIAL_STATE, action) {
@@ -15,6 +16,11 @@ export function uiReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         isLoading: false,
+      };
+    case UI_EXPAND:
+      return {
+        ...state,
+        UiExpand: action.payload ,
       };
     default:
       return state;

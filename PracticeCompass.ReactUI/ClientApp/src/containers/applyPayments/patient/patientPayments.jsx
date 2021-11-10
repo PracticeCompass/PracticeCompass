@@ -639,7 +639,6 @@ class PatientPayments extends Component {
 
     let disableApply = false;
     if (field == "patientPaid" || field == "adjustments") {
-      debugger
       let amount = Number(data[rowIndex]["amount"].replace("$", ""));
       let chargeBalance = Number(data[rowIndex]["chargeBalance"].replace("$", ""));
 

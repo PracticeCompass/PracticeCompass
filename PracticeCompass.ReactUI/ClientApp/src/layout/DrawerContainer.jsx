@@ -71,6 +71,7 @@ class DrawerContainer extends Component {
     });
   }
   handleClick = () => {
+    this.props.onexpand(!this.state.expanded);
     this.setState((e) => ({ expanded: !e.expanded }));
   };
 

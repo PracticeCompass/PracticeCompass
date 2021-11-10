@@ -47,7 +47,8 @@ function mapStateToProps(state) {
   return {
     dropDownPractices: state.lookups.practices,
     practiceList: state.patients.paractices,
-    eRApayments: state.payments.eRApayments
+    eRApayments: state.payments.eRApayments,
+    UiExpand:state.ui.UiExpand
   };
 }
 
@@ -614,7 +615,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ width:window.innerWidth}}
+                      style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                     >
                       <GridComponent
                         id="ERAPayment"
@@ -748,7 +749,7 @@ class EraPayments extends Component {
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
-                        style={{ maxWidth: "100%" }}
+                        style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                       >
                         <EditableGrid
                           data={this.state.eRADetailsPayments}
