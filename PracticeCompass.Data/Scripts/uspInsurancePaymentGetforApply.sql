@@ -43,16 +43,15 @@ inner join Charge on ProcedureEvent.ChargeSID = charge.ChargeSID
 left outer join ProcedureEventModifier as Mod1 on Mod1.ProcedureEventSID = ProcedureEvent.ProcedureEventSID and Mod1.[Order]=1
 left outer join ProcedureEventDiag as Diag1 on Diag1.ProcedureEventSID = ProcedureEvent.ProcedureEventSID and Diag1.[Order]=1
 inner join ClaimCharge on ClaimCharge.ChargeSID = Charge.ChargeSID
-
 inner join PlanClaim on 
 PlanClaim.ClaimSID = 
 ClaimCharge.ClaimSID
-where  (Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts) > 0 
+inner join Claim on 
+Claim.ClaimSID = ClaimCharge.ClaimSID
+where  
+('''+ @ClaimIcnNumber +'''=''0'' or  Claim.ClaimNumber = '''+ @ClaimIcnNumber+''' )
 and
-('''+ @ClaimIcnNumber +'''=''0'' or  PlanClaim.PlanICN= '''+ @ClaimIcnNumber+''' )
-and
-('+ convert(varchar, @GuarantorID,10) + '=0  or Charge.PatientID='+convert(varchar, @GuarantorID,10)+')'
-
+('+ convert(varchar, @GuarantorID,10) + '= 0  or Charge.PatientID='+convert(varchar, @GuarantorID,10)+')'
 
 set @SQL = @SQL + @DOsfilter  + @insurancefilter + 'Order by Charge.ChargeSID'  
 print @SQL

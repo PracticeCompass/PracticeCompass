@@ -1,18 +1,27 @@
 use medman
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GridColumns]') AND type in (N'U'))
+DROP TABLE [dbo].[GridColumns]
+GO
+/****** Object:  Table [dbo].[GridColumns]    Script Date: 10/11/2021 12:36:31 AM ******/
 
-IF (Not EXISTS (SELECT * 
-                 FROM INFORMATION_SCHEMA.TABLES 
-                 WHERE TABLE_SCHEMA = 'medman' 
-                 AND  TABLE_NAME = 'GridColumns'))
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 BEGIN
-   CREATE TABLE GridColumns (
+   CREATE TABLE [dbo].[GridColumns] (
     ID int IDENTITY(1,1),
     Name varchar(max),
     Columns varchar(max),
-	PRIMARY KEY (ID)
-);
-END
+ CONSTRAINT [PK_GridColumns] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+End
 GO
 CREATE OR ALTER      PROCEDURE [dbo].[uspGetGridColumns] 
 @Name varchar(max)
