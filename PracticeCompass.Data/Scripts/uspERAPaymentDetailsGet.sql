@@ -19,10 +19,10 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-select ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,ERSClaimName.NameFirst,
+select ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,(ERSClaimName.NameLastOrOrgName+', '+ERSClaimName.NameFirst) as NameFirst,
  ERSChargeServiceInfo.ProcedureModifier01
 ,ERSChargeServiceInfo.ProcedureModifier02,ERSChargeServiceInfo.ProductServiceID , 
-[ERSChargeDate].ServiceDate,[ERSChargeDate].DateTimeQualifier,
+CONVERT(varchar,[ERSChargeDate].ServiceDate,101) as ServiceDate,
 ERSChargeServiceInfo.LineItemChargeAmt , ERSChargeServiceInfo.LineItemProviderPaymentAmt,
 [ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
 [ERSChargeClaimAdjustment].AdjustmentReasonCode as ChargeClaimAdjustmentReason,
@@ -31,7 +31,7 @@ ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCo
  from ERSClaimData
 inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
-inner join [dbo].[ERSChargeDate] on ERSChargeDate.ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID
+inner join [dbo].[ERSChargeDate] on ERSChargeDate.ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID and DateTimeQualifier=472
 left outer join PlanClaim on PlanClaim.PlanICN = ERSClaimData.PayerClaimControlNumber
 left outer join claim on Claim.ClaimSID = PlanClaim.ClaimSID
 left outer join [dbo].[ERSChargeClaimAdjustment] on [ERSChargeClaimAdjustment].ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID

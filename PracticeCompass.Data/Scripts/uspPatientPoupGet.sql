@@ -29,7 +29,7 @@ BEGIN
 		when 3 then 'and (person.DOB > '''+@DOB+''' )'
 		else ''
 		end
-set @filter= '('''+@FirstName+''' is null or '''+@FirstName+'''='''' or (Person.FirstName  like'' '+@FirstName+'%'' ))
+set @filter= '('''+@FirstName+''' is null or '''+@FirstName+'''='''' or (Person.FirstName  like'''+@FirstName+'%'' ))
 	and
 	('''+@lastName+''' is null or '''+@lastName+'''='''' or (Person.LastName  like '''+@lastName+'%'' ))
 	and

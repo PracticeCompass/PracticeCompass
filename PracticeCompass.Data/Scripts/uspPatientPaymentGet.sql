@@ -41,7 +41,7 @@ case when CreateMethod=''M'' then ''Manual''
      when CreateMethod=''E'' then ''ERS ERA - Electronic Remittance Advice''
 	 when CreateMethod=''A'' then ''ESR -Electronic Statement Remittance''
 	 else '''' end as CreateMethod,
-	 (Amount-m.assigmentamount) as Remaining
+	 (Amount-isNull(m.assigmentamount,0)) as Remaining
 from Payment inner join Practice on 
 Payment.practiceID = Practice.PracticeID
 inner join Entity on Payment.PayorID = Entity.EntitySID
