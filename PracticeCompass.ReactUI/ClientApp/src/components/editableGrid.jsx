@@ -244,7 +244,7 @@ class EditableGrid extends React.Component {
                     onHeaderSelectionChange={this.onHeaderSelectionChange}
                     onSortChange={this.sortChange}
                     onSelectionChange={(event) => this.onSelectionChange(event)}
-                    onKeyDown={(event) => this.props.isEditable != true && this.props.onKeyDown(event)}
+                    // onKeyDown={(event) => this.props.isEditable != true && this.props.onKeyDown(event)}
                     onRowDoubleClick={(event) => this.props.onRowDoubleClick(event)}
 
                     data={

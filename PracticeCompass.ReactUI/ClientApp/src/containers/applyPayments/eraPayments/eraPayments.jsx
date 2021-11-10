@@ -256,7 +256,7 @@ class EraPayments extends Component {
       header = header + "----Practice: " + ERAPaymentDetails.detailsPracticeID.entityName + "     ";
     }
     if (ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt != null) {
-      header = header + "----Total Payment: " + ERAPaymentDetails.totalActualProviderPaymentAmt;
+      header = header + "----Total Payment: $" + ERAPaymentDetails.totalActualProviderPaymentAmt;
     }
     await this.setState({
       ERAPaymentDetails,

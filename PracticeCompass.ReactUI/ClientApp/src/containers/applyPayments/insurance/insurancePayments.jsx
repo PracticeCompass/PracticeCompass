@@ -1158,7 +1158,7 @@ class insurancePayments extends Component {
                   </ButtonComponent>
                 </div>
               </div>
-              <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+              <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?105:285) }}>
                 <div className="accordion" id="accordionExample">
                   <div
                     className="card bg-light mb-3"
@@ -1173,7 +1173,7 @@ class insurancePayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ width:window.innerWidth- (!this.props.UiExpand?130:310)}}
+                      // style={{ }}
                     >
                       <GridComponent
                         id="insurancePayment"
@@ -1496,6 +1496,7 @@ class insurancePayments extends Component {
                     marginTop: "5px",
                     marginBottom: "5px",
                     // height: "85px",
+                    width:window.innerWidth- (!this.props.UiExpand?120:300),
                     marginLeft: "10px"
                   }}
                 >
@@ -1510,7 +1511,7 @@ class insurancePayments extends Component {
                       style={{
                         float: "right",
                         position: "absolute",
-                        marginRight: "10px",
+                        marginRight: "18px",
                         right: "0",
                       }}
                     >
@@ -1540,7 +1541,6 @@ class insurancePayments extends Component {
                           className="collapse show"
                           aria-labelledby="headingOne"
                           data-parent="#accordionExample"
-                          style={{ width:window.innerWidth- (!this.props.UiExpand?140:320)}}
                         >
                           <GridComponent
                             id="planDetailsPayment"
@@ -1886,7 +1886,7 @@ class insurancePayments extends Component {
                                 className="collapse show"
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
-                                style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
+                                // style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                               >
                                 <GridComponent
                                   data={this.state.filterApplyPlanPayments || []}
@@ -1929,7 +1929,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width:window.innerWidth- (!this.props.UiExpand?150:330),
+                          width:window.innerWidth- (!this.props.UiExpand?120:300),
                           marginTop: "5px",
                           marginBottom: "5px",
                           // height: "85px",

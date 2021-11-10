@@ -1100,7 +1100,7 @@ class PatientPayments extends Component {
                   </ButtonComponent>
                 </div>
               </div>
-              <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+              <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?100:280)}}>
                 <div className="accordion" id="accordionExample">
                   <div
                     className="card bg-light mb-3"
@@ -1115,7 +1115,6 @@ class PatientPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ width:window.innerWidth- (!this.props.UiExpand?140:320)}}
                     >
                       <GridComponent
                         id="patientPayment"
@@ -1420,7 +1419,7 @@ class PatientPayments extends Component {
                     width: "100%",
                     marginTop: "5px",
                     marginBottom: "5px",
-                    // height: "85px",
+                    width:window.innerWidth- (!this.props.UiExpand?120:300),
                     marginLeft: "10px"
                   }}
                 >
@@ -1467,7 +1466,6 @@ class PatientPayments extends Component {
                           className="collapse show"
                           aria-labelledby="headingOne"
                           data-parent="#accordionExample"
-                          style={{ width:window.innerWidth- (!this.props.UiExpand?150:330)}}
                         >
                           <GridComponent
                             id="patientDetailsPayment"
@@ -1628,7 +1626,7 @@ class PatientPayments extends Component {
                                   className="collapse show"
                                   aria-labelledby="headingOne"
                                   data-parent="#accordionExample"
-                                  style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
+                                  // style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                                 >
                                   <EditableGrid
                                     data={this.state.applyPatientPayments}
@@ -1701,7 +1699,7 @@ class PatientPayments extends Component {
                                   className="collapse show"
                                   aria-labelledby="headingOne"
                                   data-parent="#accordionExample"
-                                  style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
+                                  // style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                                 >
 
                                   <GridComponent
@@ -1769,7 +1767,8 @@ class PatientPayments extends Component {
                             marginTop: "5px",
                             marginBottom: "5px",
                             // height: "85px",
-                            marginLeft: "10px"
+                            marginLeft: "10px",
+                            width:window.innerWidth- (!this.props.UiExpand?140:320)
                           }}
                         >
                           <legend
@@ -1788,11 +1787,10 @@ class PatientPayments extends Component {
                               }}
                             >
                               <div
-                                id="collapseOne1"
+                                id="collapseOne9"
                                 className="collapse show"
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
-                                style={{ width:window.innerWidth- (!this.props.UiExpand?160:340)}}
                               >
                                 <GridComponent
                                   id="patientDetailsPayment"
