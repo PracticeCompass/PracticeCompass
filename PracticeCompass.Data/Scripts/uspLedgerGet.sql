@@ -40,15 +40,15 @@ BEGIN
 		    ELSE  '' END
 	  as ChargeType
 	,Charge.Amount,charge.ApprovedAmount,
-	  case when  Charge.CurrentStatus ='G' then 'guarantor responsible charge'
-	       when  Charge.CurrentStatus ='GT' then 'responsibility manually transferred to guarantor'
-		   when  Charge.CurrentStatus ='GA' then 'responsibility automatically transferred to guarantor'
-		   when  Charge.CurrentStatus ='I' then 'insurance responsible charge'
-		   when  Charge.CurrentStatus ='IU' then 'unbilled insurance responsible charge'
-		   when  Charge.CurrentStatus ='IT' then 'responsibility manually transferred to insurance'
-		   when  Charge.CurrentStatus ='IF' then 'responsibility forwarded to insurance'
-		    ELSE  '' END
-	  as CurrentStatus,Charge.PatientStatement,ProcedureEvent.ProcedureCode, [Procedure].Description,
+	  --case when  Charge.CurrentStatus ='G' then 'guarantor responsible charge'
+	  --     when  Charge.CurrentStatus ='GT' then 'responsibility manually transferred to guarantor'
+		 --  when  Charge.CurrentStatus ='GA' then 'responsibility automatically transferred to guarantor'
+		 --  when  Charge.CurrentStatus ='I' then 'insurance responsible charge'
+		 --  when  Charge.CurrentStatus ='IU' then 'unbilled insurance responsible charge'
+		 --  when  Charge.CurrentStatus ='IT' then 'responsibility manually transferred to insurance'
+		 --  when  Charge.CurrentStatus ='IF' then 'responsibility forwarded to insurance'
+		 --   ELSE  '' END
+	  Charge.CurrentStatus as CurrentStatus,Charge.PatientStatement,ProcedureEvent.ProcedureCode, [Procedure].Description,
 	  Mod1.Modifier as Mod1 , Mod2.Modifier as mod2 , Mod3.Modifier as Mod3 , Mod4.Modifier as Mod4
 	  ,Diag1.DiagnosisCode as Diag1,Diag2.DiagnosisCode as Diag2,Diag3.DiagnosisCode as Diag3,Diag4.DiagnosisCode as Diag4 , 0 as ActivityCount , Charge.ChargeSID
 	 from ClaimCharge inner join  Charge on ClaimCharge.ChargeSID = Charge.ChargeSID inner join ProcedureEvent on

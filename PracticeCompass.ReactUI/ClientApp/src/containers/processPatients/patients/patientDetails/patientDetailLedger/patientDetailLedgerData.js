@@ -54,7 +54,7 @@ export const columns = [
   },
   {
     field: "patientstatment",
-    title: "Patient Statment",
+    title: "Pt. Statment",
     minWidth: 100,
     orderIndex: 9,
   },
