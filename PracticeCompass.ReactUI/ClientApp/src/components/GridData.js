@@ -44,8 +44,8 @@ export const MyPager = (props) => {
                     />
                 </div>
 
-                <div className="col-4" style={{ textAlign: "end" }}>
-                    <label style={{ marginRight: "20px" }}>{`${props.total > 0 ? props.skip + 1 + ' - ' : ''}${totalTake} of ${props.totalCount ?? props.total} items`}</label></div>
+                <div className="col-4" style={{ textAlign: "center"}}>
+                    <label >{`${props.total > 0 ? props.skip + 1 + ' - ' : ''}${totalTake} of ${props.totalCount ?? props.total} items`}</label></div>
             </div>
         </div>
     );

@@ -71,7 +71,8 @@ function mapStateToProps(state) {
     practiceList: state.patients.paractices,
     paymentClass: state.payments.paymentClass,
     insurancePayments: state.payments.insurancePayemnts,
-    paymentAssignments: state.payments.paymentAssignments
+    paymentAssignments: state.payments.paymentAssignments,
+    UiExpand:state.ui.UiExpand
   };
 }
 
@@ -1168,10 +1169,11 @@ class insurancePayments extends Component {
                     }}
                   >
                     <div
-                      id="collapseOne"
+                      id="collapseOne3"
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
+                      style={{ width:window.innerWidth- (!this.props.UiExpand?130:310)}}
                     >
                       <GridComponent
                         id="insurancePayment"
@@ -1534,10 +1536,11 @@ class insurancePayments extends Component {
                         }}
                       >
                         <div
-                          id="collapseOne"
+                          id="collapseOne4"
                           className="collapse show"
                           aria-labelledby="headingOne"
                           data-parent="#accordionExample"
+                          style={{ width:window.innerWidth- (!this.props.UiExpand?140:320)}}
                         >
                           <GridComponent
                             id="planDetailsPayment"
@@ -1770,7 +1773,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width: "1559px",
+                          width:window.innerWidth- (!this.props.UiExpand?148:330),
                           marginTop: "5px",
                           marginBottom: "5px",
                           height: "435px",
@@ -1806,7 +1809,7 @@ class insurancePayments extends Component {
                               }}
                             >
                               <div
-                                id="collapseOne"
+                                id="collapseOne5"
                                 className="collapse show"
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
@@ -1843,7 +1846,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width: "1559px",
+                          width:window.innerWidth- (!this.props.UiExpand?148:330),
                           marginTop: "5px",
                           marginBottom: "30px",
                           height: "435px",
@@ -1879,10 +1882,11 @@ class insurancePayments extends Component {
                               }}
                             >
                               <div
-                                id="collapseOne"
+                                id="collapseOne1"
                                 className="collapse show"
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
+                                style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                               >
                                 <GridComponent
                                   data={this.state.filterApplyPlanPayments || []}
@@ -1925,7 +1929,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width: "100%",
+                          width:window.innerWidth- (!this.props.UiExpand?150:330),
                           marginTop: "5px",
                           marginBottom: "5px",
                           // height: "85px",
@@ -1968,7 +1972,7 @@ class insurancePayments extends Component {
                             }}
                           >
                             <div
-                              id="collapseOne"
+                              id="collapseOne2"
                               className="collapse show"
                               aria-labelledby="headingOne"
                               data-parent="#accordionExample"
