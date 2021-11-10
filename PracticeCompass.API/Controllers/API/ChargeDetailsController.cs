@@ -27,10 +27,23 @@ namespace PracticeCompass.API.Controllers.API
                     decimal updatedChargeAmount = chargeActivity.ToList().FirstOrDefault().ChargeAmount;
                     foreach (var charge in chargeActivity)
                     {
+                        if (charge.ActivityType== "Create Charge")
+                        {
+                            charge.AmountValue = "$ " + charge.ChargeAmount;
+                            charge.ChargeAmountValue = "$ 0.00";
+                            continue;
+                        }
+                        else if(charge.ActivityType== "Charge Void")
+                        {
+                            charge.ChargeAmountValue = "$ 0.00";
+                            charge.AmountValue = "$ 0.00";
+                            continue;
+                        }
                         updatedChargeAmount = updatedChargeAmount + charge.Amount;
                         charge.ChargeAmount = updatedChargeAmount;
                         charge.AmountValue = "$ " + charge.Amount;
                         charge.ChargeAmountValue = "$ " + charge.ChargeAmount;
+
 
                     }
                 }

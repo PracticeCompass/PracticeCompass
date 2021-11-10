@@ -15,5 +15,7 @@
         public string SeC { get; set; }
         public string Patient { get; set; }
         public string ProviderName { get; set; }
+        public string RecordStatus { get; set; }
+        public string CurrentStatus { get; set; }
     }
 }

@@ -93,15 +93,15 @@ export const columns = [
   },
   {
     field: "destination",
-    title: "Destination ",
-    minWidth: 70,
+    title: "Lowest Resp. Coverage Order",
+    minWidth: 130,
     orderIndex: 10,
   },
   {
     field: "notes",
     title: "Notes ",
     iscellWithIcon:true,
-    minWidth: 100,
+    minWidth: 60,
     orderIndex: 11,
   },
 ];

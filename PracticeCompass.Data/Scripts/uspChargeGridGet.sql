@@ -21,8 +21,9 @@ Mod1.[Modifier] as Mod1 , Mod2.[Modifier] as Mod2 , Dag1.[DiagnosisCode] as Diag
 ProcedureEvent.Units , 
 case when Charge.RespCoverageOrder=1 then 'Active' END as Prim,
 case when Charge.RespCoverageOrder=2 then 'Active' END as SeC,
-case when Charge.RespCoverageOrder=99 then 'Active' END as Patient
+case when Charge.RespCoverageOrder=99 then 'Active' END as Patient,
 --,Provider.SortName as ProviderName
+Charge.RecordStatus,charge.CurrentStatus
 from ClaimCharge
 inner join ProcedureEvent on ProcedureEvent.ChargeSID = ClaimCharge.ChargeSID
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID

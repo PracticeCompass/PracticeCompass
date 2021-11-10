@@ -9,7 +9,7 @@ GO
 -- =============================================
 
 -- Description:	Get Charge Activity on Charge Grid select
--- exec uspChargeActivityGet @ChargeSID =8894
+-- exec uspChargeActivityGet @ChargeSID =42
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspChargeActivityGet] 
 	-- Add the parameters for the stored procedure here

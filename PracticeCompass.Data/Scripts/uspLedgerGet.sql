@@ -20,7 +20,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	  select * from 
-	  (select 'Claim' as ActivityType , convert(varchar, CONVERT(DATETIME, SUBSTRING( CreateStamp,0,9)),101) as Date  , Claim.ClaimSID , 0 as sortorder ,ClaimNumber , 
+	  (select 'Claim' as ActivityType,'Claim' as ActivityTypeStr , convert(varchar, CONVERT(DATETIME, SUBSTRING( CreateStamp,0,9)),101) as Date  , Claim.ClaimSID , 0 as sortorder ,ClaimNumber , 
 	  case when  LowestRespCoverageOrder =1 then 'Primary'
 	       when  LowestRespCoverageOrder =2 then 'Secondary'
 		   when  LowestRespCoverageOrder =3 then 'Tertiary'
@@ -33,7 +33,7 @@ BEGIN
 
 	  union all
 	  
-	select  'Charge Details' as ActivityType, convert(varchar, CONVERT(DATETIME, SUBSTRING( charge.CreateStamp,0,9)),101) as Date, ClaimCharge.ClaimSID, 1 as sortorder, ''as ClaimNumber,'' as LowestRespCoverageOrder,
+	select  'Charge Details' as ActivityType,'Charge Details' as ActivityTypeStr, convert(varchar, CONVERT(DATETIME, SUBSTRING( charge.CreateStamp,0,9)),101) as Date, ClaimCharge.ClaimSID, 1 as sortorder, [Procedure].Description as ClaimNumber,'' as LowestRespCoverageOrder,
 		  case when  Charge.ChargeType ='P' then 'Procedure'
 	       when  Charge.ChargeType ='I' then 'Admin'
 		   when  Charge.ChargeType ='A' then 'Interest'
@@ -69,12 +69,8 @@ left outer join ProcedureEventDiag as Diag8 on Diag8.ProcedureEventSID = Procedu
 	where Charge.PatientID=@PatientID
 	union all
 	
-	  select  'Txn' as ActivityType , convert(varchar, CONVERT(DATETIME, SUBSTRING( ChargeActivity.CreateStamp,0,9)),101) as Date , ClaimCharge.ClaimSID , 2 as sortorder , '' as claimnumber ,
-	  '' as LowestRespCoverageOrder , '' as chargetype ,
-	  ChargeActivity.Amount,
-	   NULL as approvedamount , '' as CurrentStatus , '' as patientstatment
-	  , ChargeActivity.ActivityType as procedurecode ,
-	  Case ActivityType 
+	  select  'Txn' as ActivityType,'Txn '+convert(varchar,ChargeActivity.ActivityCount) as ActivityTypeStr , convert(varchar, CONVERT(DATETIME, SUBSTRING( ChargeActivity.CreateStamp,0,9)),101) as Date , ClaimCharge.ClaimSID , 2 as sortorder ,
+	    Case ActivityType 
 		when 'ADJ' then 'Adjustment'
 		when 'CHG' then 'Create Charge'
 		when 'CVD' then 'Charge Void'
@@ -89,7 +85,12 @@ left outer join ProcedureEventDiag as Diag8 on Diag8.ProcedureEventSID = Procedu
 		when 'URV' then 'Unapplied Credit Reversal' 
 		when 'XFR' then 'Transfer'
 		else '' 
-		end As description,
+		end as claimnumber ,
+	  '' as LowestRespCoverageOrder , '' as chargetype ,
+	  ChargeActivity.Amount,
+	   NULL as approvedamount , '' as CurrentStatus , '' as patientstatment
+	  , ChargeActivity.ActivityType as procedurecode ,
+	'' As description,
 		 ''as mod1 ,'' as mod2 , '' as mod3 , '' as mod4 , '' as diag1 , '' as diag2 , ''as diag3 , '' as diag4 , ChargeActivity.ActivityCount , Charge.ChargeSID
 	  from ChargeActivity 
 	  inner join Charge on Charge.ChargeSID = ChargeActivity.ChargeSID

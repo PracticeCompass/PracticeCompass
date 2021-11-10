@@ -1,6 +1,6 @@
 export const columns = [
   {
-    field: "activityType",
+    field: "activityTypeStr",
     title: "Activity Type",
     minWidth: 100,
     orderIndex: 1,
@@ -13,7 +13,7 @@ export const columns = [
   },
   {
     field: "claimNumber",
-    title: "Claim Number",
+      title: "CN/ Description",
     minWidth: 100,
     orderIndex: 3,
   },
@@ -59,13 +59,6 @@ export const columns = [
     orderIndex: 9,
   },
   {
-    field: "description",
-    title: "Description",
-    minWidth: 100,
-    orderIndex: 10,
-    showToolTip: true,
-  },
-  {
     field: "mod1",
     title: "Mod 1",
     minWidth: 50,
@@ -78,18 +71,6 @@ export const columns = [
     orderIndex: 12,
   },
   {
-    field: "mod3",
-    title: "Mod 3",
-    minWidth: 50,
-    orderIndex: 13,
-  },
-  {
-    field: "mod4",
-    title: "Mod 4",
-    minWidth: 50,
-    orderIndex: 14,
-  },
-  {
     field: "diag1",
     title: "Diag 1",
     minWidth: 50,
@@ -100,18 +81,6 @@ export const columns = [
     title: "Diag 2",
     minWidth: 50,
     orderIndex: 16,
-  },
-  {
-    field: "diag3",
-    title: "Diag 3",
-    minWidth: 50,
-    orderIndex: 17,
-  },
-  {
-    field: "diag4",
-    title: "Diag 4",
-    minWidth: 50,
-    orderIndex: 18,
   },
   {
     field: "activityCount",
