@@ -79,7 +79,8 @@ function mapStateToProps(state) {
     physicians: state.claimList.physicians,
     patientPayments: state.payments.patientPayments,
     paymentAssignments: state.payments.paymentAssignments,
-    applyPatientPayments: state.payments.applyPatientPayments
+    applyPatientPayments: state.payments.applyPatientPayments,
+    UiExpand:state.ui.UiExpand
   };
 }
 
@@ -1110,10 +1111,11 @@ class PatientPayments extends Component {
                     }}
                   >
                     <div
-                      id="collapseOne"
+                      id="collapseOne1"
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
+                      style={{ width:window.innerWidth- (!this.props.UiExpand?140:320)}}
                     >
                       <GridComponent
                         id="patientPayment"
@@ -1461,10 +1463,11 @@ class PatientPayments extends Component {
                         }}
                       >
                         <div
-                          id="collapseOne"
+                          id="collapseOne2"
                           className="collapse show"
                           aria-labelledby="headingOne"
                           data-parent="#accordionExample"
+                          style={{ width:window.innerWidth- (!this.props.UiExpand?150:330)}}
                         >
                           <GridComponent
                             id="patientDetailsPayment"
@@ -1584,7 +1587,7 @@ class PatientPayments extends Component {
                         <fieldset
                           className="fieldsetStyle"
                           style={{
-                            width: "1559px",
+                            width:window.innerWidth- (!this.props.UiExpand?148:330),
                             marginTop: "5px",
                             marginBottom: "10px",
                             height: "435px",
@@ -1625,6 +1628,7 @@ class PatientPayments extends Component {
                                   className="collapse show"
                                   aria-labelledby="headingOne"
                                   data-parent="#accordionExample"
+                                  style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                                 >
                                   <EditableGrid
                                     data={this.state.applyPatientPayments}
@@ -1657,7 +1661,7 @@ class PatientPayments extends Component {
                         <fieldset
                           className="fieldsetStyle"
                           style={{
-                            width: "1559px",
+                            width:window.innerWidth- (!this.props.UiExpand?148:330),
                             marginTop: "5px",
                             marginBottom: "30px",
                             height: "435px",
@@ -1697,6 +1701,7 @@ class PatientPayments extends Component {
                                   className="collapse show"
                                   aria-labelledby="headingOne"
                                   data-parent="#accordionExample"
+                                  style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                                 >
 
                                   <GridComponent
@@ -1783,10 +1788,11 @@ class PatientPayments extends Component {
                               }}
                             >
                               <div
-                                id="collapseOne"
+                                id="collapseOne1"
                                 className="collapse show"
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
+                                style={{ width:window.innerWidth- (!this.props.UiExpand?160:340)}}
                               >
                                 <GridComponent
                                   id="patientDetailsPayment"
