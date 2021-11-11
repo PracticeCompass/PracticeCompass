@@ -21,7 +21,10 @@ import {
 import { getter } from "@progress/kendo-react-common";
 
 function mapStateToProps(state) {
-  return { charges: state.claimDetails.charges };
+  return {
+    charges: state.claimDetails.charges,
+    UiExpand: state.ui.UiExpand
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -156,7 +159,7 @@ class ClaimDetail extends Component {
       none: false,
     });
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   render() {
     return (
       <Fragment>
@@ -264,37 +267,40 @@ class ClaimDetail extends Component {
             </div>
           </div>
         </div>
-        <div className="accordion" id="accordionSummary">
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-              marginTop: "5px",
-            }}
-          >
+        <div style={{ display: "flex", flexFlow: "row", width: window.innerWidth - (!this.props.UiExpand ? 93 : 273) }}>
+
+          <div className="accordion" id="accordionExample" >
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionSummary"
+              className="card bg-light mb-3"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginTop: "5px",
+              }}
             >
-              <GridComponent
-                id="claimDetailsId"
-                columns={this.state.claimListColumns}
-                skip={0}
-                take={15}
-                onSelectionChange={this.onClaimGridSelectionChange}
-                onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
-                selectionMode="single"
-                DATA_ITEM_KEY={DATA_ITEM_KEY_CHARGES}
-                idGetter={idGetterCharges}
-                data={this.props.charges}
-                height="415px"
-                width="100%"
-                sortColumns={[]}
-                onSortChange={this.onSortChange}
-              ></GridComponent>
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                <GridComponent
+                  id="claimDetailsId"
+                  columns={this.state.claimListColumns}
+                  skip={0}
+                  take={15}
+                  onSelectionChange={this.onClaimGridSelectionChange}
+                  onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                  selectionMode="single"
+                  DATA_ITEM_KEY={DATA_ITEM_KEY_CHARGES}
+                  idGetter={idGetterCharges}
+                  data={this.props.charges}
+                  height="415px"
+                  width="100%"
+                  sortColumns={[]}
+                  onSortChange={this.onSortChange}
+                ></GridComponent>
+              </div>
             </div>
           </div>
         </div>

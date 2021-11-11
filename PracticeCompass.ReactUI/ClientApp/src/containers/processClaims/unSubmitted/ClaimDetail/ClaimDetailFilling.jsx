@@ -9,6 +9,7 @@ import { TextArea } from "@progress/kendo-react-inputs";
 function mapStateToProps(state) {
   return {
     claimDetailsData: state.claimDetails.claimDetails,
+    UiExpand:state.ui.UiExpand
   };
 }
 

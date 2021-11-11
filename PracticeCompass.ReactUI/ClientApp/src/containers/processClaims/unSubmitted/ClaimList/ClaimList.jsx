@@ -86,6 +86,7 @@ function mapStateToProps(state) {
     dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
     physicians: state.claimList.physicians,
+    UiExpand:state.ui.UiExpand
   };
 }
 
@@ -1675,7 +1676,9 @@ class ClaimList extends Component {
             </div>
           </div>
         </div>
-        <div className="accordion" id="accordionExample">
+        <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?93:273) }}>
+
+        <div className="accordion" id="accordionExample" >
           <div
             className="card bg-light mb-3"
             style={{
@@ -1719,6 +1722,7 @@ class ClaimList extends Component {
                   pageChange={this.pageChange}
                 ></GridComponent>
               )}
+            </div>
             </div>
           </div>
         </div>
