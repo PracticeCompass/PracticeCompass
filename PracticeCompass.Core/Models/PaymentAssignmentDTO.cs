@@ -15,8 +15,9 @@ namespace PracticeCompass.Core.Models
         public int ActivityCount { get; set; }
         public int AccountSID { get; set; }
         public string SortName { get; set; }
+        public string AccountNumber { get; set; }
         public string PostDate { get; set; }
-        public float Amount { get; set; }
+        public string Amount { get; set; }
         public string PatientBilled { get; set; }
         public string PatientStatement { get; set; }
     }

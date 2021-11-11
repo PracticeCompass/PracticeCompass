@@ -64,7 +64,7 @@ export const insuranceColumns = [
     minWidth: 100,
     orderIndex: 3,
   },
-  
+
   {
     field: "remaining",
     title: "Remaining",
@@ -118,8 +118,8 @@ export const insuranceAssignmentColumns = [
     orderIndex: 1,
   },
   {
-    field: "accountSID",
-    title: "Patient Account ID",
+    field: "accountNumber",
+    title: "Patient Account No",
     minWidth: 150,
     orderIndex: 2,
   },
@@ -184,48 +184,48 @@ export const applyPlanPaymentColumns = [
     minWidth: 50,
     orderIndex: 0,
     hide: true,
-    editable:false
+    editable: false,
   },
   {
     field: "fromServiceDate",
     title: "DOS",
-    editor:"date",
+    editor: "date",
     minWidth: 50,
     orderIndex: 1,
-    editable:false
+    editable: false,
   },
   {
     field: "procedureCode",
     title: "CPT",
     minWidth: 50,
     orderIndex: 2,
-    editable:false
+    editable: false,
   },
   {
     field: "modifier1",
     title: "Modifier/ICD",
     minWidth: 50,
     orderIndex: 3,
-    editable:false
+    editable: false,
   },
   {
     field: "amount",
     title: "Amount",
     minWidth: 50,
-    editor:"numeric",
-    type:"currency",
+    editor: "numeric",
+    type: "currency",
     orderIndex: 4,
-    editable:false,
+    editable: false,
   },
-  
+
   {
     field: "insurancePaid",
     title: "Plan Paid",
     minWidth: 50,
     orderIndex: 5,
-    editor:"numeric",
-    cell:"currency",
-    type:"currency",
+    editor: "numeric",
+    cell: "currency",
+    type: "currency",
     //type:"currency",
   },
   {
@@ -233,9 +233,9 @@ export const applyPlanPaymentColumns = [
     title: "Adjustment",
     minWidth: 50,
     orderIndex: 6,
-    editor:"numeric",
-    cell:"currency",
-    type:"currency",
+    editor: "numeric",
+    cell: "currency",
+    type: "currency",
     //type:"currency",
   },
   {
@@ -243,22 +243,22 @@ export const applyPlanPaymentColumns = [
     title: "Remaining",
     minWidth: 50,
     orderIndex: 7,
-    editor:"numeric",
-    type:"currency",
-    editable:false
+    editor: "numeric",
+    type: "currency",
+    editable: false,
   },
   {
     field: "MoveToNextPlan",
     title: "Move to next plan",
     minWidth: 50,
-    editor:"boolean",
-    isCustomCell:true,
-    type:"checkBox",
+    editor: "boolean",
+    isCustomCell: true,
+    type: "checkBox",
     orderIndex: 8,
-    cell:"checkBox"
+    cell: "checkBox",
   },
-]
-export const  DOSFilter = [
+];
+export const DOSFilter = [
   {
     id: "0",
     text: "Any",
