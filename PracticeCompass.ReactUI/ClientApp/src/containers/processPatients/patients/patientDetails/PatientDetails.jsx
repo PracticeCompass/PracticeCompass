@@ -27,8 +27,8 @@ class PatientDetails extends Component {
             paddingTop: "5px",
             overflow: "hidden",
             marginTop: "10px",
-            marginBottom: "50px",
-            paddingBottom: "50px",
+            // marginBottom: "50px",
+            // paddingBottom: "50px",
           }}
         >
           <TabStrip

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import GridComponent from "components/Grid";
+import FilterableGridComponent from "components/FilterableGrid";
 import { columns } from "./patientDetailLedgerData";
 import { getter } from "@progress/kendo-react-common";
 import { GetPatientLedger } from "../../../../../redux/actions/patientDetails";
@@ -88,7 +88,11 @@ class PatientDetailLedger extends Component {
   render() {
     return (
       <Fragment>
-        <div className="accordion" id="accordionExample">
+        <div
+          className="accordion"
+          id="accordionExample"
+          style={{ height: window.innerHeight - 200 }}
+        >
           <div className="card bg-light mb-3">
             <div
               id="patientLedger"
@@ -96,27 +100,29 @@ class PatientDetailLedger extends Component {
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
             >
-              <div className="card-body">
-                <GridComponent
-                  id="ledgerGrid"
-                  columns={columns}
-                  data={this.state.patientDetailsLedger}
-                  skip={0}
-                  take={this.state.take}
-                  height="650px"
-                  width="100%"
-                  activeRowRender={true}
-                  onRowRender={this.onRowRender}
-                  // onSelectionChange={this.onPatientGridSelectionChange}
-                  // onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
-                  selectionMode="single"
-                  DATA_ITEM_KEY="patientLedgerID"
-                  idGetter={idGetterPaientLedger}
-                  sortColumns={[]}
-                  onSortChange={this.onSortChange}
-                  // pageChange={this.pageChange}
-                ></GridComponent>
-              </div>
+              {this.state.patientDetailsLedger && (
+                <div className="card-body">
+                  <FilterableGridComponent
+                    id="ledgerGrid"
+                    columns={columns}
+                    data={this.state.patientDetailsLedger}
+                    skip={0}
+                    take={this.state.take}
+                    height={window.innerHeight - 200}
+                    width="100%"
+                    activeRowRender={true}
+                    onRowRender={this.onRowRender}
+                    // onSelectionChange={this.onPatientGridSelectionChange}
+                    // onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
+                    selectionMode="single"
+                    DATA_ITEM_KEY="patientLedgerID"
+                    idGetter={idGetterPaientLedger}
+                    sortColumns={[]}
+                    onSortChange={this.onSortChange}
+                    // pageChange={this.pageChange}
+                  ></FilterableGridComponent>
+                </div>
+              )}
             </div>
           </div>
         </div>

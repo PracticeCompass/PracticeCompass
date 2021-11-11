@@ -3,14 +3,7 @@ import { DropDownList } from "@progress/kendo-react-dropdowns";
 
 const DropdownFilterCell = (props) => {
   const hasValue = (value) => Boolean(value && value !== props.defaultValue);
-  const dropDowndata = (props) =>
-    props.data
-      ? Array.from(
-          new Set(
-            props.data.map((p) => (p.activityTypeStr ? p.activityTypeStr : ""))
-          )
-        )
-      : null;
+
   const onChange = (event) => {
     const hasValueNew = hasValue(event.target.value);
     props.onChange({
@@ -32,7 +25,7 @@ const DropdownFilterCell = (props) => {
   return (
     <div className="k-filterable">
       <DropDownList
-        data={dropDowndata}
+        data={props.data}
         onChange={onChange}
         value={props.value || props.defaultValue}
         defaultItem={props.defaultValue}

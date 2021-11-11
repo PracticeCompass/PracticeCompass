@@ -64,6 +64,7 @@ class FilterableGridComponent extends React.Component {
     patientDataItemKey: "",
     hasCheckBox: false,
     activeRowRender: false,
+    dropDownValus: [],
   };
   rowRender = (trElement, props) => {
     if (this.state.activeRowRender) {
@@ -78,6 +79,12 @@ class FilterableGridComponent extends React.Component {
       });
       this.props.pageChange(event.page.skip, event.page.take);
     } catch (error) {}
+  };
+  filterChange = (event) => {
+    this.setState({
+      data: filterBy(this.props.data, event.filter),
+      filter: event.filter,
+    });
   };
   onColumnReorder = async (event) => {
     //localStorage.setItem(this.props.id, JSON.stringify(event.columns));
@@ -98,11 +105,19 @@ class FilterableGridComponent extends React.Component {
   CategoryFilterCell = (props) => (
     <DropdownFilterCell
       {...props}
-      data={this.props.data}
+      data={this.state.dropDownValus}
       defaultValue={"Select Activity Type"}
     />
   );
   componentDidMount() {
+    let _values = Array.from(
+      new Set(
+        this.props.data.map((p) => (p.activityTypeStr ? p.activityTypeStr : ""))
+      )
+    );
+    this.setState({
+      dropDownValus: _values,
+    });
     this.grid = document.querySelector(".k-grid");
     window.addEventListener("resize", this.handleResize);
     if (this.props.columns) {
@@ -149,7 +164,6 @@ class FilterableGridComponent extends React.Component {
   getData = (sort) => {
     return orderBy(this.props.data, sort);
   };
-
   onSelectionChange = (event) => {
     const selectedState = getSelectedState({
       event,
@@ -175,7 +189,6 @@ class FilterableGridComponent extends React.Component {
       this.props.getSelectedItems(_selectedItems);
     }
   };
-
   onKeyDown = (event) => {
     const selectedState = getSelectedStateFromKeyDown({
       event,
@@ -186,7 +199,6 @@ class FilterableGridComponent extends React.Component {
       selectedState,
     });
   };
-
   onHeaderSelectionChange = (event) => {
     const checkboxElement = event.syntheticEvent.target;
     const checked = checkboxElement.checked;
@@ -308,18 +320,14 @@ class FilterableGridComponent extends React.Component {
             navigatable={true}
             filterable={true}
             filter={this.state.filter}
-            onFilterChange={(e) => {
-              this.setState({
-                filter: e.filter,
-              });
-            }}
+            onFilterChange={this.filterChange}
             onHeaderSelectionChange={this.onHeaderSelectionChange}
             onSortChange={this.sortChange}
             //onColumnReorder={this.onColumnReorder}
             onSelectionChange={(event) => this.onSelectionChange(event)}
             onRowDoubleClick={(event) => this.props.onRowDoubleClick(event)}
             data={this.props.data ? this.props.data : []}
-            total={this.props.data ? this.props.data.length : 0}
+            // total={this.props.data ? this.props.data.length : 0}
             // pageable={false}
             // onPageChange={this.pageChange}
           >
