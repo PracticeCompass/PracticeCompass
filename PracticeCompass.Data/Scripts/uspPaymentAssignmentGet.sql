@@ -17,7 +17,7 @@ Create or Alter   PROCEDURE [dbo].[uspPaymentAssignmentGet]
 AS
 BEGIN
 
-Select PaymentSID,ChargeSID,ActivityCount,PaymentAssignment.AccountSID , Entity.SortName  , CONVERT(varchar,PostDate,101) as PostDate,Amount,PatientBilled,PatientStatement
+Select PaymentSID,ChargeSID,ActivityCount,PaymentAssignment.AccountSID ,Account.AccountNumber,Entity.SortName  , CONVERT(varchar,PostDate,101) as PostDate,Amount,PatientBilled,PatientStatement
 from PaymentAssignment inner join Account on PaymentAssignment.AccountSID = Account.AccountSID
 inner join Entity on Account.GuarantorID = Entity.EntitySID
 where PaymentSID=@PaymentSID order by PaymentAssignment.ActivityCount
