@@ -256,7 +256,7 @@ class EraPayments extends Component {
       header = header + "----Practice: " + ERAPaymentDetails.detailsPracticeID.entityName + "     ";
     }
     if (ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt != null) {
-      header = header + "----Total Payment: $" + ERAPaymentDetails.totalActualProviderPaymentAmt;
+      header = header + "----Total Payment: "+ERAPaymentDetails.totalActualProviderPaymentAmt.toString().includes('$')?"":"$" + ERAPaymentDetails.totalActualProviderPaymentAmt;
     }
     await this.setState({
       ERAPaymentDetails,
@@ -634,7 +634,7 @@ class EraPayments extends Component {
                         //     ? this.props.insurancePayments[0].totalCount
                         //     : this.props.insurancePayments.length
                         // }
-                        height="579px"
+                        height="620px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
@@ -756,7 +756,7 @@ class EraPayments extends Component {
                           id="ERAPaymentDetails"
                           skip={0}
                           take={21}
-                          height="579px"
+                          height="545px"
                           width="100%"
                           editColumn={"ersChargeSID"}
                           DATA_ITEM_KEY="ersChargeSID"

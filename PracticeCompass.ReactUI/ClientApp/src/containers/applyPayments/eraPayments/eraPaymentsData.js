@@ -102,7 +102,7 @@ export const detailsColumns = [
     {
       field: "comment",
       title: "Comment",
-      minWidth: 100,
+      minWidth: 150,
       orderIndex: 8,
       editable:false
     },

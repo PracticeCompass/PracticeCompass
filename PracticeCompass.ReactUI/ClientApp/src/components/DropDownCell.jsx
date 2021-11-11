@@ -13,12 +13,13 @@ export class DropDownCell extends React.Component {
   localizedData = [{value:"Accepted",text:"Accepted"},{value:"Denied",text:"Denied"},{value:"Zero Or Low Pay",text:"Zero Or Low Pay"}];
   handleChange = e => {
     if (this.props.onChange) {
+
       this.props.onChange({
         dataIndex: 0,
         dataItem: this.props.dataItem,
         field: this.props.field,
         syntheticEvent: e.syntheticEvent,
-        value: e.value.value
+        value: e.value?.value
       });
     }
   };
@@ -33,7 +34,7 @@ export class DropDownCell extends React.Component {
             {dataItem.inEdit || this.props.editor == "edit" ? 
             
       <ComboBox style={{
-        width: "180px",height:"22px"
+        width: "180px",height:"18px"
       }} onChange={this.handleChange} value={this.localizedData.find(c => c.value === dataValue)} data={this.localizedData} textField="text" /> : dataValue?.toString()}
           </td>;
   }

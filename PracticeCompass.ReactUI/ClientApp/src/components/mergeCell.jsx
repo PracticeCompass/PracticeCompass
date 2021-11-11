@@ -37,7 +37,7 @@ export class MergeCell extends React.Component {
     text= text.trimEnd().replace(/,\s*$/, "").replace(/\/$/, "");
     return (
       <td>
-            <label>{text}</label>
+         {text}
       </td>
     )
   }

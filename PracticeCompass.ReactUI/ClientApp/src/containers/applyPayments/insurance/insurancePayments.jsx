@@ -1158,7 +1158,7 @@ class insurancePayments extends Component {
                   </ButtonComponent>
                 </div>
               </div>
-              <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?105:285) }}>
+              <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?80:260) }}>
                 <div className="accordion" id="accordionExample">
                   <div
                     className="card bg-light mb-3"
@@ -1192,7 +1192,7 @@ class insurancePayments extends Component {
                             ? this.props.insurancePayments[0].totalCount
                             : this.props.insurancePayments.length
                         }
-                        height="579px"
+                        height="500px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
@@ -1559,7 +1559,7 @@ class insurancePayments extends Component {
                                 ? this.props.paymentAssignments[0].totalCount
                                 : this.props.paymentAssignments.length
                             }
-                            height="579px"
+                            height="500px"
                             width="100%"
                             //hasCheckBox={true}
                             sortColumns={[]}
@@ -1994,7 +1994,7 @@ class insurancePayments extends Component {
                                     ? this.props.paymentAssignments[0].totalCount
                                     : this.props.paymentAssignments.length
                                 }
-                                height="579px"
+                                height="500px"
                                 width="100%"
                                 //hasCheckBox={true}
                                 sortColumns={[]}
