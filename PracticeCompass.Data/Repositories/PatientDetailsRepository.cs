@@ -113,6 +113,34 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspLedgerGet", new { @PatientID = PersonID }, commandType: CommandType.StoredProcedure);
             return data.Read<LedgerData>().ToList();
         }
+        public bool PatientDetailsUpdate(PatientDetails patientDetails)
+        {
+            var data = this.db.QueryMultiple("uspPatientDetailsUpdate", new {
+                @PatientID= patientDetails.PatientID,
+                @DNLastName= patientDetails.DNLastName,
+                @DNFirstName= patientDetails.DNFirstName,
+                @DNMiddleName= patientDetails.DNMiddleName,
+                @DNNameSuffix= patientDetails.DNNameSuffix,
+                @StateCode= patientDetails.StateCode,
+                @City = patientDetails.City,
+                @GenderCode = patientDetails.GenderCode,
+                @PracticeCode= patientDetails.PracticeCode,
+                @Address1= patientDetails.Address1,
+                @Address2= patientDetails.Address2,
+                @DNDOB= patientDetails.DNDOB,
+                @MaritalStatusCode= patientDetails.MaritalStatusCode,
+                @Zip= patientDetails.Zip,
+                @DNSSN= patientDetails.DNSSN,
+                @HomePhone= patientDetails.HomePhone,
+                @WorkPhone= patientDetails.WorkPhone,
+                @WorkPhoneExt= patientDetails.WorkPhoneExt,
+                @MobilePhone= patientDetails.MobilePhone,
+                @userID = 0
+
+
+            }, commandType: CommandType.StoredProcedure);
+            return true;
+        }
         public void Remove(LookupCodes entity)
         {
             throw new NotImplementedException();

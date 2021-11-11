@@ -21,6 +21,7 @@ namespace PracticeCompass.Core.Repositories
         List<InsuranceGrid> InsuranceGridGet(int PersonID);
         List<PatientDetails> PatientDetailsGet(int PersonID,int PracticeID);
         List<LedgerData> LedgerDataGet(int PersonID);
+        bool PatientDetailsUpdate(PatientDetails patientDetails);
 
     }
 }

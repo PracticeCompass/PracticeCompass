@@ -203,5 +203,19 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
 
+        public bool PatientDetailsUpdate(PatientDetails patientDetails)
+        {
+            try
+            {
+                bool Result = unitOfWork.PatientDetailsRepository.PatientDetailsUpdate(patientDetails);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+
     }
 }
