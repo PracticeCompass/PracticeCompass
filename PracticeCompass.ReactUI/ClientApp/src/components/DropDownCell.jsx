@@ -30,8 +30,10 @@ export class DropDownCell extends React.Component {
     const field = this.props.field || '';
     const dataValue = dataItem[field] === null ? '' : dataItem[field];
     return <td>
-            {dataItem.inEdit ? <ComboBox style={{
-        width: "150px"
+            {dataItem.inEdit || this.props.editor == "edit" ? 
+            
+      <ComboBox style={{
+        width: "180px"
       }} onChange={this.handleChange} value={this.localizedData.find(c => c.value === dataValue)} data={this.localizedData} textField="text" /> : dataValue?.toString()}
           </td>;
   }

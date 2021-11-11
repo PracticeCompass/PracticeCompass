@@ -18,7 +18,8 @@ import ButtonComponent from "./Button"
 import $ from "jquery";
 import DropDownCell from "./DropDownCell";
 import CheckBoxCell from "./CheckBoxCell";
-import CurrencyGridCell from "./CurrencyCell"
+import CurrencyGridCell from "./CurrencyCell";
+import MergeCell from "./mergeCell";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
 const COLUMN_MIN = 4;
@@ -310,6 +311,7 @@ class EditableGrid extends React.Component {
                                     key={index}
                                     width={this.setWidth(column.minWidth)}
                                     cell={
+                                        column.cell=="merge"? MergeCell:
                                         column.cell=="currency"?CurrencyGridCell:
                                         column.cell =="checkBox"? CheckBoxCell:
                                         column.cell == "dropDown" ?DropDownCell:

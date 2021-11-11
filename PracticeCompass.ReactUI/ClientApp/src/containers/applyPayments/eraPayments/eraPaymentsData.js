@@ -62,21 +62,24 @@ export const detailsColumns = [
       editable:false
     },
     {
-      field: "cpt",
+      field: JSON.stringify([{text:"productServiceID",s:"/"},{text:"procedureModifier01",s:","},{text:"procedureModifier02",s:","}]),
       title: "CPT/ICD10",
       minWidth: 100,
       orderIndex: 3,
+      cell:"merge",
       editable:false
     },
     {
-      field: "ersClaimAdjustmentreason",
+      cell:"merge",
+      field: JSON.stringify([{text:"lineItemChargeAmt",s:"/"},{text:"lineItemProviderPaymentAmt",s:","}]),
       title: "Asking / Amount",
       minWidth: 100,
       orderIndex: 4,
       editable:false
     },
     {
-      field: "adjustment1",
+      cell:"merge",
+      field: JSON.stringify([{text:"chargeClaimAdjustmentAmt",s:"/"},{text:"chargeClaimAdjustmentReason",s:","}]),
       title: "Adjustment1",
       minWidth: 100,
       orderIndex: 5,
@@ -97,12 +100,19 @@ export const detailsColumns = [
       editable:false
     },
     {
+      field: "comment",
+      title: "Comment",
+      minWidth: 100,
+      orderIndex: 8,
+      editable:false
+    },
+    {
       field: "suggestion",
       title: "Suggestion",
-      minWidth: 150,
-      orderIndex: 8,
+      minWidth: 200,
+      orderIndex: 9,
       //isCustomCell:true,  
-      // editor:"dropDown",
+      editor:"edit",
       cell:"dropDown",
       //dropDownList:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
     },
