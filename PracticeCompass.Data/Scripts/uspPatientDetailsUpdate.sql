@@ -9,7 +9,7 @@ GO
 -- =============================================
 
 -- Description:	Update Patient Details
--- exec [uspPatientDetailsUpdate] @PaymentSID =637 
+-- exec [uspPatientDetailsUpdate] 
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspPatientDetailsUpdate] 
 	-- Add the parameters for the stored procedure here

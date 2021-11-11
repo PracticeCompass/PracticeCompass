@@ -10,6 +10,7 @@ namespace PracticeCompass.Core.Repositories
         List<ClaimNote> ClaimNotesGet(int ClaimSID);
         List<ChargeDTO> ChargeGridGet(int ClaimSID);
         List<SubmissionHistory> ClaimSubmissionHistoryGet(int ClaimSID);
+        bool ClaimDetailsUpdate(ClaimDetails claimDetails,string ClaimSID);
 
     }
 }

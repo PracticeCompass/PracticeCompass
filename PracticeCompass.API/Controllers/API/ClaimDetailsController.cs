@@ -70,6 +70,17 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<SubmissionHistory>();
             }
         }
-
+        public bool ClaimDetailsUpdate(ClaimDetails claimDetails, string ClaimSID)
+        {
+            try
+            {
+                return unitOfWork.ClaimDetailsRepository.ClaimDetailsUpdate(claimDetails, ClaimSID);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
     }
 }

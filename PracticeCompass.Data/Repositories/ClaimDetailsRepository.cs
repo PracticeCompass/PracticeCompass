@@ -107,5 +107,27 @@ namespace PracticeCompass.Data.Repositories
               commandType: CommandType.StoredProcedure);
             return data.Read<SubmissionHistory>().ToList();
         }
+
+        public bool ClaimDetailsUpdate(ClaimDetails claimDetails,string ClaimSID)
+        {
+            var data = this.db.QueryMultiple("ClaimDetailsUpdate", new
+            {
+                @ClaimSID= ClaimSID,
+                @ClaimNumber = claimDetails.ClaimNumber,
+                @PracticeID = claimDetails.PracticeID,
+                @OriginalCRN = claimDetails.OriginalCRN,
+                @AccidentRelated = claimDetails.AccidentRelated,
+                @PrimaryStatus = claimDetails.PrimaryStatus,
+                @PrimaryBilledDate = claimDetails.PrimaryBilledDate,
+                @SeconadryStatus = claimDetails.SeconadryStatus,
+                @SeconadryBilledDate = claimDetails.SeconadryBilledDate,
+                @TertiaryStatus = claimDetails.TertiaryStatus,
+                @TertiaryBilledDate = claimDetails.TertiaryBilledDate,
+                @userID = 0
+
+
+            }, commandType: CommandType.StoredProcedure);
+            return true;
+        }
     }
 }
