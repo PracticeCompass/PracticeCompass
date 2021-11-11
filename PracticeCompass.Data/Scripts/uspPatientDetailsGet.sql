@@ -29,7 +29,7 @@ Practice.PracticeCode , Practice.SortName as PracticeName
 ,CONVERT(varchar,Person.DOB,101) as DNDOB, 
 	Address.Line1 as Address1 , Address.Line2 as Address2 ,
 	Address.City , CountryState.StateCode , CountryState.State , Address.Zip,
-	Patient.DNSSN,Person.Sex as GenderCode , LookupCode.Description as GenderName ,
+	person.SSN as DNSSN ,Person.Sex as GenderCode , LookupCode.Description as GenderName ,
 	Person.MaritalStatus as MaritalStatusCode , MaritalStatus.Description as MaritalStatusName,
 	HomePhone.Number as HomePhone , WorkPhone.Number as WorkPhone , WorkPhone.Extension as WorkPhoneExt,
 	MobilePhone.Number as MobilePhone,

@@ -9,7 +9,7 @@ GO
 -- =============================================
 
 -- Description:	Get Payment Assignment Grid Data
--- exec [uspPaymentAssignmentGet] @PaymentSID =431073 
+-- exec [uspPaymentAssignmentGet] @PaymentSID =637 
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspPaymentAssignmentGet] 
 	-- Add the parameters for the stored procedure here
@@ -17,10 +17,12 @@ Create or Alter   PROCEDURE [dbo].[uspPaymentAssignmentGet]
 AS
 BEGIN
 
-Select PaymentSID,ChargeSID,ActivityCount,PaymentAssignment.AccountSID ,Account.AccountNumber,Entity.SortName  , CONVERT(varchar,PostDate,101) as PostDate,
-+ '$' +  Convert(varchar(50),cast(Amount as money),1) AS Amount,PatientBilled,PatientStatement
+Select PaymentSID,PaymentAssignment.ChargeSID,ActivityCount,PaymentAssignment.AccountSID ,Account.AccountNumber,Entity.SortName  , CONVERT(varchar,PaymentAssignment.PostDate,101) as PostDate,
++ '$' +  Convert(varchar(50),cast(PaymentAssignment.Amount as money),1) AS Amount,PaymentAssignment.PatientBilled,PaymentAssignment.PatientStatement,
+'$' +  Convert(varchar(50),isnull((Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts),0)) as ChargeBalance
 from PaymentAssignment inner join Account on PaymentAssignment.AccountSID = Account.AccountSID
 inner join Entity on Account.GuarantorID = Entity.EntitySID
+left outer join Charge on PaymentAssignment.ChargeSID = Charge.ChargeSID
 where PaymentSID=@PaymentSID order by PaymentAssignment.ActivityCount
 
 END

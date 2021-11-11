@@ -20,5 +20,6 @@ namespace PracticeCompass.Core.Models
         public string Amount { get; set; }
         public string PatientBilled { get; set; }
         public string PatientStatement { get; set; }
+        public string ChargeBalance { get; set; }
     }
 }

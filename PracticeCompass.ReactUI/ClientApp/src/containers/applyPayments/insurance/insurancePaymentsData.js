@@ -144,7 +144,7 @@ export const insuranceAssignmentColumns = [
     orderIndex: 5,
   },
   {
-    field: "remaining",
+      field: "chargeBalance",
     title: "Remaining",
     type: "currency",
     minWidth: 100,
