@@ -56,3 +56,4 @@ uspERAPaymentDetailsGet.sql
 uspPatientDetailsUpdate.sql
 uspClaimDetailsUpdate.sql
 uspChargeDetailsUpdate.sql
+FuncERAMatchingGet.sql
