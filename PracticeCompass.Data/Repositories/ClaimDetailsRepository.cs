@@ -110,7 +110,7 @@ namespace PracticeCompass.Data.Repositories
 
         public bool ClaimDetailsUpdate(ClaimDetails claimDetails,string ClaimSID)
         {
-            var data = this.db.QueryMultiple("ClaimDetailsUpdate", new
+            var data = this.db.QueryMultiple("uspClaimDetailsUpdate", new
             {
                 @ClaimSID= ClaimSID,
                 @ClaimNumber = claimDetails.ClaimNumber,

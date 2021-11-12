@@ -83,6 +83,42 @@ namespace PracticeCompass.Data.Repositories
                 commandType: CommandType.StoredProcedure);
             return data.Read<CPTCode>().ToList();
         }
+        public  bool ChargeDetailsUpdate(ChargeDetails chargeDetails)
+        {
+            var data = this.db.QueryMultiple("uspChargeDetailsUpdate", new
+            {
+                @ChargeSID = chargeDetails.ChargeSID,
+                @ProcedureCode = chargeDetails.ProcedureCode,
+                @Units = chargeDetails.Units,
+                @Amount = chargeDetails.Amount,
+                @FromServiceDate = chargeDetails.FromServiceDate,
+                @ToServiceDate = chargeDetails.ToServiceDate,
+                @RecordStatus = chargeDetails.RecordStatus,
+                @Modifier1 = chargeDetails.Modifier1,
+                @Modifier2 = chargeDetails.Modifier2,
+                @Modifier3 = chargeDetails.Modifier3,
+                @Modifier4 = chargeDetails.Modifier4,
+                @CurrentStatus = chargeDetails.CurrentStatus,
+                @Diag1 = chargeDetails.Diag1,
+                @Diag2 = chargeDetails.Diag2,
+                @Diag3 = chargeDetails.Diag3,
+                @Diag4 = chargeDetails.Diag4,
+                @Diag5 = chargeDetails.Diag5,
+                @Diag6 = chargeDetails.Diag6,
+                @Diag7 = chargeDetails.Diag7,
+                @Diag8 = chargeDetails.Diag8,
+                @AuthorizationNumber = chargeDetails.AuthorizationNumber,
+                @RenderingID = chargeDetails.RenderingID,
+                @SupervisingID = chargeDetails.SupervisingID,
+                @ApprovedAmount = chargeDetails.ApprovedAmount,
+                @PatientPaid = chargeDetails.PatientPaid,
+                @InsurancePaid = chargeDetails.InsurancePaid,
+                @userID = 0
+
+
+            }, commandType: CommandType.StoredProcedure);
+            return true;
+        }
 
         public void Remove(ChargeDetails entity)
         {

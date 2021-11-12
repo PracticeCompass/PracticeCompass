@@ -55,3 +55,4 @@ uspERAPaymentHeaderGet.sql
 uspERAPaymentDetailsGet.sql
 uspPatientDetailsUpdate.sql
 uspClaimDetailsUpdate.sql
+uspChargeDetailsUpdate.sql

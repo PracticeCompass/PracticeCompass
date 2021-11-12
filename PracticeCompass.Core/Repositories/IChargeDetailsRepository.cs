@@ -11,5 +11,6 @@ namespace PracticeCompass.Core.Repositories
         public List<ICD10> ICD10PopupGet(string filter,int skip);
         public List<Modifier> ModifierGet();
         public List<CPTCode> CptCodesGet(string cptCode);
+        public bool ChargeDetailsUpdate(ChargeDetails chargeDetails);
     }
 }

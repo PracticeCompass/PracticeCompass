@@ -112,5 +112,18 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<CPTCode>();
             }
         }
+
+        public bool ChargeDetailsUpdate(ChargeDetails chargeDetails)
+        {
+            try
+            {
+                return unitOfWork.ChargeDetailsRepository.ChargeDetailsUpdate(chargeDetails);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
     }
 }
