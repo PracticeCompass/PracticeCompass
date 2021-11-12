@@ -80,22 +80,24 @@ export const detailsColumns = [
     {
       cell:"merge",
       field: JSON.stringify([{text:"chargeClaimAdjustmentAmt",s:"/"},{text:"chargeClaimAdjustmentReason",s:","}]),
-      title: "Adjustment1",
+      title: "Charge Adjustment",
       minWidth: 100,
       orderIndex: 5,
       editable:false
     },
     {
-      field: "adjustment2",
-      title: "Adjustment2",
-      minWidth: 100,
+        cell: "merge",
+        field: JSON.stringify([{ text: "claimAdjustmentAmt", s: "/" }, { text: "eRSClaimAdjustmentreason", s: "," }]),
+        title: "Claim Adjustment",
+        minWidth: 100,
       orderIndex: 6,
       editable:false
     },
     {
-      field: "adjustment3",
-      title: "Adjustment3",
-      minWidth: 100,
+        cell: "merge",
+        field: JSON.stringify([{ text: "providerAdjustmentAmt", s: "/" }, { text: "pmtProvLevelAdjReason", s: "," }]),
+        title: "Provider Adjustment",
+        minWidth: 100,
       orderIndex: 7,
       editable:false
     },
