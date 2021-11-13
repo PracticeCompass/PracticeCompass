@@ -781,8 +781,18 @@ class insurancePayments extends Component {
     if (
       this.state.InsurancePaymentDetails == null ||
       this.state.applyPlanPayments == null
-    )
+    ){
+      this.setState({
+        warning: true,
+        message: "Please select plan payment.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
       return;
+    }
 
     const field = event.field || "";
     const inEditID = event.dataItem["chargeSID"];

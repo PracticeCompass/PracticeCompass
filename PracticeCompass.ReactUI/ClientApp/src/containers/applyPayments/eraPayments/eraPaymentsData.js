@@ -32,92 +32,92 @@ export const PracticeColumns = [
 ];
 
 export const detailsColumns = [
-    {
-      field: "id",
-      title: "ID",
-      minWidth: 250,
-      orderIndex: 0,
-      hide:true,
-      editable:false
-    },
-    {
-      field: "ersClaimSID",
-      title: "Claim",
-      minWidth: 120,
-      orderIndex: 0,
-      editable:false
-    },
-    {
-      field: "nameFirst",
-      title: "Patient",
-      minWidth: 150,
-      orderIndex: 1,
-      editable:false
-    },
-    {
-      field: "serviceDate",
-      title: "DOS",
-      minWidth: 100,
-      orderIndex: 2,
-      editable:false
-    },
-    {
-      field: JSON.stringify([{text:"productServiceID",s:"/"},{text:"procedureModifier01",s:","},{text:"procedureModifier02",s:","}]),
-      title: "CPT/ICD10",
-      minWidth: 100,
-      orderIndex: 3,
-      cell:"merge",
-      editable:false
-    },
-    {
-      cell:"merge",
-      field: JSON.stringify([{text:"lineItemChargeAmt",s:"/"},{text:"lineItemProviderPaymentAmt",s:","}]),
-      title: "Asking / Amount",
-      minWidth: 100,
-      orderIndex: 4,
-      editable:false
-    },
-    {
-      cell:"merge",
-      field: JSON.stringify([{text:"chargeClaimAdjustmentAmt",s:"/"},{text:"chargeClaimAdjustmentReason",s:","}]),
-      title: "Charge Adjustment",
-      minWidth: 100,
-      orderIndex: 5,
-      editable:false
-    },
-    {
-        cell: "merge",
-        field: JSON.stringify([{ text: "claimAdjustmentAmt", s: "/" }, { text: "eRSClaimAdjustmentreason", s: "," }]),
-        title: "Claim Adjustment",
-        minWidth: 100,
-      orderIndex: 6,
-      editable:false
-    },
-    {
-        cell: "merge",
-        field: JSON.stringify([{ text: "providerAdjustmentAmt", s: "/" }, { text: "pmtProvLevelAdjReason", s: "," }]),
-        title: "Provider Adjustment",
-        minWidth: 100,
-      orderIndex: 7,
-      editable:false
-    },
-    {
-      field: "comment",
-      title: "Comment",
-      minWidth: 150,
-      orderIndex: 8,
-      editable:false
-    },
-    {
-      field: "suggestion",
-      title: "Suggestion",
-      minWidth: 200,
-      orderIndex: 9,
-      //isCustomCell:true,  
-      editor:"edit",
-      cell:"dropDown",
-      //dropDownList:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
-    },
+  {
+    field: "id",
+    title: "ID",
+    minWidth: 250,
+    orderIndex: 0,
+    hide: true,
+    editable: false
+  },
+  {
+    field: "ersClaimSID",
+    title: "Claim",
+    minWidth: 120,
+    orderIndex: 0,
+    editable: false
+  },
+  {
+    field: "nameFirst",
+    title: "Patient",
+    minWidth: 150,
+    orderIndex: 1,
+    editable: false
+  },
+  {
+    field: "serviceDate",
+    title: "DOS",
+    minWidth: 100,
+    orderIndex: 2,
+    editable: false
+  },
+  {
+    field: JSON.stringify([{ text: "productServiceID", s: "/" }, { text: "procedureModifier01", s: "," }, { text: "procedureModifier02", s: "," }]),
+    title: "CPT/ICD10",
+    minWidth: 100,
+    orderIndex: 3,
+    cell: "merge",
+    editable: false
+  },
+  {
+    cell: "merge",
+    field: JSON.stringify([{ text: "lineItemChargeAmt", s: "/" }, { text: "lineItemProviderPaymentAmt", s: "," }]),
+    title: "Asking / Amount",
+    minWidth: 100,
+    orderIndex: 4,
+    editable: false
+  },
+  {
+    cell: "merge",
+    field: JSON.stringify([{ text: "chargeClaimAdjustmentAmt", s: "/" }, { text: "chargeClaimAdjustmentReason", s: "," }]),
+    title: "Charge Adjustment",
+    minWidth: 100,
+    orderIndex: 5,
+    editable: false
+  },
+  {
+    cell: "merge",
+    field: JSON.stringify([{ text: "claimAdjustmentAmt", s: "/" }, { text: "eRSClaimAdjustmentreason", s: "," }]),
+    title: "Claim Adjustment",
+    minWidth: 100,
+    orderIndex: 6,
+    editable: false
+  },
+  {
+    cell: "merge",
+    field: JSON.stringify([{ text: "providerAdjustmentAmt", s: "/" }, { text: "pmtProvLevelAdjReason", s: "," }]),
+    title: "Provider Adjustment",
+    minWidth: 100,
+    orderIndex: 7,
+    editable: false
+  },
+  {
+    field: "comment",
+    title: "Comment",
+    minWidth: 150,
+    orderIndex: 8,
+    editable: false
+  },
+  {
+    field: "suggestion",
+    title: "Suggestion",
+    minWidth: 200,
+    orderIndex: 9,
+    //isCustomCell:true,  
+    editor: "edit",
+    cell: "dropDown",
+    //dropDownList:[{id:"accepted",text:"accepted"},{id:"denied",text:"Denied"},{id:"zeroOrLowPay",text:"Zero Or Low Pay"}]
+  },
 ]
 export const masterColumns = [
 
@@ -126,14 +126,14 @@ export const masterColumns = [
     title: "Practice Name",
     minWidth: 300,
     orderIndex: 0,
-    showToolTip:true
+    showToolTip: true
   },
   {
     field: "totalActualProviderPaymentAmt",
     title: "Total Payment",
     minWidth: 90,
     orderIndex: 1,
-    type:"currency"
+    type: "currency"
   },
   {
     field: "checkTraceNbr",
@@ -152,7 +152,7 @@ export const masterColumns = [
     title: "Payer Name",
     minWidth: 170,
     orderIndex: 4,
-    showToolTip:true
+    showToolTip: true
   },
   {
     field: "senderBankAcctNbr",
@@ -171,23 +171,23 @@ export const masterColumns = [
     title: "Payment Found",
     minWidth: 110,
     orderIndex: 7,
-    isCustomCell:true,
-    type:"checkBox"
+    isCustomCell: true,
+    type: "checkBox"
   },
   {
     field: "manualMatch",
     title: "Manual Match",
     minWidth: 150,
     orderIndex: 8,
-    isCustomCell:true,
-    type:"button"
+    isCustomCell: true,
+    type: "button"
   },
   {
     field: "transHandlingCode",
     title: "Trans Handling",
     minWidth: 200,
     orderIndex: 9,
-    showToolTip:true
+    showToolTip: true
   },
   {
     field: "paymentMethodCode",
@@ -200,7 +200,7 @@ export const masterColumns = [
     title: "Payment Format",
     minWidth: 120,
     orderIndex: 11,
-    showToolTip:true
+    showToolTip: true
   },
 
   {
@@ -214,7 +214,7 @@ export const masterColumns = [
     title: "eRSPaymentSID",
     minWidth: 250,
     orderIndex: 13,
-    hide:true
+    hide: true
   },
 ];
 export const AmountFilter = [
@@ -235,16 +235,16 @@ export const AmountFilter = [
     text: "Less than",
   },
 ];
-export const Days=[
-  { id: "0", text: "0"},
-  { id: "1", text: "1"},
-  { id: "2", text: "2"},
-  { id: "3", text: "3"},
-  { id: "4", text: "4"},
-  { id: "5", text: "5"},
-  { id: "6", text: "6"},
-  { id: "7", text: "7"},
-  { id: "8", text: "8"},
-  { id: "9", text: "9"},
-  { id: "10", text: "10"},
+export const Days = [
+  { id: "0", text: "0" },
+  { id: "1", text: "1" },
+  { id: "2", text: "2" },
+  { id: "3", text: "3" },
+  { id: "4", text: "4" },
+  { id: "5", text: "5" },
+  { id: "6", text: "6" },
+  { id: "7", text: "7" },
+  { id: "8", text: "8" },
+  { id: "9", text: "9" },
+  { id: "10", text: "10" },
 ]

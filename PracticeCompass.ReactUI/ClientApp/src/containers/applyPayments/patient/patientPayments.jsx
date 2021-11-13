@@ -735,7 +735,18 @@ class PatientPayments extends Component {
     this.setApplyPatientPaymentExpanded();
   };
   applyItemChanged = (event) => {
-    if (this.state.patientPaymentDetails == null) return;
+    if (this.state.patientPaymentDetails == null) {
+      this.setState({
+        warning: true,
+        message: "Please select patient payment.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
 
     const field = event.field || "";
     const inEditID = event.dataItem["chargeSID"];

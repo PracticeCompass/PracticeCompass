@@ -23,6 +23,7 @@ import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
+import EraPaymentsDialogComponent from "./eraPaymentsDialog"
 import { GetGridColumns, SaveGridColumns } from "../../../redux/actions/GridColumns"
 import {
   resetPatientList,
@@ -48,7 +49,7 @@ function mapStateToProps(state) {
     dropDownPractices: state.lookups.practices,
     practiceList: state.patients.paractices,
     eRApayments: state.payments.eRApayments,
-    UiExpand:state.ui.UiExpand
+    UiExpand: state.ui.UiExpand
   };
 }
 
@@ -88,8 +89,8 @@ class EraPayments extends Component {
     senderAccount: null,
     checkIssue: null,
     transactionHeader: "Payment Transactions ",
-    masterColumns:masterColumns,
-    detailsColumns:detailsColumns
+    masterColumns: masterColumns,
+    detailsColumns: detailsColumns
   };
   componentDidMount = () => {
     this.getGridColumns();
@@ -100,10 +101,10 @@ class EraPayments extends Component {
     let ERAPaymentDetails = await this.props.GetGridColumns('ERAPaymentDetails');
 
     if (currentColumns != null && currentColumns != "") {
-      currentColumns = JSON.parse(currentColumns?.columns)?? masterColumns;
+      currentColumns = JSON.parse(currentColumns?.columns) ?? masterColumns;
       this.setState({ masterColumns: currentColumns });
     }
-    if(ERAPaymentDetails !=null && ERAPaymentDetails !=""){
+    if (ERAPaymentDetails != null && ERAPaymentDetails != "") {
       ERAPaymentDetails = JSON.parse(ERAPaymentDetails?.columns) ?? detailsColumns;
       this.setState({ detailsColumns: ERAPaymentDetails });
     }
@@ -256,7 +257,7 @@ class EraPayments extends Component {
       header = header + "----Practice: " + ERAPaymentDetails.detailsPracticeID.entityName + "     ";
     }
     if (ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt != null) {
-      header = header + "----Total Payment: "+ERAPaymentDetails.totalActualProviderPaymentAmt.toString().includes('$')?"":"$" + ERAPaymentDetails.totalActualProviderPaymentAmt;
+      header = header + "----Total Payment: " + (ERAPaymentDetails.totalActualProviderPaymentAmt.toString().includes('$') ? "" : "$" + ERAPaymentDetails.totalActualProviderPaymentAmt);
     }
     await this.setState({
       ERAPaymentDetails,
@@ -269,14 +270,17 @@ class EraPayments extends Component {
     });
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
   }
-  onERADetailsPaymentGridSelectionChange = () => {
+  onERADetailsPaymentGridSelectionChange = (event) => {
 
   }
-  onERADetailsPaymentGridDoubleSelectionChange = () => {
-
+  onERADetailsPaymentGridDoubleSelectionChange = (event) => {
+     this.setState({
+      ShowEditERARow:true,
+      ERAItemDetails:event.dataItem
+     });
   }
   toggleShowColumnsDialog = () => {
-    this.setState({ Show_HideERADialogVisible: false,Show_HideDetailsERADialogVisible:false});
+    this.setState({ Show_HideERADialogVisible: false, Show_HideDetailsERADialogVisible: false });
   };
   SaveColumnsShow = async (columns) => {
     if (!columns.find((x) => x.hide != true)) {
@@ -322,6 +326,16 @@ class EraPayments extends Component {
       });
     }
   };
+  toggleERAPaymentDialog=()=>{
+    this.setState({
+      ShowEditERARow: false
+    })
+  }
+  savePaymentTransaction=(item)=>{
+        this.setState({
+          ShowEditERARow: false
+        })
+      }
   render() {
     return (
       <Fragment>
@@ -340,6 +354,13 @@ class EraPayments extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {this.state.ShowEditERARow && (
+            <EraPaymentsDialogComponent
+              ERAItemDetails={this.state.ERAItemDetails}
+              toggleERAPaymentDialog={this.toggleERAPaymentDialog}
+              savePaymentTransaction={this.savePaymentTransaction}
+            ></EraPaymentsDialogComponent>
+          )}
           {this.state.Show_HideERADialogVisible && (
             <Show_HideDialogComponent
               columns={this.state.masterColumns}
@@ -466,7 +487,7 @@ class EraPayments extends Component {
                     display: "flex",
                     flexFlow: "row",
                     width: "100%",
-                    marginBottom:"5px"
+                    marginBottom: "5px"
                   }}
                 >
                   <div style={{ marginLeft: "11px" }}>
@@ -615,7 +636,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
+                      style={{ width: window.innerWidth - (!this.props.UiExpand ? 120 : 290) }}
                     >
                       <GridComponent
                         id="ERAPayment"
@@ -749,7 +770,7 @@ class EraPayments extends Component {
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
-                        style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
+                        style={{ width: window.innerWidth - (!this.props.UiExpand ? 120 : 290) }}
                       >
                         <EditableGrid
                           data={this.state.eRADetailsPayments}
