@@ -10,9 +10,7 @@ import GridComponent from "../../components/Grid";
 import { DOBFilter } from "../../containers/processPatients/patients/patient/patientData";
 import { getpatientList } from "../../redux/actions/patient";
 function mapStateToProps(state) {
-  return {
-
-  };
+  return {};
 }
 function mapDispatchToProps(dispatch) {
   return {
@@ -43,41 +41,41 @@ function mapDispatchToProps(dispatch) {
 class PatientFindDialogComponent extends Component {
   state = {
     filterName: this.props.filterName,
-    dobtype:{id: "1",text: "Equal"} ,
+    dobtype: null,
     dob: null,
     patientAccountNumber: null,
     fName: null,
     lName: null,
     patientNumber: null,
-    skip:0
+    skip: 0,
   };
-  patientsearch = async(refreshData=true) => {
-   await this.props.getPatientList(
+  patientsearch = async (refreshData = true) => {
+    await this.props.getPatientList(
       this.state.fName,
       this.state.lName,
       this.state.patientAccountNumber,
       this.state.patientNumber,
       this.state.dobtype ? this.state.dobtype.id : 0,
       this.state.dob ? this.state.dob.toLocaleDateString() : "",
-      refreshData?0:this.props.data.length??0,
+      refreshData ? 0 : this.props.data.length ?? 0,
       refreshData
     );
   };
-  onSortChange=()=>{};
+  onSortChange = () => {};
   onKeyDown = () => {};
-  getNextData=async ()=>{
+  getNextData = async () => {
     await this.patientsearch(false);
-    this.setState({isVisibleNextData:false})
-   }
-   pageChange = async (skip, take) => {
-     if(skip==0)return;
-     if (this.props.data.length < (skip + take)+1) {
-       this.setState({isVisibleNextData:true,skip:this.props.data.length});
-       this.getNextData();
-     }else{
+    this.setState({ isVisibleNextData: false });
+  };
+  pageChange = async (skip, take) => {
+    if (skip == 0) return;
+    if (this.props.data.length < skip + take + 1) {
+      this.setState({ isVisibleNextData: true, skip: this.props.data.length });
+      this.getNextData();
+    } else {
       this.setState({ isVisibleNextData: false });
     }
-   };
+  };
   render() {
     return (
       <Fragment>
@@ -136,7 +134,6 @@ class PatientFindDialogComponent extends Component {
               >
                 Search
               </ButtonComponent>
-
             </div>
           </div>
           <div className="row">
@@ -170,7 +167,7 @@ class PatientFindDialogComponent extends Component {
                 data={DOBFilter}
                 textField="text"
                 dataItemKey="text"
-                defaultValue={{id: "1",text: "Equal"}}
+                defaultValue={{ id: "1", text: "Equal" }}
                 value={this.state.dobtype}
                 onChange={(e) => this.setState({ dobtype: e.value })}
               ></DropDown>
@@ -209,8 +206,16 @@ class PatientFindDialogComponent extends Component {
                   height="550px"
                   width="100%"
                   take={20}
-                  total={this.props.data !=null && this.props.data.length>0?this.props.data[0].count:null}
-                  totalCount={this.props.data !=null && this.props.data.length>0?this.props.data[0].totalCount:this.props.data.length}
+                  total={
+                    this.props.data != null && this.props.data.length > 0
+                      ? this.props.data[0].count
+                      : null
+                  }
+                  totalCount={
+                    this.props.data != null && this.props.data.length > 0
+                      ? this.props.data[0].totalCount
+                      : this.props.data.length
+                  }
                   onSelectionChange={this.props.onSelectionChange}
                   onRowDoubleClick={this.props.onRowDoubleClick}
                   onKeyDown={this.props.onKeyDown}
