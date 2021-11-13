@@ -283,16 +283,18 @@ class PatientDetailSummary extends Component {
       event.endRowIndex + 1
     );
     this.setState({
-      practiceSelectedState: selectedDataItems[0].sortName,
-      practiceIDSelectedState: selectedDataItems[0].patientID,
+      practiceID:{
+        entityId:selectedDataItems[0].patientID,
+        entityName:selectedDataItems[0].sortName
+      }
     });
   };
   onPracticeDoubleClick = async (event) => {
     this.setState({
-      practiceSelectedState: event.dataItem.sortName,
-      practiceIDSelectedState: event.dataItem.practiceID,
-      patientNameSelected: event.dataItem.sortName,
-      practiceID: event.dataItem.practiceID,
+      practiceID:{
+        entityId:event.dataItem.practiceID,
+        entityName:event.dataItem.sortName
+      }
     });
     this.props.SaveLookups(event.dataItem.practiceID, "Practice");
     //this.selectPatient();
@@ -304,12 +306,14 @@ class PatientDetailSummary extends Component {
       event.endRowIndex + 1
     );
     this.setState({
-      practiceSelectedState: selectedDataItems
-        ? selectedDataItems[0].sortName
-        : null,
-      practiceIDSelectedStateIDSelectedState: selectedDataItems
+      practiceID:{
+        entityId:selectedDataItems
         ? selectedDataItems[0].practiceID
         : null,
+        entityName:selectedDataItems
+        ? selectedDataItems[0].sortName
+        : null
+      }
     });
   };
   cancelPracticeDialog = () => {
