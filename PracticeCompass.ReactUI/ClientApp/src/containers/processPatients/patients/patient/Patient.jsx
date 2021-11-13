@@ -65,6 +65,7 @@ function mapStateToProps(state) {
     dropDownPatientTypes: state.lookups.patientTypes,
     dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
+    UiExpand:state.ui.UiExpand
   };
 }
 
@@ -450,9 +451,9 @@ class Patient extends Component {
     this.setState({
       patientType: selectedDataItems[0]
         ? {
-            entityName: selectedDataItems[0].description,
-            entityId: selectedDataItems[0].lookupCode,
-          }
+          entityName: selectedDataItems[0].description,
+          entityId: selectedDataItems[0].lookupCode,
+        }
         : null,
     });
   };
@@ -822,11 +823,10 @@ class Patient extends Component {
             <DeleteDialogComponent
               title="Delete Patient Filter"
               toggleDeleteDialog={this.toggleDeleteDialog}
-              deleteMessage={`Are you sure you wish to delete Patient Filter : ${
-                this.state.currentFilter && this.state.currentFilter.displayName
+              deleteMessage={`Are you sure you wish to delete Patient Filter : ${this.state.currentFilter && this.state.currentFilter.displayName
                   ? this.state.currentFilter.displayName
                   : ""
-              }?`}
+                }?`}
               currentFilterID={this.state.currentFilter.filterID}
               deleteFilter={this.deleteFilter}
             ></DeleteDialogComponent>
@@ -1220,46 +1220,54 @@ class Patient extends Component {
             </div>
           </div>
         </div>
-        <div className="accordion" id="accordionExample">
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-              marginTop: "5px",
-            }}
-          >
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: window.innerWidth - (!this.props.UiExpand ? 120 : 273),
+          }}
+        >
+          <div className="accordion" id="accordionExample">
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              className="card bg-light mb-3"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginTop: "5px",
+              }}
             >
-              {this.state.refreshGrid && (
-                <GridComponent
-                  id="patientGrid"
-                  columns={this.state.patientListColumns}
-                  data={this.props.Patients}
-                  totalCount={
-                    this.props.Patients != null &&
-                    this.props.Patients.length > 0
-                      ? this.props.Patients[0].totalCount
-                      : this.props.Patients.length
-                  }
-                  skip={0}
-                  take={this.state.take}
-                  height="650px"
-                  width="100%"
-                  onSelectionChange={this.onPatientGridSelectionChange}
-                  onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
-                  selectionMode="single"
-                  DATA_ITEM_KEY="patientgridID"
-                  idGetter={idGetterPaientList}
-                  sortColumns={sortColumns}
-                  onSortChange={this.onSortChange}
-                  pageChange={this.pageChange}
-                ></GridComponent>
-              )}
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                {this.state.refreshGrid && (
+                  <GridComponent
+                    id="patientGrid"
+                    columns={this.state.patientListColumns}
+                    data={this.props.Patients}
+                    totalCount={
+                      this.props.Patients != null &&
+                        this.props.Patients.length > 0
+                        ? this.props.Patients[0].totalCount
+                        : this.props.Patients.length
+                    }
+                    skip={0}
+                    take={this.state.take}
+                    height="650px"
+                    width="100%"
+                    onSelectionChange={this.onPatientGridSelectionChange}
+                    onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
+                    selectionMode="single"
+                    DATA_ITEM_KEY="patientgridID"
+                    idGetter={idGetterPaientList}
+                    sortColumns={sortColumns}
+                    onSortChange={this.onSortChange}
+                    pageChange={this.pageChange}
+                  ></GridComponent>
+                )}
+              </div>
             </div>
           </div>
         </div>

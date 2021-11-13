@@ -830,7 +830,12 @@ class insurancePayments extends Component {
         return;
       }
       data[rowIndex]["chargeBalance"] = "$" + chargeBalance;
-      this.state.InsurancePaymentDetails.remaining = remaining;
+      let InsurancePaymentDetailsCopy=this.state.InsurancePaymentDetails;
+      InsurancePaymentDetailsCopy.remaining=remaining;
+      this.setState({
+        InsurancePaymentDetails:InsurancePaymentDetailsCopy
+      })
+      // this.state.InsurancePaymentDetails.remaining = remaining;
     }
     this.setState({
       applyPlanPayments: data,

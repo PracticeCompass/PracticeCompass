@@ -52,6 +52,7 @@ function mapStateToProps(state) {
     dropDownPractices: state.lookups.practices,
     patientTypes: state.patients.patientTypes,
     dropDownPatientTypes: state.lookups.patientTypes,
+    UiExpand:state.ui.UiExpand
   };
 }
 
@@ -1045,12 +1046,17 @@ class PatientDetailSummary extends Component {
             </div>
           </div>
         </div>
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: window.innerWidth - (!this.props.UiExpand ? 120 : 310),
+          }}
+        >
         <div className="accordion" id="accordionExample">
           <div
             className="card bg-light mb-3"
             style={{
-              marginLeft: "10px",
-              marginRight: "10px",
               marginTop: "5px",
               paddingLeft: "14px",
             }}
@@ -1086,6 +1092,7 @@ class PatientDetailSummary extends Component {
               </div>
             </div>
           </div>
+        </div>
         </div>
         <div style={{ width: "100%", padding: "5px" }}>
           <div style={{ display: "flex", flexFlow: "row nowrap" }}>

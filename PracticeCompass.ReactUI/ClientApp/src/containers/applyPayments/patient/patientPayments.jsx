@@ -785,7 +785,12 @@ class PatientPayments extends Component {
         return;
       }
       data[rowIndex]["chargeBalance"] = "$" + chargeBalance;
-      this.state.patientPaymentDetails.remaining = remaining;
+      let patientPaymentDetailsCopy=this.state.patientPaymentDetails;
+      patientPaymentDetailsCopy.remaining=remaining;
+      this.setState({
+        patientPaymentDetails:patientPaymentDetailsCopy
+      })
+      //this.state.patientPaymentDetails.remaining = remaining;
     }
     this.setState({
       applyPatientPayments: data,
