@@ -164,15 +164,14 @@ class PatientDetailSummary extends Component {
         this.props.patientDetails.practiceID
       );
       if (patientDetails == null) return;
-
       if (
-        patientDetails?.practiceCode != null &&
+        patientDetails?.practiceID != null &&
         (this.props.dropDownPractices == null ||
           this.props.dropDownPractices.filter(
-            (x) => x.entityId == patientDetails?.practiceCode
+            (x) => x.entityId == patientDetails?.practiceID
           ).length == 0)
       ) {
-        await this.props.SaveLookups(patientDetails?.practiceCode, "Practice");
+        await this.props.SaveLookups(patientDetails?.practiceID, "Practice");
       }
       if (
         patientDetails?.patienttypecode != null &&
@@ -191,8 +190,8 @@ class PatientDetailSummary extends Component {
           description: patientDetails?.genderName,
         },
         practiceID: {
-          practiceSelectedState: patientDetails?.practiceName,
-          practiceIDSelectedState: patientDetails?.practiceCode,
+          entityName: patientDetails?.practiceName,
+          entityId: patientDetails?.practiceID,
         },
         Statevalue: {
           stateCode: patientDetails?.stateCode,
@@ -540,14 +539,8 @@ class PatientDetailSummary extends Component {
                       data={this.props.dropDownPractices}
                       textField="entityName"
                       dataItemKey="entityId"
-                      defaultValue={{
-                        entityId: this.state.practiceID,
-                        entityName: this.state.practiceSelectedState,
-                      }}
-                      value={{
-                        entityId: this.state.practiceID,
-                        entityName: this.state.practiceSelectedState,
-                      }}
+                      defaultValue={this.state.practiceID}
+                      value={this.state.practiceID}
                       onChange={(e) =>
                         this.setState({
                           practiceSelectedState: e.value?.entityName,

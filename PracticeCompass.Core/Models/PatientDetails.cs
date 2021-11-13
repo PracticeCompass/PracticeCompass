@@ -8,6 +8,7 @@ namespace PracticeCompass.Core.Models
     {
         public int PersonID { get; set; }
         public int PatientID { get; set; }
+        public string PracticeID { get; set; }
         public string  DNLastName { get; set; }
         public string DNFirstName { get; set; }
         public string DNMiddleName { get; set; }

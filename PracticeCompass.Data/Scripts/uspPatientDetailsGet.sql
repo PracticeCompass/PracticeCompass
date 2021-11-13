@@ -23,7 +23,7 @@ BEGIN
 	SET NOCOUNT ON;
 
    Select top 1 Person.PersonID ,patient.PatientID, Person.LastName as DNLastName , Person.FirstName as DNFirstName, 
-Person.MiddleName as DNMiddleName , Person.NameSuffix as DNNameSuffix , 
+Person.MiddleName as DNMiddleName , Person.NameSuffix as DNNameSuffix , Practice.PracticeID,
 Practice.PracticeCode , Practice.SortName as PracticeName 
 --,Provider.SortName as ProviderName , Provider.ProviderID 
 ,CONVERT(varchar,Person.DOB,101) as DNDOB, 
