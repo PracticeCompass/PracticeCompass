@@ -76,6 +76,9 @@ class PatientFindDialogComponent extends Component {
       this.setState({ isVisibleNextData: false });
     }
   };
+  onSelectionChange=()=>{
+
+  }
   render() {
     return (
       <Fragment>
@@ -205,7 +208,7 @@ class PatientFindDialogComponent extends Component {
                   id="findDialog"
                   height="550px"
                   width="100%"
-                  take={20}
+                  take={24}
                   total={
                     this.props.data != null && this.props.data.length > 0
                       ? this.props.data[0].count
@@ -216,7 +219,7 @@ class PatientFindDialogComponent extends Component {
                       ? this.props.data[0].totalCount
                       : this.props.data.length
                   }
-                  onSelectionChange={this.props.onSelectionChange}
+                  onSelectionChange={this.onSelectionChange}
                   onRowDoubleClick={this.props.onRowDoubleClick}
                   onKeyDown={this.props.onKeyDown}
                   columns={this.props.columns}
@@ -236,8 +239,7 @@ class PatientFindDialogComponent extends Component {
             </div>
           </div>
           <DialogActionsBar>
-            <div className="row">
-              <div style={{ width: "85px" }}>
+            <div style={{ textAlign:"right",marginRight: "15px"}}>
                 <ButtonComponent
                   type="button"
                   className="k-button"
@@ -247,7 +249,6 @@ class PatientFindDialogComponent extends Component {
                   Cancel
                 </ButtonComponent>
               </div>
-            </div>
           </DialogActionsBar>
         </Dialog>
       </Fragment>

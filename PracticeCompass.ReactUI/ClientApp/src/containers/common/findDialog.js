@@ -34,6 +34,7 @@ class FindDialogComponent extends Component {
    }
    componentDidUpdate(){
    }
+   onSelectionChange=()=>{};
   onKeyDown = () => {};
   render() {
     return (
@@ -89,8 +90,8 @@ class FindDialogComponent extends Component {
                   id="findDialog"
                   height="550px"
                   width="100%"
-                  take={20}
-                  onSelectionChange={this.props.onSelectionChange}
+                  take={24}
+                  onSelectionChange={this.onSelectionChange}
                   onRowDoubleClick={this.props.onRowDoubleClick}
                   onKeyDown={this.props.onKeyDown}
                   columns={this.props.columns}
@@ -111,8 +112,7 @@ class FindDialogComponent extends Component {
             </div>
           </div>
           <DialogActionsBar>
-            <div className="row">
-              <div style={{ width: "85px" }}>
+              <div style={{ textAlign:"right",marginRight: "15px"}}>
                 <ButtonComponent
                   type="button"
                   className="k-button"
@@ -122,7 +122,6 @@ class FindDialogComponent extends Component {
                   Cancel
                 </ButtonComponent>
               </div>
-            </div>
           </DialogActionsBar>
         </Dialog>
       </Fragment>

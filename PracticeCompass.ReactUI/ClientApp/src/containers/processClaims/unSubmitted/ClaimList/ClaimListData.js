@@ -2,24 +2,28 @@ export const PatientTypesColumns = [
   {
     field: "description",
     title: "Patient Type",
+    minWidth: "817px",
   },
 ];
 export const PracticeColumns = [
   {
     field: "sortName",
     title: "Practice Name",
+    minWidth: "817px",
   },
 ];
 export const PhysicianColumns = [
   {
     field: "sortName",
     title: "Physician Name",
+    minWidth: "817px",
   },
 ];
 export const insuranceColumns = [
   {
     field: "sortName",
     title: "Plan Company",
+    minWidth: "817px",
     //minWidth: "100px",
   },
 ];
@@ -27,6 +31,7 @@ export const guarantorColumns = [
   {
     field: "sortName",
     title: "Guarantor Name",
+    minWidth: "817px",
     //minWidth: "100px",
   },
 ];
