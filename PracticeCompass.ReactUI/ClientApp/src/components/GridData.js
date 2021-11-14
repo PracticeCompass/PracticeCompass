@@ -69,7 +69,7 @@ export const CurrencyCell = (props) => {
       {props.dataItem[props.field] == null ||
       props.dataItem[props.field].toString().includes("$")
         ? props.dataItem[props.field]
-        : props.dataItem[props.field]}
+        :'$' +Number(props.dataItem[props.field]).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}
     </td>
   );
 };

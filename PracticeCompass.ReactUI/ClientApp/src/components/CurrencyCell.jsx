@@ -21,7 +21,9 @@ export class CurrencyGridCell extends React.Component {
       });
     }
   };
-
+ currencyFormat(num) {
+    return '$' + Number(num.toFixed(2)).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+ }
   render() {
     const { dataItem } = this.props;
     const field = this.props.field || "";
@@ -38,7 +40,7 @@ export class CurrencyGridCell extends React.Component {
             onChange={this.handleChange}
           ></TextBox>
         ) : (
-          dataValue?.toString()
+          this.currencyFormat(dataValue)
         )}
       </td>
     );

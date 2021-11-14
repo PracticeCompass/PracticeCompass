@@ -2085,7 +2085,7 @@ class insurancePayments extends Component {
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
                               >
-                                <EditableGrid
+                                <GridComponent
                                   data={this.state.applyPlanPayments}
                                   id="applyedPatient"
                                   skip={0}
@@ -2111,7 +2111,7 @@ class insurancePayments extends Component {
                                   //     ? this.props.patientApplys[0].totalCount
                                   //     : this.props.patientApplys.length
                                   // }
-                                ></EditableGrid>
+                                ></GridComponent>
                               </div>
                             </div>
                           </div>
@@ -2149,7 +2149,7 @@ class insurancePayments extends Component {
                             onClick={() => {
                               this.ApplyListChanged();
                             }}
-                            style={{ marginTop: "0px", marginLeft: "10px" }}
+                            style={{ marginTop: "0px", marginLeft: "12px" }}
                             disabled={
                               this.state.disableApply ||
                               this.state.filterApplyPlanPayments == null ||
