@@ -253,11 +253,12 @@ class EraPayments extends Component {
       }
     }
     let header = "Payment Transactions ";
+    
     if (ERAPaymentDetails && ERAPaymentDetails.detailsPracticeID != null) {
       header = header + "----Practice: " + ERAPaymentDetails.detailsPracticeID.entityName + "     ";
     }
     if (ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt != null) {
-      header = header + "----Total Payment: " + (ERAPaymentDetails.totalActualProviderPaymentAmt.toString().includes('$') ? "" : "$" + ERAPaymentDetails.totalActualProviderPaymentAmt);
+      header = header + "----Total Payment: " + (ERAPaymentDetails.totalActualProviderPaymentAmt.toString().includes('$') ? "" : this.currencyFormat(ERAPaymentDetails.totalActualProviderPaymentAmt));
     }
     await this.setState({
       ERAPaymentDetails,
@@ -270,6 +271,9 @@ class EraPayments extends Component {
     });
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
   }
+  currencyFormat(num) {
+    return '$' + Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+ }
   onERADetailsPaymentGridSelectionChange = (event) => {
 
   }
