@@ -33,7 +33,7 @@ class PatientDetailLedger extends Component {
       );
       if (patientLedger == null) return;
 
-      this.setState({
+      await this.setState({
         patientId: this.props.patientDetails.patientID,
         patientDetailsLedger: patientLedger,
       });

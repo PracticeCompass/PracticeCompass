@@ -14,6 +14,7 @@ import { MyPager, CurrencyCell, CustomCell, cellWithIcon } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 import DropdownFilterCell from "./DropdownFilterCell";
+import { RadioGroup } from "@progress/kendo-react-inputs";
 import $ from "jquery";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
@@ -30,6 +31,11 @@ function mapDispatchToProps(dispatch) {
       dispatch(SaveGridColumns(name, columns)),
   };
 }
+const filters = [
+  { label: "Claims", value: "claims" },
+  { label: "Charges", value: "charges" },
+  { label: "Txn", value: "txn" },
+];
 
 class ColumnNameCell extends React.Component {
   render() {
@@ -65,6 +71,9 @@ class FilterableGridComponent extends React.Component {
     hasCheckBox: false,
     activeRowRender: false,
     dropDownValus: [],
+    selectedValue: null,
+    checked: null,
+    data: this.props.data,
   };
   rowRender = (trElement, props) => {
     if (this.state.activeRowRender) {
@@ -288,6 +297,72 @@ class FilterableGridComponent extends React.Component {
     //   data: [newDataItem, ...this.state.data],
     // });
   };
+  handleChange = async (e) => {
+    this.setState({ checked: e.value });
+    if (e.value === "charges") {
+      await this.setState({
+        filter: {
+          logic: "or",
+          filters: [
+            {
+              field: "activityTypeStr",
+              operator: "contains",
+              value: "Claim",
+            },
+            {
+              field: "activityTypeStr",
+              operator: "contains",
+              value: "Charge Details",
+            },
+          ],
+        },
+      });
+    } else if (e.value === "claims") {
+      await this.setState({
+        filter: {
+          logic: "and",
+          filters: [
+            {
+              field: "activityTypeStr",
+              operator: "contains",
+              value: "Claim",
+            },
+          ],
+        },
+      });
+    } else if (e.value === "txn") {
+      await this.setState({
+        filter: {
+          logic: "or",
+          filters: [
+            {
+              field: "activityTypeStr",
+              operator: "contains",
+              value: "Claim",
+            },
+            {
+              field: "activityTypeStr",
+              operator: "contains",
+              value: "Charge Details",
+            },
+            {
+              field: "activityTypeStr",
+              operator: "contains",
+              value: "Txn",
+            },
+          ],
+        },
+      });
+    } else {
+      await this.setState({
+        filter: {},
+      });
+    }
+    const filteredData = filterBy(this.props.data, this.state.filter);
+    await this.setState({
+      data: filteredData,
+    });
+  };
   render() {
     let Columns = this.props.columns.sort((a, b) =>
       a.orderIndex > b.orderIndex ? 1 : -1
@@ -295,6 +370,14 @@ class FilterableGridComponent extends React.Component {
 
     return (
       <div id={this.props.id} style={{ width: "100%" }}>
+        <div className="row" style={{ margin: "5px" }}>
+          <RadioGroup
+            data={filters}
+            value={this.state.checked}
+            onChange={this.handleChange}
+            layout="horizontal"
+          />
+        </div>
         <Tooltip openDelay={100}>
           <Grid
             rowRender={this.rowRender}
@@ -318,7 +401,7 @@ class FilterableGridComponent extends React.Component {
             }}
             cellClick={(event) => this.cellClick(event)}
             navigatable={true}
-            filterable={true}
+            filterable={false}
             filter={this.state.filter}
             onFilterChange={this.filterChange}
             onHeaderSelectionChange={this.onHeaderSelectionChange}
@@ -326,7 +409,7 @@ class FilterableGridComponent extends React.Component {
             //onColumnReorder={this.onColumnReorder}
             onSelectionChange={(event) => this.onSelectionChange(event)}
             onRowDoubleClick={(event) => this.props.onRowDoubleClick(event)}
-            data={this.props.data ? this.props.data : []}
+            data={this.state.data ? this.state.data : []}
             // total={this.props.data ? this.props.data.length : 0}
             // pageable={false}
             // onPageChange={this.pageChange}
@@ -347,12 +430,7 @@ class FilterableGridComponent extends React.Component {
                     title={column.title}
                     key={index}
                     width={this.setWidth(column.minWidth)}
-                    filterable={column.filterable}
-                    filterCell={
-                      column.filterType === "dropDown"
-                        ? this.CategoryFilterCell
-                        : null
-                    }
+                    filterable={false}
                     cell={
                       column.type == "currency"
                         ? CurrencyCell

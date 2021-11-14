@@ -353,3 +353,6 @@ PracticeCompass.Data/Scripts/__tmp_uspERAPaymentHeaderGet.sql.txt
 /PracticeCompass.Data/Scripts/__tmp_uspPatientDetailsUpdate.sql.txt
 /PracticeCompass.Data/Scripts/__tmp_uspChargeDetailsUpdate.sql.txt
 /PracticeCompass.Data/Scripts/__tmp_uspClaimDetailsUpdate.sql.txt
+/PracticeCompass.Data/Scripts/__tmp_FuncERAMatchingGet.sql.txt
+/PracticeCompass.Data/Scripts/__tmp_FuncGetStampFromDate.sql.txt
+/PracticeCompass.Data/Scripts/__tmp_FuncDateFromStamp.sql.txt

@@ -57,3 +57,5 @@ uspPatientDetailsUpdate.sql
 uspClaimDetailsUpdate.sql
 uspChargeDetailsUpdate.sql
 FuncERAMatchingGet.sql
+FuncGetStampFromDate.sql
+FuncDateFromStamp.sql
