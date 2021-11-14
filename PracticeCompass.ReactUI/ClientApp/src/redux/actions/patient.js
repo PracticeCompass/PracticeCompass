@@ -13,6 +13,8 @@ import {
   SET_INSURANCE_LIST,
   GET_INSURANCE_lIST_FAILED,
   RESET_INSURANCE_LIST_FAILED,
+  SET_COMPANIES,
+  GET_COMPANIES_FAILED
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
@@ -131,6 +133,25 @@ export const getinsuranceList =
       dispatch(uiStopLoading());
     }
   };
+  export const getCompaniesList = (filter) => async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/PatientDetails/companiesGet?sortName=${filter??""}`,
+      });
+      await dispatch(setCompanies(resp.data || []));
+    } catch (error) {
+      await dispatch(setCompanies([]));
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_COMPANIES_FAILED,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 export const getPracticeList = (name) => async (dispatch, getState) => {
   try {
     dispatch(uiStartLoading());
@@ -174,6 +195,20 @@ export const resetPatientTypeList = () => async (dispatch, getState) => {
     console.log("error ==> ", error);
     dispatch({
       type: GET_PATIENT_TYPES_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+export const resetCompanyList = () => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    await dispatch(setCompanies([]));
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: GET_COMPANIES_FAILED,
       payload: error,
     });
   } finally {
@@ -280,6 +315,12 @@ export const setParactices = (paractices) => {
   return {
     type: SET_PRACTICE,
     payload: paractices,
+  };
+};
+export const setCompanies = (companies) => {
+  return {
+    type: SET_COMPANIES,
+    payload: companies,
   };
 };
 export const setPatients = (patients) => {

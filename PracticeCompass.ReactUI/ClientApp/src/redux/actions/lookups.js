@@ -10,9 +10,11 @@ import {
   FILTERS_ICD10,
   GET_MODIFIER_LIST,
   GET_MODIFIER_LIST_FAILED,
+  SET_COMPANIES_LIST
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
+import { setCompanies } from "./patient";
 
 export const SaveLookups =
   (EntityValueID, EntityName) => async (dispatch, getState) => {
@@ -47,6 +49,7 @@ export const GetLookupsByEnityName =
       else if (EntityName == "Physician") dispatch(savePhysicians(resp.data));
       else if (EntityName == "CPT") dispatch(saveCpts(resp.data));
       else if (EntityName == "ICD10") dispatch(saveICD10(resp.data));
+      else if (EntityName == "Company") dispatch(setCompanies(resp.data));
     } catch (error) {
     } finally {
       dispatch(uiStopLoading());
@@ -118,6 +121,14 @@ export const GetLookups = () => async (dispatch, getState) => {
       url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=ICD10`,
     });
     dispatch(saveICD10(respICD10.data));
+
+    const companies = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=Company`,
+    });
+    debugger;
+    dispatch(setCompanies(companies.data));
+
     dispatch(uiStopLoading());
   } catch (error) {
   } finally {
@@ -179,6 +190,12 @@ export const saveICD10 = (icd10s) => {
 export const setModifierList = (data) => {
   return {
     type: GET_MODIFIER_LIST,
+    payload: data,
+  };
+};
+export const setCompaniesList = (data) => {
+  return {
+    type: SET_COMPANIES_LIST,
     payload: data,
   };
 };

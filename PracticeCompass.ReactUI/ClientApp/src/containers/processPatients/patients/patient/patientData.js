@@ -36,6 +36,12 @@ export const PatientTypesColumns = [
     title: "Patient Type",
   },
 ];
+export const companyNameColumns = [
+  {
+    field: "sortName",
+    title: "Company Name",
+  },
+];
 export const insuranceColumns = [
   {
     field: "entitySID",

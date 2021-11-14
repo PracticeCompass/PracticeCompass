@@ -6,7 +6,9 @@ import {
   FILTERS_PATIENTTYPE,
   FILTERS_PHYSICIAN,
   FILTERS_CPT,
-  FILTERS_ICD10
+  FILTERS_ICD10,
+  SET_COMPANIES,
+  GET_COMPANIES_FAILED
 } from "../actionTypes/actionTypes";
 
 const INITIAL_STATE = {
@@ -17,7 +19,9 @@ const INITIAL_STATE = {
   patientTypes:[],
   physicians:[],
   cpts:[],
-  iCD10s:[]
+  iCD10s:[],
+  companies:[],
+  companiesFailed:false
 };
 
 export function lookupsReducer(state = INITIAL_STATE, action) {
@@ -38,6 +42,10 @@ export function lookupsReducer(state = INITIAL_STATE, action) {
       return { ...state, cpts: action.payload };
     case FILTERS_ICD10:
       return {...state,iCD10s:action.payload}
+      case SET_COMPANIES:
+        return { ...state, companies: action.payload };
+      case GET_COMPANIES_FAILED:
+      return {...state,companiesFailed:action.payload}
     default:
       return state;
   }

@@ -34,25 +34,30 @@ import {
   getPracticeList,
   getpatientTypes,
   resetPatientTypeList,
+  resetCompanyList,
   resetPracticeList,
+  getCompaniesList
 } from "../../../../../redux/actions/patient";
 import {
   PracticeColumns,
   PatientTypesColumns,
+  companyNameColumns
 } from "./../../patient/patientData";
 import { SaveLookups } from "../../../../../redux/actions/lookups";
 import NotificationComponent from "../../../../common/notification";
 import {
-  GetGridColumns,SaveGridColumns
-}from "../../../../../redux/actions/GridColumns"
+  GetGridColumns, SaveGridColumns
+} from "../../../../../redux/actions/GridColumns"
 function mapStateToProps(state) {
   return {
     insurances: state.patientDetails.insurances,
     practiceList: state.patients.paractices,
+    companyList: state.patients.companies,
     dropDownPractices: state.lookups.practices,
+    dropDownCompanies: state.lookups.companies,
     patientTypes: state.patients.patientTypes,
     dropDownPatientTypes: state.lookups.patientTypes,
-    UiExpand:state.ui.UiExpand
+    UiExpand: state.ui.UiExpand
   };
 }
 
@@ -65,10 +70,12 @@ function mapDispatchToProps(dispatch) {
     GetPatientDetails: (personID, PracticeID) =>
       dispatch(GetPatientDetails(personID, PracticeID)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
+    getCompaniesList:(name)=>dispatch(getCompaniesList(name)),
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getpatientTypes: (name) => dispatch(getpatientTypes(name)),
     resetPatientTypeList: () => dispatch(resetPatientTypeList()),
+    resetCompanyList:()=>dispatch(resetCompanyList()),
     resetPracticeList: () => dispatch(resetPracticeList()),
     resetInsuranceGridGet: () => dispatch(resetInsuranceGridGet()),
   };
@@ -79,6 +86,8 @@ const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 const DATA_ITEM_KEY_PATIENT_TYPE = "lookupCode";
 const idGetterPaientYype = getter(DATA_ITEM_KEY_PATIENT_TYPE);
+const DATA_ITEM_KEY_COMPANY_NAME = "entitySID";
+const idGetterCompanyName = getter(DATA_ITEM_KEY_COMPANY_NAME);
 class PatientDetailSummary extends Component {
   state = {
     selected: 0,
@@ -134,7 +143,8 @@ class PatientDetailSummary extends Component {
     warning: false,
     info: false,
     timer: 5000,
-    patientListColumns:columns
+    companySearchText:null,
+    patientListColumns: columns
   };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });
@@ -147,6 +157,9 @@ class PatientDetailSummary extends Component {
   // }
   patientTypeSearch = () => {
     this.props.getpatientTypes(this.state.patientTypeSearchText);
+  };
+  companySearch = () => {
+    this.props.getCompaniesList(this.state.companySearchText);
   };
   getBaseGridUrl(filter) {
     return getCompanyNameUrl(filter);
@@ -227,17 +240,17 @@ class PatientDetailSummary extends Component {
       });
       await this.props.InsuranceGridGet(this.props.patientDetails.patientID);
     }
-     this.getGridColumns();
+    this.getGridColumns();
   }
 
   getGridColumns = async () => {
-    this.setState({ refreshGrid: false});
+    this.setState({ refreshGrid: false });
     let currentColumns = await this.props.GetGridColumns('summeryGrid');
-    if(currentColumns !=null && currentColumns !=""){
-       currentColumns=JSON.parse(currentColumns?.columns) ?? columns ;
-       this.setState({ patientListColumns: currentColumns});
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? columns;
+      this.setState({ patientListColumns: currentColumns });
     }
-    this.setState({ refreshGrid: true});
+    this.setState({ refreshGrid: true });
   }
   onInsuranceGridSelectionChange = (event) => {
     this.setState({
@@ -283,17 +296,17 @@ class PatientDetailSummary extends Component {
       event.endRowIndex + 1
     );
     this.setState({
-      practiceID:{
-        entityId:selectedDataItems[0].patientID,
-        entityName:selectedDataItems[0].sortName
+      practiceID: {
+        entityId: selectedDataItems[0].patientID,
+        entityName: selectedDataItems[0].sortName
       }
     });
   };
   onPracticeDoubleClick = async (event) => {
     this.setState({
-      practiceID:{
-        entityId:event.dataItem.practiceID,
-        entityName:event.dataItem.sortName
+      practiceID: {
+        entityId: event.dataItem.practiceID,
+        entityName: event.dataItem.sortName
       }
     });
     this.props.SaveLookups(event.dataItem.practiceID, "Practice");
@@ -306,13 +319,13 @@ class PatientDetailSummary extends Component {
       event.endRowIndex + 1
     );
     this.setState({
-      practiceID:{
-        entityId:selectedDataItems
-        ? selectedDataItems[0].practiceID
-        : null,
-        entityName:selectedDataItems
-        ? selectedDataItems[0].sortName
-        : null
+      practiceID: {
+        entityId: selectedDataItems
+          ? selectedDataItems[0].practiceID
+          : null,
+        entityName: selectedDataItems
+          ? selectedDataItems[0].sortName
+          : null
       }
     });
   };
@@ -338,6 +351,23 @@ class PatientDetailSummary extends Component {
       patientTypeSearchText: null,
     });
     this.togglePatientTypeDialog();
+  };
+  cancelcomapnyNameeDialog = () => {
+    this.setState({
+      companySearchText: null,
+    });
+    this.toggleCompaniesDialog();
+  };
+  toggleCompaniesDialog = () => {
+    if (this.state.companyNameVisible) {
+      this.setState({
+        companySearchText: null,
+      });
+      this.props.resetCompanyList();
+    }
+    this.setState({
+      companyNameVisible: !this.state.companyNameVisible,
+    });
   };
   togglePatientTypeDialog = () => {
     if (this.state.patientTypeVisible) {
@@ -387,10 +417,48 @@ class PatientDetailSummary extends Component {
       },
     });
   };
+  onCompanyNameKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      CompanyName: selectedDataItems[0]
+        ? {
+          entityName: selectedDataItems[0].sortName,
+          entityId: selectedDataItems[0].entitySID,
+        }
+        : null,
+    });
+  };
+  onCompanyNameSelectionChange = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      CompanyName: {
+        entityName: selectedDataItems[0].sortName,
+        entityId: selectedDataItems[0].entitySID,
+      },
+    });
+  };
+  onCompanyNameDoubleClick = async (event) => {
+    debugger;
+    this.setState({
+      CompanyName: {
+        entityName: event.dataItem.sortName,
+        entityId: event.dataItem.entitySID,
+      },
+    });
+    this.props.SaveLookups(event.dataItem.entitySID, "Company");
+    //this.selectPatient();
+    this.toggleCompaniesDialog();
+  };
   toggleShowColumnsDialog = () => {
     this.setState({ Show_HideDialogVisible: false });
   };
-  SaveColumnsShow =async (columns) => {
+  SaveColumnsShow = async (columns) => {
     if (!columns.find((x) => x.hide != true)) {
       this.setState({ Show_HideDialogVisible: false });
       this.setState({ warning: true, message: "Cann't hide all columns" });
@@ -403,7 +471,7 @@ class PatientDetailSummary extends Component {
     } else {
       this.setState({ refreshGrid: false });
       //localStorage.setItem("summeryGrid", JSON.stringify(columns));
-      let GridColumns=await this.props.SaveGridColumns("summeryGrid", JSON.stringify(columns));
+      let GridColumns = await this.props.SaveGridColumns("summeryGrid", JSON.stringify(columns));
       this.setState({ patientListColumns: JSON.parse(GridColumns?.columns), Show_HideDialogVisible: false });
       setTimeout(() => {
         this.setState({ refreshGrid: true });
@@ -437,7 +505,7 @@ class PatientDetailSummary extends Component {
           {this.state.Show_HideDialogVisible && (
             <Show_HideDialogComponent
               columns={
-                  this.state.patientListColumns
+                this.state.patientListColumns
               }
               toggleShowColumnsDialog={this.toggleShowColumnsDialog}
               SaveColumnsShow={this.SaveColumnsShow}
@@ -452,6 +520,28 @@ class PatientDetailSummary extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {this.state.companyNameVisible && (
+            <FindDialogComponent
+            title="Company Name Search"
+            placeholder="Enter Company Name"
+            searcTextBoxValue={this.state.companySearchText}
+            onTextSearchChange={(e) => {
+              this.setState({
+                companySearchText: e.value,
+              });
+            }}
+            clickOnSearch={this.companySearch}
+            dataItemKey="entitySID"
+            data={this.props.companyList}
+            columns={companyNameColumns}
+            onSelectionChange={this.onCompanyNameSelectionChange}
+            onRowDoubleClick={this.onCompanyNameDoubleClick}
+            onKeyDown={this.onCompanyNameKeyDown}
+            idGetterLookup={idGetterCompanyName}
+            toggleDialog={this.cancelcomapnyNameeDialog}
+            cancelDialog={this.cancelcomapnyNameeDialog}
+          ></FindDialogComponent>
+          )}
           {this.state.patientTypeVisible && (
             <FindDialogComponent
               title="Patient Type Search"
@@ -534,7 +624,7 @@ class PatientDetailSummary extends Component {
                   </div>
                 </div>
                 <div style={{ float: "left", width: "550px" }}>
-                  <div style={{ float: "left",marginLeft:"-3px" }}>
+                  <div style={{ float: "left", marginLeft: "-3px" }}>
                     <label className="userInfoLabel">Practice</label>
                   </div>
                   <div className="PracticeStyle" style={{ float: "left" }}>
@@ -629,7 +719,7 @@ class PatientDetailSummary extends Component {
                   <div style={{ float: "left", marginLeft: "47px" }}>
                     <label className="userInfoLabel">DOB</label>
                   </div>
-                  <div className="dateStyle"  style={{ float: "left" }}>
+                  <div className="dateStyle" style={{ float: "left" }}>
                     <DatePicker
                       className="unifyHeight"
                       placeholder="MM/DD/YYYY"
@@ -733,7 +823,7 @@ class PatientDetailSummary extends Component {
                   <div style={{ float: "left", marginLeft: "29px" }}>
                     <label className="userInfoLabel">State</label>
                   </div>
-                  <div  style={{ float: "left", width: "105px" }}>
+                  <div style={{ float: "left", width: "105px" }}>
                     <DropDown
                       className="unifyHeight"
                       id="stateList"
@@ -758,7 +848,7 @@ class PatientDetailSummary extends Component {
                       placeholder="00000-0000"
                       className="unifyHeight"
                       value={this.state.Zip}
-                      onValueChange={(e) => this.setState({ Zip: e.target.value})}
+                      onValueChange={(e) => this.setState({ Zip: e.target.value })}
                     ></TextBox>
                   </div>
                   <div style={{ float: "left", marginLeft: "15px" }}>
@@ -771,7 +861,7 @@ class PatientDetailSummary extends Component {
                       placeholder="000-00-00000"
                       className="unifyHeight"
                       value={this.state.SS}
-                      onValueChange={(e) => this.setState({ SS: e.target.value})}
+                      onValueChange={(e) => this.setState({ SS: e.target.value })}
                     ></TextBox>
                   </div>
                 </div>
@@ -785,7 +875,7 @@ class PatientDetailSummary extends Component {
                   <div style={{ float: "left" }}>
                     <label className="userInfoLabel">Home Phone</label>
                   </div>
-                  <div className="PhoneStyle" style={{ float: "left"}}>
+                  <div className="PhoneStyle" style={{ float: "left" }}>
                     <TextBox
                       type="maskedTextBox"
                       format="(###) ###-####"
@@ -810,7 +900,7 @@ class PatientDetailSummary extends Component {
                   <div style={{ float: "left", marginLeft: "3px" }}>
                     <label className="userInfoLabel">Work Phone</label>
                   </div>
-                  <div  className="PhoneStyle" style={{ float: "left" }}>
+                  <div className="PhoneStyle" style={{ float: "left" }}>
                     <TextBox
                       type="maskedTextBox"
                       format="(###) ###-####"
@@ -818,7 +908,7 @@ class PatientDetailSummary extends Component {
                       className="unifyHeight"
                       value={this.state.WorkPhone}
                       onValueChange={(e) =>
-                        this.setState({ WorkPhone: e.target.value})
+                        this.setState({ WorkPhone: e.target.value })
                       }
                     ></TextBox>
                   </div>
@@ -1050,46 +1140,46 @@ class PatientDetailSummary extends Component {
             width: window.innerWidth - (!this.props.UiExpand ? 120 : 310),
           }}
         >
-        <div className="accordion" id="accordionExample">
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginTop: "5px",
-              paddingLeft: "14px",
-            }}
-          >
+          <div className="accordion" id="accordionExample">
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              className="card bg-light mb-3"
+              style={{
+                marginTop: "5px",
+                paddingLeft: "14px",
+              }}
             >
-              <div className="row" >
-                {this.state.refreshGrid && (
-                  <GridComponent
-                    id="summeryGrid"
-                    height="150px"
-                    width="100%"
-                    take={3}
-                    columns={
-                      this.state.patientListColumns
-                    }
-                    selectionMode="single"
-                    onSelectionChange={this.onInsuranceGridSelectionChange}
-                    onRowDoubleClick={this.onInsuranceGridSelectionChange}
-                    onKeyDown={this.onPatientDetailKeyDown}
-                    data={this.props.insurances}
-                    getBaseUrl={(filter) => this.getBaseGridUrl(filter)}
-                    DATA_ITEM_KEY="gridID"
-                    idGetter={idGetterInsurance}
-                    sortColumns={[]}
-                    onSortChange={this.onSortChange}
-                  ></GridComponent>
-                )}
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                <div className="row" >
+                  {this.state.refreshGrid && (
+                    <GridComponent
+                      id="summeryGrid"
+                      height="150px"
+                      width="100%"
+                      take={3}
+                      columns={
+                        this.state.patientListColumns
+                      }
+                      selectionMode="single"
+                      onSelectionChange={this.onInsuranceGridSelectionChange}
+                      onRowDoubleClick={this.onInsuranceGridSelectionChange}
+                      onKeyDown={this.onPatientDetailKeyDown}
+                      data={this.props.insurances}
+                      getBaseUrl={(filter) => this.getBaseGridUrl(filter)}
+                      DATA_ITEM_KEY="gridID"
+                      idGetter={idGetterInsurance}
+                      sortColumns={[]}
+                      onSortChange={this.onSortChange}
+                    ></GridComponent>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
         <div style={{ width: "100%", padding: "5px" }}>
           <div style={{ display: "flex", flexFlow: "row nowrap" }}>
@@ -1160,18 +1250,30 @@ class PatientDetailSummary extends Component {
                       <div style={{ float: "left" }}>
                         <label className="userInfoLabel">Company Name</label>
                       </div>
-                      <div style={{ float: "left", width: "130px" }}>
+                      <div style={{ float: "left", width: "300px" }}>
                         <DropDown
                           className="unifyHeight"
-                          type="remoteDropDown"
-                          textField="carrierCode"
-                          dataItemKey="carrierID"
+                          textField="entityName"
+                          dataItemKey="entityId"
                           value={this.state.CompanyName}
-                          getBaseUrl={(filter) => getCompanyNameUrl(filter)}
+                          data={this.props.dropDownCompanies}
                           onChange={(e) =>
                             this.setState({ CompanyName: e.value })
                           }
                         ></DropDown>
+                      </div>
+                      <div style={{ float: "left" }}>
+                        <ButtonComponent
+                          icon="search"
+                          type="search"
+                          classButton="infraBtn-primary find-button"
+                          style={{ marginTop: "0px" }}
+                          onClick={(e) =>
+                            this.setState({ companyNameVisible: true })
+                          }
+                        >
+                          Find
+                        </ButtonComponent>
                       </div>
                       <div style={{ float: "left", marginLeft: "15px" }}>
                         <label className="userInfoLabel">Type</label>
@@ -1258,7 +1360,7 @@ class PatientDetailSummary extends Component {
                           Plan Effective Date
                         </label>
                       </div>
-                      <div className="dateStyle"  style={{ float: "left" }}>
+                      <div className="dateStyle" style={{ float: "left" }}>
                         <DatePicker
                           id="planEndDate"
                           name="planEndDate"
@@ -1274,7 +1376,7 @@ class PatientDetailSummary extends Component {
                       <div style={{ float: "left", marginLeft: "15px" }}>
                         <label className="userInfoLabel">Plan End Date</label>
                       </div>
-                      <div className="dateStyle"  style={{ float: "left" }}>
+                      <div className="dateStyle" style={{ float: "left" }}>
                         <DatePicker
                           id="planEndDate"
                           name="planEndDate"
@@ -1316,7 +1418,7 @@ class PatientDetailSummary extends Component {
                       <div style={{ float: "left", marginLeft: "32px" }}>
                         <label className="userInfoLabel">RelationShip</label>
                       </div>
-                      <div style={{width: "185px"}}>
+                      <div style={{ width: "185px" }}>
                         <DropDown
                           className="unifyHeight"
                           id="relationList"
@@ -1413,20 +1515,20 @@ class PatientDetailSummary extends Component {
                             placeholder="00000-0000"
                             className="unifyHeight"
                             value={this.state.OtherZip}
-                            onValueChange={(e) => this.setState({ OtherZip: e.target.value})}
+                            onValueChange={(e) => this.setState({ OtherZip: e.target.value })}
                           ></TextBox>
                         </div>
                         <div style={{ float: "left", marginLeft: "15px" }}>
                           <label className="userInfoLabel">SSN</label>
                         </div>
-                        <div className="SSNStyle"  style={{ float: "left" }}>
+                        <div className="SSNStyle" style={{ float: "left" }}>
                           <TextBox
                             type="maskedTextBox"
                             format="###-##-####"
                             placeholder="000-00-00000"
                             className="unifyHeight"
                             value={this.state.OtherSSN}
-                            onValueChange={(e) => this.setState({ OtherSSN: e.target.value})}
+                            onValueChange={(e) => this.setState({ OtherSSN: e.target.value })}
                           ></TextBox>
                         </div>
                       </div>
@@ -1447,7 +1549,7 @@ class PatientDetailSummary extends Component {
                             className="unifyHeight"
                             value={this.state.OtherHomePhone}
                             onValueChange={(e) =>
-                              this.setState({ OtherHomePhone: e.target.value})
+                              this.setState({ OtherHomePhone: e.target.value })
                             }
                           ></TextBox>
                         </div>
@@ -1498,7 +1600,7 @@ class PatientDetailSummary extends Component {
                         <div style={{ float: "left", marginLeft: "13px" }}>
                           <label className="userInfoLabel">Cell Phone</label>
                         </div>
-                        <div className="PhoneStyle" style={{ float: "left"}}>
+                        <div className="PhoneStyle" style={{ float: "left" }}>
                           <TextBox
                             type="maskedTextBox"
                             format="(###) ###-####"

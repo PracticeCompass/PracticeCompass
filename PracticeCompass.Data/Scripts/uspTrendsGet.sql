@@ -49,6 +49,10 @@ ELSE IF @EntityName='CPT'
 ELSE IF @EntityName='ICD10'
         SELECT distinct   Trends.EntityValueID as entityId,Diagnosis.Description as entityName ,searchcount from Trends inner join Diagnosis on Diagnosis.DiagnosisCode=EntityValueID
 	   where Trends.UserID=@UserID and Trends.EntityName =@EntityName  order by searchcount desc
+
+ELSE if  @EntityName='Company'
+        SELECT distinct   Trends.EntityValueID as EntityId,Carrier.Name as EntityName,searchcount from Trends inner join Carrier on Carrier.CarrierID=EntityValueID
+		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
 END
 GO
 
