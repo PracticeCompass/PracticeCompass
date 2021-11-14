@@ -742,6 +742,11 @@ class insurancePayments extends Component {
   };
   findClaim = async () => {
     //(GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber)
+    this.setState({
+      applyPlanPayments: [],
+      applyPlanPaymentsbackup: [],
+      filterApplyPlanPayments:[]
+    });
     let applyData = await this.props.getApplyInsurancePayment(
       this.state.patientApplyGuarantorID,
       this.state.txnApplyDatetype,
@@ -884,6 +889,7 @@ class insurancePayments extends Component {
       list = list.filter((i) => i != null);
       let result = await this.props.ApplyPayments(list);
       if (result) {
+        this.findClaim();
         this.setState({
           success: true,
           message: "Save Apply succefully.",
@@ -1345,7 +1351,7 @@ class insurancePayments extends Component {
                         id="insurancePayment"
                         columns={this.state.insuranceColumns}
                         skip={0}
-                        take={21}
+                        take={24}
                         onSelectionChange={
                           this.onInsurancePaymentGridSelectionChange
                         }
@@ -1363,7 +1369,7 @@ class insurancePayments extends Component {
                             ? this.props.insurancePayments[0].totalCount
                             : this.props.insurancePayments.length
                         }
-                        height="500px"
+                        height="550px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
@@ -1736,7 +1742,7 @@ class insurancePayments extends Component {
                             id="planDetailsPayment"
                             columns={this.state.insuranceAssignmentColumns}
                             skip={0}
-                            take={21}
+                            take={24}
                             onSelectionChange={
                               this.onInsuranceDetailsGridSelectionChange
                             }
@@ -1754,7 +1760,7 @@ class insurancePayments extends Component {
                                 ? this.props.paymentAssignments[0].totalCount
                                 : this.props.paymentAssignments.length
                             }
-                            height="500px"
+                            height="550px"
                             width="100%"
                             //hasCheckBox={true}
                             sortColumns={[]}
@@ -2022,7 +2028,7 @@ class insurancePayments extends Component {
                             (!this.props.UiExpand ? 148 : 330),
                           marginTop: "5px",
                           marginBottom: "5px",
-                          height: "435px",
+                          height: "360px",
                           marginLeft: "10px",
                         }}
                       >
@@ -2084,7 +2090,7 @@ class insurancePayments extends Component {
                                   id="applyedPatient"
                                   skip={0}
                                   take={10}
-                                  height="350px"
+                                  height="290px"
                                   width="100%"
                                   editColumn={"chargeSID"}
                                   DATA_ITEM_KEY="chargeSID"
@@ -2119,7 +2125,7 @@ class insurancePayments extends Component {
                             (!this.props.UiExpand ? 148 : 330),
                           marginTop: "5px",
                           marginBottom: "30px",
-                          height: "435px",
+                          height: "360px",
                           marginLeft: "10px",
                         }}
                       >
@@ -2185,7 +2191,7 @@ class insurancePayments extends Component {
                                   id="applyedPlan"
                                   skip={0}
                                   take={10}
-                                  height="350px"
+                                  height="290px"
                                   width="100%"
                                   editColumn={"chargeSID"}
                                   DATA_ITEM_KEY="chargeSID"
@@ -2288,7 +2294,7 @@ class insurancePayments extends Component {
                                 id="planDetailsPayment"
                                 columns={this.state.insuranceAssignmentColumns}
                                 skip={0}
-                                take={21}
+                                take={24}
                                 onSelectionChange={
                                   this.onInsuranceDetailsGridSelectionChange
                                 }
@@ -2308,7 +2314,7 @@ class insurancePayments extends Component {
                                         .totalCount
                                     : this.props.paymentAssignments.length
                                 }
-                                height="500px"
+                                height="550px"
                                 width="100%"
                                 //hasCheckBox={true}
                                 sortColumns={[]}

@@ -63,26 +63,41 @@ export const detailsColumns = [
   },
   {
     field: JSON.stringify([{ text: "productServiceID", s: "/" }, { text: "procedureModifier01", s: "," }, { text: "procedureModifier02", s: "," }]),
-    title: "CPT/ICD10",
+    title: "CPT/Modifier",
     minWidth: 100,
     orderIndex: 3,
     cell: "merge",
     editable: false
   },
   {
-    cell: "merge",
-    field: JSON.stringify([{ text: "lineItemChargeAmt", s: "/" }, { text: "lineItemProviderPaymentAmt", s: "," }]),
-    title: "Asking / Amount",
+    field: "lineItemChargeAmt" ,
+    title: "Asking",
     minWidth: 100,
     orderIndex: 4,
+    type: "currency",
     editable: false
   },
   {
-    cell: "merge",
-    field: JSON.stringify([{ text: "chargeClaimAdjustmentAmt", s: "/" }, { text: "chargeClaimAdjustmentReason", s: "," }]),
-    title: "Charge Adjustment",
+    field: "lineItemProviderPaymentAmt" ,
+    title: "Paid",
     minWidth: 100,
     orderIndex: 5,
+    type: "currency",
+    editable: false
+  },
+  {
+    type: "currency",
+    field: "chargeClaimAdjustmentAmt",
+    title: "Adjustment",
+    minWidth: 100,
+    orderIndex: 6,
+    editable: false
+  },
+  {
+    field: "chargeClaimAdjustmentReason",
+    title: "Adjustment Type",
+    minWidth: 100,
+    orderIndex: 7,
     editable: false
   },
   {
@@ -90,29 +105,29 @@ export const detailsColumns = [
     field: JSON.stringify([{ text: "claimAdjustmentAmt", s: "/" }, { text: "eRSClaimAdjustmentreason", s: "," }]),
     title: "Claim Adjustment",
     minWidth: 100,
-    orderIndex: 6,
+    orderIndex: 8,
     editable: false
   },
   {
-    cell: "merge",
-    field: JSON.stringify([{ text: "providerAdjustmentAmt", s: "/" }, { text: "pmtProvLevelAdjReason", s: "," }]),
+    type: "currency",
+    field: "providerAdjustmentAmt",
     title: "Provider Adjustment",
     minWidth: 100,
-    orderIndex: 7,
+    orderIndex: 9,
     editable: false
   },
   {
     field: "comment",
     title: "Comment",
     minWidth: 150,
-    orderIndex: 8,
+    orderIndex: 10,
     editable: false
   },
   {
     field: "suggestion",
     title: "Suggestion",
-    minWidth: 200,
-    orderIndex: 9,
+    minWidth: 300,
+    orderIndex: 11,
     //isCustomCell:true,  
     editor: "edit",
     cell: "dropDown",

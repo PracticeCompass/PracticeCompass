@@ -655,7 +655,7 @@ class EraPayments extends Component {
                         //     ? this.props.insurancePayments[0].totalCount
                         //     : this.props.insurancePayments.length
                         // }
-                        height="620px"
+                        height="640px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
@@ -777,7 +777,7 @@ class EraPayments extends Component {
                           id="ERAPaymentDetails"
                           skip={0}
                           take={21}
-                          height="545px"
+                          height="560px"
                           width="100%"
                           editColumn={"ersChargeSID"}
                           DATA_ITEM_KEY="ersChargeSID"

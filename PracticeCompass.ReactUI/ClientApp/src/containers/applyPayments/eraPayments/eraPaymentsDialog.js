@@ -40,7 +40,7 @@ class EraPaymentsDialogComponent extends Component {
           onClose={this.props.toggleERAPaymentDialog}
           width={400}
         >
-            <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+            {/* <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
               <div style={{ width: "221px", marginLeft: "41px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>Asking </label>
               </div>
@@ -75,7 +75,7 @@ class EraPaymentsDialogComponent extends Component {
                     }
                   ></TextBox>
               </div>
-            </div>
+            </div> */}
             <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
               <div style={{ width: "221px", marginLeft: "40px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>Charge Claim Adjustment Amount </label>
@@ -94,7 +94,7 @@ class EraPaymentsDialogComponent extends Component {
                   ></TextBox>
               </div>
             </div>
-            <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+            {/* <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
               <div style={{ width: "221px", marginLeft: "40px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>Charge Claim Adjustment Reason</label>
               </div>
@@ -111,10 +111,10 @@ class EraPaymentsDialogComponent extends Component {
                     }
                   ></TextBox>
               </div>
-            </div>
+            </div> */}
             {/* JSON.stringify([{ text: "claimAdjustmentAmt", s: "/" }, { text: "eRSClaimAdjustmentreason", s: "," }]) */}
             <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-              <div style={{ width: "221px", marginLeft: "45px" }}>
+              <div style={{ width: "221px", marginLeft: "39px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>Claim Adjustment Amount</label>
               </div>
               <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -131,7 +131,7 @@ class EraPaymentsDialogComponent extends Component {
                   ></TextBox>
               </div>
             </div>
-            <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+            {/* <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
               <div style={{ width: "221px", marginLeft: "36px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>ERS Claim Adjustment Reason</label>
               </div>
@@ -148,7 +148,7 @@ class EraPaymentsDialogComponent extends Component {
                     }
                   ></TextBox>
               </div>
-            </div>
+            </div> */}
             {/* field: JSON.stringify([{ text: "providerAdjustmentAmt", s: "/" }, { text: "pmtProvLevelAdjReason", s: "," }]), */}
             <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
               <div style={{ width: "221px", marginLeft: "36px" }}>
@@ -168,7 +168,7 @@ class EraPaymentsDialogComponent extends Component {
                   ></TextBox>
               </div>
             </div>
-            <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+            {/* <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
               <div style={{ width: "221px", marginLeft: "36px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>Pmt Prov Level Adjustment Reason</label>
               </div>
@@ -185,7 +185,7 @@ class EraPaymentsDialogComponent extends Component {
                     }
                   ></TextBox>
               </div>
-            </div>
+            </div> */}
 
           <DialogActionsBar>
             <div className="row">

@@ -633,7 +633,7 @@ class PatientPayments extends Component {
     } else {
       this.resetPatientDetails();
     }
-    this.setPatientPaymentDetailExpanded();
+       this.setPatientPaymentDetailExpanded();
     return patientPaymentDetails;
   }
   resetPatientDetails = () => {
@@ -706,7 +706,7 @@ class PatientPayments extends Component {
   onInsuranceDetailsGridDoubleSelectionChange = (event) => {
     // this.setApplyInsurancePaymentExpanded();
   };
-  ApplyPatientPayment = async () => {
+  ApplyPatientPayment = async (isExpand=true) => {
     if (this.state.patientPaymentDetails == null) {
       this.setState({
         warning: true,
@@ -732,7 +732,9 @@ class PatientPayments extends Component {
       applyPatientPayments: applyData,
       applyPatientPaymentsbackup: [...applyData],
     });
+    if(isExpand){
     this.setApplyPatientPaymentExpanded();
+    }
   };
   applyItemChanged = (event) => {
     if (this.state.patientPaymentDetails == null) {
@@ -838,7 +840,14 @@ class PatientPayments extends Component {
       );
       list = list.filter((i) => i != null);
       let result = await this.props.ApplyPayments(list);
+      this.setState({
+        applyPatientPayments: [],
+        applyPatientPaymentsbackup: [],
+        filterapplyPatientPayments:[]
+      });
+     this.ApplyPatientPayment(false);
       if (result) {
+
         this.setState({
           success: true,
           message: "Save Apply succefully.",
@@ -1285,7 +1294,7 @@ class PatientPayments extends Component {
                         id="patientPayment"
                         columns={this.state.patientPaymentColumns}
                         skip={0}
-                        take={21}
+                        take={24}
                         onSelectionChange={
                           this.onPatientPaymentGridSelectionChange
                         }
@@ -1303,7 +1312,7 @@ class PatientPayments extends Component {
                             ? this.props.patientPayments[0].totalCount
                             : this.props.patientPayments.length
                         }
-                        height="500px"
+                        height="550px"
                         width="100%"
                         //hasCheckBox={true}
                         sortColumns={[]}
@@ -1642,7 +1651,7 @@ class PatientPayments extends Component {
                             id="patientDetailsPayment"
                             columns={this.state.insuranceAssignmentColumns}
                             skip={0}
-                            take={21}
+                            take={24}
                             onSelectionChange={
                               this.onInsuranceDetailsGridSelectionChange
                             }
@@ -1660,7 +1669,7 @@ class PatientPayments extends Component {
                                 ? this.props.paymentAssignments[0].totalCount
                                 : this.props.paymentAssignments.length
                             }
-                            height="500px"
+                            height="550px"
                             width="100%"
                             //hasCheckBox={true}
                             sortColumns={[]}
@@ -1784,7 +1793,7 @@ class PatientPayments extends Component {
                               (!this.props.UiExpand ? 148 : 330),
                             marginTop: "5px",
                             marginBottom: "10px",
-                            height: "435px",
+                            height: "360px",
                             marginLeft: "10px",
                           }}
                         >
@@ -1848,7 +1857,7 @@ class PatientPayments extends Component {
                                     id="applyedPatient"
                                     skip={0}
                                     take={11}
-                                    height="350px"
+                                    height="290px"
                                     width="100%"
                                     editColumn={"chargeSID"}
                                     DATA_ITEM_KEY="chargeSID"
@@ -1886,7 +1895,7 @@ class PatientPayments extends Component {
                               (!this.props.UiExpand ? 148 : 330),
                             marginTop: "5px",
                             marginBottom: "30px",
-                            height: "435px",
+                            height: "360px",
                             marginLeft: "10px",
                           }}
                         >
@@ -1908,7 +1917,7 @@ class PatientPayments extends Component {
                               icon="edit"
                               type="edit"
                               classButton="infraBtn-primary"
-                              onClick={() => this.ApplyListChanged}
+                              onClick={() => this.ApplyListChanged()}
                               style={{ marginTop: "0px" }}
                               disabled={
                                 this.state.disableApply ||
@@ -1952,7 +1961,7 @@ class PatientPayments extends Component {
                                     id="applyedPatient"
                                     skip={0}
                                     take={11}
-                                    height="350px"
+                                    height="290px"
                                     width="100%"
                                     editColumn={"chargeSID"}
                                     DATA_ITEM_KEY="chargeSID"
@@ -2063,7 +2072,7 @@ class PatientPayments extends Component {
                                     this.state.insuranceAssignmentColumns
                                   }
                                   skip={0}
-                                  take={21}
+                                  take={24}
                                   onSelectionChange={
                                     this.onInsuranceDetailsGridSelectionChange
                                   }
@@ -2083,7 +2092,7 @@ class PatientPayments extends Component {
                                           .totalCount
                                       : this.props.paymentAssignments.length
                                   }
-                                  height="500px"
+                                  height="550px"
                                   width="100%"
                                   //hasCheckBox={true}
                                   sortColumns={[]}
