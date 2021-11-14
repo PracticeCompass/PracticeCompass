@@ -1706,7 +1706,7 @@ class ClaimList extends Component {
                       //JSON.parse(localStorage.getItem("claimListId")) ?? columns
                     }
                     skip={0}
-                    take={21}
+                    take={24}
                     onSelectionChange={this.onClaimGridSelectionChange}
                     onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
                     getSelectedItems={this.getSelectedClaims}

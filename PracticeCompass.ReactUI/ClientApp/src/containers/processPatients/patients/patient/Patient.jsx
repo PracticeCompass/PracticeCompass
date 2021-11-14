@@ -65,7 +65,7 @@ function mapStateToProps(state) {
     dropDownPatientTypes: state.lookups.patientTypes,
     dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
-    UiExpand:state.ui.UiExpand
+    UiExpand: state.ui.UiExpand,
   };
 }
 
@@ -152,7 +152,7 @@ class Patient extends Component {
     patientTypeVisible: false,
     patientTypeSearchText: null,
     skip: 0,
-    take: 23,
+    take: 28,
     refreshPaging: true,
     Show_HideDialogVisible: false,
     refreshGrid: true,
@@ -451,9 +451,9 @@ class Patient extends Component {
     this.setState({
       patientType: selectedDataItems[0]
         ? {
-          entityName: selectedDataItems[0].description,
-          entityId: selectedDataItems[0].lookupCode,
-        }
+            entityName: selectedDataItems[0].description,
+            entityId: selectedDataItems[0].lookupCode,
+          }
         : null,
     });
   };
@@ -823,10 +823,11 @@ class Patient extends Component {
             <DeleteDialogComponent
               title="Delete Patient Filter"
               toggleDeleteDialog={this.toggleDeleteDialog}
-              deleteMessage={`Are you sure you wish to delete Patient Filter : ${this.state.currentFilter && this.state.currentFilter.displayName
+              deleteMessage={`Are you sure you wish to delete Patient Filter : ${
+                this.state.currentFilter && this.state.currentFilter.displayName
                   ? this.state.currentFilter.displayName
                   : ""
-                }?`}
+              }?`}
               currentFilterID={this.state.currentFilter.filterID}
               deleteFilter={this.deleteFilter}
             ></DeleteDialogComponent>
@@ -1249,13 +1250,13 @@ class Patient extends Component {
                     data={this.props.Patients}
                     totalCount={
                       this.props.Patients != null &&
-                        this.props.Patients.length > 0
+                      this.props.Patients.length > 0
                         ? this.props.Patients[0].totalCount
                         : this.props.Patients.length
                     }
                     skip={0}
                     take={this.state.take}
-                    height="650px"
+                    height="640px"
                     width="100%"
                     onSelectionChange={this.onPatientGridSelectionChange}
                     onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
