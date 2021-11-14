@@ -10,8 +10,8 @@ import {
   SET_CLAIM_DETAILS,
   SET_PHYSICIAN_LIST,
   SET_PHYSICIAN_LIST_FAILED,
-    SUBMIT_CLAIMS_FAILED,
-    Parse_ERAMessages_FAILED
+  SUBMIT_CLAIMS_FAILED,
+  Parse_ERAMessages_FAILED,
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
@@ -19,7 +19,7 @@ export const getclaimListFilters = (filter) => async (dispatch, getState) => {
   try {
     if (filter !== undefined) {
       dispatch(uiStartLoading());
-     // await dispatch(setGuarantorList([]));
+      // await dispatch(setGuarantorList([]));
       //TO:DO call API
       const resp = await axios({
         method: "GET",
@@ -38,32 +38,34 @@ export const getclaimListFilters = (filter) => async (dispatch, getState) => {
     dispatch(uiStopLoading());
   }
 };
-export const getguarantorList = (name, refreshData = true, skip = 0) => async (dispatch, getState) => {
-  try {
-    let backUpData = [...getState().claimList.guarantorList];
-    dispatch(uiStartLoading());
-    //await dispatch(setGuarantorList([]));
-    //TO:DO call API
-    const resp = await axios({
-      method: "GET",
-      url: `${config.baseUrl}/ClaimList/GuarantorGet?entity=${
-        name === null ? "" : name
-      }&skip=${skip}`,
-    });
-    let copyData = resp.data;
-    if (!refreshData) copyData = resp.data.concat(backUpData);
-    await dispatch(setGuarantorList(copyData || []));
-  } catch (error) {
-    await dispatch(setGuarantorList([]));
-    console.log("error ==> ", error);
-    dispatch({
-      type: GET_GUARANTOR_lIST_FAILED,
-      payload: error,
-    });
-  } finally {
-    dispatch(uiStopLoading());
-  }
-};
+export const getguarantorList =
+  (name, refreshData = true, skip = 0) =>
+  async (dispatch, getState) => {
+    try {
+      let backUpData = [...getState().claimList.guarantorList];
+      dispatch(uiStartLoading());
+      //await dispatch(setGuarantorList([]));
+      //TO:DO call API
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/ClaimList/GuarantorGet?entity=${
+          name === null ? "" : name
+        }&skip=${skip}`,
+      });
+      let copyData = resp.data;
+      if (!refreshData) copyData = resp.data.concat(backUpData);
+      await dispatch(setGuarantorList(copyData || []));
+    } catch (error) {
+      await dispatch(setGuarantorList([]));
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_GUARANTOR_lIST_FAILED,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 export const resetGuarantorList = () => async (dispatch, getState) => {
   try {
     dispatch(uiStartLoading());
@@ -99,13 +101,13 @@ export const getclaims =
           searchCriteria.PatientClass ? searchCriteria.PatientClass : ""
         }&InsuranceType=${searchCriteria.InsuranceType}&InsuranceID=${
           searchCriteria.InsurancID
-        }&BillNumber=${searchCriteria.BILLNUMBER}&ClaimIcnNumber=${
-          searchCriteria.ClaimIcnNumber
-        }&ClaimValue=${searchCriteria.ClaimValue}&Age=${
-          searchCriteria.Age
-        }&Batch=${searchCriteria.Batch}&CoverageOrder=${
-          searchCriteria.InsuranceOrder
-        }&InsuranceStatus=${
+        }&BillNumber=${
+          searchCriteria.BILLNUMBER ? searchCriteria.BILLNUMBER : ""
+        }&ClaimIcnNumber=${searchCriteria.ClaimIcnNumber}&ClaimValue=${
+          searchCriteria.ClaimValue
+        }&Age=${searchCriteria.Age}&Batch=${
+          searchCriteria.Batch
+        }&CoverageOrder=${searchCriteria.InsuranceOrder}&InsuranceStatus=${
           searchCriteria.InsuranceStatus
         }&IncludeCompletedClaims=${searchCriteria.completedCalims}
       &Skip=${searchCriteria.Skip}&SortColumn=${
@@ -128,8 +130,9 @@ export const getclaims =
       dispatch(uiStopLoading());
     }
   };
-export const getPhysicianList = (name,refreshData,skip) => async (dispatch, getState) => {
-  try {
+export const getPhysicianList =
+  (name, refreshData, skip) => async (dispatch, getState) => {
+    try {
       dispatch(uiStartLoading());
       let backUpData = [...getState().claimList.physicians];
       //await dispatch(setPhysicians([]));
@@ -144,17 +147,17 @@ export const getPhysicianList = (name,refreshData,skip) => async (dispatch, getS
       let copyData = resp.data;
       if (!refreshData) copyData = resp.data.concat(backUpData);
       await dispatch(setPhysicians(copyData || []));
-  } catch (error) {
-    await dispatch(setPhysicians([]));
-    console.log("error ==> ", error);
-    dispatch({
-      type: SET_PHYSICIAN_LIST_FAILED,
-      payload: error,
-    });
-  } finally {
-    dispatch(uiStopLoading());
-  }
-};
+    } catch (error) {
+      await dispatch(setPhysicians([]));
+      console.log("error ==> ", error);
+      dispatch({
+        type: SET_PHYSICIAN_LIST_FAILED,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 export const resetPhysicianList = () => async (dispatch, getState) => {
   try {
     dispatch(uiStartLoading());
@@ -170,23 +173,22 @@ export const resetPhysicianList = () => async (dispatch, getState) => {
   }
 };
 export const ParseERAMessages = () => async (dispatch, getState) => {
-    try {
-        
-            dispatch(uiStartLoading());
-            const resp = await axios({
-                method: "GET",
-                url: `${config.baseUrl}/ClaimList/ParseERAMessages`,
-            });
-    } catch (error) {
-        console.log("error ==> ", error);
-        dispatch({
-            type: Parse_ERAMessages_FAILED,
-            payload: error,
-        });
-    } finally {
-        dispatch(uiStopLoading());
-    }
-}
+  try {
+    dispatch(uiStartLoading());
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/ClaimList/ParseERAMessages`,
+    });
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: Parse_ERAMessages_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
 export const SubmitClaims = (claims) => async (dispatch, getState) => {
   try {
     if (claims !== undefined) {

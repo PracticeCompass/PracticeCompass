@@ -119,7 +119,7 @@ and
 and
 ('+ convert(varchar, @GuarantorID,10) +'=0 or Account.GuarantorID='+ convert(varchar, @GuarantorID,10) +')
 and
-('''+ @BillNumber +'''=''0'' or  Claim.ClaimNumber= '''+ @BillNumber+''' )
+('''+ @BillNumber +'''='''' or  Claim.ClaimNumber= '''+ @BillNumber+''' )
 and
 ('''+ @ClaimIcnNumber +'''=''0'' or  PlanClaim.PlanICN= '''+ @ClaimIcnNumber+''' )
 and 

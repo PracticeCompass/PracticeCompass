@@ -86,7 +86,7 @@ function mapStateToProps(state) {
     dropDownPhysicians: state.lookups.physicians,
     practiceList: state.patients.paractices,
     physicians: state.claimList.physicians,
-    UiExpand:state.ui.UiExpand
+    UiExpand: state.ui.UiExpand,
   };
 }
 
@@ -676,7 +676,7 @@ class ClaimList extends Component {
       PatientClass: this.state.patientType
         ? this.state.patientType.lookupCode
         : null,
-      BILLNUMBER: this.state.billNumber ? Number(this.state.billNumber) : 0,
+      BILLNUMBER: this.state.billNumber ? this.state.billNumber : null,
       ClaimIcnNumber: this.state.claimIcnNumber
         ? Number(this.state.claimIcnNumber)
         : 0,
@@ -1676,53 +1676,58 @@ class ClaimList extends Component {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexFlow: "row", width:window.innerWidth- (!this.props.UiExpand?93:273) }}>
-
-        <div className="accordion" id="accordionExample" >
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-              marginTop: "5px",
-            }}
-          >
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: window.innerWidth - (!this.props.UiExpand ? 93 : 273),
+          }}
+        >
+          <div className="accordion" id="accordionExample">
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              className="card bg-light mb-3"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginTop: "5px",
+              }}
             >
-              {this.state.refreshGrid && (
-                <GridComponent
-                  id="claimListId"
-                  columns={
-                    this.state.claimListColumns
-                    //JSON.parse(localStorage.getItem("claimListId")) ?? columns
-                  }
-                  skip={0}
-                  take={21}
-                  onSelectionChange={this.onClaimGridSelectionChange}
-                  onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
-                  getSelectedItems={this.getSelectedClaims}
-                  selectionMode="multiple"
-                  DATA_ITEM_KEY="gridID"
-                  idGetter={idGetterClaimList}
-                  data={this.props.Claims}
-                  totalCount={
-                    this.props.Claims != null && this.props.Claims.length > 0
-                      ? this.props.Claims[0].totalCount
-                      : this.props.Claims.length
-                  }
-                  height="600px"
-                  width="100%"
-                  hasCheckBox={true}
-                  sortColumns={sortColumns}
-                  onSortChange={this.onSortChange}
-                  pageChange={this.pageChange}
-                ></GridComponent>
-              )}
-            </div>
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                {this.state.refreshGrid && (
+                  <GridComponent
+                    id="claimListId"
+                    columns={
+                      this.state.claimListColumns
+                      //JSON.parse(localStorage.getItem("claimListId")) ?? columns
+                    }
+                    skip={0}
+                    take={21}
+                    onSelectionChange={this.onClaimGridSelectionChange}
+                    onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                    getSelectedItems={this.getSelectedClaims}
+                    selectionMode="multiple"
+                    DATA_ITEM_KEY="gridID"
+                    idGetter={idGetterClaimList}
+                    data={this.props.Claims}
+                    totalCount={
+                      this.props.Claims != null && this.props.Claims.length > 0
+                        ? this.props.Claims[0].totalCount
+                        : this.props.Claims.length
+                    }
+                    height="600px"
+                    width="100%"
+                    hasCheckBox={true}
+                    sortColumns={sortColumns}
+                    onSortChange={this.onSortChange}
+                    pageChange={this.pageChange}
+                  ></GridComponent>
+                )}
+              </div>
             </div>
           </div>
         </div>
