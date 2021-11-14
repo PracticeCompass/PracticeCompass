@@ -36,7 +36,8 @@ set @SQL= 'select distinct Charge.ChargeSID ,CONVERT(varchar,ProcedureEvent.From
  Mod1.[Modifier] as Modifier1 ,  Diag1.DiagnosisCode as Diag1,
 + ''$'' +  Convert(varchar(50),cast((Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts)as money),1) as ChargeBalance,
 + ''$'' +  Convert(varchar(50),cast(Charge.Amount as money),1) as Amount   ,
- charge.InsuranceReceipts as InsurancePaid, Charge.Adjustments , ClaimCharge.ClaimSID 
+ + ''$'' +  Convert(varchar(50),cast(charge.InsuranceReceipts as money),1) as InsurancePaid, 
+ + ''$'' +  Convert(varchar(50),cast(Charge.Adjustments as money),1) as Adjustments, ClaimCharge.ClaimSID 
  from ProcedureEvent
 inner join [Procedure] on [Procedure].ProcedureCode = ProcedureEvent.ProcedureCode
 inner join Charge on ProcedureEvent.ChargeSID = charge.ChargeSID

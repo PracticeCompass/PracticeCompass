@@ -35,12 +35,12 @@ Declare  @SQL varchar(max), @Datefilter varchar(50) ,@Fullyappliedfilter varchar
 		end
 
 set @SQL='select [dbo].[Payment].[PaymentSID] , Practice.SortName as PracticeName , CONVERT(varchar,PostDate,101) as PostDate  , Source , Entity.SortName as PayorName,Entity.EntitySID as payorID,
-LookupCode.Description as paymentClass , Amount , PayMethod.Description as PayMethod , FullyApplied , Voucher , 
+LookupCode.Description as paymentClass , + ''$'' +  Convert(varchar(50),cast(Amount as money),1) as Amount , PayMethod.Description as PayMethod , FullyApplied , Voucher , 
 case when CreateMethod=''M'' then ''Manual''
      when CreateMethod=''E'' then ''ERS ERA - Electronic Remittance Advice''
 	 when CreateMethod=''A'' then ''ESR -Electronic Statement Remittance''
 	 else '''' end as CreateMethod,
-	 (Amount-isNull(m.assigmentamount,0)) as Remaining
+	 + ''$'' +  Convert(varchar(50),cast((Amount-isNull(m.assigmentamount,0))as money),1) as Remaining
 from Payment inner join Practice on 
 Payment.practiceID = Practice.PracticeID
 inner join Entity on Payment.PayorID = Entity.EntitySID

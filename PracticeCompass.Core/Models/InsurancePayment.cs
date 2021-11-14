@@ -18,8 +18,8 @@ namespace PracticeCompass.Core.Models
         public string Diag1 { get; set; }
         public string Amount { get; set; }
         public string ChargeBalance { get; set; }
-        public float InsurancePaid { get; set; }
-        public float Adjustments { get; set; }
+        public string InsurancePaid { get; set; }
+        public string Adjustments { get; set; }
         public int PatientID { get; set; }
         public int ClaimSID { get; set; }
     }
