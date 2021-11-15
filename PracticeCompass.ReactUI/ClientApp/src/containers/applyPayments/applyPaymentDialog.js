@@ -46,7 +46,7 @@ class ApplyPaymentDialogComponent extends Component {
           width={400}
         >
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-            <div style={{ width: "221px", marginLeft: "40px" }}>
+            <div style={{ marginLeft: "77px" }}>
               <label className="userInfoLabel" style={{ float: "right" }}>Amount </label>
             </div>
             <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -65,7 +65,7 @@ class ApplyPaymentDialogComponent extends Component {
             </div>
           </div>
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-            <div style={{ width: "221px", marginLeft: "40px" }}>
+            <div style={{ marginLeft: "40px" }}>
               <label className="userInfoLabel" style={{ float: "right" }}>Insurance Paid </label>
             </div>
             <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -86,7 +86,7 @@ class ApplyPaymentDialogComponent extends Component {
             </div>
           </div>
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-            <div style={{ width: "221px", marginLeft: "40px" }}>
+            <div style={{ marginLeft: "50px" }}>
               <label className="userInfoLabel" style={{ float: "right" }}>Adjustments</label>
             </div>
             <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -107,7 +107,7 @@ class ApplyPaymentDialogComponent extends Component {
             </div>
           </div>
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-            <div style={{ width: "221px", marginLeft: "40px" }}>
+            <div style={{ marginLeft: "60px" }}>
               <label className="userInfoLabel" style={{ float: "right" }}>Remaining </label>
             </div>
             <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -126,7 +126,7 @@ class ApplyPaymentDialogComponent extends Component {
             </div>
           </div>
           { !this.props.isHideMoveToNext &&(
-          <div style={{marginLeft:"204px"}}>
+          <div style={{marginLeft:"100px"}}>
             <CheckboxComponent
               style={{ marginRight: "5px" }}
               id="paymentId"
