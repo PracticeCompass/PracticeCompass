@@ -444,7 +444,6 @@ class PatientDetailSummary extends Component {
     });
   };
   onCompanyNameDoubleClick = async (event) => {
-    debugger;
     this.setState({
       CompanyName: {
         entityName: event.dataItem.sortName,

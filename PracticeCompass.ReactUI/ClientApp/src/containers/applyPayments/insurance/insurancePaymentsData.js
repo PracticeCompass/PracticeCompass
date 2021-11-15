@@ -248,7 +248,7 @@ export const applyPlanPaymentColumns = [
     editable: false,
   },
   {
-    field: "MoveToNextPlan",
+    field: "moveToNextPlan",
     title: "Move to next plan",
     minWidth: 50,
     editor: "boolean",
