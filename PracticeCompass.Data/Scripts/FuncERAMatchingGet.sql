@@ -29,7 +29,7 @@ BEGIN
 	Declare @ERSPaymentSID int
 	select @ERSPaymentSID=ERSPaymentSID from ERSClaimData where  ERSClaimSID=1913548
 	 if not exists ( select voucher from payment where voucher in(select CheckTraceNbr from ERSPaymentHeader where RecordStatus=@RecordStatus and ERSPaymentSID= @ERSPaymentSID))
-	set @result = @result + ' Payment voucher not Matched'
+	set @result = @result + ', Payment voucher not Matched'
 
 Declare @ERSChargeAmount decimal(17,2), @chargeSID int , @Chargeamount  decimal(17,2)
 select @Chargeamount=Amount from Charge where ChargeSID=@chargeSID 
@@ -37,27 +37,27 @@ select @ERSChargeAmount=LineItemChargeAmt from ERSChargeServiceInfo where ERSCha
 select @chargeSID=ReferenceID from ERSChargeReference where ERSChargeSID=@ERSChargeSID and ReferenceIDQualifier='6R'
 
 if  (@ERSChargeAmount <> @Chargeamount)
-set @result = @result + ' Charge Amount not Matched'
+set @result = @result + ', Charge Amount not Matched'
 
 declare @ERSServiceDate datetime , @ChargeFromDate datetime , @ProcedureEventSID int , @ProcedureCode varchar(50)
 select @ERSServiceDate=ServiceDate from ERSChargeDate where ERSChargeSID=@ERSChargeSID and DateTimeQualifier='472' --DOS
    select @ProcedureEventSID=ProcedureEventSID,@ChargeFromDate=FromServiceDate, @ProcedureCode=ProcedureCode from ProcedureEvent where ChargeSID=@chargeSID
 	if (@ERSServiceDate <> @ChargeFromDate)
-	set @result = @result + ' Date of Service not Matched'
+	set @result = @result + ', Date of Service not Matched'
 
 Declare @ERSCPT varchar(100), @ERSMod1 varchar(4), @ERSMod2 varchar(4), @ERSMod3 varchar(4), @ERSMod4 varchar(4)
   select @ERSCPT=ProductServiceID,@ERSMod1=ProcedureModifier01,
   @ERSMod2=ProcedureModifier02,@ERSMod3=ProcedureModifier03,@ERSMod4=ProcedureModifier04 from ERSChargeServiceInfo where ERSChargeSID=@ERSChargeSID
   --select * from ProcedureEventModifier where ProcedureEventSID=@ProcedureEventSID
 	if (@ERSCPT <> @ProcedureCode)
-	set @result = @result + ' CPT Code not Matched'
+	set @result = @result + ', CPT Code not Matched'
 	
 Declare @ESRTracePayerIdent varchar(20)
 select @ESRTracePayerIdent=TracePayerIdent from ERSPaymentHeader where ERSPaymentSID=@ERSPaymentSID  
 
 --select * from PlanClaimCharge where ChargeSID = 608782
 if not exists (select PayerID from [Plan] where PayerID in(select payerID from payer where EnvoyPayerID = @ESRTracePayerIdent))
-	set @result = @result + ' Payer not Matched'
+	set @result = @result + ', Payer not Matched'
 
 
  

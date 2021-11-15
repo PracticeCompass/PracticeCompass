@@ -29,5 +29,6 @@ namespace PracticeCompass.Core.Models
         public string ERSClaimAdjustmentreason { get; set; }
         public float ProviderAdjustmentAmt { get; set; }
         public string PmtProvLevelAdjReason { get; set; }
+        public string comment { get; set; }
     }
 }

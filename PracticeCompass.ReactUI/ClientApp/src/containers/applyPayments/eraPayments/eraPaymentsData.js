@@ -101,10 +101,10 @@ export const detailsColumns = [
     editable: false
   },
   {
-    cell: "merge",
-    field: JSON.stringify([{ text: "claimAdjustmentAmt", s: "/" }, { text: "eRSClaimAdjustmentreason", s: "," }]),
+    type: "currency",
+    field: "claimAdjustmentAmt",
     title: "Claim Adjustment",
-    minWidth: 100,
+    minWidth: 120,
     orderIndex: 8,
     editable: false
   },
@@ -112,16 +112,17 @@ export const detailsColumns = [
     type: "currency",
     field: "providerAdjustmentAmt",
     title: "Provider Adjustment",
-    minWidth: 100,
+    minWidth: 120,
     orderIndex: 9,
     editable: false
   },
   {
     field: "comment",
-    title: "Comment",
-    minWidth: 150,
+    title: "Comments",
+    minWidth: 200,
     orderIndex: 10,
-    editable: false
+      editable: false,
+      showToolTip: true
   },
   {
     field: "suggestion",

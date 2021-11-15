@@ -27,7 +27,7 @@ ERSChargeServiceInfo.LineItemChargeAmt , ERSChargeServiceInfo.LineItemProviderPa
 [ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
 [ERSChargeClaimAdjustment].AdjustmentReasonCode as ChargeClaimAdjustmentReason,
 ERSClaimAdjustment.AdjustmentAmt as ClaimAdjustmentAmt , ERSClaimAdjustment.AdjustmentReasonCode as ERSClaimAdjustmentreason,
-ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason
+ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason , dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment
  from ERSClaimData
 inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
@@ -37,6 +37,7 @@ left outer join claim on Claim.ClaimSID = PlanClaim.ClaimSID
 left outer join [dbo].[ERSChargeClaimAdjustment] on [ERSChargeClaimAdjustment].ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID
 left outer join [dbo].ERSClaimAdjustment on ERSClaimAdjustment.ERSClaimSID = ERSChargeServiceInfo.ERSClaimSID
 left outer join [dbo].ERSPmtProvLevelAdj on ERSPmtProvLevelAdj.ERSPaymentSID = ERSClaimData.ERSPaymentSID
+left outer join dbo.ERSPaymentHeader on ERSPaymentHeader.ERSPaymentSID = ERSClaimData.ERSPaymentSID
 where ERSClaimData.ERSPaymentSID=@ERSPaymentSID
 order by  claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,ERSClaimName.NameFirst
 
