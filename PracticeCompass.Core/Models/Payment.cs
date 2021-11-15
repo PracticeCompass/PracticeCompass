@@ -17,8 +17,8 @@ namespace PracticeCompass.Core.Models
         public string PayorName { get; set; }
         public string payorID { get; set; }
         public string paymentClass { get; set; }
-        public string Amount { get; set; }
-        public string Remaining { get; set; }
+        public float Amount { get; set; }
+        public float Remaining { get; set; }
         public string PayMethod { get; set; }
         public string FullyApplied { get; set; }
         public string Voucher { get; set; }

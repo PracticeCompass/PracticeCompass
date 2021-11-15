@@ -17,6 +17,7 @@ import {
   getguarantorList,
   resetGuarantorList,
 } from "../../../redux/actions/claimList";
+import ApplyPaymentDialogComponent from "../applyPaymentDialog";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
@@ -690,7 +691,27 @@ class insurancePayments extends Component {
     );
   };
   onApplyPaymentGridSelectionChange = () => {};
-  onApplyPaymentGridDoubleSelectionChange = () => {};
+  onApplyPaymentGridDoubleSelectionChange = (event) => {
+    if (
+      this.state.InsurancePaymentDetails == null ||
+      this.state.applyPlanPayments == null
+    ){
+      this.setState({
+        warning: true,
+        message: "Please select plan payment.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    this.setState({ ShowApplyPayment:true,paymentRow:event.dataItem});
+  };
+  togglePaymentDialog=()=>{
+    this.setState({ ShowApplyPayment:false});
+  }
   saveInsurancePaymentDetails = async () => {
     let resp = await this.props.savePayment(
       this.state.paymentSID ?? 0,
@@ -782,81 +803,7 @@ class insurancePayments extends Component {
     this.setApplyInsurancePaymentExpanded();
   };
 
-  applyItemChanged = (event) => {
-    if (
-      this.state.InsurancePaymentDetails == null ||
-      this.state.applyPlanPayments == null
-    ){
-      this.setState({
-        warning: true,
-        message: "Please select plan payment.",
-      });
-      setTimeout(() => {
-        this.setState({
-          warning: false,
-        });
-      }, this.state.timer);
-      return;
-    }
 
-    const field = event.field || "";
-    const inEditID = event.dataItem["chargeSID"];
-    let rowIndex = this.state.applyPlanPayments.findIndex(
-      (item) => item["chargeSID"] === inEditID
-    );
-    let backUpData = { ...this.state.applyPlanPaymentsbackup[rowIndex] };
-    let data = this.state.applyPlanPayments.map((item) =>
-      item["chargeSID"] === inEditID
-        ? {
-            ...item,
-            [field]: event.value,
-            isEdit: true,
-          }
-        : item
-    );
-
-    let disableApply = false;
-    if (field == "insurancePaid" || field == "adjustments") {
-      let amount = Number(data[rowIndex]["amount"].replace("$", ""));
-      let chargeBalance = Number(
-        data[rowIndex]["chargeBalance"].replace("$", "")
-      );
-
-      chargeBalance =
-        amount -
-        (data[rowIndex]["adjustments"] + data[rowIndex]["insurancePaid"]);
-      let remaining = this.state.InsurancePaymentDetails.remaining;
-      if (field == "insurancePaid") {
-        remaining =
-          remaining -
-          (data[rowIndex]["insurancePaid"] - backUpData["insurancePaid"]);
-      }
-      if (amount < 0 || remaining < 0) {
-        disableApply = true;
-        this.setState({
-          warning: true,
-          message: "Payment is higher than remaining.",
-        });
-        setTimeout(() => {
-          this.setState({
-            warning: false,
-          });
-        }, this.state.timer);
-        return;
-      }
-      data[rowIndex]["chargeBalance"] = "$" + chargeBalance;
-      let InsurancePaymentDetailsCopy=this.state.InsurancePaymentDetails;
-      InsurancePaymentDetailsCopy.remaining=remaining;
-      this.setState({
-        InsurancePaymentDetails:InsurancePaymentDetailsCopy
-      })
-      // this.state.InsurancePaymentDetails.remaining = remaining;
-    }
-    this.setState({
-      applyPlanPayments: data,
-      disableApply,
-    });
-  };
   filterApplyListChanged = async () => {
     if (
       this.state.applyPlanPayments != null &&
@@ -985,6 +932,44 @@ class insurancePayments extends Component {
       });
     }
   };
+
+  applyPaymentTransaction=(row)=>{
+
+    let InsurancePaymentDetailsCopy=this.state.InsurancePaymentDetails;
+    let data=[...this.state.applyPlanPayments];
+    let paymentindex =this.state.applyPlanPayments.findIndex(item=>item.chargeSID==row.chargeSID);
+    if(data[paymentindex].insurancePaid > row.insurancePaid){
+      InsurancePaymentDetailsCopy.remaining=InsurancePaymentDetailsCopy.remaining+(data[paymentindex].insurancePaid-row.insurancePaid);
+    }else if(data[paymentindex].insurancePaid < row.insurancePaid){
+      InsurancePaymentDetailsCopy.remaining=InsurancePaymentDetailsCopy.remaining - (row.insurancePaid-data[paymentindex].insurancePaid);
+    }
+
+    if(row.chargeBalance<0 || InsurancePaymentDetailsCopy.remaining < 0){
+      this.setState({
+        warning: true,
+        message: "Paid is higher than remaining.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+   
+   data[paymentindex].insurancePaid=row.insurancePaid??0;
+   data[paymentindex].adjustments=row.adjustments;
+   data[paymentindex].amount=row.amount;
+   data[paymentindex].chargeBalance=row.chargeBalance;
+   data[paymentindex].moveToNextPlan=row.moveToNextPlan;
+   data[paymentindex].isEdit=true;
+   this.setState({
+    applyPlanPayments:data,
+    InsurancePaymentDetails:InsurancePaymentDetailsCopy
+   })
+   this.filterApplyListChanged();
+   this.togglePaymentDialog();
+  }
   render() {
     return (
       <Fragment>
@@ -1003,6 +988,13 @@ class insurancePayments extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
+          {this.state.ShowApplyPayment && (
+            <ApplyPaymentDialogComponent
+              paymentRow={this.state.paymentRow}
+              togglePaymentDialog={this.togglePaymentDialog}
+              applyPaymentTransaction={this.applyPaymentTransaction}
+            ></ApplyPaymentDialogComponent>
+          )}
           {this.state.Show_HidePlanDialogVisible && (
             <Show_HideDialogComponent
               columns={this.state.insuranceColumns}
@@ -2038,31 +2030,7 @@ class insurancePayments extends Component {
                         >
                           Assignement Payment
                         </legend>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexFlow: "row nowrap",
-                            width: "100%",
-                          }}
-                        >
-                          <ButtonComponent
-                            icon="edit"
-                            type="edit"
-                            classButton="infraBtn-primary"
-                            onClick={() => {
-                              this.filterApplyListChanged();
-                            }}
-                            style={{ marginTop: "10px", marginLeft: "10px" }}
-                            disabled={
-                              this.state.applyPlanPayments == null ||
-                              this.state.applyPlanPayments.filter(
-                                (item) => item.isEdit
-                              ).length == 0
-                            }
-                          >
-                            Apply
-                          </ButtonComponent>
-                        </div>
+
                         <div
                           style={{
                             display: "flex",
@@ -2102,7 +2070,6 @@ class insurancePayments extends Component {
                                     this.onApplyPaymentGridDoubleSelectionChange
                                   }
                                   columns={this.state.applyPlanPaymentColumns}
-                                  itemChange={this.applyItemChanged}
                                   onSortChange={this.onSortChange}
                                   // pageChange={this.pageChange}
                                   isEditable={true}

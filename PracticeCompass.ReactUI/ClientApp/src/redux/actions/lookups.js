@@ -126,7 +126,6 @@ export const GetLookups = () => async (dispatch, getState) => {
       method: "GET",
       url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=Company`,
     });
-    debugger;
     dispatch(setCompanies(companies.data));
 
     dispatch(uiStopLoading());
