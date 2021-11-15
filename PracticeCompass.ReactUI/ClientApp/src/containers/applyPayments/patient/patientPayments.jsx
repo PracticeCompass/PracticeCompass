@@ -1846,7 +1846,7 @@ class PatientPayments extends Component {
                               (!this.props.UiExpand ? 148 : 330),
                             marginTop: "5px",
                             marginBottom: "10px",
-                            height: "360px",
+                            height: "330px",
                             marginLeft: "10px",
                           }}
                         >
