@@ -26,9 +26,11 @@ BEGIN
 		   when  LowestRespCoverageOrder =3 then 'Tertiary'
 		   when  LowestRespCoverageOrder =99 then 'Patient'
 		    ELSE  '' END
-	  as LowestRespCoverageOrder , '' as chargetype , -NULL as Amount , NULL as approvedamount , '' as CurrentStatus , '' as patientstatment 
+	  as LowestRespCoverageOrder , '' as chargetype , m.TotalClaimAmount  as Amount , NULL as approvedamount , '' as CurrentStatus , '' as patientstatment 
 	  ,'' as  procedurecode , '' as description, ''as mod1 ,'' as mod2 , '' as mod3 , '' as mod4 , '' as diag1 , '' as diag2 , ''as diag3 , '' as diag4 , 0 as ActivityCount , 0 as ChargeSID
-	  from Claim where PatientID = @PatientID
+	  from Claim  inner join 
+	  (select ClaimSID , max (TotalClaimAmount) as TotalClaimAmount from PlanClaim group by ClaimSID)m on m.ClaimSID = Claim.ClaimSID
+	  where PatientID = @PatientID
 
 
 	  union all
