@@ -25,7 +25,7 @@ select ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimCon
 CONVERT(varchar,[ERSChargeDate].ServiceDate,101) as ServiceDate,
 ERSChargeServiceInfo.LineItemChargeAmt , ERSChargeServiceInfo.LineItemProviderPaymentAmt,
 [ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
-[ERSChargeClaimAdjustment].AdjustmentReasonCode as ChargeClaimAdjustmentReason,
+ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode +' - '+[ERSChargeClaimAdjustment].AdjustmentReasonCode  as ChargeClaimAdjustmentReason,
 ERSClaimAdjustment.AdjustmentAmt as ClaimAdjustmentAmt , ERSClaimAdjustment.AdjustmentReasonCode as ERSClaimAdjustmentreason,
 ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason , dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment
  from ERSClaimData
