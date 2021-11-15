@@ -24,7 +24,7 @@ class ApplyPaymentDialogComponent extends Component {
     let item = {...this.props.paymentRow};
 
     this.setState({
-      insurancePaid: item?.insurancePaid,
+      insurancePaid: this.props.isHideMoveToNext?item?.patientPaid: item?.insurancePaid,
       adjustments: item?.adjustments,
       amount: item?.amount,
       chargeBalance: item?.chargeBalance,
@@ -106,15 +106,6 @@ class ApplyPaymentDialogComponent extends Component {
               ></TextBox>
             </div>
           </div>
-          <div style={{marginLeft:"204px"}}>
-            <CheckboxComponent
-              style={{ marginRight: "5px" }}
-              id="paymentId"
-              label="Move To Next Plan"
-              value={this.state.moveToNextPlan}
-              onChange={(e) => this.setState({ moveToNextPlan: e.value })}
-            />
-          </div>
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
             <div style={{ width: "221px", marginLeft: "40px" }}>
               <label className="userInfoLabel" style={{ float: "right" }}>Remaining </label>
@@ -134,6 +125,17 @@ class ApplyPaymentDialogComponent extends Component {
               ></TextBox>
             </div>
           </div>
+          { !this.props.isHideMoveToNext &&(
+          <div style={{marginLeft:"204px"}}>
+            <CheckboxComponent
+              style={{ marginRight: "5px" }}
+              id="paymentId"
+              label="Move To Next Plan"
+              value={this.state.moveToNextPlan}
+              onChange={(e) => this.setState({ moveToNextPlan: e.value })}
+            />
+          </div>
+           ) }
 
 
           <DialogActionsBar>

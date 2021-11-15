@@ -839,7 +839,7 @@ class insurancePayments extends Component {
         this.findClaim();
         this.setState({
           success: true,
-          message: "Save Apply succefully.",
+          message: "Save Payment succefully.",
         });
         setTimeout(() => {
           this.setState({
@@ -849,7 +849,7 @@ class insurancePayments extends Component {
       } else {
         this.setState({
           error: true,
-          message: "Error Apply succefully.",
+          message: "Error Payment Apply.",
         });
         setTimeout(() => {
           this.setState({
@@ -935,7 +935,7 @@ class insurancePayments extends Component {
 
   applyPaymentTransaction=(row)=>{
 
-    let InsurancePaymentDetailsCopy=this.state.InsurancePaymentDetails;
+    let InsurancePaymentDetailsCopy={...this.state.InsurancePaymentDetails};
     let data=[...this.state.applyPlanPayments];
     let paymentindex =this.state.applyPlanPayments.findIndex(item=>item.chargeSID==row.chargeSID);
     if(data[paymentindex].insurancePaid > row.insurancePaid){
@@ -2020,7 +2020,7 @@ class insurancePayments extends Component {
                             (!this.props.UiExpand ? 148 : 330),
                           marginTop: "5px",
                           marginBottom: "5px",
-                          height: "360px",
+                          height: "330px",
                           marginLeft: "10px",
                         }}
                       >
