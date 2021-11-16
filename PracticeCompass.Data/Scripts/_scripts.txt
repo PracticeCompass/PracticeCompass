@@ -59,3 +59,4 @@ uspChargeDetailsUpdate.sql
 FuncERAMatchingGet.sql
 FuncGetStampFromDate.sql
 FuncDateFromStamp.sql
+FuncGetMAXprrowid.sql

@@ -60,7 +60,7 @@ INSERT INTO [dbo].[Address]
            ([prrowid],[EntitySID],[Class],[Line1],[Line2],[City],[State],[Country],[Zip]
            ,[Attention],[TimeStamp],[LastUser],[CreateStamp],[CreateUser],[HL7Updated],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@PatientID,'H',@Address1,@Address2,@City,@StateCode,'US',@Zip
+           (dbo.FuncGetMAXprrowid('Address'),@PatientID,'H',@Address1,@Address2,@City,@StateCode,'US',@Zip
            ,'',GETDATE(),@userID,GETDATE(),@userID,'','medman',GETDATE(),GETDATE())
 END
 ELSE
@@ -85,7 +85,7 @@ INSERT INTO [dbo].[Phone]
            ([prrowid],[EntitySID],[Class],[Number],[Contact],[Extension],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[HL7Updated],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@PatientID,'H',@HomePhone,'','',GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('phone'),@PatientID,'H',@HomePhone,'','',GETDATE(),@userID
            ,GETDATE(),@userID,'','medman',GETDATE(),GETDATE())
 END
 ELSE
@@ -106,7 +106,7 @@ INSERT INTO [dbo].[Phone]
            ([prrowid],[EntitySID],[Class],[Number],[Contact],[Extension],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[HL7Updated],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@PatientID,'W',@WorkPhone,'',@WorkPhoneExt,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('phone'),@PatientID,'W',@WorkPhone,'',@WorkPhoneExt,GETDATE(),@userID
            ,GETDATE(),@userID,'','medman',GETDATE(),GETDATE())
 END
 ELSE
@@ -127,7 +127,7 @@ INSERT INTO [dbo].[Phone]
            ([prrowid],[EntitySID],[Class],[Number],[Contact],[Extension],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[HL7Updated],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@PatientID,'M',@WorkPhone,'',@WorkPhoneExt,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('phone'),@PatientID,'M',@WorkPhone,'',@WorkPhoneExt,GETDATE(),@userID
            ,GETDATE(),@userID,'','medman',GETDATE(),GETDATE())
 END
 ELSE

@@ -76,7 +76,7 @@ INSERT INTO [dbo].[ProcedureEventModifier]
            ([prrowid],[ProcedureEventSID],[Order],[Modifier],[TimeStamp],[LastUser],[CreateStamp]
            ,[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,1,@Modifier1,GETDATE(),@userID,GETDATE()
+           (dbo.FuncGetMAXprrowid('ProcedureEventModifier'),@ProcedureEventSID,1,@Modifier1,GETDATE(),@userID,GETDATE()
            ,@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -96,7 +96,7 @@ INSERT INTO [dbo].[ProcedureEventModifier]
            ([prrowid],[ProcedureEventSID],[Order],[Modifier],[TimeStamp],[LastUser],[CreateStamp]
            ,[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,2,@Modifier2,GETDATE(),@userID,GETDATE()
+           (dbo.FuncGetMAXprrowid('ProcedureEventModifier'),@ProcedureEventSID,2,@Modifier2,GETDATE(),@userID,GETDATE()
            ,@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -116,7 +116,7 @@ INSERT INTO [dbo].[ProcedureEventModifier]
            ([prrowid],[ProcedureEventSID],[Order],[Modifier],[TimeStamp],[LastUser],[CreateStamp]
            ,[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,3,@Modifier3,GETDATE(),@userID,GETDATE()
+           (dbo.FuncGetMAXprrowid('ProcedureEventModifier'),@ProcedureEventSID,3,@Modifier3,GETDATE(),@userID,GETDATE()
            ,@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -136,7 +136,7 @@ INSERT INTO [dbo].[ProcedureEventModifier]
            ([prrowid],[ProcedureEventSID],[Order],[Modifier],[TimeStamp],[LastUser],[CreateStamp]
            ,[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,4,@Modifier4,GETDATE(),@userID,GETDATE()
+           (dbo.FuncGetMAXprrowid('ProcedureEventModifier'),@ProcedureEventSID,4,@Modifier4,GETDATE(),@userID,GETDATE()
            ,@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -156,7 +156,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag1,1,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag1,1,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -175,7 +175,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag2,2,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag2,2,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -194,7 +194,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag3,3,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag3,3,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -212,7 +212,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag4,4,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag4,4,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -230,7 +230,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag5,5,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag5,5,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -248,7 +248,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag6,6,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag6,6,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -266,7 +266,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag7,7,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag7,7,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else
@@ -284,7 +284,7 @@ INSERT INTO [dbo].[ProcedureEventDiag]
            ([prrowid],[ProcedureEventSID],[DiagnosisCode],[Order],[TimeStamp],[LastUser]
            ,[CreateStamp],[CreateUser],[Pro2SrcPDB],[pro2created],[pro2modified])
      VALUES
-           (<prrowid, varchar(36),>,@ProcedureEventSID,@Diag8,8,GETDATE(),@userID
+           (dbo.FuncGetMAXprrowid('ProcedureEventDiag'),@ProcedureEventSID,@Diag8,8,GETDATE(),@userID
            ,GETDATE(),@userID,'medman',GETDATE(),GETDATE())
 end
 else

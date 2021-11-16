@@ -356,3 +356,4 @@ PracticeCompass.Data/Scripts/__tmp_uspERAPaymentHeaderGet.sql.txt
 /PracticeCompass.Data/Scripts/__tmp_FuncERAMatchingGet.sql.txt
 /PracticeCompass.Data/Scripts/__tmp_FuncGetStampFromDate.sql.txt
 /PracticeCompass.Data/Scripts/__tmp_FuncDateFromStamp.sql.txt
+PracticeCompass.Data/Scripts/__tmp_FuncGetMAXprrowid.sql.txt
