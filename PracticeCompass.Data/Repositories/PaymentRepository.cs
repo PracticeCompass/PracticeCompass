@@ -130,7 +130,7 @@ namespace PracticeCompass.Data.Repositories
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
-
+            
             foreach (var paymentmodel in applyPaymentModel)
             {
                 // update Charge
@@ -138,7 +138,7 @@ namespace PracticeCompass.Data.Repositories
                 chargerow.GuarantorReceipts = paymentmodel.AmountPaid;
                 chargerow.Adjustments = paymentmodel.Adjustment;
                 chargerow.pro2modified = DateTime.Now;
-
+                var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
                 // ChargeActivity
                 string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
                 int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
@@ -154,9 +154,9 @@ namespace PracticeCompass.Data.Repositories
                     SourceType = paymentmodel.PaymentType,
                     SourceID = paymentmodel.PayorID,
                     CreateMethod = "M",
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
@@ -177,9 +177,9 @@ namespace PracticeCompass.Data.Repositories
                     SourceType = paymentmodel.PaymentType,
                     SourceID = paymentmodel.PayorID,
                     CreateMethod = "M",
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
@@ -197,9 +197,9 @@ namespace PracticeCompass.Data.Repositories
                     ChargeSID = paymentmodel.ChargeSID,
                     ActivityCount = PAmaxactivitycount,
                     Amount = paymentmodel.AmountPaid,
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
