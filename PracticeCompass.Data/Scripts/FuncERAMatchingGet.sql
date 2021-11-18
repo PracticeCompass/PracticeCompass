@@ -65,11 +65,13 @@ if not exists (select PayerID from [Plan] where PayerID in(select payerID from p
 if not exists (select LastName from Person where PersonID in (
 select PersonID from PolicyMember where ClaimMemberID in (
 select  IDCode  from ERSClaimName where ERSClaimSID=@ERSClaimSID)))
-	set @result = @result + ' Patient not Matched'
+	set @result = @result + ', Patient not Matched'
 	
 if (@result = '')
 set @result = 'Records are Matched'
 
+if left(@result,1) = ','
+set @result = RIGHT(@result, LEN(@result) - 1) 
 	RETURN @result
 
 END
