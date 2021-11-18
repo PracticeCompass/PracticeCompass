@@ -27,7 +27,14 @@ ERSChargeServiceInfo.LineItemChargeAmt , ERSChargeServiceInfo.LineItemProviderPa
 [ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
 ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode +' - '+[ERSChargeClaimAdjustment].AdjustmentReasonCode  as ChargeClaimAdjustmentReason,
 ERSClaimAdjustment.AdjustmentAmt as ClaimAdjustmentAmt , ERSClaimAdjustment.AdjustmentReasonCode as ERSClaimAdjustmentreason,
-ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason , dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment
+ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason ,
+dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment,
+case when [ERADenialAlert].[AlertCode]='Phys' then 'Physician Responsibility'
+     when [ERADenialAlert].[AlertCode]='Pat' then 'Patient responsibility'
+	 when [ERADenialAlert].[AlertCode]='Move' then 'Move responsibility to the next level. Secondary/tertiary insurance or patient.'
+	 when [ERADenialAlert].[AlertCode]='Manual' then 'Manual Processing'
+	 else '' end as AlertCode
+
  from ERSClaimData
 inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
@@ -38,6 +45,7 @@ left outer join [dbo].[ERSChargeClaimAdjustment] on [ERSChargeClaimAdjustment].E
 left outer join [dbo].ERSClaimAdjustment on ERSClaimAdjustment.ERSClaimSID = ERSChargeServiceInfo.ERSClaimSID
 left outer join [dbo].ERSPmtProvLevelAdj on ERSPmtProvLevelAdj.ERSPaymentSID = ERSClaimData.ERSPaymentSID
 left outer join dbo.ERSPaymentHeader on ERSPaymentHeader.ERSPaymentSID = ERSClaimData.ERSPaymentSID
+left outer join [dbo].[ERADenialAlert] on [dbo].[ERADenialAlert].[GroupCode] = ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode and [dbo].[ERADenialAlert].[CodeNumber]= [ERSChargeClaimAdjustment].AdjustmentReasonCode
 where ERSClaimData.ERSPaymentSID=@ERSPaymentSID
 order by  claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,ERSClaimName.NameFirst
 

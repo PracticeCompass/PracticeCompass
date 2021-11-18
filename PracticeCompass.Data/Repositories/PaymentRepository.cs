@@ -132,13 +132,14 @@ namespace PracticeCompass.Data.Repositories
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
             
             foreach (var paymentmodel in applyPaymentModel)
-            {
+            {    
+                var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
                 // update Charge
                 var chargerow = Charges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
                 chargerow.GuarantorReceipts = paymentmodel.AmountPaid;
                 chargerow.Adjustments = paymentmodel.Adjustment;
                 chargerow.pro2modified = DateTime.Now;
-                var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+                chargerow.TimeStamp = timestamp;
                 // ChargeActivity
                 string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
                 int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
@@ -160,7 +161,13 @@ namespace PracticeCompass.Data.Repositories
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
-                    pro2modified = DateTime.Now
+                    pro2modified = DateTime.Now,
+                    PostDate = DateTime.Now.Date,
+                    AccountSID = chargerow.AccountSID,
+                    DNPracticeID = chargerow.PracticeID,
+                    PatientStatement = "",
+                    DisplayText=""
+
                 });
 
                 ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
@@ -183,7 +190,12 @@ namespace PracticeCompass.Data.Repositories
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
-                    pro2modified = DateTime.Now
+                    pro2modified = DateTime.Now,
+                    PostDate = DateTime.Now.Date,
+                    AccountSID = chargerow.AccountSID,
+                    DNPracticeID = chargerow.PracticeID,
+                    PatientStatement = "",
+                    DisplayText = ""
                 });
 
                 //PaymentAssignment
@@ -203,7 +215,13 @@ namespace PracticeCompass.Data.Repositories
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
-                    pro2modified = DateTime.Now
+                    pro2modified = DateTime.Now,
+                    AccountSID= chargerow.AccountSID,
+                    PostDate = DateTime.Now.Date,
+                    PatientBilled="",
+                    PatientStatement="",
+                    CreditedPlanID = paymentmodel.PlanID
+
                 });
             }
             using var txScope = new TransactionScope();

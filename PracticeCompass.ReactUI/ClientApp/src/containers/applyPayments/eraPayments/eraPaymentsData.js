@@ -125,7 +125,7 @@ export const detailsColumns = [
       showToolTip: true
   },
   {
-    field: "suggestion",
+      field: "alertCode",
     title: "Suggestion",
     minWidth: 300,
     orderIndex: 11,
