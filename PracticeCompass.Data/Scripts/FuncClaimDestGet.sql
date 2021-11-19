@@ -28,6 +28,8 @@ BEGIN
 		                       when LowestRespCoverageOrder=2 then 'Secondary'
 							   when LowestRespCoverageOrder=3 then 'Tertiary'
 							   when LowestRespCoverageOrder=99 then 'Patient'
+							   when LowestRespCoverageOrder=0 then '0'
+							   when LowestRespCoverageOrder=4 then 'Quaternary'
 		                     ELSE  '' END
 		   from Claim where ClaimSID=@calimID
 
