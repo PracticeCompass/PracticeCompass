@@ -24,8 +24,27 @@ BEGIN
 	SET NOCOUNT ON;
 	
 	Declare  @SQL varchar(max)
-	, @providerfilter varchar(50) ,@sortProviderfilter varchar(200)
+	, @providerfilter varchar(50) ,@providerFirstNamefilter varchar(100),@providerLastNamefilter varchar(100),@providerZipfilter varchar(100),  @sortProviderfilter varchar(200)
 	  set @providerfilter = '('+convert(varchar, @ProviderID,10)+' = 0  or Provider.ProviderID = '+convert(varchar, @ProviderID,10)+')'
+	 
+	 set @providerFirstNamefilter = case @firstName
+	   when '' then ''
+	   else 'and ( person.FirstName= '''+@firstName+''')'
+	   end
+
+	   set @providerLastNamefilter = case @lastName
+	   when '' then ''
+	   else 'and ( person.LastName= '''+@lastName+''')'
+	   end
+
+	   if(@Zip = 0)
+	   begin
+	    set  @providerZipfilter=''
+	   end
+	   else
+	   begin
+	   set @providerZipfilter =  'and ( Zip= '''+@Zip+''')'
+	   end
 
 
 	   set  @sortProviderfilter= Case @SortColumn
@@ -56,7 +75,7 @@ on Email.EntitySID=ProviderID
 where
 '
 
-set @SQL = @SQL+@providerfilter +@sortProviderfilter
+set @SQL = @SQL+@providerfilter + @providerFirstNamefilter+@providerLastNamefilter + @providerZipfilter +@sortProviderfilter
 print @SQL
  exec(@SQL)
 
