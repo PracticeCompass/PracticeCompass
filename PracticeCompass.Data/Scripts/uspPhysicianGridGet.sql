@@ -9,6 +9,8 @@ GO
 
 ---- =============================================
 --exec uspPhysicianGridGet @ProviderID=0,@firstName=N'Michael',@lastName=N'',@Skip=0,@SortColumn=N'',@SortDirection=N'',@zip=0
+--select  * from Entity where Class = 'D' and EntitySID=579893
+--select * from Provider where ProviderID=579893
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[uspPhysicianGridGet] 
 @ProviderID int, 
@@ -60,16 +62,15 @@ BEGIN
 		else 'order by Provider.ProviderID'
 		end
 
-set @SQL=	'select CONVERT(varchar,Provider.ProviderID,50) + CONVERT(varchar,Person.PersonID,50) as ProvidergridID,Person.PersonNumber ,Provider.ProviderID
-,person.LastName as DNLastName , person.FirstName as DNFirstName,  CONVERT(varchar,person.DOB,101) as DOB ,
+set @SQL=	'select CONVERT(varchar,Provider.ProviderID,50) as ProvidergridID ,Provider.ProviderID
+,Provider.LastName as DNLastName , Provider.FirstName as DNFirstName ,
 Address.Line1 as Address, Address.City , Address.State , case  LEN(LTRIM(RTRIM(Address.Zip)))
                             when 9 then
                             STUFF(Address.Zip, 6, 0, ''-'') 
                             else Address.Zip
                             end As Zip ,email.Email as Email 
-from Person
-inner join Provider on PersonID= Provider.ProviderID
-left outer join Address on [dbo].[Address].[EntitySID] = PersonID
+from Provider 
+left outer join Address on [dbo].[Address].[EntitySID] = ProviderID
 left outer join Email
 on Email.EntitySID=ProviderID
 where

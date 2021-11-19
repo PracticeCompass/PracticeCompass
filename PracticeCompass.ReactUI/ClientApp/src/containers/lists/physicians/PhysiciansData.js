@@ -20,11 +20,11 @@ export const providerColumns = [
         title: "Last Name",
         orderIndex: 4,
     },
-    {
-        field: "dob",
-        title: "DOB",
-        orderIndex: 5,
-    },
+    // {
+    //     field: "dob",
+    //     title: "DOB",
+    //     orderIndex: 5,
+    // },
     {
         field: "email",
         title: "Email",
