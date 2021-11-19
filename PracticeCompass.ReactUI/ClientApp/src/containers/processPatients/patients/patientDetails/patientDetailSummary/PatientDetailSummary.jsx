@@ -36,18 +36,19 @@ import {
   resetPatientTypeList,
   resetCompanyList,
   resetPracticeList,
-  getCompaniesList
+  getCompaniesList,
 } from "../../../../../redux/actions/patient";
 import {
   PracticeColumns,
   PatientTypesColumns,
-  companyNameColumns
+  companyNameColumns,
 } from "./../../patient/patientData";
 import { SaveLookups } from "../../../../../redux/actions/lookups";
 import NotificationComponent from "../../../../common/notification";
 import {
-  GetGridColumns, SaveGridColumns
-} from "../../../../../redux/actions/GridColumns"
+  GetGridColumns,
+  SaveGridColumns,
+} from "../../../../../redux/actions/GridColumns";
 function mapStateToProps(state) {
   return {
     insurances: state.patientDetails.insurances,
@@ -57,7 +58,7 @@ function mapStateToProps(state) {
     dropDownCompanies: state.lookups.companies,
     patientTypes: state.patients.patientTypes,
     dropDownPatientTypes: state.lookups.patientTypes,
-    UiExpand: state.ui.UiExpand
+    UiExpand: state.ui.UiExpand,
   };
 }
 
@@ -70,12 +71,12 @@ function mapDispatchToProps(dispatch) {
     GetPatientDetails: (personID, PracticeID) =>
       dispatch(GetPatientDetails(personID, PracticeID)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
-    getCompaniesList:(name)=>dispatch(getCompaniesList(name)),
+    getCompaniesList: (name) => dispatch(getCompaniesList(name)),
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getpatientTypes: (name) => dispatch(getpatientTypes(name)),
     resetPatientTypeList: () => dispatch(resetPatientTypeList()),
-    resetCompanyList:()=>dispatch(resetCompanyList()),
+    resetCompanyList: () => dispatch(resetCompanyList()),
     resetPracticeList: () => dispatch(resetPracticeList()),
     resetInsuranceGridGet: () => dispatch(resetInsuranceGridGet()),
   };
@@ -143,8 +144,20 @@ class PatientDetailSummary extends Component {
     warning: false,
     info: false,
     timer: 5000,
-    companySearchText:null,
-    patientListColumns: columns
+    companySearchText: null,
+    patientListColumns: columns,
+    OtherName: null,
+    OtherRelationShip: null,
+    OtherAddress1: null,
+    OtherAddress2: null,
+    OtherCity: null,
+    OtherStatevalue: null,
+    OtherZip: null,
+    OtherSSN: null,
+    OtherHomePhone: null,
+    OtherWorkPhone: null,
+    OtherExt: null,
+    OtherCellPhone: null,
   };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });
@@ -164,8 +177,8 @@ class PatientDetailSummary extends Component {
   getBaseGridUrl(filter) {
     return getCompanyNameUrl(filter);
   }
-  onPatientDetailClick = (event) => { };
-  onPatientDetailKeyDown = (event) => { };
+  onPatientDetailClick = (event) => {};
+  onPatientDetailKeyDown = (event) => {};
   async componentDidMount() {
     await this.props.resetInsuranceGridGet();
     if (
@@ -210,7 +223,7 @@ class PatientDetailSummary extends Component {
           stateCode: patientDetails?.stateCode,
           state: patientDetails?.state,
         },
-        maritalStatus: {
+        MaritalStatus: {
           lookupCode: patientDetails?.maritalStatusCode,
           description: patientDetails?.maritalStatusName,
         },
@@ -245,25 +258,37 @@ class PatientDetailSummary extends Component {
 
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
-    let currentColumns = await this.props.GetGridColumns('summeryGrid');
+    let currentColumns = await this.props.GetGridColumns("summeryGrid");
     if (currentColumns != null && currentColumns != "") {
       currentColumns = JSON.parse(currentColumns?.columns) ?? columns;
       this.setState({ patientListColumns: currentColumns });
     }
     this.setState({ refreshGrid: true });
-  }
-  onInsuranceGridSelectionChange = (event) => {
+  };
+  onInsuranceGridSelectionChange = async (event) => {
     this.setState({
       currentInsurance: event.dataItem != null ? event.dataItem : null,
     });
-    this.setState({
+    if (
+      this.state.currentInsurance?.carrierID != null &&
+      (this.props.dropDownCompanies == null ||
+        this.props.dropDownCompanies.filter(
+          (x) => x.entityId == this.state.currentInsurance?.carrierID
+        ).length == 0)
+    ) {
+      await this.props.SaveLookups(
+        this.state.currentInsurance?.carrierID,
+        "Company"
+      );
+    }
+    await this.setState({
       Type: {
         lookupCode: this.state.currentInsurance?.insuranceTypeCode,
         description: this.state.currentInsurance?.insuranceTypeName,
       },
       CompanyName: {
-        carrierID: this.state.currentInsurance?.carrierID,
-        name: this.state.currentInsurance?.companyName,
+        entityId: this.state.currentInsurance?.carrierID,
+        entityName: this.state.currentInsurance?.companyName,
       },
       PlanType: {
         lookupCode: this.state.currentInsurance?.plantypecode,
@@ -274,16 +299,38 @@ class PatientDetailSummary extends Component {
       GroupNumber: this.state.currentInsurance?.groupNumber,
       PlanEndDate:
         this.state.currentInsurance != null &&
-          this.state.currentInsurance.endDate
+        this.state.currentInsurance.endDate
           ? new Date(this.state.currentInsurance.endDate)
           : null,
       PlanEffectiveDate:
         this.state.currentInsurance != null &&
-          this.state.currentInsurance.startDate
+        this.state.currentInsurance.startDate
           ? new Date(this.state.currentInsurance.startDate)
           : null,
       Insured: this.state.currentInsurance?.relationToSub,
       InsuredID: this.state.currentInsurance?.insuredID,
+      OtherName: this.state.currentInsurance?.subscriberName,
+      OtherRelationShip: this.state.currentInsurance
+        ? {
+            lookupCode: this.state.currentInsurance.relationToSub,
+            description: this.state.currentInsurance.releationDescription,
+          }
+        : null,
+      OtherAddress1: this.state.currentInsurance?.address1,
+      OtherAddress2: this.state.currentInsurance?.address2,
+      OtherCity: this.state.currentInsurance?.city,
+      OtherStatevalue: this.state.currentInsurance
+        ? {
+            stateCode: this.state.currentInsurance.stateCode,
+            state: this.state.currentInsurance.state,
+          }
+        : null,
+      OtherZip: this.state.currentInsurance?.zip,
+      OtherSSN: this.state.currentInsurance?.insuredID,
+      OtherHomePhone: this.state.currentInsurance?.homePhone,
+      OtherWorkPhone: this.state.currentInsurance?.workPhone,
+      OtherExt: this.state.currentInsurance?.insuredID,
+      OtherCellPhone: this.state.currentInsurance?.mobilePhone,
     });
     this.scrollToBottom();
   };
@@ -298,16 +345,16 @@ class PatientDetailSummary extends Component {
     this.setState({
       practiceID: {
         entityId: selectedDataItems[0].patientID,
-        entityName: selectedDataItems[0].sortName
-      }
+        entityName: selectedDataItems[0].sortName,
+      },
     });
   };
   onPracticeDoubleClick = async (event) => {
     this.setState({
       practiceID: {
         entityId: event.dataItem.practiceID,
-        entityName: event.dataItem.sortName
-      }
+        entityName: event.dataItem.sortName,
+      },
     });
     this.props.SaveLookups(event.dataItem.practiceID, "Practice");
     //this.selectPatient();
@@ -320,13 +367,9 @@ class PatientDetailSummary extends Component {
     );
     this.setState({
       practiceID: {
-        entityId: selectedDataItems
-          ? selectedDataItems[0].practiceID
-          : null,
-        entityName: selectedDataItems
-          ? selectedDataItems[0].sortName
-          : null
-      }
+        entityId: selectedDataItems ? selectedDataItems[0].practiceID : null,
+        entityName: selectedDataItems ? selectedDataItems[0].sortName : null,
+      },
     });
   };
   cancelPracticeDialog = () => {
@@ -388,9 +431,9 @@ class PatientDetailSummary extends Component {
     this.setState({
       patientType: selectedDataItems[0]
         ? {
-          entityName: selectedDataItems[0].description,
-          entityId: selectedDataItems[0].lookupCode,
-        }
+            entityName: selectedDataItems[0].description,
+            entityId: selectedDataItems[0].lookupCode,
+          }
         : null,
     });
   };
@@ -425,9 +468,9 @@ class PatientDetailSummary extends Component {
     this.setState({
       CompanyName: selectedDataItems[0]
         ? {
-          entityName: selectedDataItems[0].sortName,
-          entityId: selectedDataItems[0].entitySID,
-        }
+            entityName: selectedDataItems[0].sortName,
+            entityId: selectedDataItems[0].entitySID,
+          }
         : null,
     });
   };
@@ -470,8 +513,14 @@ class PatientDetailSummary extends Component {
     } else {
       this.setState({ refreshGrid: false });
       //localStorage.setItem("summeryGrid", JSON.stringify(columns));
-      let GridColumns = await this.props.SaveGridColumns("summeryGrid", JSON.stringify(columns));
-      this.setState({ patientListColumns: JSON.parse(GridColumns?.columns), Show_HideDialogVisible: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "summeryGrid",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        patientListColumns: JSON.parse(GridColumns?.columns),
+        Show_HideDialogVisible: false,
+      });
       setTimeout(() => {
         this.setState({ refreshGrid: true });
       }, 10);
@@ -496,16 +545,14 @@ class PatientDetailSummary extends Component {
       });
     }
   };
-  onSortChange = () => { }
+  onSortChange = () => {};
   render() {
     return (
       <Fragment>
         <div style={{ width: "100%", padding: "5px" }}>
           {this.state.Show_HideDialogVisible && (
             <Show_HideDialogComponent
-              columns={
-                this.state.patientListColumns
-              }
+              columns={this.state.patientListColumns}
               toggleShowColumnsDialog={this.toggleShowColumnsDialog}
               SaveColumnsShow={this.SaveColumnsShow}
             ></Show_HideDialogComponent>
@@ -521,25 +568,25 @@ class PatientDetailSummary extends Component {
           ></NotificationComponent>
           {this.state.companyNameVisible && (
             <FindDialogComponent
-            title="Company Name Search"
-            placeholder="Enter Company Name"
-            searcTextBoxValue={this.state.companySearchText}
-            onTextSearchChange={(e) => {
-              this.setState({
-                companySearchText: e.value,
-              });
-            }}
-            clickOnSearch={this.companySearch}
-            dataItemKey="entitySID"
-            data={this.props.companyList}
-            columns={companyNameColumns}
-            onSelectionChange={this.onCompanyNameSelectionChange}
-            onRowDoubleClick={this.onCompanyNameDoubleClick}
-            onKeyDown={this.onCompanyNameKeyDown}
-            idGetterLookup={idGetterCompanyName}
-            toggleDialog={this.cancelcomapnyNameeDialog}
-            cancelDialog={this.cancelcomapnyNameeDialog}
-          ></FindDialogComponent>
+              title="Company Name Search"
+              placeholder="Enter Company Name"
+              searcTextBoxValue={this.state.companySearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  companySearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.companySearch}
+              dataItemKey="entitySID"
+              data={this.props.companyList}
+              columns={companyNameColumns}
+              onSelectionChange={this.onCompanyNameSelectionChange}
+              onRowDoubleClick={this.onCompanyNameDoubleClick}
+              onKeyDown={this.onCompanyNameKeyDown}
+              idGetterLookup={idGetterCompanyName}
+              toggleDialog={this.cancelcomapnyNameeDialog}
+              cancelDialog={this.cancelcomapnyNameeDialog}
+            ></FindDialogComponent>
           )}
           {this.state.patientTypeVisible && (
             <FindDialogComponent
@@ -587,8 +634,10 @@ class PatientDetailSummary extends Component {
           )}
           <div style={{ display: "flex", flexFlow: "row" }}>
             <div style={{ float: "left" }}>
-              <div className="rowHeight"
-                style={{ display: "flex", flexFlow: "row nowrap" }}>
+              <div
+                className="rowHeight"
+                style={{ display: "flex", flexFlow: "row nowrap" }}
+              >
                 <div style={{ float: "left", width: "362px" }}>
                   <div style={{ float: "left", marginLeft: "5px" }}>
                     <label className="userInfoLabel">Patient Type</label>
@@ -661,7 +710,9 @@ class PatientDetailSummary extends Component {
                 className="rowHeight"
                 style={{ display: "flex", flexFlow: "row nowrap" }}
               >
-                <div style={{ float: "left", width: "316px", marginLeft: "13px" }}>
+                <div
+                  style={{ float: "left", width: "316px", marginLeft: "13px" }}
+                >
                   <div style={{ float: "left" }}>
                     <label className="userInfoLabel">First Name</label>
                   </div>
@@ -784,8 +835,6 @@ class PatientDetailSummary extends Component {
                     ></TextBox>
                   </div>
                 </div>
-
-
               </div>
               <div
                 className="rowHeight"
@@ -847,7 +896,9 @@ class PatientDetailSummary extends Component {
                       placeholder="00000-0000"
                       className="unifyHeight"
                       value={this.state.Zip}
-                      onValueChange={(e) => this.setState({ Zip: e.target.value })}
+                      onValueChange={(e) =>
+                        this.setState({ Zip: e.target.value })
+                      }
                     ></TextBox>
                   </div>
                   <div style={{ float: "left", marginLeft: "15px" }}>
@@ -860,7 +911,9 @@ class PatientDetailSummary extends Component {
                       placeholder="000-00-00000"
                       className="unifyHeight"
                       value={this.state.SS}
-                      onValueChange={(e) => this.setState({ SS: e.target.value })}
+                      onValueChange={(e) =>
+                        this.setState({ SS: e.target.value })
+                      }
                     ></TextBox>
                   </div>
                 </div>
@@ -887,8 +940,6 @@ class PatientDetailSummary extends Component {
                     ></TextBox>
                   </div>
                 </div>
-
-
               </div>
 
               <div
@@ -921,7 +972,9 @@ class PatientDetailSummary extends Component {
                       placeholder="00000"
                       className="unifyHeight"
                       value={this.state.Ext}
-                      onValueChange={(e) => this.setState({ Ext: e.target.value })}
+                      onValueChange={(e) =>
+                        this.setState({ Ext: e.target.value })
+                      }
                     ></TextBox>
                   </div>
                 </div>
@@ -1153,16 +1206,14 @@ class PatientDetailSummary extends Component {
                 aria-labelledby="headingOne"
                 data-parent="#accordionExample"
               >
-                <div className="row" >
+                <div className="row">
                   {this.state.refreshGrid && (
                     <GridComponent
                       id="summeryGrid"
                       height="150px"
                       width="100%"
                       take={3}
-                      columns={
-                        this.state.patientListColumns
-                      }
+                      columns={this.state.patientListColumns}
                       selectionMode="single"
                       onSelectionChange={this.onInsuranceGridSelectionChange}
                       onRowDoubleClick={this.onInsuranceGridSelectionChange}
@@ -1195,7 +1246,9 @@ class PatientDetailSummary extends Component {
               View
             </ButtonComponent> */}
           </div>
-          <div style={{ display: "flex", flexFlow: "row nowrap", width: "1222px" }}>
+          <div
+            style={{ display: "flex", flexFlow: "row nowrap", width: "1222px" }}
+          >
             <fieldset
               className="fieldsetStyle"
               style={{ width: "99%", height: "260px" }}
@@ -1230,7 +1283,7 @@ class PatientDetailSummary extends Component {
                       selectedValue={
                         this.state.Insured &&
                         (this.state.Insured == "S" ||
-                          this.state.Insured == "Self"
+                        this.state.Insured == "Self"
                           ? "Self"
                           : "Other")
                       }
@@ -1245,7 +1298,10 @@ class PatientDetailSummary extends Component {
                   onSelect={this.handleSelect}
                 >
                   <TabStripTab title="Plan">
-                    <div className="rowHeight" style={{ display: "flex", flexFlow: "row nowrap" }}>
+                    <div
+                      className="rowHeight"
+                      style={{ display: "flex", flexFlow: "row nowrap" }}
+                    >
                       <div style={{ float: "left" }}>
                         <label className="userInfoLabel">Company Name</label>
                       </div>
@@ -1289,7 +1345,10 @@ class PatientDetailSummary extends Component {
                         ></DropDown>
                       </div>
                     </div>
-                    <div className="rowHeight" style={{ display: "flex", flexFlow: "row nowrap" }}>
+                    <div
+                      className="rowHeight"
+                      style={{ display: "flex", flexFlow: "row nowrap" }}
+                    >
                       <div style={{ float: "left", marginLeft: "28px" }}>
                         <label className="userInfoLabel">Plan Name</label>
                       </div>
@@ -1327,7 +1386,10 @@ class PatientDetailSummary extends Component {
                         ></DropDown>
                       </div>
                     </div>
-                    <div className="rowHeight" style={{ display: "flex", flexFlow: "row nowrap" }}>
+                    <div
+                      className="rowHeight"
+                      style={{ display: "flex", flexFlow: "row nowrap" }}
+                    >
                       <div style={{ float: "left", marginLeft: "31px" }}>
                         <label className="userInfoLabel">Insured ID</label>
                       </div>
@@ -1353,7 +1415,10 @@ class PatientDetailSummary extends Component {
                         ></TextBox>
                       </div>
                     </div>
-                    <div className="rowHeight" style={{ display: "flex", flexFlow: "row nowrap" }}>
+                    <div
+                      className="rowHeight"
+                      style={{ display: "flex", flexFlow: "row nowrap" }}
+                    >
                       <div style={{ float: "left", marginLeft: "15px" }}>
                         <label className="userInfoLabel">
                           Plan Effective Date
@@ -1382,16 +1447,17 @@ class PatientDetailSummary extends Component {
                           className="unifyHeight"
                           placeholder="MM/DD/YYYY"
                           format="M/dd/yyyy"
-                          value={
-                            this.state.PlanEndDate
-                          }
+                          value={this.state.PlanEndDate}
                           onChange={(e) =>
                             this.setState({ PlanEndDate: e.value })
                           }
                         ></DatePicker>
                       </div>
                     </div>
-                    <div className="rowHeight" style={{ display: "flex", flexFlow: "row nowrap" }}></div>
+                    <div
+                      className="rowHeight"
+                      style={{ display: "flex", flexFlow: "row nowrap" }}
+                    ></div>
                   </TabStripTab>
 
                   <TabStripTab title="Other">
@@ -1451,8 +1517,6 @@ class PatientDetailSummary extends Component {
                           ></TextBox>
                         </div>
                       </div>
-
-
                     </div>
                     <div
                       className="rowHeight"
@@ -1466,7 +1530,9 @@ class PatientDetailSummary extends Component {
                           <TextBox
                             className="unifyHeight"
                             value={this.state.OtherAddress2}
-                            onChange={(e) => this.setState({ OtherAddress2: e.value })}
+                            onChange={(e) =>
+                              this.setState({ OtherAddress2: e.value })
+                            }
                           ></TextBox>
                         </div>
                       </div>
@@ -1483,7 +1549,9 @@ class PatientDetailSummary extends Component {
                           <TextBox
                             className="unifyHeight"
                             value={this.state.OtherCity}
-                            onChange={(e) => this.setState({ OtherCity: e.value })}
+                            onChange={(e) =>
+                              this.setState({ OtherCity: e.value })
+                            }
                           ></TextBox>
                         </div>
                         <div style={{ float: "left", marginLeft: "29px" }}>
@@ -1499,7 +1567,9 @@ class PatientDetailSummary extends Component {
                             dataItemKey="stateCode"
                             getBaseUrl={(filter) => countryStateGetUrl(filter)}
                             value={this.state.OtherStatevalue}
-                            onChange={(e) => this.setState({ OtherStatevalue: e.value })}
+                            onChange={(e) =>
+                              this.setState({ OtherStatevalue: e.value })
+                            }
                           ></DropDown>
                         </div>
                       </div>
@@ -1514,7 +1584,9 @@ class PatientDetailSummary extends Component {
                             placeholder="00000-0000"
                             className="unifyHeight"
                             value={this.state.OtherZip}
-                            onValueChange={(e) => this.setState({ OtherZip: e.target.value })}
+                            onValueChange={(e) =>
+                              this.setState({ OtherZip: e.target.value })
+                            }
                           ></TextBox>
                         </div>
                         <div style={{ float: "left", marginLeft: "15px" }}>
@@ -1527,7 +1599,9 @@ class PatientDetailSummary extends Component {
                             placeholder="000-00-00000"
                             className="unifyHeight"
                             value={this.state.OtherSSN}
-                            onValueChange={(e) => this.setState({ OtherSSN: e.target.value })}
+                            onValueChange={(e) =>
+                              this.setState({ OtherSSN: e.target.value })
+                            }
                           ></TextBox>
                         </div>
                       </div>
@@ -1553,8 +1627,6 @@ class PatientDetailSummary extends Component {
                           ></TextBox>
                         </div>
                       </div>
-
-
                     </div>
                     <div
                       className="rowHeight"
@@ -1586,7 +1658,9 @@ class PatientDetailSummary extends Component {
                             placeholder="00000"
                             className="unifyHeight"
                             value={this.state.OtherExt}
-                            onValueChange={(e) => this.setState({ OtherExt: e.target.value })}
+                            onValueChange={(e) =>
+                              this.setState({ OtherExt: e.target.value })
+                            }
                           ></TextBox>
                         </div>
                       </div>
