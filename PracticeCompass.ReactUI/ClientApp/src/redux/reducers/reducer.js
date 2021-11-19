@@ -14,6 +14,7 @@ import { insuranceReducer } from "./Insurance";
 import { gridColumnsReducer } from "./GridColumns";
 import { authentication } from "./authentication.reducer";
 import { registration } from "./registration.reducer";
+import {physiciansReducer} from "./Physicians"
 import { users } from "./users.reducer";
 import { alert } from "./alert.reducer";
 const rootReducer = (history) =>
@@ -31,6 +32,7 @@ const rootReducer = (history) =>
     insurances: insuranceReducer,
     gridColumns: gridColumnsReducer,
     lookups: lookupsReducer,
+    physicians:physiciansReducer,
     authentication,
     registration,
     users,

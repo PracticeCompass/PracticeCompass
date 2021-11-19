@@ -1,0 +1,67 @@
+USE [medman]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+---- =============================================
+--exec uspPhysicianGridGet @ProviderID=0,@firstName=N'',@lastName=N'',@Skip=0,@SortColumn=N'',@SortDirection=N'',@zip=0
+-- =============================================
+CREATE OR ALTER PROCEDURE [dbo].[uspPhysicianGridGet] 
+@ProviderID int, 
+@firstName nvarchar(200),
+@lastName nvarchar(200),
+@Zip int,
+@Skip int,
+@SortColumn varchar(50),
+@SortDirection varchar(50)
+
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	Declare  @SQL varchar(max)
+	, @providerfilter varchar(50) ,@sortProviderfilter varchar(200)
+	  set @providerfilter = '('+convert(varchar, @ProviderID,10)+' = 0  or Provider.ProviderID = '+convert(varchar, @ProviderID,10)+')'
+
+
+	   set  @sortProviderfilter= Case @SortColumn
+	   	when 'email' then 'order by Email '+@SortDirection+''
+		when 'zip' then 'order by Zip '+@SortDirection+''
+		when 'state' then 'order by Address.State '+@SortDirection+''
+		when 'city' then 'order by Address.City '+@SortDirection+''
+		when 'address' then 'order by Address '+@SortDirection+''
+		when 'dnLastName' then 'order by DNLastName '+@SortDirection+''
+		when 'dnFirstName' then 'order by DNFirstName '+@SortDirection+''
+		when 'dob' then 'order by DOB '+@SortDirection+''
+		when 'personNumber' then 'order by Person.PersonNumber '+@SortDirection+''
+		else 'order by Provider.ProviderID'
+		end
+
+set @SQL=	'select CONVERT(varchar,Provider.ProviderID,50) + CONVERT(varchar,Person.PersonID,50) as ProvidergridID,Person.PersonNumber ,Provider.ProviderID
+,person.LastName as DNLastName , person.FirstName as DNFirstName,  CONVERT(varchar,person.DOB,101) as DOB ,
+Address.Line1 as Address, Address.City , Address.State , case  LEN(LTRIM(RTRIM(Address.Zip)))
+                            when 9 then
+                            STUFF(Address.Zip, 6, 0, ''-'') 
+                            else Address.Zip
+                            end As Zip ,email.Email as Email 
+from Person
+inner join Provider on PersonID= Provider.ProviderID
+left outer join Address on [dbo].[Address].[EntitySID] = PersonID
+left outer join Email
+on Email.EntitySID=ProviderID
+where
+'
+
+set @SQL = @SQL+@providerfilter +@sortProviderfilter
+print @SQL
+ exec(@SQL)
+
+
+END
+GO
+
+

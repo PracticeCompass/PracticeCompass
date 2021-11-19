@@ -17,9 +17,16 @@ import {
   FilterInsert,
   FilterUpdate,
 } from "../../../redux/actions/filter";
+import { getPhysicians } from "../../../redux/actions/Physician"
+
+const DATA_ITEM_KEY_PROVIDER = "providergridID";
+const idGetterProvider = getter(DATA_ITEM_KEY_PROVIDER);
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    physicians: state.physicians.physicians,
+    UiExpand: state.ui.UiExpand,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -32,10 +39,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
+    getPhysicians: (searchGrid) => dispatch(getPhysicians(searchGrid))
   };
 }
-const DATA_ITEM_KEY_PHYSICIAN = "id";
-const idGetterPhysisionList = getter(DATA_ITEM_KEY_PHYSICIAN);
+
 class PhysiciansList extends Component {
   state = {
     success: false,
@@ -49,7 +56,9 @@ class PhysiciansList extends Component {
     lastName: null,
     Position: null,
     providerVisible: false,
-    refreshFilter: true
+    refreshFilter: true,
+    skip: 0,
+    take: 28,
   }
   onSortChange = () => {
 
@@ -172,6 +181,53 @@ class PhysiciansList extends Component {
       this.reset();
     }
   };
+  physicianGridSearch = async (refreshData = true) => {
+    var physicianGrid = {
+      ProviderID: this.state.selectedProviderId
+        ? this.state.selectedProviderId
+        : 0,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      ZIP: this.state.Zip,
+      // skip: refreshData ? 0 : this.props.Patients.length,
+      skip: 0,
+      SortColumn: this.state.selectedSortColumn
+        ? this.state.selectedSortColumn
+        : "",
+      SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
+    };
+    await this.props.getPhysicians(physicianGrid);
+  };
+  onSortChange = async (column, sort) => {
+    await this.setState({
+      selectedSortColumn: column,
+      sortDirection: sort,
+    });
+    this.physicianGridSearch();
+  };
+  onPhysiciansGridSelectionChange = (event) => {
+    this.setState({selectedPhysician: event.dataItem});
+  }
+  onPhysiciansGridDoubleSelectionChange = (event) => {
+    this.props.setInsuranceDetailExpanded();
+    this.props.setInsuranceDetails(event.dataItem);
+  }
+  openPhysicianRow=()=>{
+    if(this.state.selectedPhysician){
+      this.props.setInsuranceDetailExpanded();
+      this.props.setInsuranceDetails(this.state.selectedPhysician);
+    }else{
+    this.setState({
+      warning: true,
+      message: "Please Select Physician.",
+    });
+    setTimeout(() => {
+      this.setState({
+        warning: false,
+      });
+    }, this.state.timer);
+  }
+}
   render() {
     return (
       <Fragment>
@@ -218,8 +274,8 @@ class PhysiciansList extends Component {
                   <div className="filterStyle" style={{ float: "left" }}>
                     <DropDown
                       className="unifyHeight"
-                      id="patientFilter"
-                      name="patientFilter"
+                      id="physicianFilter"
+                      name="physicianFilter"
                       type="remoteDropDown"
                       textField="displayName"
                       dataItemKey="filterID"
@@ -353,12 +409,12 @@ class PhysiciansList extends Component {
                   icon="search"
                   type="search"
                   classButton="infraBtn-primary action-button"
-                  onClick={this.props.clickOnSearch}
+                  onClick={this.physicianGridSearch}
                 >
                   Search
                 </ButtonComponent>
               </div>
-              <div style={{ float: "left", width: "200px !important" }}>
+              {/* <div style={{ float: "left", width: "200px !important" }}>
                 <ButtonComponent
                   type="edit"
                   icon="edit"
@@ -369,7 +425,7 @@ class PhysiciansList extends Component {
                 >
                   Save
                 </ButtonComponent>
-              </div>
+              </div> */}
               <div style={{ float: "left" }}>
                 <ButtonComponent
                   type="edit"
@@ -388,7 +444,7 @@ class PhysiciansList extends Component {
                   icon="edit"
                   classButton="infraBtn-primary details-button  "
                   onClick={() => {
-                    this.props.setInsuranceDetailExpanded();
+                    this.openPhysicianRow();
                   }}
                 >
                   Physician Details
@@ -398,39 +454,52 @@ class PhysiciansList extends Component {
 
           </div>
         </div>
-
-        <div className="accordion" id="accordionExample">
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-              marginTop: "5px",
-            }}
-          >
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: window.innerWidth - (!this.props.UiExpand ? 120 : 273),
+          }}
+        >
+          <div className="accordion" id="accordionExample">
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              className="card bg-light mb-3"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginTop: "5px",
+              }}
             >
-              <GridComponent
-                id="physicianGrid"
-                columns={
-                  providerColumns
-                }
-                height="400px"
-                width="100%"
-                onSelectionChange={this.onPatientGridSelectionChange}
-                onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
-                selectionMode="single"
-                sortColumns={[]}
-                onSortChange={this.onSortChange}
-              ></GridComponent>
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                <GridComponent
+                  id="physicianGrid"
+                  data={this.props.physicians}
+                  columns={
+                    providerColumns
+                  }
+                  height="400px"
+                  width="100%"
+                  onSelectionChange={this.onPhysiciansGridSelectionChange}
+                  onRowDoubleClick={this.onPhysiciansGridDoubleSelectionChange}
+                  selectionMode="single"
+                  idGetter={idGetterProvider}
+                  DATA_ITEM_KEY="providergridID"
+                  sortColumns={[]}
+                  onSortChange={this.onSortChange}
+                  height="640px"
+                  width="100%"
+                  skip={0}
+                  take={this.state.take}
+                ></GridComponent>
+              </div>
             </div>
           </div>
         </div>
-
 
       </Fragment>
 

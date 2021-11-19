@@ -1,19 +1,54 @@
 export const providerColumns = [
     {
-        field: "id",
-        title: "ID",
+        field: "providergridID",
+        title: "providergridID",
         hide:true,
         orderIndex: 1,
     },
     {
-        field: "name",
-        title: "Name",
+        field: "providerID",
+        title: "ID",
         orderIndex: 2,
+    },
+    {
+        field: "dnFirstName",
+        title: "First Name",
+        orderIndex: 3,
+    },
+    {
+        field: "dnLastName",
+        title: "Last Name",
+        orderIndex: 4,
+    },
+    {
+        field: "dob",
+        title: "DOB",
+        orderIndex: 5,
     },
     {
         field: "email",
         title: "Email",
-        orderIndex: 3,
+        orderIndex: 6,
+    },
+    {
+        field: "address",
+        title: "Address",
+        orderIndex: 7,
+    },
+    {
+        field: "city",
+        title: "City",
+        orderIndex: 8,
+    },
+    {
+        field: "state",
+        title: "State",
+        orderIndex: 9,
+    },
+    {
+        field: "zip",
+        title: "Zip",
+        orderIndex: 10,
     }
 ];
 export const Columns = [

@@ -35,8 +35,8 @@ class PhysiciansDetails extends Component {
 
         <div className="row" style={{ marginTop: "10px" }}>
           <div className="col-12">
-            <TabStrip selected={this.state.selected} onSelect={this.handleSelect} style={{ height: "270px" }}>
-              <TabStripTab title="Provider Info" style={{ height: "270px" }}>
+            <TabStrip selected={this.state.selected} onSelect={this.handleSelect} style={{ height: "310px" }}>
+              <TabStripTab title="Provider Info" style={{ height: "310px" }}>
                 <div
                   className="rowHeight"
                   style={{ display: "flex", flexFlow: "row nowrap", marginLeft: "93px" }}
