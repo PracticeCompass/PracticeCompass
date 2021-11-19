@@ -44,8 +44,8 @@ export const columns = [
   },
   {
     field: "claimNumber",
-    title: "Claim #",
-    minWidth: 70,
+    title: "Claim Number",
+    minWidth: 100,
     orderIndex: 2,
   },
   {

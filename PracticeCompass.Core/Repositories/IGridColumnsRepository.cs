@@ -6,7 +6,7 @@ namespace PracticeCompass.Core.Repositories
 {
     public interface IGridColumnsRepository : IRepository<GridColumn>
     {
-        GridColumn GetGridColumns(string Name);
-        GridColumn SaveGridColumns(string Name,string Columns);
+        GridColumn GetGridColumns(string Name, int UserId);
+        GridColumn SaveGridColumns(string Name,string Columns, int UserId);
     }
 }

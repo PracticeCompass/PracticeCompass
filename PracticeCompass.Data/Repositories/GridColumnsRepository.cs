@@ -49,11 +49,11 @@ namespace PracticeCompass.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public GridColumn SaveGridColumns(string Name,string Columns)
+        public GridColumn SaveGridColumns(string Name,string Columns, int UserId)
         {
             try
             {
-                var data =  this.db.QueryMultiple("uspGridColumnsSave", new { @Name=Name, @Columns= Columns }, commandType: CommandType.StoredProcedure);
+                var data =  this.db.QueryMultiple("uspGridColumnsSave", new { @Name=Name, @Columns= Columns,@UserId = UserId }, commandType: CommandType.StoredProcedure);
                 return data.Read<GridColumn>().FirstOrDefault();
             }
             catch (Exception)
@@ -61,9 +61,9 @@ namespace PracticeCompass.Data.Repositories
                 return null;
             }
         }
-        public GridColumn GetGridColumns(string Name)
+        public GridColumn GetGridColumns(string Name, int UserId)
         {
-            var data = this.db.QueryMultiple("uspGetGridColumns", new { @Name = Name }, commandType: CommandType.StoredProcedure);
+            var data = this.db.QueryMultiple("uspGetGridColumns", new { @Name = Name,@UserId = UserId }, commandType: CommandType.StoredProcedure);
             return data.Read<GridColumn>().FirstOrDefault();
         }
 

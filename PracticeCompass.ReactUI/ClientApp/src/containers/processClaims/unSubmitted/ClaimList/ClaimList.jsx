@@ -232,7 +232,7 @@ class ClaimList extends Component {
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
-    let currentColumns = await this.props.GetGridColumns("claimListId");
+    let currentColumns = await this.props.GetGridColumns("claimList");
     if (currentColumns != null && currentColumns != "") {
       currentColumns = JSON.parse(currentColumns?.columns) ?? columns;
       this.setState({ claimListColumns: currentColumns });
@@ -1026,7 +1026,7 @@ class ClaimList extends Component {
       this.setState({ refreshGrid: false });
       //localStorage.setItem("claimListId", JSON.stringify(columns));
       let GridColumns = await this.props.SaveGridColumns(
-        "claimListId",
+        "claimList",
         JSON.stringify(columns)
       );
       this.setState({
