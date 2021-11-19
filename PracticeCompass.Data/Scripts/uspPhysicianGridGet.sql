@@ -8,7 +8,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ---- =============================================
---exec uspPhysicianGridGet @ProviderID=0,@firstName=N'',@lastName=N'',@Skip=0,@SortColumn=N'',@SortDirection=N'',@zip=0
+--exec uspPhysicianGridGet @ProviderID=0,@firstName=N'Michael',@lastName=N'',@Skip=0,@SortColumn=N'',@SortDirection=N'',@zip=0
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[uspPhysicianGridGet] 
 @ProviderID int, 

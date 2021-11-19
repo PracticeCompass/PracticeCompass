@@ -186,9 +186,9 @@ class PhysiciansList extends Component {
       ProviderID: this.state.selectedProviderId
         ? this.state.selectedProviderId
         : 0,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      ZIP: this.state.Zip,
+      firstName: this.state.firstName??'',
+      lastName: this.state.lastName??'',
+      ZIP: this.state.Zip??0,
       // skip: refreshData ? 0 : this.props.Patients.length,
       skip: 0,
       SortColumn: this.state.selectedSortColumn
