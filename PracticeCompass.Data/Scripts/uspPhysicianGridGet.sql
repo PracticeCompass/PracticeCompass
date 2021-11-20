@@ -16,6 +16,7 @@ CREATE OR ALTER PROCEDURE [dbo].[uspPhysicianGridGet]
 @ProviderID int, 
 @firstName nvarchar(200),
 @lastName nvarchar(200),
+@positionCode nvarchar(200),
 @Zip int,
 @Skip int,
 @SortColumn varchar(50),
@@ -26,18 +27,25 @@ BEGIN
 	SET NOCOUNT ON;
 	
 	Declare  @SQL varchar(max)
-	, @providerfilter varchar(50) ,@providerFirstNamefilter varchar(100),@providerLastNamefilter varchar(100),@providerZipfilter varchar(100),  @sortProviderfilter varchar(200)
+	, @providerfilter varchar(50) ,@providerFirstNamefilter varchar(100),@providerLastNamefilter varchar(100),@providerZipfilter varchar(100),  @sortProviderfilter varchar(200),@providerpositionCodefilter varchar(200)
+	  
 	  set @providerfilter = '('+convert(varchar, @ProviderID,10)+' = 0  or Provider.ProviderID = '+convert(varchar, @ProviderID,10)+')'
 	 
 	 set @providerFirstNamefilter = case @firstName
 	   when '' then ''
-	   else 'and ( person.FirstName= '''+@firstName+''')'
+	   else 'and ( Provider.FirstName= '''+@firstName+''')'
 	   end
 
 	   set @providerLastNamefilter = case @lastName
 	   when '' then ''
-	   else 'and ( person.LastName= '''+@lastName+''')'
+	   else 'and ( Provider.LastName= '''+@lastName+''')'
 	   end
+
+	   set @providerpositionCodefilter = case @positionCode
+	   when '' then ''
+	   else 'and ( staff.PositionCode= '''+@positionCode+''')'
+	   end
+	   
 
 	   if(@Zip = 0)
 	   begin
@@ -62,21 +70,22 @@ BEGIN
 		else 'order by Provider.ProviderID'
 		end
 
-set @SQL=	'select CONVERT(varchar,Provider.ProviderID,50) as ProvidergridID ,Provider.ProviderID
-,Provider.LastName as DNLastName , Provider.FirstName as DNFirstName ,
+set @SQL=	'select distinct Provider.ProviderID as ProvidergridID, Provider.ProviderID ,
+Provider.LastName as DNLastName , Provider.FirstName as DNFirstName ,
 Address.Line1 as Address, Address.City , Address.State , case  LEN(LTRIM(RTRIM(Address.Zip)))
                             when 9 then
                             STUFF(Address.Zip, 6, 0, ''-'') 
                             else Address.Zip
                             end As Zip ,email.Email as Email 
 from Provider 
+left outer join Staff on [dbo].[Staff].[StaffID] = ProviderID
 left outer join Address on [dbo].[Address].[EntitySID] = ProviderID
 left outer join Email
 on Email.EntitySID=ProviderID
 where
 '
 
-set @SQL = @SQL+@providerfilter + @providerFirstNamefilter+@providerLastNamefilter + @providerZipfilter +@sortProviderfilter
+set @SQL = @SQL+@providerfilter + @providerFirstNamefilter+@providerLastNamefilter + @providerZipfilter +@providerpositionCodefilter+@sortProviderfilter
 print @SQL
  exec(@SQL)
 

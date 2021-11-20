@@ -33,6 +33,7 @@ export const providerColumns = [
     {
         field: "address",
         title: "Address",
+        minWidth:200,
         orderIndex: 7,
     },
     {

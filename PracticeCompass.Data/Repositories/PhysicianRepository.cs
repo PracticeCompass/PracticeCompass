@@ -19,7 +19,7 @@ namespace PracticeCompass.Data.Repositories
 
         { this.db = new SqlConnection(connString); }
 
-        public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName,int Zip, int skip, string SortColumn, string SortDirection)
+        public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName,string positionCode, int Zip, int skip, string SortColumn, string SortDirection)
         {
             var data = this.db.QueryMultiple("uspPhysicianGridGet", new
             {
@@ -29,12 +29,19 @@ namespace PracticeCompass.Data.Repositories
                 @Zip= Zip,
                 @Skip = skip,
                 @SortColumn = SortColumn,
+                @positionCode=positionCode,
                 @SortDirection = SortDirection
             },
                 commandType: CommandType.StoredProcedure);
             return data.Read<Physician>().ToList();
         }
-
+        public List<Position> PositionGet()
+        {
+            var data = this.db.QueryMultiple("uspPositionGet", new
+            {
+            },commandType: CommandType.StoredProcedure);
+            return data.Read<Position>().ToList();
+        }
         Task IRepository<Physician>.AddAsync(Physician entity)
         {
             throw new NotImplementedException();

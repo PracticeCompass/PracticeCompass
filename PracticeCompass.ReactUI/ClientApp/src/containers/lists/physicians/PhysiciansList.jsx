@@ -17,7 +17,7 @@ import {
   FilterInsert,
   FilterUpdate,
 } from "../../../redux/actions/filter";
-import { getPhysicians } from "../../../redux/actions/Physician"
+import { getPhysicians ,getPositions} from "../../../redux/actions/Physician"
 
 const DATA_ITEM_KEY_PROVIDER = "providergridID";
 const idGetterProvider = getter(DATA_ITEM_KEY_PROVIDER);
@@ -25,6 +25,7 @@ const idGetterProvider = getter(DATA_ITEM_KEY_PROVIDER);
 function mapStateToProps(state) {
   return {
     physicians: state.physicians.physicians,
+    positions: state.physicians.positions,
     UiExpand: state.ui.UiExpand,
   };
 }
@@ -39,7 +40,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
-    getPhysicians: (searchGrid) => dispatch(getPhysicians(searchGrid))
+    getPhysicians: (searchGrid) => dispatch(getPhysicians(searchGrid)),
+    getPositions:()=>dispatch(getPositions())
   };
 }
 
@@ -63,6 +65,9 @@ class PhysiciansList extends Component {
   onSortChange = () => {
 
   }
+  componentDidMount(){
+    this.props.getPositions();
+  }
   getFilters(filter) {
     if (filter !== undefined) filter = "";
     return `${config.baseUrl}/Filters/FiltersGet?Entity=physician&DisplayName=${filter}`;
@@ -81,6 +86,7 @@ class PhysiciansList extends Component {
   };
   saveFilter = async (event) => {
     this.toggleSaveDialog();
+    debugger;
     var patientGrid = JSON.stringify({
       firstName: this.state.firstName
         ? this.state.firstName
@@ -194,8 +200,12 @@ class PhysiciansList extends Component {
       SortColumn: this.state.selectedSortColumn
         ? this.state.selectedSortColumn
         : "",
+      PositionCode:this.state.Position
+      ? this.state.Position.positionCode
+      : "",
       SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
     };
+    debugger;
     await this.props.getPhysicians(physicianGrid);
   };
   onSortChange = async (column, sort) => {
@@ -363,6 +373,9 @@ class PhysiciansList extends Component {
                 <div style={{ width: "200px", float: "left" }}>
                   <DropDown
                     className="unifyHeight"
+                    data={this.props.positions||[]}
+                    textField="name"
+                    dataItemKey="positionCode"
                     value={this.state.Position}
                     onChange={(e) =>
                       this.setState({
@@ -478,7 +491,7 @@ class PhysiciansList extends Component {
               >
                 <GridComponent
                   id="physicianGrid"
-                  data={this.props.physicians}
+                  data={this.props.physicians || []}
                   columns={
                     providerColumns
                   }

@@ -31,13 +31,30 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.SortColumn = "";
                 if (searchCriteria.SortDirection == null)
                     searchCriteria.SortDirection = "";
-                List<Physician> Result = unitOfWork.PhysicianRepository.PhysiciansGridGet(searchCriteria.ProviderID, searchCriteria.firstName, searchCriteria.lastName, searchCriteria.ZIP, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
+                if (searchCriteria.PositionCode == null)
+                    searchCriteria.PositionCode = "";
+                List<Physician> Result = unitOfWork.PhysicianRepository.PhysiciansGridGet(searchCriteria.ProviderID, searchCriteria.firstName, searchCriteria.lastName, searchCriteria.PositionCode, searchCriteria.ZIP, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
                 return Result;
             }
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
                 return new List<Physician>();
+            }
+        }
+        [HttpGet]
+        [Route("api/physician/PositionGet")]
+        public List<Position> PositionGet()
+        {
+            try
+            {
+                List<Position> Result = unitOfWork.PhysicianRepository.PositionGet();
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<Position>();
             }
         }
 

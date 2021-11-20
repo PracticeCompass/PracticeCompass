@@ -6,6 +6,8 @@ namespace PracticeCompass.Core.Repositories
 {
     public interface IPhysicianRepository : IRepository<Physician>
     {
-        public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName,int zip, int skip, string SortColumn, string SortDirection);
+        
+        public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName, string positionCode,int zip, int skip, string SortColumn, string SortDirection);
+        public List<Position> PositionGet();
     }
 }
