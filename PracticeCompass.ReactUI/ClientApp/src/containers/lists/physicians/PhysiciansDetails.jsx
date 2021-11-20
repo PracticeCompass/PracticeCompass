@@ -243,11 +243,11 @@ class PhysiciansDetails extends Component {
                   className="rowHeight"
                   style={{ display: "flex", flexFlow: "row nowrap" }}
                 >
-                  <div style={{ width: "390px" }}>
+                  <div style={{ width: "440px" }}>
                     <div style={{ float: "left", marginLeft: "107px" }}>
                       <label className="userInfoLabel">Position</label>
                     </div>
-                    <div style={{ width: "200px", float: "left" }}>
+                    <div style={{ width: "250px", float: "left" }}>
                       <DropDown
                         className="unifyHeight"
                         data={this.props.positions || []}
