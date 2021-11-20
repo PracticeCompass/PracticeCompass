@@ -19,6 +19,15 @@ namespace PracticeCompass.Data.Repositories
 
         { this.db = new SqlConnection(connString); }
 
+        public PhysicianDetails PhysicianDetailsGet(int providerId)
+        {
+            var data = this.db.QueryMultiple("uspPhysicianDetailsGet", new
+            {
+                @ProviderID = providerId,
+            }, commandType: CommandType.StoredProcedure);
+            return data.Read<PhysicianDetails>().FirstOrDefault();
+        }
+
         public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName,string positionCode, int Zip, int skip, string SortColumn, string SortDirection)
         {
             var data = this.db.QueryMultiple("uspPhysicianGridGet", new

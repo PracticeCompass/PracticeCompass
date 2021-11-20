@@ -44,7 +44,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/physician/PositionGet")]
-        public List<Position> PositionGet()
+        public List<Position>  PositionGet()
         {
             try
             {
@@ -55,6 +55,21 @@ namespace PracticeCompass.API.Controllers.API
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
                 return new List<Position>();
+            }
+        }
+        [HttpGet]
+        [Route("api/physician/PhysicianDetailsGet")]
+        public PhysicianDetails PhysicianDetailsGet(int providerId)
+        {
+            try
+            {
+                PhysicianDetails Result = unitOfWork.PhysicianRepository.PhysicianDetailsGet(providerId);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new PhysicianDetails();
             }
         }
 

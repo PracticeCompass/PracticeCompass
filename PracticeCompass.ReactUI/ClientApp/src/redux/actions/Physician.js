@@ -52,7 +52,26 @@ export const getPhysicians =
       dispatch(uiStopLoading());
     }
   };
-
+  export const getPhysicianDetails=
+  (ProviderID) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      const resp = await axios({
+        method: "GET",
+        url: `${config.baseUrl}/physician/PhysicianDetailsGet?providerId=${ProviderID}`,
+      });
+      return resp.data ;
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_POSITION_FAILS,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 
   export const setPhysicians = (Physicians) => {
     return {

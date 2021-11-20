@@ -11,11 +11,18 @@ import {
   countryStateGetUrl
 } from "../../processPatients/patients/patientDetails/patientDetailSummary/patientDetailSummaryData.js";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
+import { getPhysicianDetails, getPositions } from "../../../redux/actions/Physician";
 function mapStateToProps(state) {
-  return {};
+  return {
+    positions: state.physicians.positions,
+    UiExpand: state.ui.UiExpand,
+  };
 }
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    getPositions: () => dispatch(getPositions()),
+    getPhysicianDetails: (providerId) => dispatch(getPhysicianDetails(providerId))
+  };
 }
 
 class PhysiciansDetails extends Component {
@@ -28,6 +35,36 @@ class PhysiciansDetails extends Component {
   };
   onSortChange = () => {
 
+  }
+  async componentDidMount() {
+    this.props.getPositions();
+    if (this.props.PhysicianDetails) {
+      let item = await this.props.getPhysicianDetails(this.props.PhysicianDetails.providerID);
+      if (item) {
+        this.setState({
+          firstName: item.dnFirstName,
+          LastName: item.dnLastName,
+          Suffix: item.nameSuffix,
+          MI: item.middleName,
+          Email: item.email,
+          Address1: item.address1,
+          Address2: item.address2,
+          Statevalue: {
+            stateCode: item.stateCode
+          },
+          Zip: item.zip,
+          City: item.city,
+          HomePhone: item.homePhone,
+          WorkPhone: item.workPhone,
+          Ext: item.workPhoneExt,
+          CellPhone: item.mobilePhone,
+          Position: {
+            name: item.positionName,
+            positionCode: item.positionCode
+          }
+        })
+      }
+    }
   }
   render() {
     return (
@@ -207,16 +244,19 @@ class PhysiciansDetails extends Component {
                   style={{ display: "flex", flexFlow: "row nowrap" }}
                 >
                   <div style={{ width: "390px" }}>
-                    <div style={{ float: "left", marginLeft: "55px" }}>
-                      <label className="userInfoLabel">Provider Position</label>
+                    <div style={{ float: "left", marginLeft: "107px" }}>
+                      <label className="userInfoLabel">Position</label>
                     </div>
                     <div style={{ width: "200px", float: "left" }}>
                       <DropDown
                         className="unifyHeight"
-                        value={this.state.ProviderPosition}
+                        data={this.props.positions || []}
+                        textField="name"
+                        dataItemKey="positionCode"
+                        value={this.state.Position}
                         onChange={(e) =>
                           this.setState({
-                            ProviderPosition: e.value,
+                            Position: e.value,
                           })
                         }
                       ></DropDown>
@@ -491,7 +531,7 @@ class PhysiciansDetails extends Component {
                         className="unifyHeight"
                         value={this.state.CellPhone}
                         onValueChange={(e) =>
-                          this.setState({ CellPhone: e.target.value})
+                          this.setState({ CellPhone: e.target.value })
                         }
                       ></TextBox>
                     </div>
@@ -531,6 +571,7 @@ class PhysiciansDetails extends Component {
                       marginLeft: "10px",
                       marginRight: "10px",
                       marginTop: "5px",
+                      width: window.innerWidth - (!this.props.UiExpand ? 120 : 273),
                     }}
                   >
                     <div
