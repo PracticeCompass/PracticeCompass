@@ -6,6 +6,7 @@ namespace PracticeCompass.Core.Models
 {
     public class LedgerData
     {
+        public string GridID { get; set; }
         public string ActivityType { get; set; }
         public string ActivityTypeStr { get; set; }
         public string Date { get; set; }
