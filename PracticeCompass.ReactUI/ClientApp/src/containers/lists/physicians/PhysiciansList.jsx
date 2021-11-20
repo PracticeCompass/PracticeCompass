@@ -11,13 +11,18 @@ import { getter } from "@progress/kendo-react-common";
 import config from "../../../../src/config";
 import SaveFilterComponent from "../../common/saveFilter";
 import NotificationComponent from "../../common/notification";
+import Show_HideDialogComponent from "../../common/show_hideDialog";
 import {
   getFilters,
   FilterDelete,
   FilterInsert,
   FilterUpdate,
 } from "../../../redux/actions/filter";
-import { getPhysicians ,getPositions} from "../../../redux/actions/Physician"
+import {
+  GetGridColumns,
+  SaveGridColumns,
+} from "../../../redux/actions/GridColumns";
+import { getPhysicians, getPositions } from "../../../redux/actions/Physician"
 
 const DATA_ITEM_KEY_PROVIDER = "providergridID";
 const idGetterProvider = getter(DATA_ITEM_KEY_PROVIDER);
@@ -41,7 +46,10 @@ function mapDispatchToProps(dispatch) {
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
     getPhysicians: (searchGrid) => dispatch(getPhysicians(searchGrid)),
-    getPositions:()=>dispatch(getPositions())
+    getPositions: () => dispatch(getPositions()),
+    SaveGridColumns: (name, columns) =>
+    dispatch(SaveGridColumns(name, columns)),
+  GetGridColumns: (name) => dispatch(GetGridColumns(name)),
   };
 }
 
@@ -61,13 +69,24 @@ class PhysiciansList extends Component {
     refreshFilter: true,
     skip: 0,
     take: 28,
+    providerColumns:providerColumns
   }
   onSortChange = () => {
 
   }
-  componentDidMount(){
+  componentDidMount() {
     this.props.getPositions();
+    this.getGridColumns();
   }
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns("Physician");
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? providerColumns;
+      this.setState({ providerColumns: currentColumns });
+    }
+    this.setState({ refreshGrid: true });
+  };
   getFilters(filter) {
     if (filter !== undefined) filter = "";
     return `${config.baseUrl}/Filters/FiltersGet?Entity=physician&DisplayName=${filter}`;
@@ -86,7 +105,6 @@ class PhysiciansList extends Component {
   };
   saveFilter = async (event) => {
     this.toggleSaveDialog();
-    debugger;
     var patientGrid = JSON.stringify({
       firstName: this.state.firstName
         ? this.state.firstName
@@ -192,20 +210,19 @@ class PhysiciansList extends Component {
       ProviderID: this.state.selectedProviderId
         ? this.state.selectedProviderId
         : 0,
-      firstName: this.state.firstName??'',
-      lastName: this.state.lastName??'',
-      ZIP: this.state.Zip??0,
+      firstName: this.state.firstName ?? '',
+      lastName: this.state.lastName ?? '',
+      ZIP: this.state.Zip ?? 0,
       // skip: refreshData ? 0 : this.props.Patients.length,
       skip: 0,
       SortColumn: this.state.selectedSortColumn
         ? this.state.selectedSortColumn
         : "",
-      PositionCode:this.state.Position
-      ? this.state.Position.positionCode
-      : "",
+      PositionCode: this.state.Position
+        ? this.state.Position.positionCode
+        : "",
       SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
     };
-    debugger;
     await this.props.getPhysicians(physicianGrid);
   };
   onSortChange = async (column, sort) => {
@@ -216,28 +233,55 @@ class PhysiciansList extends Component {
     this.physicianGridSearch();
   };
   onPhysiciansGridSelectionChange = (event) => {
-    this.setState({selectedPhysician: event.dataItem});
+    this.setState({ selectedPhysician: event.dataItem });
   }
   onPhysiciansGridDoubleSelectionChange = (event) => {
     this.props.setInsuranceDetailExpanded();
     this.props.setInsuranceDetails(event.dataItem);
   }
-  openPhysicianRow=()=>{
-    if(this.state.selectedPhysician){
+  openPhysicianRow = () => {
+    if (this.state.selectedPhysician) {
       this.props.setInsuranceDetailExpanded();
       this.props.setInsuranceDetails(this.state.selectedPhysician);
-    }else{
-    this.setState({
-      warning: true,
-      message: "Please Select Physician.",
-    });
-    setTimeout(() => {
+    } else {
       this.setState({
-        warning: false,
+        warning: true,
+        message: "Please Select Physician.",
       });
-    }, this.state.timer);
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+    }
   }
-}
+  toggleShowColumnsDialog = () => {
+    this.setState({
+      Show_HidePhysicianDialogVisible: false,
+    });
+  };
+  SaveColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HidePhysicianDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "Physician",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        providerColumns: JSON.parse(GridColumns?.columns),
+        Show_HidePhysicianDialogVisible: false,
+      });
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -250,6 +294,13 @@ class PhysiciansList extends Component {
           info={this.state.info}
           none={this.state.none}
         ></NotificationComponent>
+        {this.state.Show_HidePhysicianDialogVisible && (
+          <Show_HideDialogComponent
+            columns={this.state.providerColumns}
+            toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+            SaveColumnsShow={this.SaveColumnsShow}
+          ></Show_HideDialogComponent>
+        )}
         {(this.state.visibleSaveFilter || this.state.editFilter) && (
           <SaveFilterComponent
             toggleSaveDialog={() => {
@@ -373,7 +424,7 @@ class PhysiciansList extends Component {
                 <div style={{ width: "200px", float: "left" }}>
                   <DropDown
                     className="unifyHeight"
-                    data={this.props.positions||[]}
+                    data={this.props.positions || []}
                     textField="name"
                     dataItemKey="positionCode"
                     value={this.state.Position}
@@ -463,7 +514,26 @@ class PhysiciansList extends Component {
                   Physician Details
                 </ButtonComponent>
               </div>
+              <div
+                style={{
+                  float: "right",
+                  position: "absolute",
+                  marginRight: "10px",
+                  right: "0",
+                }}
+              >
+                <ButtonComponent
+                  type="add"
+                  classButton="infraBtn-primary action-button"
+                  onClick={() => {
+                    this.setState({ Show_HidePhysicianDialogVisible: true });
+                  }}
+                >
+                  Edit Grid
+                </ButtonComponent>
+              </div>
             </div>
+
 
           </div>
         </div>

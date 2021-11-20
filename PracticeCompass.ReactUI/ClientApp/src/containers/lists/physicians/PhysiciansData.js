@@ -28,6 +28,7 @@ export const providerColumns = [
     {
         field: "email",
         title: "Email",
+        minWidth:150,
         orderIndex: 6,
     },
     {
