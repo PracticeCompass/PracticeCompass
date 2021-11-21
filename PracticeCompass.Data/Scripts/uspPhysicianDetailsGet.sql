@@ -1,4 +1,4 @@
-USE [medman2]
+USE [medman]
 GO
 
 /****** Object:  StoredProcedure [dbo].[uspPhysicianDetailsGet]    Script Date: 7/18/2021 3:38:02 PM ******/

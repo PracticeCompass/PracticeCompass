@@ -22,7 +22,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(SaveGridColumns(name, columns)),
   };
 }
-const DATA_ITEM_KEY_PatientLedger = "patientLedgerID";
+const DATA_ITEM_KEY_PatientLedger = "gridID";
 const idGetterPaientLedger = getter(DATA_ITEM_KEY_PatientLedger);
 class PatientDetailLedger extends Component {
   state = {
@@ -136,6 +136,31 @@ class PatientDetailLedger extends Component {
       trElement.props.children
     );
   }
+  onPatientLedgerGridSelectionChange = (event) => {
+    if (event.dataItem.activityTypeStr === "Claim") {
+      console.log(event.dataItem.claimSID);
+    } else if (event.dataItem.activityTypeStr === "Charge Details") {
+      console.log(event.dataItem.chargeSID);
+    }
+    // this.props.setPatientDetails(
+    //   event.dataItems == null || event.dataItems.length == 0
+    //     ? event.dataItem
+    //     : event.dataItems[event.endRowIndex]
+    // );
+  };
+  onPatientLedgerGridDoubleSelectionChange = (event) => {
+    if (event.dataItem.activityTypeStr === "Claim") {
+      console.log(event.dataItem.claimSID);
+    } else if (event.dataItem.activityTypeStr === "Charge Details") {
+      console.log(event.dataItem.chargeSID);
+    }
+    // this.props.setPatientDetails(
+    //   event.dataItems == null || event.dataItems.length == 0
+    //     ? event.dataItem
+    //     : event.dataItems[event.endRowIndex]
+    // );
+    // this.props.setPatientDetailExpanded();
+  };
   render() {
     return (
       <Fragment>
@@ -181,10 +206,12 @@ class PatientDetailLedger extends Component {
                     width="100%"
                     activeRowRender={true}
                     onRowRender={this.onRowRender}
-                    // onSelectionChange={this.onPatientGridSelectionChange}
-                    // onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
+                    onSelectionChange={this.onPatientLedgerGridSelectionChange}
+                    onRowDoubleClick={
+                      this.onPatientLedgerGridDoubleSelectionChange
+                    }
                     selectionMode="single"
-                    DATA_ITEM_KEY="patientLedgerID"
+                    DATA_ITEM_KEY="gridID"
                     idGetter={idGetterPaientLedger}
                     sortColumns={[]}
                     onSortChange={this.onSortChange}
