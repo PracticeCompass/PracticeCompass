@@ -90,6 +90,10 @@ const idGetterPaientYype = getter(DATA_ITEM_KEY_PATIENT_TYPE);
 const DATA_ITEM_KEY_COMPANY_NAME = "entitySID";
 const idGetterCompanyName = getter(DATA_ITEM_KEY_COMPANY_NAME);
 class PatientDetailSummary extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     selected: 0,
     practiceID: null,
@@ -254,8 +258,19 @@ class PatientDetailSummary extends Component {
       await this.props.InsuranceGridGet(this.props.patientDetails.patientID);
     }
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
   }
-
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 310)
+    })
+  }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
     let currentColumns = await this.props.GetGridColumns("summeryGrid");
@@ -1189,7 +1204,7 @@ class PatientDetailSummary extends Component {
           style={{
             display: "flex",
             flexFlow: "row",
-            width: window.innerWidth - (!this.props.UiExpand ? 120 : 310),
+            width: this.state.gridWidth
           }}
         >
           <div className="accordion" id="accordionExample">

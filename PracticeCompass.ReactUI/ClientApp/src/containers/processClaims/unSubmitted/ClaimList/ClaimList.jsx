@@ -141,6 +141,10 @@ const DATA_ITEM_KEY_INSURANCE = "entitySID";
 const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
 
 class ClaimList extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     patientNameSelected: null,
     guarantorSelected: null,
@@ -229,6 +233,18 @@ class ClaimList extends Component {
   };
   componentDidMount() {
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 93 : 273)
+    })
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -863,12 +879,13 @@ class ClaimList extends Component {
     this.setState({
       patientType: selectedDataItems[0]
         ? {
-            entityName: selectedDataItems[0].description,
-            entityId: selectedDataItems[0].lookupCode,
-          }
+          entityName: selectedDataItems[0].description,
+          entityId: selectedDataItems[0].lookupCode,
+        }
         : null,
     });
   };
+
   onPatientTypeDoubleClick = async (event) => {
     this.setState({
       patientType: {
@@ -1159,11 +1176,10 @@ class ClaimList extends Component {
             <DeleteDialogComponent
               title="Delete Claim Filter"
               toggleDeleteDialog={this.toggleDeleteDialog}
-              deleteMessage={`Are you sure you wish to delete Claim Filter : ${
-                this.state.currentFilter && this.state.currentFilter.displayName
+              deleteMessage={`Are you sure you wish to delete Claim Filter : ${this.state.currentFilter && this.state.currentFilter.displayName
                   ? this.state.currentFilter.displayName
                   : ""
-              }?`}
+                }?`}
               currentFilterID={this.state.currentFilter.filterID}
               deleteFilter={this.deleteFilter}
             ></DeleteDialogComponent>
@@ -1680,7 +1696,7 @@ class ClaimList extends Component {
           style={{
             display: "flex",
             flexFlow: "row",
-            width: window.innerWidth - (!this.props.UiExpand ? 93 : 273),
+            width: this.state.gridWidth,
           }}
         >
           <div className="accordion" id="accordionExample">

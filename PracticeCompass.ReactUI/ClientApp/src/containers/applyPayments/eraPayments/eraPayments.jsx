@@ -69,6 +69,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 class EraPayments extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     type: "Patient",
     selected: 0,
@@ -94,6 +98,18 @@ class EraPayments extends Component {
   };
   componentDidMount = () => {
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 290),
+    })
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -640,7 +656,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ width: window.innerWidth - (!this.props.UiExpand ? 120 : 290) }}
+                      style={{ width: this.state.gridWidth}}
                     >
                       <GridComponent
                         id="ERAPayment"
@@ -774,7 +790,7 @@ class EraPayments extends Component {
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
-                        style={{ width: window.innerWidth - (!this.props.UiExpand ? 120 : 290) }}
+                        style={{ width: this.state.gridWidth }}
                       >
                         <EditableGrid
                           data={this.state.eRADetailsPayments}

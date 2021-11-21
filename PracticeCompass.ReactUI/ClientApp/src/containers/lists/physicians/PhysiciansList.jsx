@@ -54,6 +54,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 class PhysiciansList extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     success: false,
     none: false,
@@ -77,6 +81,18 @@ class PhysiciansList extends Component {
   componentDidMount() {
     this.props.getPositions();
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+    })
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -541,7 +557,7 @@ class PhysiciansList extends Component {
           style={{
             display: "flex",
             flexFlow: "row",
-            width: window.innerWidth - (!this.props.UiExpand ? 120 : 273),
+            width: this.state.gridWidth,
           }}
         >
           <div className="accordion" id="accordionExample">

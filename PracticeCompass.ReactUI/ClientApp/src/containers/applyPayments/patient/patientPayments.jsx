@@ -178,6 +178,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 class PatientPayments extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     method: null,
     methodSelected: 0,
@@ -234,7 +238,22 @@ class PatientPayments extends Component {
   };
   componentDidMount = () => {
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
   };
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 80 : 260),
+      gridDetails: window.innerWidth - (!this.props.UiExpand ? 120 : 300),
+      // gridapplyed
+      gridcharged:window.innerWidth - (!this.props.UiExpand ? 148 : 330),
+    })
+  }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
     let currentColumns = await this.props.GetGridColumns("patientPayment");
@@ -1325,7 +1344,7 @@ class PatientPayments extends Component {
                 style={{
                   display: "flex",
                   flexFlow: "row",
-                  width: window.innerWidth - (!this.props.UiExpand ? 80 : 260),
+                  width: this.state.gridWidth,
                 }}
               >
                 <div className="accordion" id="accordionExample">
@@ -1640,7 +1659,7 @@ class PatientPayments extends Component {
                     marginTop: "5px",
                     marginBottom: "5px",
                     width:
-                      window.innerWidth - (!this.props.UiExpand ? 120 : 300),
+                      this.state.gridDetails,
                     marginLeft: "10px",
                   }}
                 >
@@ -1841,9 +1860,7 @@ class PatientPayments extends Component {
                         <fieldset
                           className="fieldsetStyle"
                           style={{
-                            width:
-                              window.innerWidth -
-                              (!this.props.UiExpand ? 148 : 330),
+                            width:this.state.gridcharged,
                             marginTop: "5px",
                             marginBottom: "10px",
                             height: "330px",
@@ -2093,9 +2110,7 @@ class PatientPayments extends Component {
                             marginBottom: "5px",
                             // height: "85px",
                             marginLeft: "10px",
-                            width:
-                              window.innerWidth -
-                              (!this.props.UiExpand ? 140 : 320),
+                            width:this.state.gridcharged
                           }}
                         >
                           <legend

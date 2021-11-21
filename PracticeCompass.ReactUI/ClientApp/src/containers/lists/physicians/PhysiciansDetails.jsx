@@ -26,6 +26,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 class PhysiciansDetails extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     filterName: this.props.filterName,
     selected: 0,
@@ -65,6 +69,18 @@ class PhysiciansDetails extends Component {
         })
       }
     }
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+    })
   }
   render() {
     return (
@@ -571,7 +587,7 @@ class PhysiciansDetails extends Component {
                       marginLeft: "10px",
                       marginRight: "10px",
                       marginTop: "5px",
-                      width: window.innerWidth - (!this.props.UiExpand ? 120 : 273),
+                      width: this.state.gridWidth,
                     }}
                   >
                     <div
