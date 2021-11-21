@@ -34,7 +34,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(200) , @completedclaimsfilter varchar(200),@sortClaimsfilter varchar(200)
+	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300)
 
 	 	set @DOSfilter=Case @DOSType 
 		when 1 then 'and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
@@ -51,7 +51,7 @@ BEGIN
 		else ''
 		end
 		set @completedclaimsfilter=Case @IncludeCompletedClaims
-		when 0 then 'and (Charge.Amount - (Charge.InsuranceReceipts + Charge.GuarantorReceipts + Charge.Adjustments) > 0) and (charge.CurrentStatus != ''V'' OR charge.CurrentStatus != ''P'')'
+		when 0 then 'and (((Charge.Amount - (Charge.InsuranceReceipts + Charge.GuarantorReceipts + Charge.Adjustments) > 0) and (charge.CurrentStatus != ''V'' OR charge.CurrentStatus != ''P'')) or Claim.LowestRespCoverageOrder != 99)'
 		when 1 then ''
 		else ''
 		end
