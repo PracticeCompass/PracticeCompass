@@ -137,9 +137,16 @@ export const itemsList = [
     route: "/lists/physicians",
   },
   {
-    text: "Transactions",
+    text: "LookUps",
     icon: "k-i-inbox",
     id: 19,
+    parentId: 16,
+    route: "/lists/transactions",
+  },
+  {
+    text: "Transactions",
+    icon: "k-i-inbox",
+    id: 20,
     parentId: 16,
     route: "/lists/transactions",
   },

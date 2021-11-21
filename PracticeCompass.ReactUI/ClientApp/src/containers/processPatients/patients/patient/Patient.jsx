@@ -112,6 +112,10 @@ const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
 const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
 class Patient extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     patientNameSelected: null,
     insuranceNameSelected: null,
@@ -173,6 +177,18 @@ class Patient extends Component {
     // this.props.getpatientFilters("");
     //this.props.getPatients(null);
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+    })
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -1225,7 +1241,7 @@ class Patient extends Component {
           style={{
             display: "flex",
             flexFlow: "row",
-            width: window.innerWidth - (!this.props.UiExpand ? 120 : 273),
+            width: this.state.gridWidth,
           }}
         >
           <div className="accordion" id="accordionExample">

@@ -14,8 +14,9 @@ GO
 BEGIN
    CREATE TABLE [dbo].[GridColumns] (
     ID int IDENTITY(1,1),
-    Name varchar(max),
-    Columns varchar(max),
+    Name varchar(max) Not null,
+	UserId int Not null,
+    Columns varchar(max) Not null,
  CONSTRAINT [PK_GridColumns] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -24,28 +25,31 @@ BEGIN
 End
 GO
 CREATE OR ALTER      PROCEDURE [dbo].[uspGetGridColumns] 
-@Name varchar(max)
+@Name varchar(max),
+@UserId int
+
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-  select Name,columns from GridColumns where Name=@Name
+  select Name,columns from GridColumns where Name=@Name and UserId = @UserId
 END
 
 GO
 CREATE OR ALTER      PROCEDURE [dbo].[uspGridColumnsSave] 
 @Name varchar(max),
-@Columns varchar(max)
+@Columns varchar(max),
+@UserId int
 AS
 BEGIN
 	SET NOCOUNT ON;
-	IF EXISTS(select * from GridColumns where Name=@Name)
+	IF EXISTS(select * from GridColumns where Name=@Name and UserId = @UserId)
 	BEGIN
-	  update GridColumns set columns=@columns where Name=@Name
+	  update GridColumns set columns=@columns where Name=@Name and UserId = @UserId
 	END
 	ELSE
 	BEGIN
-	 insert into GridColumns (Name,Columns) values(@Name,@columns)
+	 insert into GridColumns (Name,Columns,UserId) values(@Name,@columns,@UserId)
 	END
-	select Name,Columns from GridColumns where Name=@Name
+	select Name,Columns from GridColumns where Name=@Name and UserId = @UserId
 END

@@ -61,3 +61,6 @@ FuncGetStampFromDate.sql
 FuncDateFromStamp.sql
 FuncGetMAXprrowid.sql
 CreateERADenailTable.sql
+uspPhysicianGridGet.sql
+uspPositionGet.sql
+uspPhysicianDetailsGet.sql

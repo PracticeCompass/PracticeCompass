@@ -4,6 +4,12 @@ import FilterableGridComponent from "components/FilterableGrid";
 import { columns } from "./patientDetailLedgerData";
 import { getter } from "@progress/kendo-react-common";
 import { GetPatientLedger } from "../../../../../redux/actions/patientDetails";
+import ButtonComponent from "../../../../../components/Button";
+import Show_HideDialogComponent from "../../../../common/show_hideDialog";
+import {
+  GetGridColumns,
+  SaveGridColumns,
+} from "../../../../../redux/actions/GridColumns";
 function mapStateToProps(state) {
   return {};
 }
@@ -11,9 +17,12 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     GetPatientLedger: (personID) => dispatch(GetPatientLedger(personID)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
+    SaveGridColumns: (name, columns) =>
+      dispatch(SaveGridColumns(name, columns)),
   };
 }
-const DATA_ITEM_KEY_PatientLedger = "patientLedgerID";
+const DATA_ITEM_KEY_PatientLedger = "gridID";
 const idGetterPaientLedger = getter(DATA_ITEM_KEY_PatientLedger);
 class PatientDetailLedger extends Component {
   state = {
@@ -22,8 +31,12 @@ class PatientDetailLedger extends Component {
     take: 23,
     patientDetailsLedger: null,
     patientId: 0,
+    Show_HideDialogVisible: false,
+    ledgerColumns: columns,
+    refreshGrid: true,
   };
   async componentDidMount() {
+    await this.getGridColumns();
     if (
       this.props.patientDetails != null &&
       this.state.patientId != this.props.patientDetails.patientID
@@ -43,7 +56,45 @@ class PatientDetailLedger extends Component {
     this.setState({ selected: e.selected });
   };
   onSortChange = () => {};
-
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns("patientLedger");
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? columns;
+      this.setState({ ledgerColumns: currentColumns });
+    }
+    this.setState({ refreshGrid: true });
+  };
+  toggleShowColumnsDialog = () => {
+    this.setState({ Show_HideDialogVisible: false });
+  };
+  SaveColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HideDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      //localStorage.setItem("patientGrid", JSON.stringify(columns));
+      let GridColumns = await this.props.SaveGridColumns(
+        "patientLedger",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        ledgerColumns: JSON.parse(GridColumns?.columns),
+        Show_HideDialogVisible: false,
+      });
+      this.setState({ Show_HideDialogVisible: false });
+      setTimeout(() => {
+        this.setState({ refreshGrid: true });
+      }, 10);
+    }
+  };
   onRowRender(trElement, props) {
     const activity = props.dataItem.activityType;
     const white = {
@@ -85,6 +136,31 @@ class PatientDetailLedger extends Component {
       trElement.props.children
     );
   }
+  onPatientLedgerGridSelectionChange = (event) => {
+    if (event.dataItem.activityTypeStr === "Claim") {
+      console.log(event.dataItem.claimSID);
+    } else if (event.dataItem.activityTypeStr === "Charge Details") {
+      console.log(event.dataItem.chargeSID);
+    }
+    // this.props.setPatientDetails(
+    //   event.dataItems == null || event.dataItems.length == 0
+    //     ? event.dataItem
+    //     : event.dataItems[event.endRowIndex]
+    // );
+  };
+  onPatientLedgerGridDoubleSelectionChange = (event) => {
+    if (event.dataItem.activityTypeStr === "Claim") {
+      console.log(event.dataItem.claimSID);
+    } else if (event.dataItem.activityTypeStr === "Charge Details") {
+      console.log(event.dataItem.chargeSID);
+    }
+    // this.props.setPatientDetails(
+    //   event.dataItems == null || event.dataItems.length == 0
+    //     ? event.dataItem
+    //     : event.dataItems[event.endRowIndex]
+    // );
+    // this.props.setPatientDetailExpanded();
+  };
   render() {
     return (
       <Fragment>
@@ -100,11 +176,29 @@ class PatientDetailLedger extends Component {
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
             >
-              {this.state.patientDetailsLedger && (
+              {this.state.patientDetailsLedger && this.state.refreshGrid && (
                 <div className="card-body">
+                  <div
+                    style={{
+                      float: "right",
+                      position: "absolute",
+                      marginRight: "10px",
+                      right: "0",
+                    }}
+                  >
+                    <ButtonComponent
+                      type="add"
+                      classButton="infraBtn-primary action-button"
+                      onClick={() => {
+                        this.setState({ Show_HideDialogVisible: true });
+                      }}
+                    >
+                      Edit Grid
+                    </ButtonComponent>
+                  </div>
                   <FilterableGridComponent
                     id="ledgerGrid"
-                    columns={columns}
+                    columns={this.state.ledgerColumns}
                     data={this.state.patientDetailsLedger}
                     skip={0}
                     take={this.state.take}
@@ -112,16 +206,25 @@ class PatientDetailLedger extends Component {
                     width="100%"
                     activeRowRender={true}
                     onRowRender={this.onRowRender}
-                    // onSelectionChange={this.onPatientGridSelectionChange}
-                    // onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
+                    onSelectionChange={this.onPatientLedgerGridSelectionChange}
+                    onRowDoubleClick={
+                      this.onPatientLedgerGridDoubleSelectionChange
+                    }
                     selectionMode="single"
-                    DATA_ITEM_KEY="patientLedgerID"
+                    DATA_ITEM_KEY="gridID"
                     idGetter={idGetterPaientLedger}
                     sortColumns={[]}
                     onSortChange={this.onSortChange}
                     // pageChange={this.pageChange}
                   ></FilterableGridComponent>
                 </div>
+              )}
+              {this.state.Show_HideDialogVisible && (
+                <Show_HideDialogComponent
+                  columns={this.state.ledgerColumns}
+                  toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+                  SaveColumnsShow={this.SaveColumnsShow}
+                ></Show_HideDialogComponent>
               )}
             </div>
           </div>

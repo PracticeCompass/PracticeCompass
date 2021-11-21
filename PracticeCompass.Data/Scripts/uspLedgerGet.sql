@@ -20,7 +20,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	  select * from 
-	  (select 'Claim' as ActivityType,'Claim' as ActivityTypeStr , convert(varchar, CONVERT(DATETIME, SUBSTRING( CreateStamp,0,9)),101) as Date  , Claim.ClaimSID , 0 as sortorder ,ClaimNumber , 
+	  (select Claim.ClaimSID as GridID,'Claim' as ActivityType,'Claim' as ActivityTypeStr , convert(varchar, CONVERT(DATETIME, SUBSTRING( CreateStamp,0,9)),101) as Date  , Claim.ClaimSID , 0 as sortorder ,ClaimNumber , 
 	  case when  LowestRespCoverageOrder =1 then 'Primary'
 	       when  LowestRespCoverageOrder =2 then 'Secondary'
 		   when  LowestRespCoverageOrder =3 then 'Tertiary'
@@ -35,7 +35,7 @@ BEGIN
 
 	  union all
 	  
-	select  'Charge Details' as ActivityType,'Charge Details' as ActivityTypeStr, convert(varchar, CONVERT(DATETIME, SUBSTRING( charge.CreateStamp,0,9)),101) as Date, ClaimCharge.ClaimSID, 1 as sortorder, [Procedure].Description as ClaimNumber,'' as LowestRespCoverageOrder,
+	select  ClaimCharge.ClaimSID+ClaimCharge.ChargeSID as GridID ,'Charge Details' as ActivityType,'Charge Details' as ActivityTypeStr, convert(varchar, CONVERT(DATETIME, SUBSTRING( charge.CreateStamp,0,9)),101) as Date, ClaimCharge.ClaimSID, 1 as sortorder, [Procedure].Description as ClaimNumber,'' as LowestRespCoverageOrder,
 		  case when  Charge.ChargeType ='P' then 'Procedure'
 	       when  Charge.ChargeType ='I' then 'Admin'
 		   when  Charge.ChargeType ='A' then 'Interest'
@@ -71,7 +71,7 @@ left outer join ProcedureEventDiag as Diag8 on Diag8.ProcedureEventSID = Procedu
 	where Charge.PatientID=@PatientID
 	union all
 	
-	  select  'Txn' as ActivityType,'Txn '+convert(varchar,ChargeActivity.ActivityCount) as ActivityTypeStr , convert(varchar, CONVERT(DATETIME, SUBSTRING( ChargeActivity.CreateStamp,0,9)),101) as Date , ClaimCharge.ClaimSID , 2 as sortorder ,
+	  select  ChargeActivity.ActivityCount+ClaimCharge.ChargeSID as GridID, 'Txn' as ActivityType,'Txn '+convert(varchar,ChargeActivity.ActivityCount) as ActivityTypeStr , convert(varchar, CONVERT(DATETIME, SUBSTRING( ChargeActivity.CreateStamp,0,9)),101) as Date , ClaimCharge.ClaimSID , 2 as sortorder ,
 	    Case ActivityType 
 		when 'ADJ' then 'Adjustment'
 		when 'CHG' then 'Create Charge'

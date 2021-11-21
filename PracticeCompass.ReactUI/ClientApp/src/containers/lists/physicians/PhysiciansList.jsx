@@ -11,15 +11,28 @@ import { getter } from "@progress/kendo-react-common";
 import config from "../../../../src/config";
 import SaveFilterComponent from "../../common/saveFilter";
 import NotificationComponent from "../../common/notification";
+import Show_HideDialogComponent from "../../common/show_hideDialog";
 import {
   getFilters,
   FilterDelete,
   FilterInsert,
   FilterUpdate,
 } from "../../../redux/actions/filter";
+import {
+  GetGridColumns,
+  SaveGridColumns,
+} from "../../../redux/actions/GridColumns";
+import { getPhysicians, getPositions } from "../../../redux/actions/Physician"
+
+const DATA_ITEM_KEY_PROVIDER = "providergridID";
+const idGetterProvider = getter(DATA_ITEM_KEY_PROVIDER);
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    physicians: state.physicians.physicians,
+    positions: state.physicians.positions,
+    UiExpand: state.ui.UiExpand,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -32,11 +45,19 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
+    getPhysicians: (searchGrid) => dispatch(getPhysicians(searchGrid)),
+    getPositions: () => dispatch(getPositions()),
+    SaveGridColumns: (name, columns) =>
+    dispatch(SaveGridColumns(name, columns)),
+  GetGridColumns: (name) => dispatch(GetGridColumns(name)),
   };
 }
-const DATA_ITEM_KEY_PHYSICIAN = "id";
-const idGetterPhysisionList = getter(DATA_ITEM_KEY_PHYSICIAN);
+
 class PhysiciansList extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     success: false,
     none: false,
@@ -49,11 +70,39 @@ class PhysiciansList extends Component {
     lastName: null,
     Position: null,
     providerVisible: false,
-    refreshFilter: true
+    refreshFilter: true,
+    skip: 0,
+    take: 28,
+    providerColumns:providerColumns
   }
   onSortChange = () => {
 
   }
+  componentDidMount() {
+    this.props.getPositions();
+    this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+    })
+  }
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns("Physician");
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? providerColumns;
+      this.setState({ providerColumns: currentColumns });
+    }
+    this.setState({ refreshGrid: true });
+  };
   getFilters(filter) {
     if (filter !== undefined) filter = "";
     return `${config.baseUrl}/Filters/FiltersGet?Entity=physician&DisplayName=${filter}`;
@@ -172,6 +221,83 @@ class PhysiciansList extends Component {
       this.reset();
     }
   };
+  physicianGridSearch = async (refreshData = true) => {
+    var physicianGrid = {
+      ProviderID: this.state.selectedProviderId
+        ? this.state.selectedProviderId
+        : 0,
+      firstName: this.state.firstName ?? '',
+      lastName: this.state.lastName ?? '',
+      ZIP: this.state.Zip ?? 0,
+      // skip: refreshData ? 0 : this.props.Patients.length,
+      skip: 0,
+      SortColumn: this.state.selectedSortColumn
+        ? this.state.selectedSortColumn
+        : "",
+      PositionCode: this.state.Position
+        ? this.state.Position.positionCode
+        : "",
+      SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
+    };
+    await this.props.getPhysicians(physicianGrid);
+  };
+  onSortChange = async (column, sort) => {
+    await this.setState({
+      selectedSortColumn: column,
+      sortDirection: sort,
+    });
+    this.physicianGridSearch();
+  };
+  onPhysiciansGridSelectionChange = (event) => {
+    this.setState({ selectedPhysician: event.dataItem });
+  }
+  onPhysiciansGridDoubleSelectionChange = (event) => {
+    this.props.setInsuranceDetailExpanded();
+    this.props.setInsuranceDetails(event.dataItem);
+  }
+  openPhysicianRow = () => {
+    if (this.state.selectedPhysician) {
+      this.props.setInsuranceDetailExpanded();
+      this.props.setInsuranceDetails(this.state.selectedPhysician);
+    } else {
+      this.setState({
+        warning: true,
+        message: "Please Select Physician.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+    }
+  }
+  toggleShowColumnsDialog = () => {
+    this.setState({
+      Show_HidePhysicianDialogVisible: false,
+    });
+  };
+  SaveColumnsShow = async (columns) => {
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HidePhysicianDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      this.setState({ refreshGrid: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "Physician",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        providerColumns: JSON.parse(GridColumns?.columns),
+        Show_HidePhysicianDialogVisible: false,
+      });
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -184,6 +310,13 @@ class PhysiciansList extends Component {
           info={this.state.info}
           none={this.state.none}
         ></NotificationComponent>
+        {this.state.Show_HidePhysicianDialogVisible && (
+          <Show_HideDialogComponent
+            columns={this.state.providerColumns}
+            toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+            SaveColumnsShow={this.SaveColumnsShow}
+          ></Show_HideDialogComponent>
+        )}
         {(this.state.visibleSaveFilter || this.state.editFilter) && (
           <SaveFilterComponent
             toggleSaveDialog={() => {
@@ -218,8 +351,8 @@ class PhysiciansList extends Component {
                   <div className="filterStyle" style={{ float: "left" }}>
                     <DropDown
                       className="unifyHeight"
-                      id="patientFilter"
-                      name="patientFilter"
+                      id="physicianFilter"
+                      name="physicianFilter"
                       type="remoteDropDown"
                       textField="displayName"
                       dataItemKey="filterID"
@@ -300,13 +433,16 @@ class PhysiciansList extends Component {
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
-              <div style={{ width: "280px" }}>
+              <div style={{ width: "330px" }}>
                 <div style={{ float: "left", marginLeft: "20px" }}>
                   <label className="userInfoLabel">Position</label>
                 </div>
-                <div style={{ width: "200px", float: "left" }}>
+                <div style={{ width: "250px", float: "left" }}>
                   <DropDown
                     className="unifyHeight"
+                    data={this.props.positions || []}
+                    textField="name"
+                    dataItemKey="positionCode"
                     value={this.state.Position}
                     onChange={(e) =>
                       this.setState({
@@ -353,12 +489,12 @@ class PhysiciansList extends Component {
                   icon="search"
                   type="search"
                   classButton="infraBtn-primary action-button"
-                  onClick={this.props.clickOnSearch}
+                  onClick={this.physicianGridSearch}
                 >
                   Search
                 </ButtonComponent>
               </div>
-              <div style={{ float: "left", width: "200px !important" }}>
+              {/* <div style={{ float: "left", width: "200px !important" }}>
                 <ButtonComponent
                   type="edit"
                   icon="edit"
@@ -369,7 +505,7 @@ class PhysiciansList extends Component {
                 >
                   Save
                 </ButtonComponent>
-              </div>
+              </div> */}
               <div style={{ float: "left" }}>
                 <ButtonComponent
                   type="edit"
@@ -388,49 +524,81 @@ class PhysiciansList extends Component {
                   icon="edit"
                   classButton="infraBtn-primary details-button  "
                   onClick={() => {
-                    this.props.setInsuranceDetailExpanded();
+                    this.openPhysicianRow();
                   }}
                 >
                   Physician Details
                 </ButtonComponent>
               </div>
+              <div
+                style={{
+                  float: "right",
+                  position: "absolute",
+                  marginRight: "10px",
+                  right: "0",
+                }}
+              >
+                <ButtonComponent
+                  type="add"
+                  classButton="infraBtn-primary action-button"
+                  onClick={() => {
+                    this.setState({ Show_HidePhysicianDialogVisible: true });
+                  }}
+                >
+                  Edit Grid
+                </ButtonComponent>
+              </div>
             </div>
+
 
           </div>
         </div>
-
-        <div className="accordion" id="accordionExample">
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-              marginTop: "5px",
-            }}
-          >
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: this.state.gridWidth,
+          }}
+        >
+          <div className="accordion" id="accordionExample">
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              className="card bg-light mb-3"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginTop: "5px",
+              }}
             >
-              <GridComponent
-                id="physicianGrid"
-                columns={
-                  providerColumns
-                }
-                height="400px"
-                width="100%"
-                onSelectionChange={this.onPatientGridSelectionChange}
-                onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
-                selectionMode="single"
-                sortColumns={[]}
-                onSortChange={this.onSortChange}
-              ></GridComponent>
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                <GridComponent
+                  id="physicianGrid"
+                  data={this.props.physicians || []}
+                  columns={
+                    providerColumns
+                  }
+                  height="400px"
+                  width="100%"
+                  onSelectionChange={this.onPhysiciansGridSelectionChange}
+                  onRowDoubleClick={this.onPhysiciansGridDoubleSelectionChange}
+                  selectionMode="single"
+                  idGetter={idGetterProvider}
+                  DATA_ITEM_KEY="providergridID"
+                  sortColumns={[]}
+                  onSortChange={this.onSortChange}
+                  height="640px"
+                  width="100%"
+                  skip={0}
+                  take={this.state.take}
+                ></GridComponent>
+              </div>
             </div>
           </div>
         </div>
-
 
       </Fragment>
 

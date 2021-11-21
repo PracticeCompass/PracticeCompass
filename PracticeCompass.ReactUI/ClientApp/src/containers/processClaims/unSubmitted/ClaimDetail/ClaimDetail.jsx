@@ -40,6 +40,10 @@ function mapDispatchToProps(dispatch) {
 const DATA_ITEM_KEY_CHARGES = "chargeSID";
 const idGetterCharges = getter(DATA_ITEM_KEY_CHARGES);
 class ClaimDetail extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     selected: 0,
     Show_HideDialogVisible: false,
@@ -140,6 +144,18 @@ class ClaimDetail extends Component {
       );
     }
     this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 93 : 273)
+    })
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -267,7 +283,7 @@ class ClaimDetail extends Component {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexFlow: "row", width: window.innerWidth - (!this.props.UiExpand ? 93 : 273) }}>
+        <div style={{ display: "flex", flexFlow: "row", width: this.state.gridWidth}}>
 
           <div className="accordion" id="accordionExample" >
             <div

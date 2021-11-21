@@ -56,6 +56,7 @@ class Physicians extends Component {
           >
             <PhysiciansDetails
               setInsuranceExpanded={this.setInsuranceExpanded}
+              PhysicianDetails={this.state.PhysicianDetails}
             ></PhysiciansDetails>
           </PanelBarItem>
         </PanelBar>

@@ -34,7 +34,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(200) , @completedclaimsfilter varchar(200),@sortClaimsfilter varchar(200)
+	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300)
 
 	 	set @DOSfilter=Case @DOSType 
 		when 1 then 'and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
@@ -51,13 +51,14 @@ BEGIN
 		else ''
 		end
 		set @completedclaimsfilter=Case @IncludeCompletedClaims
-		when 0 then 'and (Charge.Amount - (Charge.InsuranceReceipts + Charge.GuarantorReceipts + Charge.Adjustments) > 0) and (charge.CurrentStatus != ''V'' OR charge.CurrentStatus != ''P'')'
+		when 0 then 'and (((Charge.Amount - (Charge.InsuranceReceipts + Charge.GuarantorReceipts + Charge.Adjustments) > 0) and (charge.CurrentStatus != ''V'' OR charge.CurrentStatus != ''P'')) or Claim.LowestRespCoverageOrder != 99)'
 		when 1 then ''
 		else ''
 		end
 		set  @sortClaimsfilter= Case @SortColumn
 		when 'dos' then 'order by convert(Date,Max(ProcedureEvent.FromServiceDate),101) '+@SortDirection+''
 		when 'patientName' then 'order by Person.SortName '+@SortDirection+''
+		when 'claimNumber' then 'order by Claim.ClaimNumber '+@SortDirection+''
 		when 'totalClaimAmount' then 'order by cast(max(PlanClaim.TotalClaimAmount)as money) '+@SortDirection+''
 		when 'outStandingBalanace' then 'order by cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money) '+@SortDirection+''
 		when 'practiceName' then 'order by Practice.SortName '+@SortDirection+''
@@ -72,7 +73,7 @@ BEGIN
 	
 set @SQL= 'select distinct COUNT(*) OVER() as totalCount,
    convert(varchar,Claim.ClaimSID,10) as GridID,
-   Claim.ClaimSID, ' + '''$ ''' + ' + Convert(varchar(50),cast(max(PlanClaim.TotalClaimAmount)as money),1) as TotalClaimAmount ,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmountValue,' + '''$ ''' + ' + Convert(varchar(50),cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money),1) AS OutStandingBalanace , 
+   Claim.ClaimSID,Claim.ClaimNumber, ' + '''$ ''' + ' + Convert(varchar(50),cast(max(PlanClaim.TotalClaimAmount)as money),1) as TotalClaimAmount ,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmountValue,' + '''$ ''' + ' + Convert(varchar(50),cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money),1) AS OutStandingBalanace , 
    cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money) AS OutStandingBalanaceValue
 ,Practice.SortName as practiceName,Practice.PracticeID as PracticeID,Person.SortName as patientName , dbo.FuncClaimDestGet(Claim.ClaimSID) as Destination 
 ,Provider.SortName as ProviderName , convert(varchar,Max(ProcedureEvent.FromServiceDate),101) as DOS , convert(Date,Max(ProcedureEvent.FromServiceDate),101) as DOSDate ,
@@ -130,7 +131,7 @@ and
 ('+ convert(varchar, @PhysicianID,10) +'=0 or PlanClaim.PerformingProviderID= '+ convert(varchar, @PhysicianID,10) +')'
 
 print @SQL
-set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + 'group by Claim.ClaimSID , Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
+set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
 print @SQL
  exec(@SQL)
 

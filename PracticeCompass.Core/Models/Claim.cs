@@ -8,9 +8,9 @@ namespace PracticeCompass.Core.Models
     {
         public string GridID { get; set; }
         public string ClaimSID { get; set; }
+        public string ClaimNumber { get; set; }
         public string TotalClaimAmount { get; set; }
         public string OutStandingBalanace { get; set; }
-
         public string PracticeName { get; set; }
         public string PracticeID { get; set; }
         public string patientName { get; set; }
@@ -21,7 +21,5 @@ namespace PracticeCompass.Core.Models
         public string SeconadryStatus { get; set; }
         public string TertiaryStatus { get; set; }
         public int totalCount { get; set; }
-
-
     }
 }

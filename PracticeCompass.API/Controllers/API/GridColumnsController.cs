@@ -16,11 +16,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/GridColumns/GridColumnsGet")]
-        public GridColumn GridColumnsGet(string Name)
+        public GridColumn GridColumnsGet(string Name, int UserId)
         {
             try
             {
-                var gridColumns = unitOfWork.GridColumnsRepository.GetGridColumns(Name);
+                var gridColumns = unitOfWork.GridColumnsRepository.GetGridColumns(Name,UserId);
 
                 return gridColumns;
             }
@@ -32,11 +32,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/GridColumns/SaveGridColumns")]
-        public GridColumn FilterUpdate(string Name,string Columns)
+        public GridColumn FilterUpdate(string Name, int UserId,string Columns)
         {
             try
             {
-                var gridColumns = unitOfWork.GridColumnsRepository.SaveGridColumns(Name,Columns);
+                var gridColumns = unitOfWork.GridColumnsRepository.SaveGridColumns(Name,Columns,UserId);
 
                 return gridColumns;
             }
