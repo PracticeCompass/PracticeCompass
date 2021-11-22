@@ -23,7 +23,7 @@ import { getter } from "@progress/kendo-react-common";
 function mapStateToProps(state) {
   return {
     charges: state.claimDetails.charges,
-    UiExpand: state.ui.UiExpand
+    UiExpand: state.ui.UiExpand,
   };
 }
 
@@ -147,15 +147,15 @@ class ClaimDetail extends Component {
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions);
   }
-  componentDidUpdate=(event)=>{
-    if(event.UiExpand != this.props.UiExpand){
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
       this.updateDimensions();
     }
-  }
+  };
   updateDimensions() {
     this.setState({
-      gridWidth: window.innerWidth - (!this.props.UiExpand ? 93 : 273)
-    })
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 93 : 273),
+    });
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -175,7 +175,7 @@ class ClaimDetail extends Component {
       none: false,
     });
   };
-  onSortChange = () => { };
+  onSortChange = () => {};
   render() {
     return (
       <Fragment>
@@ -213,11 +213,11 @@ class ClaimDetail extends Component {
                 claimDetails={this.props.claimDetails}
               ></ClaimDetailSummary>
             </TabStripTab>
-            <TabStripTab title="Filing">
+            {/* <TabStripTab title="Filing">
               <ClaimDetailFilling
                 claimDetails={this.props.claimDetails}
               ></ClaimDetailFilling>
-            </TabStripTab>
+            </TabStripTab> */}
             <TabStripTab title="Submission History">
               <ClaimDetailSubmissionHistory
                 claimDetails={this.props.claimDetails}
@@ -283,9 +283,14 @@ class ClaimDetail extends Component {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexFlow: "row", width: this.state.gridWidth}}>
-
-          <div className="accordion" id="accordionExample" >
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: this.state.gridWidth,
+          }}
+        >
+          <div className="accordion" id="accordionExample">
             <div
               className="card bg-light mb-3"
               style={{

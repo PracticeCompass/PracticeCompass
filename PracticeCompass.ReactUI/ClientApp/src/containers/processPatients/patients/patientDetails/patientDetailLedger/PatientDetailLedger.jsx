@@ -6,12 +6,16 @@ import { getter } from "@progress/kendo-react-common";
 import { GetPatientLedger } from "../../../../../redux/actions/patientDetails";
 import ButtonComponent from "../../../../../components/Button";
 import Show_HideDialogComponent from "../../../../common/show_hideDialog";
+import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import {
   GetGridColumns,
   SaveGridColumns,
 } from "../../../../../redux/actions/GridColumns";
+import ClaimDetail from "../../../../processClaims/unSubmitted/ClaimDetail/ClaimDetail";
+import ChargeDetail from "../../../../processClaims/unSubmitted/ChargeDetail/ChargeDetail";
+
 function mapStateToProps(state) {
-  return {};
+  return { UiExpand: state.ui.UiExpand };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -34,7 +38,16 @@ class PatientDetailLedger extends Component {
     Show_HideDialogVisible: false,
     ledgerColumns: columns,
     refreshGrid: true,
+    Show_ClaimDetailsDialog: false,
+    Show_ChargeDetailsDialog: false,
+    gridWidth: null,
+    claimDetails: {},
+    chargeDetails: {},
   };
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   async componentDidMount() {
     await this.getGridColumns();
     if (
@@ -51,7 +64,19 @@ class PatientDetailLedger extends Component {
         patientDetailsLedger: patientLedger,
       });
     }
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
   }
+  updateDimensions() {
+    this.setState({
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 310),
+    });
+  }
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
+      this.updateDimensions();
+    }
+  };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });
   };
@@ -138,9 +163,22 @@ class PatientDetailLedger extends Component {
   }
   onPatientLedgerGridSelectionChange = (event) => {
     if (event.dataItem.activityTypeStr === "Claim") {
-      console.log(event.dataItem.claimSID);
+      const selectedClaim = {
+        claimSID: event.dataItem.claimSID,
+        practiceID: 0,
+      };
+      this.setState({ claimDetails: selectedClaim });
+      this.setState({ Show_ClaimDetailsDialog: true });
+
+      //console.log(event.dataItem.claimSID);
     } else if (event.dataItem.activityTypeStr === "Charge Details") {
-      console.log(event.dataItem.chargeSID);
+      const selectedCharge = {
+        chargeSID: event.dataItem.chargeSID,
+        practiceID: 0,
+      };
+      this.setState({ chargeDetails: selectedCharge });
+      this.setState({ Show_ChargeDetailsDialog: true });
+      //console.log(event.dataItem.chargeSID);
     }
     // this.props.setPatientDetails(
     //   event.dataItems == null || event.dataItems.length == 0
@@ -150,9 +188,21 @@ class PatientDetailLedger extends Component {
   };
   onPatientLedgerGridDoubleSelectionChange = (event) => {
     if (event.dataItem.activityTypeStr === "Claim") {
-      console.log(event.dataItem.claimSID);
+      const selectedClaim = {
+        claimSID: event.dataItem.claimSID,
+        practiceID: 0,
+      };
+      this.setState({ claimDetails: selectedClaim });
+      this.setState({ Show_ClaimDetailsDialog: true });
+      //console.log(event.dataItem.claimSID);
     } else if (event.dataItem.activityTypeStr === "Charge Details") {
-      console.log(event.dataItem.chargeSID);
+      const selectedCharge = {
+        chargeSID: event.dataItem.chargeSID,
+        practiceID: 0,
+      };
+      this.setState({ chargeDetails: selectedCharge });
+      this.setState({ Show_ChargeDetailsDialog: true });
+      //console.log(event.dataItem.chargeSID);
     }
     // this.props.setPatientDetails(
     //   event.dataItems == null || event.dataItems.length == 0
@@ -167,7 +217,7 @@ class PatientDetailLedger extends Component {
         <div
           className="accordion"
           id="accordionExample"
-          style={{ height: window.innerHeight - 200 }}
+          style={{ width: this.state.gridWidth }}
         >
           <div className="card bg-light mb-3">
             <div
@@ -202,7 +252,7 @@ class PatientDetailLedger extends Component {
                     data={this.state.patientDetailsLedger}
                     skip={0}
                     take={this.state.take}
-                    height={window.innerHeight - 200}
+                    height={window.innerHeight - 220}
                     width="100%"
                     activeRowRender={true}
                     onRowRender={this.onRowRender}
@@ -225,6 +275,98 @@ class PatientDetailLedger extends Component {
                   toggleShowColumnsDialog={this.toggleShowColumnsDialog}
                   SaveColumnsShow={this.SaveColumnsShow}
                 ></Show_HideDialogComponent>
+              )}
+              {this.state.Show_ClaimDetailsDialog && (
+                <Dialog
+                  title={"Claim Details"}
+                  onClose={() => {
+                    this.setState({ Show_ClaimDetailsDialog: false });
+                  }}
+                  width={window.innerWidth - 235}
+                  height={window.innerHeight - 80}
+                >
+                  <ClaimDetail
+                    claimDetails={this.state.claimDetails}
+                  ></ClaimDetail>
+                  <DialogActionsBar>
+                    <div className="row">
+                      <div className="col-12">
+                        <button
+                          type="button"
+                          className="k-button k-primary"
+                          style={{
+                            float: "right",
+                            right: 0,
+                            marginRight: "20px",
+                          }}
+                          onClick={() => {
+                            this.setState({ Show_ClaimDetailsDialog: false });
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          className="k-button k-primary"
+                          style={{
+                            float: "right",
+                            right: 0,
+                            marginRight: "20px",
+                          }}
+                          onClick={() => {}}
+                        >
+                          Ok
+                        </button>
+                      </div>
+                    </div>
+                  </DialogActionsBar>
+                </Dialog>
+              )}
+              {this.state.Show_ChargeDetailsDialog && (
+                <Dialog
+                  title={"Charge Details"}
+                  onClose={() => {
+                    this.setState({ Show_ChargeDetailsDialog: false });
+                  }}
+                  width={window.innerWidth - 235}
+                  height={window.innerHeight - 80}
+                >
+                  <ChargeDetail
+                    ChargeDetails={this.state.chargeDetails}
+                  ></ChargeDetail>
+                  <DialogActionsBar>
+                    <div className="row">
+                      <div className="col-12">
+                        <button
+                          type="button"
+                          className="k-button k-primary"
+                          style={{
+                            float: "right",
+                            right: 0,
+                            marginRight: "20px",
+                          }}
+                          onClick={() => {
+                            this.setState({ Show_ChargeDetailsDialog: false });
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          className="k-button k-primary"
+                          style={{
+                            float: "right",
+                            right: 0,
+                            marginRight: "20px",
+                          }}
+                          onClick={() => {}}
+                        >
+                          Ok
+                        </button>
+                      </div>
+                    </div>
+                  </DialogActionsBar>
+                </Dialog>
               )}
             </div>
           </div>
