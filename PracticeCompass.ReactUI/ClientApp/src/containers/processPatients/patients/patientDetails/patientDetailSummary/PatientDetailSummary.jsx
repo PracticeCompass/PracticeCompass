@@ -162,6 +162,7 @@ class PatientDetailSummary extends Component {
     OtherWorkPhone: null,
     OtherExt: null,
     OtherCellPhone: null,
+    gridWidth:0
   };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });

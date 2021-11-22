@@ -235,6 +235,9 @@ class PatientPayments extends Component {
     patientPaymentColumns: patientPaymentColumns,
     insuranceAssignmentColumns: insuranceAssignmentColumns,
     applyPatientPaymentColumns: applyPatientPaymentColumns,
+    gridWidth:0,
+    gridDetails:0,
+    gridcharged:0
   };
   componentDidMount = () => {
     this.getGridColumns();

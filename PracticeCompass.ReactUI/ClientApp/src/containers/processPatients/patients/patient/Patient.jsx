@@ -165,6 +165,7 @@ class Patient extends Component {
     selectedSortColumn: null,
     sortDirection: null,
     patientListColumns: columns,
+    gridWidth:0
   };
   // getPatientTypeUrl(filter) {
   //   return `${config.baseUrl}/patient/PatientTypesGet?description=${filter}`;

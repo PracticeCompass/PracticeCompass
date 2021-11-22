@@ -94,7 +94,8 @@ class EraPayments extends Component {
     checkIssue: null,
     transactionHeader: "Payment Transactions ",
     masterColumns: masterColumns,
-    detailsColumns: detailsColumns
+    detailsColumns: detailsColumns,
+    gridWidth:0
   };
   componentDidMount = () => {
     this.getGridColumns();

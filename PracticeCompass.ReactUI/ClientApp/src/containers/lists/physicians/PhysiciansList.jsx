@@ -73,7 +73,8 @@ class PhysiciansList extends Component {
     refreshFilter: true,
     skip: 0,
     take: 28,
-    providerColumns:providerColumns
+    providerColumns:providerColumns,
+    gridWidth:0
   }
   onSortChange = () => {
 
@@ -277,6 +278,7 @@ class PhysiciansList extends Component {
     });
   };
   SaveColumnsShow = async (columns) => {
+    this.setState({ refreshGrid: false });
     if (!columns.find((x) => x.hide != true)) {
       this.setState({ Show_HidePhysicianDialogVisible: false });
       this.setState({ warning: true, message: "Cann't hide all columns" });
@@ -287,7 +289,6 @@ class PhysiciansList extends Component {
       }, this.state.timer);
       return;
     } else {
-      this.setState({ refreshGrid: false });
       let GridColumns = await this.props.SaveGridColumns(
         "Physician",
         JSON.stringify(columns)
@@ -297,6 +298,7 @@ class PhysiciansList extends Component {
         Show_HidePhysicianDialogVisible: false,
       });
     }
+    this.setState({refreshGrid:true});
   };
   render() {
     return (
@@ -575,11 +577,12 @@ class PhysiciansList extends Component {
                 aria-labelledby="headingOne"
                 data-parent="#accordionExample"
               >
+                {this.state.refreshGrid && (
                 <GridComponent
                   id="physicianGrid"
                   data={this.props.physicians || []}
                   columns={
-                    providerColumns
+                   this.state.providerColumns
                   }
                   height="400px"
                   width="100%"
@@ -595,6 +598,7 @@ class PhysiciansList extends Component {
                   skip={0}
                   take={this.state.take}
                 ></GridComponent>
+                )}
               </div>
             </div>
           </div>

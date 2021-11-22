@@ -40,16 +40,19 @@ export const providerColumns = [
     {
         field: "city",
         title: "City",
+        minWidth:100,
         orderIndex: 8,
     },
     {
         field: "state",
         title: "State",
+        minWidth:100,
         orderIndex: 9,
     },
     {
         field: "zip",
         title: "Zip",
+        minWidth:100,
         orderIndex: 10,
     }
 ];

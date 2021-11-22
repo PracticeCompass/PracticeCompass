@@ -218,6 +218,9 @@ class insurancePayments extends Component {
     insuranceColumns: insuranceColumns,
     insuranceAssignmentColumns: insuranceAssignmentColumns,
     applyPlanPaymentColumns: applyPlanPaymentColumns,
+    gridWidth:0,
+    gridDetails:0,
+    gridcharged:0
   };
   componentDidMount = () => {
     this.getGridColumns();

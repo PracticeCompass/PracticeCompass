@@ -205,6 +205,7 @@ class ClaimList extends Component {
     sortDirection: null,
     selectedClaims: null,
     claimListColumns: columns,
+    gridWidth:0
   };
   getPhysiciansUrl(filter) {
     return `${config.baseUrl}/ClaimList/PhysicianGet?sortname=${filter}`;

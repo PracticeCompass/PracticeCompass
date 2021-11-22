@@ -31,8 +31,9 @@ class PhysiciansDetails extends Component {
     this.updateDimensions = this.updateDimensions.bind(this);
   }
   state = {
-    filterName: this.props.filterName,
+    // filterName: this.props.filterName,
     selected: 0,
+    gridWidth:0
   };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });

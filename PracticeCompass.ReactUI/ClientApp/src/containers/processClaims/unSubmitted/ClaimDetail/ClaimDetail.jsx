@@ -58,6 +58,7 @@ class ClaimDetail extends Component {
     timer: 5000,
     selectedChargeSID: 0,
     claimListColumns: columns,
+    gridWidth:0
   };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });
