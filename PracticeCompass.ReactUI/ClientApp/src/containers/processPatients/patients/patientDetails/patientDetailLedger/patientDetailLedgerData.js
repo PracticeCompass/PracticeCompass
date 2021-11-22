@@ -17,8 +17,9 @@ export const columns = [
   {
     field: "claimNumber",
     title: "CN/ Description",
-    minWidth: 100,
+    minWidth: 150,
     orderIndex: 3,
+    showToolTip: true,
     filterable: false,
   },
   {
