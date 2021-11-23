@@ -16,10 +16,13 @@ import {
   FilterInsert,
   FilterUpdate,
 } from "../../../redux/actions/filter";
-const DATA_ITEM_KEY_PHYSICIAN = "id";
-const idGetterInsuranceList = getter(DATA_ITEM_KEY_PHYSICIAN);
+import { getPlans } from "../../../redux/actions/plans";
+const DATA_ITEM_KEY_PLAN = "planId";
+const idGetterInsuranceList = getter(DATA_ITEM_KEY_PLAN);
 function mapStateToProps(state) {
-  return {};
+  return {
+    plans:state.plans.plans
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -32,6 +35,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
+      getPlans: (searchGrid) => dispatch(getPlans(searchGrid)),
   };
 }
 class Insurance extends Component {
@@ -43,14 +47,30 @@ class Insurance extends Component {
     warning: false,
     info: false,
     timer: 5000,
-    Zip:null,
-    group:null,
-    name:null,
-    listName:null
+    Zip: null,
+    group: null,
+    name: null,
+    listName: null,
+    take: 28,
   }
   onSortChange = () => {
 
   }
+  planGridSearch = async (refreshData = true) => {
+    var plaGrid = {
+      PlanID: this.state.selectedPlanId
+        ? this.state.selectedPlanId
+        : 0,
+      ZIP: this.state.Zip ?? '',
+      // skip: refreshData ? 0 : this.props.Patients.length,
+      skip: 0,
+      SortColumn: this.state.selectedSortColumn
+        ? this.state.selectedSortColumn
+        : "",
+      SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
+    };
+    await this.props.getPlans(plaGrid);
+  };
   getFilters(filter) {
     if (filter !== undefined) filter = "";
     return `${config.baseUrl}/Filters/FiltersGet?Entity=insurance&DisplayName=${filter}`;
@@ -157,7 +177,7 @@ class Insurance extends Component {
       group: null,
       listName: null,
       name: null,
-      currentFilter:null
+      currentFilter: null
     });
   };
   closeNotification = () => {
@@ -169,6 +189,12 @@ class Insurance extends Component {
       none: false,
     });
   };
+  onPlanGridDoubleSelectionChange =()=>{
+
+  }
+  onPlanGridSelectionChange=()=>{
+
+  }
   render() {
     return (
       <Fragment>
@@ -338,9 +364,10 @@ class Insurance extends Component {
                     className="unifyHeight"
                     value={this.state.Zip}
                     onValueChange={(e) => {
-                      this.setState({ 
-                      Zip: e.target.value
-                    })}}
+                      this.setState({
+                        Zip: e.target.value
+                      })
+                    }}
                   ></TextBox>
                 </div>
               </div>
@@ -354,7 +381,7 @@ class Insurance extends Component {
                   icon="search"
                   type="search"
                   classButton="infraBtn-primary action-button"
-                  onClick={this.props.clickOnSearch}
+                  onClick={this.planGridSearch}
                 >
                   Search
                 </ButtonComponent>
@@ -417,16 +444,20 @@ class Insurance extends Component {
             >
               <GridComponent
                 id="physicianGrid"
+                data={this.props.plans}
                 columns={
                   insuranceColumns
                 }
-                height="400px"
+                height="640px"
                 width="100%"
-                onSelectionChange={this.onPatientGridSelectionChange}
-                onRowDoubleClick={this.onPatientGridDoubleSelectionChange}
+                onSelectionChange={this.onPlanGridSelectionChange}
+                onRowDoubleClick={this.onPlanGridDoubleSelectionChange}
                 selectionMode="single"
                 sortColumns={[]}
                 onSortChange={this.onSortChange}
+                idGetter={idGetterInsuranceList}
+                take={this.state.take}
+                DATA_ITEM_KEY="planId"
               ></GridComponent>
             </div>
           </div>

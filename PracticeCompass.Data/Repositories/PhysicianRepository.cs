@@ -28,7 +28,7 @@ namespace PracticeCompass.Data.Repositories
             return data.Read<PhysicianDetails>().FirstOrDefault();
         }
 
-        public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName,string positionCode, int Zip, int skip, string SortColumn, string SortDirection)
+        public List<Physician> PhysiciansGridGet(int ProviderID, string firstName, string lastName,string positionCode, string Zip, int skip, string SortColumn, string SortDirection)
         {
             var data = this.db.QueryMultiple("uspPhysicianGridGet", new
             {

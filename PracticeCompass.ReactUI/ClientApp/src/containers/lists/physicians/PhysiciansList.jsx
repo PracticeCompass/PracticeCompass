@@ -131,7 +131,7 @@ class PhysiciansList extends Component {
         : null,
       Zip: this.state.Zip
         ? this.state.Zip
-        : null,
+        : '',
       Position: this.state.Position ? this.state.Position : null
     });
     if (this.state.currentFilter && this.state.currentFilter.filterID) {
@@ -584,8 +584,6 @@ class PhysiciansList extends Component {
                   columns={
                    this.state.providerColumns
                   }
-                  height="400px"
-                  width="100%"
                   onSelectionChange={this.onPhysiciansGridSelectionChange}
                   onRowDoubleClick={this.onPhysiciansGridDoubleSelectionChange}
                   selectionMode="single"

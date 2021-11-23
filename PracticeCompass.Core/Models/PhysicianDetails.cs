@@ -21,6 +21,7 @@ namespace PracticeCompass.Core.Models
         public string WorkPhone { get; set; }
         public string WorkPhoneExt { get; set; }
         public string MobilePhone { get; set; }
+        public string FaxPhone { get; set; }
         public string SSN { get; set; }
         public string NameSuffix { get; set; }
         public string MiddleName { get; set; }
@@ -31,6 +32,11 @@ namespace PracticeCompass.Core.Models
         public string Email { get; set; }
         public string PositionCode { get; set; }
         public string PositionName { get; set; }
+        public string Taxcode { get; set; }
+        public string IdentificationNumber { get; set; }
+        public string UPIN { get; set; }
+        public string DEA { get; set; }
+
         #endregion
 
     }

@@ -66,7 +66,12 @@ class PhysiciansDetails extends Component {
           Position: {
             name: item.positionName,
             positionCode: item.positionCode
-          }
+          },
+          taxcode:item.taxcode,
+          identificationNumber:item.identificationNumber,
+          upin:item.upin,
+          dea:item.dea,
+          faxPhone:item.faxPhone
         })
       }
     }
@@ -193,10 +198,10 @@ class PhysiciansDetails extends Component {
                     <div style={{ width: "200px", float: "left" }}>
                       <TextBox
                         className="unifyHeight"
-                        value={this.state.TaxIdentificationNumber}
+                        value={this.state.identificationNumber}
                         onChange={(e) =>
                           this.setState({
-                            TaxIdentificationNumber: e.value,
+                            identificationNumber: e.value,
                           })
                         }
                       ></TextBox>
@@ -209,10 +214,10 @@ class PhysiciansDetails extends Component {
                     <div style={{ width: "200px", float: "left" }}>
                       <TextBox
                         className="unifyHeight"
-                        value={this.state.TaxonomyCode}
+                        value={this.state.taxcode}
                         onChange={(e) =>
                           this.setState({
-                            TaxonomyCode: e.value,
+                            taxcode: e.value,
                           })
                         }
                       ></TextBox>
@@ -245,10 +250,10 @@ class PhysiciansDetails extends Component {
                     <div style={{ width: "200px", float: "left" }}>
                       <TextBox
                         className="unifyHeight"
-                        value={this.state.UPIN}
+                        value={this.state.upin}
                         onChange={(e) =>
                           this.setState({
-                            UPIN: e.value,
+                            upin: e.value,
                           })
                         }
                       ></TextBox>
@@ -292,10 +297,10 @@ class PhysiciansDetails extends Component {
                     <div style={{ width: "200px", float: "left" }}>
                       <TextBox
                         className="unifyHeight"
-                        value={this.state.DEA}
+                        value={this.state.dea}
                         onChange={(e) =>
                           this.setState({
-                            DEA: e.value,
+                            dea: e.value,
                           })
                         }
                       ></TextBox>
@@ -568,9 +573,9 @@ class PhysiciansDetails extends Component {
                         format="(###) ###-####"
                         placeholder="(000) 000-0000"
                         className="unifyHeight"
-                        value={this.state.fax}
+                        value={this.state.faxPhone}
                         onValueChange={(e) =>
-                          this.setState({ fax: e.target.value })
+                          this.setState({ faxPhone: e.target.value })
                         }
                       ></TextBox>
                     </div>

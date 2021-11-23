@@ -18,5 +18,6 @@ namespace PracticeCompass.Core.Common
         IInsuranceRecordRepository InsuranceRecordRepository { get; }
         IPaymentRepository PaymentRepository { get; }
         IPhysicianRepository PhysicianRepository { get; }
+        IPlanRepository PlanRepository { get; }
     }
 }

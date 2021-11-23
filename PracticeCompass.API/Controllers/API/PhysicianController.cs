@@ -33,6 +33,8 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.SortDirection = "";
                 if (searchCriteria.PositionCode == null)
                     searchCriteria.PositionCode = "";
+                if (searchCriteria.ZIP == null)
+                    searchCriteria.ZIP = "";
                 List<Physician> Result = unitOfWork.PhysicianRepository.PhysiciansGridGet(searchCriteria.ProviderID, searchCriteria.firstName, searchCriteria.lastName, searchCriteria.PositionCode, searchCriteria.ZIP, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
                 return Result;
             }
