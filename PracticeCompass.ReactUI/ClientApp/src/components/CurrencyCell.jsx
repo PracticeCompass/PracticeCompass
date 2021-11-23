@@ -21,8 +21,8 @@ export class CurrencyGridCell extends React.Component {
       });
     }
   };
- currencyFormat(num) {
-    return '$' + Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+ currencyFormat(num,isNegative) {
+    return (isNegative?'(':'') +('$' + Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'))+(isNegative?')':'')
  }
   render() {
     const { dataItem } = this.props;
@@ -30,11 +30,21 @@ export class CurrencyGridCell extends React.Component {
     const dataValue = dataItem[field] === null ? "" : dataItem[field];
     let column = this.props.myProp.columns.find((x) => x.field == field);
     let columnStyle={ textAlign: "right"};
-    if(dataValue < 0)columnStyle.color ="red";
+    let isNegative=false;
+    if(dataValue < 0){
+      columnStyle.color ="red";
+      isNegative=true;
+    }
     if (column.fontColor)columnStyle.color =column.fontColor;
     if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
     return (
-      <td style={columnStyle}>
+      <td style={columnStyle}
+      ref={(node) => {
+        if (node) {
+          node.style.setProperty("text-align", "right", "important");
+          node.style.setProperty("padding-right", "5px", "important");
+        }
+      }}>
         {(dataItem.inEdit && column.editable!= false) ? (
           <TextBox
             type="numeric"
@@ -45,7 +55,7 @@ export class CurrencyGridCell extends React.Component {
             onChange={this.handleChange}
           ></TextBox>
         ) : (
-            this.currencyFormat(dataValue)
+            this.currencyFormat(dataValue,isNegative)
         )}
       </td>
     );

@@ -59,8 +59,10 @@ export const MyPager = (props) => {
 export const CurrencyCell = (props) => {
   let column = props.myProp.columns.find((x) => x.field == props.field);
   let columnStyle={};
+  let isNegative=false;
   if(!isNaN(+props.dataItem[props.field]) && (Number(props.dataItem[props.field]<0))){
     columnStyle.color="red";
+    isNegative=true;
   }
   if (column.fontColor)columnStyle.color=column.fontColor;
   if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
@@ -77,7 +79,7 @@ export const CurrencyCell = (props) => {
       {props.dataItem[props.field] == null ||
       props.dataItem[props.field].toString().includes("$")
         ? props.dataItem[props.field]
-        :'$' +Number(props.dataItem[props.field]).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}
+        :(isNegative?'(':'') + '$' +Number(props.dataItem[props.field]).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')+(isNegative?')':'')  }
     </td>
   );
 };
