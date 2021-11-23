@@ -31,6 +31,6 @@ namespace PracticeCompass.Core.Models
         public string PmtProvLevelAdjReason { get; set; }
         public string comment { get; set; }
         public string AlertCode { get; set; }
-        public string LongDescription { get; set; }
+        public string comment_ { get; set; }
     }
 }

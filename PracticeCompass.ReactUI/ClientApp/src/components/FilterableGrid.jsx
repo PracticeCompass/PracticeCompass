@@ -10,7 +10,8 @@ import {
 } from "@progress/kendo-react-grid";
 import { getter } from "@progress/kendo-react-common";
 import { filterBy, orderBy } from "@progress/kendo-data-query";
-import { MyPager, CurrencyCell, CustomCell, cellWithIcon } from "./GridData.js";
+import { MyPager, CustomCell, cellWithIcon } from "./GridData.js";
+import CurrencyGridCell from "./CurrencyCell";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 import DropdownFilterCell from "./DropdownFilterCell";
@@ -53,7 +54,9 @@ class FilterableGridComponent extends React.Component {
   Currentpager = (props) => {
     return <MyPager {...props} totalCount={this.props.totalCount} />;
   };
-
+  MyCurrencyCell = (props) => {
+    return <CurrencyGridCell {...props} myProp={this.props} />;
+  };
   minGridWidth = 0;
   state = {
     selectedState: {},
@@ -433,7 +436,7 @@ class FilterableGridComponent extends React.Component {
                     filterable={false}
                     cell={
                       column.type == "currency"
-                        ? CurrencyCell
+                        ? this.MyCurrencyCell
                         : column.iscellWithIcon
                         ? cellWithIcon
                         : column.isCustomCell

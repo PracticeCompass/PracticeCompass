@@ -44,11 +44,19 @@ function mapDispatchToProps(dispatch) {
 
 class ColumnNameCell extends React.Component {
   render() {
-    return (
-      <td title={this.props.dataItem[this.props.field]}>
-        {this.props.dataItem[this.props.field]}
-      </td>
-    );
+    if (this.props.dataItem[this.props.field + "_"] !== undefined) {
+      return (
+        <td title={this.props.dataItem[this.props.field + "_"]}>
+          {this.props.dataItem[this.props.field]}
+        </td>
+      );
+    } else {
+      return (
+        <td title={this.props.dataItem[this.props.field]}>
+          {this.props.dataItem[this.props.field]}
+        </td>
+      );
+    }
   }
 }
 class EditableGrid extends React.Component {
@@ -58,9 +66,9 @@ class EditableGrid extends React.Component {
   Currentpager = (props) => {
     return <MyPager {...props} totalCount={this.props.totalCount} />;
   };
-  MyCurrencyCell =(props) =>{
+  MyCurrencyCell = (props) => {
     return <CurrencyGridCell {...props} myProp={this.props} />;
-  }
+  };
   minGridWidth = 0;
   state = {
     selectedState: {},

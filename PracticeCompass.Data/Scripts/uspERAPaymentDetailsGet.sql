@@ -30,8 +30,8 @@ sum([ERSChargeClaimAdjustment].AdjustmentAmt) as ChargeClaimAdjustmentAmt ,
 sum(ERSClaimAdjustment.AdjustmentAmt) as ClaimAdjustmentAmt , '' as ERSClaimAdjustmentreason,
 sum(ERSPmtProvLevelAdj.ProviderAdjustmentAmt) as ProviderAdjustmentAmt , '' as PmtProvLevelAdjReason ,
 dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment,
-'' as AlertCode,
-'' as LongDescription
+dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment_,
+'' as AlertCode
 
  from ERSClaimData
 inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
@@ -60,16 +60,15 @@ ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNum
 '' as ServiceDate,
 null as LineItemChargeAmt , null as LineItemProviderPaymentAmt,
 [ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
-ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode +' - '+[ERSChargeClaimAdjustment].AdjustmentReasonCode +' / '+ ERADenialAlert.ShortDescription  as ChargeClaimAdjustmentReason,
+ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode +' - '+[ERSChargeClaimAdjustment].AdjustmentReasonCode   as ChargeClaimAdjustmentReason,
 ERSClaimAdjustment.AdjustmentAmt as ClaimAdjustmentAmt , ERSClaimAdjustment.AdjustmentReasonCode as ERSClaimAdjustmentreason,
 ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason ,
-'' as comment,
+ERADenialAlert.ShortDescription as comment,ERADenialAlert.LongDescription as comment_,
 case when [ERADenialAlert].[AlertCode]='Phys' then 'Physician Responsibility'
      when [ERADenialAlert].[AlertCode]='Pat' then 'Patient responsibility'
 	 when [ERADenialAlert].[AlertCode]='Move' then 'Move responsibility to the next level. Secondary/tertiary insurance or patient.'
 	 when [ERADenialAlert].[AlertCode]='Manual' then 'Manual Processing'
-	 else '' end as AlertCode,
-	 ERADenialAlert.LongDescription
+	 else '' end as AlertCode
 
 from ERSClaimData
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
