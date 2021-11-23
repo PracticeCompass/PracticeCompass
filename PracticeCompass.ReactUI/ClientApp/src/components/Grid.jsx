@@ -6,7 +6,7 @@ import {
   GridColumn as Column,
   getSelectedState,
   getSelectedStateFromKeyDown,
-  GridToolbar
+  GridToolbar,
 } from "@progress/kendo-react-grid";
 import { getter } from "@progress/kendo-react-common";
 import { Slider, NumericTextBox } from "@progress/kendo-react-inputs";
@@ -34,20 +34,28 @@ function mapDispatchToProps(dispatch) {
 
 class ColumnNameCell extends React.Component {
   render() {
-    return (
-      <td title={this.props.dataItem[this.props.field]}>
-        {this.props.dataItem[this.props.field]}
-      </td>
-    );
+    if (this.props.dataItem[this.props.field + "_"] !== null) {
+      return (
+        <td title={this.props.dataItem[this.props.field + "_"]}>
+          {this.props.dataItem[this.props.field]}
+        </td>
+      );
+    } else {
+      return (
+        <td title={this.props.dataItem[this.props.field]}>
+          {this.props.dataItem[this.props.field]}
+        </td>
+      );
+    }
   }
 }
 class GridComponent extends React.Component {
   MyCustomCell = (props) => {
     return <CustomCell {...props} myProp={this.props} />;
   };
-  MyCurrencyCell =(props) =>{
+  MyCurrencyCell = (props) => {
     return <CurrencyCell {...props} myProp={this.props} />;
-  }
+  };
   Currentpager = (props) => {
     return <MyPager {...props} totalCount={this.props.totalCount} />;
   };
@@ -82,7 +90,7 @@ class GridComponent extends React.Component {
         take: event.page.take,
       });
       this.props.pageChange(event.page.skip, event.page.take);
-    } catch (error) { }
+    } catch (error) {}
   };
   onColumnReorder = async (event) => {
     //localStorage.setItem(this.props.id, JSON.stringify(event.columns));
@@ -92,8 +100,12 @@ class GridComponent extends React.Component {
     );
   };
   componentDidUpdate(prevProps) {
-    if (prevProps.data !== null && this.props.data != null && prevProps.data.length > this.props.data.length) {
-      this.setState({ skip: 0 })
+    if (
+      prevProps.data !== null &&
+      this.props.data != null &&
+      prevProps.data.length > this.props.data.length
+    ) {
+      this.setState({ skip: 0 });
     }
   }
   componentDidMount() {
@@ -123,7 +135,7 @@ class GridComponent extends React.Component {
       });
     }
   }
-  cellClick = () => { };
+  cellClick = () => {};
   handleResize = () => {
     if (this.grid.offsetWidth < this.minGridWidth && !this.state.setMinWidth) {
       this.setState({
@@ -200,8 +212,8 @@ class GridComponent extends React.Component {
     let width = this.state.setMinWidth
       ? minWidth
       : minWidth +
-      (this.state.gridCurrent - this.minGridWidth) /
-      this.props.columns.length;
+        (this.state.gridCurrent - this.minGridWidth) /
+          this.props.columns.length;
     if (width > COLUMN_MIN) width -= ADJUST_PADDING;
     return width;
   };
@@ -318,12 +330,12 @@ class GridComponent extends React.Component {
             data={
               this.props.data
                 ? this.props.data
-                  .slice(this.state.skip, this.state.take + this.state.skip)
-                  .map((item) => ({
-                    ...item,
-                    [SELECTED_FIELD]:
-                      this.state.selectedState[this.props.idGetter(item)],
-                  }))
+                    .slice(this.state.skip, this.state.take + this.state.skip)
+                    .map((item) => ({
+                      ...item,
+                      [SELECTED_FIELD]:
+                        this.state.selectedState[this.props.idGetter(item)],
+                    }))
                 : []
             }
             skip={this.state.skip}
@@ -352,16 +364,14 @@ class GridComponent extends React.Component {
                       column.type == "currency"
                         ? this.MyCurrencyCell
                         : column.iscellWithIcon
-                          ? cellWithIcon
-                          : column.isCustomCell
-                            ? this.MyCustomCell
-                            : column.showToolTip && ColumnNameCell
+                        ? cellWithIcon
+                        : column.isCustomCell
+                        ? this.MyCustomCell
+                        : column.showToolTip && ColumnNameCell
                     }
                   />
                 );
-
-              })
-              }
+              })}
           </Grid>
         </Tooltip>
       </div>
