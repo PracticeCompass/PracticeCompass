@@ -101,7 +101,8 @@ export const detailsColumns = [
     title: "Adjustment Type",
     minWidth: 120,
     orderIndex: 7,
-    editable: false
+    editable: false,
+    showToolTip: true
   },
   {
     type: "currency",

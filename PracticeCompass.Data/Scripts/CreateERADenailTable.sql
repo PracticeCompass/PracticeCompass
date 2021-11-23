@@ -17,6 +17,8 @@ CREATE TABLE [dbo].[ERADenialAlert](
 	[CodeNumber] [int] NOT NULL,
 	[AlertCode] [varchar](50) NOT NULL,
 	[AutomatedTask] [varchar](250) NULL,
+	[ShortDescription] [varchar](50) NULL,
+	[LongDescription] [varchar](max) NULL,
  CONSTRAINT [PK_ERADenialAlert] PRIMARY KEY CLUSTERED 
 (
 	[ERACodeID] ASC
@@ -25,19 +27,30 @@ CREATE TABLE [dbo].[ERADenialAlert](
 GO
 SET IDENTITY_INSERT [dbo].[ERADenialAlert] ON 
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (1, N'CO', 45, N'Phys', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (1, N'CO', 45, N'Phys', NULL, N'Charge exceeds fee schedule', N'Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement. Usage: This adjustment amount cannot equal the total service or claim charge amount; and must not duplicate provider adjustment amounts (payments and contractual reductions) that have resulted from prior payer(s) adjudication. (Use only with Group Codes PR or CO depending upon liability)')
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (2, N'PR', 2, N'move', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (2, N'PR', 2, N'move', NULL, N'Coinsurance Amount
+', N'Coinsurance Amount
+')
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (3, N'CO', 253, N'Phys', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (3, N'CO', 253, N'Phys', NULL, N'Sequestration - reduction in federal payment
+', N'Sequestration - reduction in federal payment
+')
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (4, N'PR', 3, N'Pat', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (4, N'PR', 3, N'Pat', NULL, N'Co-payment Amount
+', N'Co-payment Amount
+')
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (5, N'PR', 1, N'Pat', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (5, N'PR', 1, N'Pat', NULL, N'Deductible Amount
+', N'Deductible Amount
+')
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (6, N'CO', 29, N'Manual', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (6, N'CO', 29, N'Manual', NULL, N'The time limit for filing has expired.
+', N'The time limit for filing has expired.
+')
 GO
-INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask]) VALUES (7, N'CO', 16, N'Manual', NULL)
+INSERT [dbo].[ERADenialAlert] ([ERACodeID], [GroupCode], [CodeNumber], [AlertCode], [AutomatedTask], [ShortDescription], [LongDescription]) VALUES (7, N'CO', 16, N'Manual', NULL, N'Claim/service lacks information ', N'Claim/service lacks information or has submission/billing error(s). Usage: Do not use this code for claims attachment(s)/other documentation. At least one Remark Code must be provided (may be comprised of either the NCPDP Reject Reason Code, or Remittance Advice Remark Code that is not an ALERT.) Refer to the 835 Healthcare Policy Identification Segment (loop 2110 Service Payment Information REF), if present.
+')
 GO
 SET IDENTITY_INSERT [dbo].[ERADenialAlert] OFF
 GO
