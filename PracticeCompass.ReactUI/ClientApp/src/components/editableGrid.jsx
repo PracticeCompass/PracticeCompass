@@ -58,6 +58,9 @@ class EditableGrid extends React.Component {
   Currentpager = (props) => {
     return <MyPager {...props} totalCount={this.props.totalCount} />;
   };
+  MyCurrencyCell =(props) =>{
+    return <CurrencyGridCell {...props} myProp={this.props} />;
+  }
   minGridWidth = 0;
   state = {
     selectedState: {},
@@ -327,13 +330,13 @@ class EditableGrid extends React.Component {
                       column.cell == "merge"
                         ? MergeCell
                         : column.cell == "currency"
-                        ? CurrencyGridCell
+                        ? this.MyCurrencyCell
                         : column.cell == "checkBox"
                         ? CheckBoxCell
                         : column.cell == "dropDown"
                         ? DropDownCell
                         : column.type == "currency"
-                        ? CurrencyCell
+                        ? this.MyCurrencyCell
                         : column.iscellWithIcon
                         ? cellWithIcon
                         : column.isCustomCell

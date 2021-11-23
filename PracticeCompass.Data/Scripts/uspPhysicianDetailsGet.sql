@@ -38,9 +38,8 @@ left outer join Position on Position.PositionCode=Staff.PositionCode
 left outer join CountryState on Address.State = CountryState.StateCode
 left outer join Phone as HomePhone on Provider.ProviderID = HomePhone.EntitySID and HomePhone.Class = 'H'
 left outer join Phone as WorkPhone on Provider.ProviderID  = WorkPhone.EntitySID and WorkPhone.Class = 'W'
-left outer join Phone as MobilePhone on Provider.ProviderID = MobilePhone.EntitySID and HomePhone.Class = 'M'
+left outer join Phone as MobilePhone on Provider.ProviderID = MobilePhone.EntitySID and MobilePhone.Class = 'M'
 where ProviderID=@ProviderID
 END
-GO
 
 

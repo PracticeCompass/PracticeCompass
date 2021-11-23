@@ -91,7 +91,10 @@ export const detailsColumns = [
     title: "Adjustment",
     minWidth: 100,
     orderIndex: 6,
-    editable: false
+    editable: false,
+    fontColor:"red",
+    fontWeight: 'bold'
+
   },
   {
     field: "chargeClaimAdjustmentReason",

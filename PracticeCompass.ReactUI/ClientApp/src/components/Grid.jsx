@@ -45,6 +45,9 @@ class GridComponent extends React.Component {
   MyCustomCell = (props) => {
     return <CustomCell {...props} myProp={this.props} />;
   };
+  MyCurrencyCell =(props) =>{
+    return <CurrencyCell {...props} myProp={this.props} />;
+  }
   Currentpager = (props) => {
     return <MyPager {...props} totalCount={this.props.totalCount} />;
   };
@@ -347,7 +350,7 @@ class GridComponent extends React.Component {
                     width={this.setWidth(column.minWidth)}
                     cell={
                       column.type == "currency"
-                        ? CurrencyCell
+                        ? this.MyCurrencyCell
                         : column.iscellWithIcon
                           ? cellWithIcon
                           : column.isCustomCell
