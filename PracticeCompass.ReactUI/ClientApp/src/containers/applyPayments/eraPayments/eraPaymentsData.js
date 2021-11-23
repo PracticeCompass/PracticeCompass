@@ -93,7 +93,7 @@ export const detailsColumns = [
     orderIndex: 6,
     editable: false,
     fontColor:"red",
-    fontWeight:"900"
+    //fontWeight:"900"
 
   },
   {
@@ -104,26 +104,26 @@ export const detailsColumns = [
     editable: false,
     showToolTip: true
   },
-  {
-    type: "currency",
-    field: "claimAdjustmentAmt",
-    title: "Claim Adjustment",
-    minWidth: 120,
-    orderIndex: 8,
-    editable: false
-  },
-  {
-    type: "currency",
-    field: "providerAdjustmentAmt",
-    title: "Provider Adjustment",
-    minWidth: 120,
-    orderIndex: 9,
-    editable: false
-  },
+  //{
+  //  type: "currency",
+  //  field: "claimAdjustmentAmt",
+  //  title: "Claim Adjustment",
+  //  minWidth: 120,
+  //  orderIndex: 8,
+  //  editable: false
+  //},
+  //{
+  //  type: "currency",
+  //  field: "providerAdjustmentAmt",
+  //  title: "Provider Adjustment",
+  //  minWidth: 120,
+  //  orderIndex: 9,
+  //  editable: false
+  //},
   {
     field: "comment",
     title: "Comments",
-    minWidth: 200,
+    minWidth: 300,
     orderIndex: 10,
       editable: false,
       showToolTip: true
