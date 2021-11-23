@@ -30,7 +30,6 @@ export class CurrencyGridCell extends React.Component {
     const dataValue = dataItem[field] === null ? "" : dataItem[field];
     let column = this.props.myProp.columns.find((x) => x.field == field);
     let columnStyle={ textAlign: "right"};
-
     if(dataValue < 0)columnStyle.color ="red";
     if (column.fontColor)columnStyle.color =column.fontColor;
     if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
