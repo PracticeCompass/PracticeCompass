@@ -26,7 +26,8 @@ namespace PracticeCompass.Data.Common
         public InsuranceRecordRepository _InsuranceRecordRepository;
         public ERATransactionRepository _ERATransactionRepository;
         public PaymentRepository _PaymentRepository;
-        public PhysicianRepository _PhysicianRepository { get; set; }
+        public PhysicianRepository _PhysicianRepository;
+        public PlanRepository _PlanRepository;
         public IPatientDetailsRepository PatientDetailsRepository => _PatientDetailsRepository = _PatientDetailsRepository ??
            new PatientDetailsRepository(configuration.GetConnectionString("PracticeCompass"));
         public IPatientRepository PatientRepository => _PatientRepository = _PatientRepository ??
@@ -59,6 +60,8 @@ namespace PracticeCompass.Data.Common
 
         public IPhysicianRepository PhysicianRepository => _PhysicianRepository = _PhysicianRepository ??
            new PhysicianRepository(configuration.GetConnectionString("PracticeCompass"));
+       public IPlanRepository PlanRepository => _PlanRepository = _PlanRepository ??
+           new PlanRepository(configuration.GetConnectionString("PracticeCompass"));
 
     }
 }

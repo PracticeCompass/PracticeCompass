@@ -17,7 +17,7 @@ CREATE OR ALTER PROCEDURE [dbo].[uspPhysicianGridGet]
 @firstName nvarchar(200),
 @lastName nvarchar(200),
 @positionCode nvarchar(200),
-@Zip int,
+@Zip varchar(50),
 @Skip int,
 @SortColumn varchar(50),
 @SortDirection varchar(50)
@@ -47,7 +47,7 @@ BEGIN
 	   end
 	   
 
-	   if(@Zip = 0)
+	   if(@Zip = '')
 	   begin
 	    set  @providerZipfilter=''
 	   end
