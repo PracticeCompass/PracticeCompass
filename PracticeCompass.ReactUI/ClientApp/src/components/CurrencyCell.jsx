@@ -36,7 +36,7 @@ export class CurrencyGridCell extends React.Component {
     if(column.fontWeight) fontWeight={fontWeight:column.fontWeight};
     return (
       <td style={{ textAlign: "right"},fontWeight,colorStyle}>
-        {dataItem.inEdit ? (
+        {(dataItem.inEdit && column.editable!= false) ? (
           <TextBox
             type="numeric"
             format="c2"
