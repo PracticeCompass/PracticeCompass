@@ -29,7 +29,8 @@ Address.Line1 as Address1,Address.Line2 as Address2 , Address.City , case  LEN(L
                             STUFF(Address.Zip, 6, 0, '-') 
                             else Address.Zip
                             end As Zip ,email.Email as Email ,HomePhone.Number as HomePhone , WorkPhone.Number as WorkPhone , WorkPhone.Extension as WorkPhoneExt,
-MobilePhone.Number as MobilePhone, CountryState.StateCode , CountryState.State , Address.Zip
+MobilePhone.Number as MobilePhone, CountryState.StateCode , CountryState.State , Address.Zip,
+FaxPhone.Number as FaxPhone,taxid.ID  as Taxcode , NPI.ID as IdentificationNumber , UPIN.ID as UPIN , DEA.ID as DEA
 from Provider 
 left outer join Staff on [dbo].[Staff].[StaffID] = ProviderID
 left outer join Address on [dbo].[Address].[EntitySID] = ProviderID
@@ -39,7 +40,14 @@ left outer join CountryState on Address.State = CountryState.StateCode
 left outer join Phone as HomePhone on Provider.ProviderID = HomePhone.EntitySID and HomePhone.Class = 'H'
 left outer join Phone as WorkPhone on Provider.ProviderID  = WorkPhone.EntitySID and WorkPhone.Class = 'W'
 left outer join Phone as MobilePhone on Provider.ProviderID = MobilePhone.EntitySID and MobilePhone.Class = 'M'
+left outer join Phone as FaxPhone on Provider.ProviderID = FaxPhone.EntitySID and FaxPhone.Class = 'F'
+left outer join StaffAltID as taxid  on provider.ProviderID=taxid.StaffID  and taxid.AidTag='taxid'
+left outer join StaffAltID as NPI  on provider.ProviderID=NPI.StaffID  and NPI.AidTag='NPI'
+left outer join StaffAltID as UPIN  on provider.ProviderID=UPIN.StaffID  and UPIN.AidTag='UPIN'
+left outer join StaffAltID as DEA  on provider.ProviderID=DEA.StaffID  and DEA.AidTag='DEA'
 where ProviderID=@ProviderID
 END
+
+
 
 
