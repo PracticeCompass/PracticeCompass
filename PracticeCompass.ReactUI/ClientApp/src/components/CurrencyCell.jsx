@@ -28,14 +28,14 @@ export class CurrencyGridCell extends React.Component {
     const { dataItem } = this.props;
     const field = this.props.field || "";
     const dataValue = dataItem[field] === null ? "" : dataItem[field];
-    let colorStyle={color:"black"};
     let column = this.props.myProp.columns.find((x) => x.field == field);
-    if(dataValue < 0)colorStyle={color:"red"};
-    if (column.fontColor)colorStyle={color:column.fontColor};
-    let fontWeight={};
-    if(column.fontWeight) fontWeight={fontWeight:column.fontWeight};
+    let columnStyle={ textAlign: "right"};
+
+    if(dataValue < 0)columnStyle.color ="red";
+    if (column.fontColor)columnStyle.color =column.fontColor;
+    if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
     return (
-      <td style={{ textAlign: "right"},fontWeight,colorStyle}>
+      <td style={columnStyle}>
         {(dataItem.inEdit && column.editable!= false) ? (
           <TextBox
             type="numeric"

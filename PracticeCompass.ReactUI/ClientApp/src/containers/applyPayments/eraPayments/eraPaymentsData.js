@@ -93,7 +93,7 @@ export const detailsColumns = [
     orderIndex: 6,
     editable: false,
     fontColor:"red",
-    fontWeight: 'bold'
+    fontWeight:"900"
 
   },
   {
