@@ -19,22 +19,19 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-select ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,(ERSClaimName.NameLastOrOrgName+', '+ERSClaimName.NameFirst) as NameFirst,
+	select * from (
+select 'Charge' as type,ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,(ERSClaimName.NameLastOrOrgName+', '+ERSClaimName.NameFirst) as NameFirst,
  ERSChargeServiceInfo.ProcedureModifier01
 ,ERSChargeServiceInfo.ProcedureModifier02,ERSChargeServiceInfo.ProductServiceID , 
 CONVERT(varchar,[ERSChargeDate].ServiceDate,101) as ServiceDate,
 ERSChargeServiceInfo.LineItemChargeAmt , ERSChargeServiceInfo.LineItemProviderPaymentAmt,
-[ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
-ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode +' - '+[ERSChargeClaimAdjustment].AdjustmentReasonCode +' / '+ ERADenialAlert.ShortDescription  as ChargeClaimAdjustmentReason,
-ERSClaimAdjustment.AdjustmentAmt as ClaimAdjustmentAmt , ERSClaimAdjustment.AdjustmentReasonCode as ERSClaimAdjustmentreason,
-ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason ,
+sum([ERSChargeClaimAdjustment].AdjustmentAmt) as ChargeClaimAdjustmentAmt ,
+''  as ChargeClaimAdjustmentReason,
+sum(ERSClaimAdjustment.AdjustmentAmt) as ClaimAdjustmentAmt , '' as ERSClaimAdjustmentreason,
+sum(ERSPmtProvLevelAdj.ProviderAdjustmentAmt) as ProviderAdjustmentAmt , '' as PmtProvLevelAdjReason ,
 dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment,
-case when [ERADenialAlert].[AlertCode]='Phys' then 'Physician Responsibility'
-     when [ERADenialAlert].[AlertCode]='Pat' then 'Patient responsibility'
-	 when [ERADenialAlert].[AlertCode]='Move' then 'Move responsibility to the next level. Secondary/tertiary insurance or patient.'
-	 when [ERADenialAlert].[AlertCode]='Manual' then 'Manual Processing'
-	 else '' end as AlertCode,
-	 ERADenialAlert.LongDescription
+'' as AlertCode,
+'' as LongDescription
 
  from ERSClaimData
 inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
@@ -48,6 +45,42 @@ left outer join [dbo].ERSPmtProvLevelAdj on ERSPmtProvLevelAdj.ERSPaymentSID = E
 left outer join dbo.ERSPaymentHeader on ERSPaymentHeader.ERSPaymentSID = ERSClaimData.ERSPaymentSID
 left outer join [dbo].[ERADenialAlert] on [dbo].[ERADenialAlert].[GroupCode] = ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode and [dbo].[ERADenialAlert].[CodeNumber]= [ERSChargeClaimAdjustment].AdjustmentReasonCode
 where ERSClaimData.ERSPaymentSID=@ERSPaymentSID
-order by  claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,ERSClaimName.NameFirst
+group by ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber
+,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,ERSClaimName.NameFirst, ERSChargeServiceInfo.ProcedureModifier01
+,ERSChargeServiceInfo.ProcedureModifier02,ERSChargeServiceInfo.ProductServiceID,[ERSChargeDate].ServiceDate,
+ERSChargeServiceInfo.LineItemChargeAmt,ERSChargeServiceInfo.LineItemProviderPaymentAmt,ERSPaymentHeader.RecordStatus
+
+
+union all 
+select 'Detail' as type,
+ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,'' as ClaimNumber,'' as NameLastOrOrgName,
+'' as NameFirst,
+'' asProcedureModifier01
+,'' as ProcedureModifier02,'' as ProductServiceID , 
+'' as ServiceDate,
+null as LineItemChargeAmt , null as LineItemProviderPaymentAmt,
+[ERSChargeClaimAdjustment].AdjustmentAmt as ChargeClaimAdjustmentAmt ,
+ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode +' - '+[ERSChargeClaimAdjustment].AdjustmentReasonCode +' / '+ ERADenialAlert.ShortDescription  as ChargeClaimAdjustmentReason,
+ERSClaimAdjustment.AdjustmentAmt as ClaimAdjustmentAmt , ERSClaimAdjustment.AdjustmentReasonCode as ERSClaimAdjustmentreason,
+ERSPmtProvLevelAdj.ProviderAdjustmentAmt , ERSPmtProvLevelAdj.AdjustmentReasonCode as PmtProvLevelAdjReason ,
+'' as comment,
+case when [ERADenialAlert].[AlertCode]='Phys' then 'Physician Responsibility'
+     when [ERADenialAlert].[AlertCode]='Pat' then 'Patient responsibility'
+	 when [ERADenialAlert].[AlertCode]='Move' then 'Move responsibility to the next level. Secondary/tertiary insurance or patient.'
+	 when [ERADenialAlert].[AlertCode]='Manual' then 'Manual Processing'
+	 else '' end as AlertCode,
+	 ERADenialAlert.LongDescription
+
+from ERSClaimData
+inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
+left outer join
+ [dbo].[ERSChargeClaimAdjustment] on [ERSChargeClaimAdjustment].ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID
+left outer join [dbo].ERSClaimAdjustment on ERSClaimAdjustment.ERSClaimSID = ERSChargeServiceInfo.ERSClaimSID
+left outer join [dbo].ERSPmtProvLevelAdj on ERSPmtProvLevelAdj.ERSPaymentSID = ERSClaimData.ERSPaymentSID
+left outer join dbo.ERSPaymentHeader on ERSPaymentHeader.ERSPaymentSID = ERSClaimData.ERSPaymentSID
+left outer join [dbo].[ERADenialAlert] on [dbo].[ERADenialAlert].[GroupCode] = ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode 
+and [dbo].[ERADenialAlert].[CodeNumber]= [ERSChargeClaimAdjustment].AdjustmentReasonCode
+where ERSClaimData.ERSPaymentSID=@ERSPaymentSID)m
+Order by m.ERSClaimSID , m.ERSChargeSID , m.type
 
 END
