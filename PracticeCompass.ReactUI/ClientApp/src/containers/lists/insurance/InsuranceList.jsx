@@ -10,18 +10,24 @@ import { insuranceColumns } from "./InsurancesData"
 import config from "../../../../src/config";
 import SaveFilterComponent from "../../common/saveFilter";
 import NotificationComponent from "../../common/notification";
+import Show_HideDialogComponent from "../../common/show_hideDialog";
 import {
   getFilters,
   FilterDelete,
   FilterInsert,
   FilterUpdate,
 } from "../../../redux/actions/filter";
+import {
+  GetGridColumns,
+  SaveGridColumns,
+} from "../../../redux/actions/GridColumns";
 import { getPlans } from "../../../redux/actions/plans";
 const DATA_ITEM_KEY_PLAN = "planId";
 const idGetterInsuranceList = getter(DATA_ITEM_KEY_PLAN);
 function mapStateToProps(state) {
   return {
-    plans:state.plans.plans
+    plans: state.plans.plans,
+    UiExpand: state.ui.UiExpand,
   };
 }
 
@@ -35,10 +41,17 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
-      getPlans: (searchGrid) => dispatch(getPlans(searchGrid)),
+    getPlans: (searchGrid) => dispatch(getPlans(searchGrid)),
+    SaveGridColumns: (name, columns) =>
+    dispatch(SaveGridColumns(name, columns)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
   };
 }
 class Insurance extends Component {
+  constructor() {
+    super();
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   state = {
     refreshFilter: true,
     success: false,
@@ -52,10 +65,35 @@ class Insurance extends Component {
     name: null,
     listName: null,
     take: 28,
+    insuranceColumns:insuranceColumns
   }
   onSortChange = () => {
 
   }
+  componentDidMount=()=>{
+    this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentDidUpdate=(event)=>{
+    if(event.UiExpand != this.props.UiExpand){
+      this.updateDimensions();
+    }
+  }
+  updateDimensions() {
+    this.setState({
+      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+    })
+  }
+  getGridColumns = async () => {
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns("Plan");
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? insuranceColumns;
+      this.setState({ insuranceColumns: currentColumns });
+    }
+    this.setState({ refreshGrid: true });
+  };
   planGridSearch = async (refreshData = true) => {
     var plaGrid = {
       PlanID: this.state.selectedPlanId
@@ -189,12 +227,40 @@ class Insurance extends Component {
       none: false,
     });
   };
-  onPlanGridDoubleSelectionChange =()=>{
+  onPlanGridDoubleSelectionChange = () => {
 
   }
-  onPlanGridSelectionChange=()=>{
+  onPlanGridSelectionChange = () => {
 
   }
+  toggleShowColumnsDialog = () => {
+    this.setState({
+      Show_HidePlanDialogVisible: false,
+    });
+  };
+  SaveColumnsShow = async (columns) => {
+    this.setState({ refreshGrid: false });
+    if (!columns.find((x) => x.hide != true)) {
+      this.setState({ Show_HidePlanDialogVisible: false });
+      this.setState({ warning: true, message: "Cann't hide all columns" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    } else {
+      let GridColumns = await this.props.SaveGridColumns(
+        "Plan",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        insuranceColumns: JSON.parse(GridColumns?.columns),
+        Show_HidePlanDialogVisible: false,
+      });
+    }
+    this.setState({refreshGrid:true});
+  };
   render() {
     return (
       <Fragment>
@@ -207,6 +273,13 @@ class Insurance extends Component {
           info={this.state.info}
           none={this.state.none}
         ></NotificationComponent>
+        {this.state.Show_HidePlanDialogVisible && (
+          <Show_HideDialogComponent
+            columns={this.state.insuranceColumns}
+            toggleShowColumnsDialog={this.toggleShowColumnsDialog}
+            SaveColumnsShow={this.SaveColumnsShow}
+          ></Show_HideDialogComponent>
+        )}
         {(this.state.visibleSaveFilter || this.state.editFilter) && (
           <SaveFilterComponent
             toggleSaveDialog={() => {
@@ -386,7 +459,7 @@ class Insurance extends Component {
                   Search
                 </ButtonComponent>
               </div>
-              <div style={{ float: "left", width: "200px !important" }}>
+              {/* <div style={{ float: "left", width: "200px !important" }}>
                 <ButtonComponent
                   type="edit"
                   icon="edit"
@@ -397,7 +470,7 @@ class Insurance extends Component {
                 >
                   Save
                 </ButtonComponent>
-              </div>
+              </div> */}
               <div style={{ float: "left" }}>
                 <ButtonComponent
                   type="edit"
@@ -422,11 +495,35 @@ class Insurance extends Component {
                   Plan Details
                 </ButtonComponent>
               </div>
+              <div
+                style={{
+                  float: "right",
+                  position: "absolute",
+                  marginRight: "10px",
+                  right: "0",
+                }}
+              >
+                <ButtonComponent
+                  type="add"
+                  classButton="infraBtn-primary action-button"
+                  onClick={() => {
+                    this.setState({ Show_HidePlanDialogVisible: true });
+                  }}
+                >
+                  Edit Grid
+                </ButtonComponent>
+              </div>
             </div>
 
           </div>
         </div>
-
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row",
+            width: this.state.gridWidth,
+          }}
+        >
         <div className="accordion" id="accordionExample">
           <div
             className="card bg-light mb-3"
@@ -446,7 +543,7 @@ class Insurance extends Component {
                 id="physicianGrid"
                 data={this.props.plans}
                 columns={
-                  insuranceColumns
+                 this.state.insuranceColumns
                 }
                 height="640px"
                 width="100%"
@@ -462,7 +559,7 @@ class Insurance extends Component {
             </div>
           </div>
         </div>
-
+</div>
       </Fragment>
 
 
