@@ -34,7 +34,7 @@ function mapDispatchToProps(dispatch) {
 
 class ColumnNameCell extends React.Component {
   render() {
-    if (this.props.dataItem[this.props.field + "_"] !== null) {
+    if (this.props.dataItem[this.props.field + "_"] !== undefined) {
       return (
         <td title={this.props.dataItem[this.props.field + "_"]}>
           {this.props.dataItem[this.props.field]}
