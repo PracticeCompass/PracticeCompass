@@ -57,17 +57,16 @@ export const MyPager = (props) => {
   );
 };
 export const CurrencyCell = (props) => {
-  let fontColor={};
   let column = props.myProp.columns.find((x) => x.field == props.field);
+  let columnStyle={};
   if(!isNaN(+props.dataItem[props.field]) && (Number(props.dataItem[props.field]<0))){
-    fontColor={color:"red"};
+    columnStyle.color="red";
   }
-  if (column.fontColor)fontColor={color:column.fontColor};
-  let fontWeight={};
-  if(column.fontWeight) fontWeight={fontWeight:column.fontWeight};
+  if (column.fontColor)columnStyle.color=column.fontColor;
+  if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
   return (
     <td
-    style={fontColor,fontWeight}
+    style={columnStyle}
       ref={(node) => {
         if (node) {
           node.style.setProperty("text-align", "right", "important");
