@@ -650,78 +650,7 @@ class PatientDetailSummary extends Component {
           )}
           <div style={{ display: "flex", flexFlow: "row" }}>
             <div style={{ float: "left" }}>
-              <div
-                className="rowHeight"
-                style={{ display: "flex", flexFlow: "row nowrap" }}
-              >
-                <div style={{ float: "left", width: "362px" }}>
-                  <div style={{ float: "left", marginLeft: "5px" }}>
-                    <label className="userInfoLabel">Patient Type</label>
-                  </div>
-                  <div className="patientStyle" style={{ float: "left" }}>
-                    <DropDown
-                      className="unifyHeight"
-                      data={this.props.dropDownPatientTypes}
-                      textField="entityName"
-                      dataItemKey="entityId"
-                      defaultValue={this.state.patientType}
-                      value={this.state.patientType}
-                      onChange={(e) =>
-                        this.setState({
-                          patientType: e.value,
-                        })
-                      }
-                    ></DropDown>
-                  </div>
-                  <div style={{ float: "left" }}>
-                    <ButtonComponent
-                      icon="search"
-                      type="search"
-                      classButton="infraBtn-primary find-button"
-                      style={{ marginTop: "0px" }}
-                      onClick={(e) =>
-                        this.setState({ patientTypeVisible: true })
-                      }
-                    >
-                      Find
-                    </ButtonComponent>
-                  </div>
-                </div>
-                <div style={{ float: "left", width: "550px" }}>
-                  <div style={{ float: "left", marginLeft: "-3px" }}>
-                    <label className="userInfoLabel">Practice</label>
-                  </div>
-                  <div className="PracticeStyle" style={{ float: "left" }}>
-                    <DropDown
-                      className="unifyHeight"
-                      data={this.props.dropDownPractices}
-                      textField="entityName"
-                      dataItemKey="entityId"
-                      defaultValue={this.state.practiceID}
-                      value={this.state.practiceID}
-                      onChange={(e) =>
-                        this.setState({
-                          practiceSelectedState: e.value?.entityName,
-                          practiceIDSelectedState: e.value?.entityId,
-                          practiceNameSelected: e.value?.entityName,
-                          practiceID: e.value?.entityId,
-                        })
-                      }
-                    ></DropDown>
-                  </div>
-                  <div style={{ float: "left" }}>
-                    <ButtonComponent
-                      icon="search"
-                      type="search"
-                      classButton="infraBtn-primary find-button"
-                      style={{ marginTop: "0px" }}
-                      onClick={(e) => this.setState({ practiceVisible: true })}
-                    >
-                      Find
-                    </ButtonComponent>
-                  </div>
-                </div>
-              </div>
+
               <div
                 className="rowHeight"
                 style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -1017,7 +946,78 @@ class PatientDetailSummary extends Component {
                   </div>
                 </div>
               </div>
-
+              <div
+                className="rowHeight"
+                style={{ display: "flex", flexFlow: "row nowrap" }}
+              >
+                <div style={{ float: "left", width: "362px" }}>
+                  <div style={{ float: "left", marginLeft: "5px" }}>
+                    <label className="userInfoLabel">Patient Type</label>
+                  </div>
+                  <div className="patientStyle" style={{ float: "left" }}>
+                    <DropDown
+                      className="unifyHeight"
+                      data={this.props.dropDownPatientTypes}
+                      textField="entityName"
+                      dataItemKey="entityId"
+                      defaultValue={this.state.patientType}
+                      value={this.state.patientType}
+                      onChange={(e) =>
+                        this.setState({
+                          patientType: e.value,
+                        })
+                      }
+                    ></DropDown>
+                  </div>
+                  <div style={{ float: "left" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary find-button"
+                      style={{ marginTop: "0px" }}
+                      onClick={(e) =>
+                        this.setState({ patientTypeVisible: true })
+                      }
+                    >
+                      Find
+                    </ButtonComponent>
+                  </div>
+                </div>
+                <div style={{ float: "left", width: "550px" }}>
+                  <div style={{ float: "left", marginLeft: "-3px" }}>
+                    <label className="userInfoLabel">Practice</label>
+                  </div>
+                  <div className="PracticeStyle" style={{ float: "left" }}>
+                    <DropDown
+                      className="unifyHeight"
+                      data={this.props.dropDownPractices}
+                      textField="entityName"
+                      dataItemKey="entityId"
+                      defaultValue={this.state.practiceID}
+                      value={this.state.practiceID}
+                      onChange={(e) =>
+                        this.setState({
+                          practiceSelectedState: e.value?.entityName,
+                          practiceIDSelectedState: e.value?.entityId,
+                          practiceNameSelected: e.value?.entityName,
+                          practiceID: e.value?.entityId,
+                        })
+                      }
+                    ></DropDown>
+                  </div>
+                  <div style={{ float: "left" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary find-button"
+                      style={{ marginTop: "0px" }}
+                      onClick={(e) => this.setState({ practiceVisible: true })}
+                    >
+                      Find
+                    </ButtonComponent>
+                  </div>
+                </div>
+              </div>
               <div
                 className="rowHeight"
                 style={{ display: "flex", flexFlow: "row nowrap" }}

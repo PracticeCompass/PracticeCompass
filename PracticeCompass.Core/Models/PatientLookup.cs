@@ -62,6 +62,7 @@ namespace PracticeCompass.Core.Models
 
         public string DNPersonNumber { get; set; }
         public int totalCount { get; set; }
+        public string practiceName { get; set; }
 
         //public string PatInfoReleaseOnFile { get; set; }
 

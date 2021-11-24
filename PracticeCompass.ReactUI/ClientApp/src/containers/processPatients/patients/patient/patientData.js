@@ -2,26 +2,32 @@ export const patientColumns = [
   {
     field: "sortName",
     title: "Patient Name",
-    minWidth: "300px",
+    minWidth: "150px",
     orderIndex: 1,
+  },
+  {
+    field: "practiceName",
+    title: "Practice Name",
+    minWidth: "250px",
+    orderIndex: 2,
   },
   {
     field: "accountNumber",
     title: "Account Nubmer",
     minWidth: "150px",
-    orderIndex: 2,
+    orderIndex: 3,
   },
   {
     field: "personNumber",
     title: "Person Number",
     minWidth: "150px",
-    orderIndex: 3,
+    orderIndex: 4,
   },
   {
     field: "dob",
     title: "DOB",
     minWidth: "150px",
-    orderIndex: 4,
+    orderIndex: 5,
   },
 ];
 export const PracticeColumns = [

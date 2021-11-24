@@ -21,10 +21,10 @@ class ApplyPaymentDialogComponent extends Component {
     this.setState({ refresh: true });
   };
   componentDidMount = () => {
-    let item = {...this.props.paymentRow};
+    let item = { ...this.props.paymentRow };
 
     this.setState({
-      insurancePaid: this.props.isHideMoveToNext?item?.patientPaid: item?.insurancePaid,
+      insurancePaid: this.props.isHideMoveToNext ? item?.patientPaid : item?.insurancePaid,
       adjustments: item?.adjustments,
       amount: item?.amount,
       chargeBalance: item?.chargeBalance,
@@ -32,9 +32,9 @@ class ApplyPaymentDialogComponent extends Component {
       chargeSID: item?.chargeSID
     })
   }
-  onBlur=()=>{
+  onBlur = () => {
     this.setState({
-      chargeBalance:this.state.amount-this.state.insurancePaid-this.state.adjustments
+      chargeBalance: this.state.amount - this.state.insurancePaid - this.state.adjustments
     })
   }
   render() {
@@ -65,9 +65,18 @@ class ApplyPaymentDialogComponent extends Component {
             </div>
           </div>
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-            <div style={{ marginLeft: "40px" }}>
-              <label className="userInfoLabel" style={{ float: "right" }}>Insurance Paid </label>
-            </div>
+            {!this.props.isHideMoveToNext && (
+              <div style={{ marginLeft: "40px" }}>
+                <label className="userInfoLabel" style={{ float: "right" }}>Insurance Paid</label>
+              </div>
+            )
+            }
+            {this.props.isHideMoveToNext && (
+              <div style={{ marginLeft: "55px" }}>
+                <label className="userInfoLabel" style={{ float: "right" }}>Patient Paid</label>
+              </div>
+            )
+            }
             <div className="dateStyle" style={{ marginLeft: "5px" }}>
               <TextBox
                 type="numeric"
@@ -79,7 +88,7 @@ class ApplyPaymentDialogComponent extends Component {
                     insurancePaid: e.value,
                   })
                 }
-                onBlur={(e)=>
+                onBlur={(e) =>
                   this.onBlur()
                 }
               ></TextBox>
@@ -100,7 +109,7 @@ class ApplyPaymentDialogComponent extends Component {
                     adjustments: e.value,
                   })
                 }
-                onBlur={(e)=>
+                onBlur={(e) =>
                   this.onBlur()
                 }
               ></TextBox>
@@ -125,18 +134,26 @@ class ApplyPaymentDialogComponent extends Component {
               ></TextBox>
             </div>
           </div>
-          { !this.props.isHideMoveToNext &&(
-          <div style={{marginLeft:"100px"}}>
-            <CheckboxComponent
-              style={{ marginRight: "5px" }}
-              id="paymentId"
-              label="Move To Next Plan"
-              value={this.state.moveToNextPlan}
-              onChange={(e) => this.setState({ moveToNextPlan: e.value })}
-            />
-          </div>
-           ) }
-
+          {!this.props.isHideMoveToNext && (
+            <div style={{ marginLeft: "100px" }}>
+              <CheckboxComponent
+                style={{ marginRight: "5px" }}
+                id="paymentId"
+                label="Move To Next Plan"
+                value={this.state.moveToNextPlan}
+                onChange={(e) => this.setState({ moveToNextPlan: e.value })}
+              />
+            </div>
+          )}
+          {this.state.chargeBalance < 0 && (
+            <div style={{ marginLeft: "100px" }}>
+              <label className="userInfoLabel" ref={(node) => {
+                if (node) {
+                  node.style.setProperty("color", "red", "important");
+                }
+              }}>Paid is higher than remaining.</label>
+            </div>
+          )}
 
           <DialogActionsBar>
             <div className="row">
@@ -145,12 +162,12 @@ class ApplyPaymentDialogComponent extends Component {
                   type="button"
                   className="k-button k-primary"
                   onClick={() => this.props.applyPaymentTransaction({
-                    insurancePaid:this.state.insurancePaid,
-                    adjustments:this.state.adjustments,
-                    amount:this.state.amount,
-                    chargeBalance:this.state.chargeBalance,
-                    moveToNextPlan:this.state.moveToNextPlan,
-                    chargeSID:this.state.chargeSID
+                    insurancePaid: this.state.insurancePaid,
+                    adjustments: this.state.adjustments,
+                    amount: this.state.amount,
+                    chargeBalance: this.state.chargeBalance,
+                    moveToNextPlan: this.state.moveToNextPlan,
+                    chargeSID: this.state.chargeSID
                   })}
                 >
                   Ok

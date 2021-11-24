@@ -37,7 +37,7 @@ set @filter= '('''+@FirstName+''' is null or '''+@FirstName+'''='''' or (Person.
 	and
 	('''+@PersonNumber+''' is null or '''+@PersonNumber+'''='''' or (Person.PersonNumber = '''+@PersonNumber+''' ))'
 
-set @SQL=	'select distinct COUNT(*) OVER() as totalCount,  Person.SortName,PersonID as PatientID ,CONVERT(varchar,Account.AccountNumber,50) + CONVERT(varchar,Person.PersonID,50) + CONVERT(varchar,Person.PersonNumber,50) as PatientListgridID, Account.AccountNumber AS AccountNumber,Person.PersonNumber AS PersonNumber,CONVERT(varchar,person.DOB,101) as DOB from  [dbo].Person 
+set @SQL=	'select distinct COUNT(*) OVER() as totalCount,practice.SortName as practiceName,  Person.SortName,PersonID as PatientID ,CONVERT(varchar,Account.AccountNumber,50) + CONVERT(varchar,Person.PersonID,50) + CONVERT(varchar,Person.PersonNumber,50) as PatientListgridID, Account.AccountNumber AS AccountNumber,Person.PersonNumber AS PersonNumber,CONVERT(varchar,person.DOB,101) as DOB from  [dbo].Person 
 	inner join Patient on 
 	Patient.PatientID = Person.PersonID
 	inner join PatientAccount on 
@@ -47,7 +47,8 @@ set @SQL=	'select distinct COUNT(*) OVER() as totalCount,  Person.SortName,Perso
 	Patient.PatientID
 	inner join Account on 
 	PatientAccount.AccountSID = 
-Account.AccountSID
+    Account.AccountSID
+	inner join practice on practice.practiceid=patient.PracticeID
 	where'
 
 	set @SQL = @SQL + +@filter+@DOBfilter +'	Order By PatientID OFFSET '+convert(varchar, @Skip)+' ROWS FETCH NEXT  '+convert(varchar,500)+' ROWS ONLY'

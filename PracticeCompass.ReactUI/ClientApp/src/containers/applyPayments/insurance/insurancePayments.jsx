@@ -218,26 +218,26 @@ class insurancePayments extends Component {
     insuranceColumns: insuranceColumns,
     insuranceAssignmentColumns: insuranceAssignmentColumns,
     applyPlanPaymentColumns: applyPlanPaymentColumns,
-    gridWidth:0,
-    gridDetails:0,
-    gridcharged:0
+    gridWidth: 0,
+    gridDetails: 0,
+    gridcharged: 0
   };
   componentDidMount = () => {
     this.getGridColumns();
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions);
   };
-  componentDidUpdate=(event)=>{
-    if(event.UiExpand != this.props.UiExpand){
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
       this.updateDimensions();
     }
   }
   updateDimensions() {
     this.setState({
-      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 80 : 260),
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 80 : 260),
       gridDetails: window.innerWidth - (!this.props.UiExpand ? 120 : 300),
       // gridapplyed
-      gridcharged:window.innerWidth - (!this.props.UiExpand ? 148 : 330),
+      gridcharged: window.innerWidth - (!this.props.UiExpand ? 148 : 330),
     })
   }
   getGridColumns = async () => {
@@ -395,7 +395,7 @@ class insurancePayments extends Component {
     }
     this.toggleInsuranceDialog();
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   toggleSaveInsuranceDialog = () => {
     this.setState({
       visibleInsuranceSaveFilter: false,
@@ -712,12 +712,12 @@ class insurancePayments extends Component {
       selectedDataItems[0].sortName
     );
   };
-  onApplyPaymentGridSelectionChange = () => {};
+  onApplyPaymentGridSelectionChange = () => { };
   onApplyPaymentGridDoubleSelectionChange = (event) => {
     if (
       this.state.InsurancePaymentDetails == null ||
       this.state.applyPlanPayments == null
-    ){
+    ) {
       this.setState({
         warning: true,
         message: "Please select plan payment.",
@@ -729,10 +729,10 @@ class insurancePayments extends Component {
       }, this.state.timer);
       return;
     }
-    this.setState({ ShowApplyPayment:true,paymentRow:event.dataItem});
+    this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
   };
-  togglePaymentDialog=()=>{
-    this.setState({ ShowApplyPayment:false});
+  togglePaymentDialog = () => {
+    this.setState({ ShowApplyPayment: false });
   }
   saveInsurancePaymentDetails = async () => {
     let resp = await this.props.savePayment(
@@ -788,7 +788,7 @@ class insurancePayments extends Component {
     this.setState({
       applyPlanPayments: [],
       applyPlanPaymentsbackup: [],
-      filterApplyPlanPayments:[]
+      filterApplyPlanPayments: []
     });
     let applyData = await this.props.getApplyInsurancePayment(
       this.state.patientApplyGuarantorID,
@@ -846,13 +846,13 @@ class insurancePayments extends Component {
       let list = this.state.applyPlanPayments.map((item) =>
         item.isEdit == true
           ? {
-              chargeSID: item.chargeSID,
-              paymentSID: this.state.InsurancePaymentDetails.paymentSID,
-              payorID: item.claimSID,
-              amountPaid: item.insurancePaid,
-              adjustment: item.adjustments,
-              PaymentType: "I",
-            }
+            chargeSID: item.chargeSID,
+            paymentSID: this.state.InsurancePaymentDetails.paymentSID,
+            payorID: item.claimSID,
+            amountPaid: item.insurancePaid,
+            adjustment: item.adjustments,
+            PaymentType: "I",
+          }
           : null
       );
       list = list.filter((i) => i != null);
@@ -955,18 +955,19 @@ class insurancePayments extends Component {
     }
   };
 
-  applyPaymentTransaction=(row)=>{
+  applyPaymentTransaction = (row) => {
+    if (row.chargeBalance < 0) return;
 
-    let InsurancePaymentDetailsCopy={...this.state.InsurancePaymentDetails};
-    let data=[...this.state.applyPlanPayments];
-    let paymentindex =this.state.applyPlanPayments.findIndex(item=>item.chargeSID==row.chargeSID);
-    if(data[paymentindex].insurancePaid > row.insurancePaid){
-      InsurancePaymentDetailsCopy.remaining=InsurancePaymentDetailsCopy.remaining+(data[paymentindex].insurancePaid-row.insurancePaid);
-    }else if(data[paymentindex].insurancePaid < row.insurancePaid){
-      InsurancePaymentDetailsCopy.remaining=InsurancePaymentDetailsCopy.remaining - (row.insurancePaid-data[paymentindex].insurancePaid);
+    let InsurancePaymentDetailsCopy = { ...this.state.InsurancePaymentDetails };
+    let data = [...this.state.applyPlanPayments];
+    let paymentindex = this.state.applyPlanPayments.findIndex(item => item.chargeSID == row.chargeSID);
+    if (data[paymentindex].insurancePaid > row.insurancePaid) {
+      InsurancePaymentDetailsCopy.remaining = InsurancePaymentDetailsCopy.remaining + (data[paymentindex].insurancePaid - row.insurancePaid);
+    } else if (data[paymentindex].insurancePaid < row.insurancePaid) {
+      InsurancePaymentDetailsCopy.remaining = InsurancePaymentDetailsCopy.remaining - (row.insurancePaid - data[paymentindex].insurancePaid);
     }
 
-    if(row.chargeBalance<0 || InsurancePaymentDetailsCopy.remaining < 0){
+    if (InsurancePaymentDetailsCopy.remaining < 0) {
       this.setState({
         warning: true,
         message: "Paid is higher than remaining.",
@@ -978,19 +979,19 @@ class insurancePayments extends Component {
       }, this.state.timer);
       return;
     }
-   
-   data[paymentindex].insurancePaid=row.insurancePaid??0;
-   data[paymentindex].adjustments=row.adjustments;
-   data[paymentindex].amount=row.amount;
-   data[paymentindex].chargeBalance=row.chargeBalance;
-   data[paymentindex].moveToNextPlan=row.moveToNextPlan;
-   data[paymentindex].isEdit=true;
-   this.setState({
-    applyPlanPayments:data,
-    InsurancePaymentDetails:InsurancePaymentDetailsCopy
-   })
-   this.filterApplyListChanged();
-   this.togglePaymentDialog();
+
+    data[paymentindex].insurancePaid = row.insurancePaid ?? 0;
+    data[paymentindex].adjustments = row.adjustments;
+    data[paymentindex].amount = row.amount;
+    data[paymentindex].chargeBalance = row.chargeBalance;
+    data[paymentindex].moveToNextPlan = row.moveToNextPlan;
+    data[paymentindex].isEdit = true;
+    this.setState({
+      applyPlanPayments: data,
+      InsurancePaymentDetails: InsurancePaymentDetailsCopy
+    })
+    this.filterApplyListChanged();
+    this.togglePaymentDialog();
   }
   render() {
     return (
@@ -1040,76 +1041,76 @@ class insurancePayments extends Component {
           )}
           {(this.state.guarantorVisible ||
             this.state.guarantorDetailsVisible) && (
-            <FindDialogComponent
-              title="Guarantor Search"
-              placeholder="Enter Guarantor Name"
-              searcTextBoxValue={this.state.guarantorSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  guarantorSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.guarantorsearch}
-              dataItemKey="entitySID"
-              data={this.props.guarantorList}
-              columns={guarantorColumns}
-              onSelectionChange={this.onGuarantorSelectionChange}
-              onRowDoubleClick={this.onGuarantorDoubleClick}
-              onKeyDown={this.onGuarantorKeyDown}
-              idGetterLookup={idGetterInsurance}
-              toggleDialog={this.cancelGuarantorDialog}
-              cancelDialog={this.cancelGuarantorDialog}
-            ></FindDialogComponent>
-          )}
+              <FindDialogComponent
+                title="Guarantor Search"
+                placeholder="Enter Guarantor Name"
+                searcTextBoxValue={this.state.guarantorSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    guarantorSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.guarantorsearch}
+                dataItemKey="entitySID"
+                data={this.props.guarantorList}
+                columns={guarantorColumns}
+                onSelectionChange={this.onGuarantorSelectionChange}
+                onRowDoubleClick={this.onGuarantorDoubleClick}
+                onKeyDown={this.onGuarantorKeyDown}
+                idGetterLookup={idGetterInsurance}
+                toggleDialog={this.cancelGuarantorDialog}
+                cancelDialog={this.cancelGuarantorDialog}
+              ></FindDialogComponent>
+            )}
           {(this.state.practiceVisiblePatient ||
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
             this.state.practiceVisibleSubInsurance) && (
-            <FindDialogComponent
-              title="Practice Search"
-              placeholder="Enter Practice Name"
-              searcTextBoxValue={this.state.practiceSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  practiceSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.practiceSearch}
-              dataItemKey="practiceID"
-              data={this.props.practiceList}
-              columns={PracticeColumns}
-              onSelectionChange={this.onPracticeSelectionChange}
-              onRowDoubleClick={this.onPracticeDoubleClick}
-              onKeyDown={this.onPracticeKeyDown}
-              idGetterLookup={idGetterPracticeID}
-              toggleDialog={this.cancelPracticeDialog}
-              cancelDialog={this.cancelPracticeDialog}
-            ></FindDialogComponent>
-          )}
+              <FindDialogComponent
+                title="Practice Search"
+                placeholder="Enter Practice Name"
+                searcTextBoxValue={this.state.practiceSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    practiceSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.practiceSearch}
+                dataItemKey="practiceID"
+                data={this.props.practiceList}
+                columns={PracticeColumns}
+                onSelectionChange={this.onPracticeSelectionChange}
+                onRowDoubleClick={this.onPracticeDoubleClick}
+                onKeyDown={this.onPracticeKeyDown}
+                idGetterLookup={idGetterPracticeID}
+                toggleDialog={this.cancelPracticeDialog}
+                cancelDialog={this.cancelPracticeDialog}
+              ></FindDialogComponent>
+            )}
           {(this.state.insuranceVisible ||
             this.state.insuranceDetailsVisible) && (
-            <FindDialogComponent
-              title="Plan Search"
-              placeholder="Enter Plan Company Name"
-              searcTextBoxValue={this.state.insuranceSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  insuranceSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.insuranceSearch}
-              dataItemKey="entitySID"
-              data={this.props.insuranceList}
-              columns={insurancePatientColumns}
-              onSelectionChange={this.onInsuranceSelectionChange}
-              onRowDoubleClick={this.onInsuranceDoubleClick}
-              onKeyDown={this.onInsuranceKeyDown}
-              idGetterLookup={idGetterInsurance}
-              toggleDialog={this.cancelInsuranceDialog}
-              cancelDialog={this.cancelInsuranceDialog}
-              getNextData={true}
-            ></FindDialogComponent>
-          )}
+              <FindDialogComponent
+                title="Plan Search"
+                placeholder="Enter Plan Company Name"
+                searcTextBoxValue={this.state.insuranceSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    insuranceSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.insuranceSearch}
+                dataItemKey="entitySID"
+                data={this.props.insuranceList}
+                columns={insurancePatientColumns}
+                onSelectionChange={this.onInsuranceSelectionChange}
+                onRowDoubleClick={this.onInsuranceDoubleClick}
+                onKeyDown={this.onInsuranceKeyDown}
+                idGetterLookup={idGetterInsurance}
+                toggleDialog={this.cancelInsuranceDialog}
+                cancelDialog={this.cancelInsuranceDialog}
+                getNextData={true}
+              ></FindDialogComponent>
+            )}
           <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
             <PanelBarItem
               id="InsurancePaymentSearch"
@@ -1359,7 +1360,7 @@ class insurancePayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      // style={{ }}
+                    // style={{ }}
                     >
                       <GridComponent
                         id="insurancePayment"
@@ -1380,7 +1381,7 @@ class insurancePayments extends Component {
                         data={this.props.insurancePayments}
                         totalCount={
                           this.props.insurancePayments != null &&
-                          this.props.insurancePayments.length > 0
+                            this.props.insurancePayments.length > 0
                             ? this.props.insurancePayments[0].totalCount
                             : this.props.insurancePayments.length
                         }
@@ -1694,7 +1695,7 @@ class insurancePayments extends Component {
                     marginBottom: "5px",
                     // height: "85px",
                     width:
-                     this.state.gridDetails,
+                      this.state.gridDetails,
                     marginLeft: "10px",
                   }}
                 >
@@ -1771,7 +1772,7 @@ class insurancePayments extends Component {
                             data={this.props.paymentAssignments}
                             totalCount={
                               this.props.paymentAssignments != null &&
-                              this.props.paymentAssignments.length > 0
+                                this.props.paymentAssignments.length > 0
                                 ? this.props.paymentAssignments[0].totalCount
                                 : this.props.paymentAssignments.length
                             }
@@ -2038,7 +2039,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width:this.state.gridcharged,
+                          width: this.state.gridcharged,
                           marginTop: "5px",
                           marginBottom: "5px",
                           height: "330px",
@@ -2094,11 +2095,11 @@ class insurancePayments extends Component {
                                   onSortChange={this.onSortChange}
                                   // pageChange={this.pageChange}
                                   isEditable={true}
-                                  // totalCount={
-                                  //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                                  //     ? this.props.patientApplys[0].totalCount
-                                  //     : this.props.patientApplys.length
-                                  // }
+                                // totalCount={
+                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                //     ? this.props.patientApplys[0].totalCount
+                                //     : this.props.patientApplys.length
+                                // }
                                 ></GridComponent>
                               </div>
                             </div>
@@ -2108,7 +2109,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width:this.state.gridcharged,
+                          width: this.state.gridcharged,
                           marginTop: "5px",
                           marginBottom: "30px",
                           height: "360px",
@@ -2168,7 +2169,7 @@ class insurancePayments extends Component {
                                 className="collapse show"
                                 aria-labelledby="headingOne"
                                 data-parent="#accordionExample"
-                                // style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
+                              // style={{ width:window.innerWidth- (!this.props.UiExpand?120:290)}}
                               >
                                 <GridComponent
                                   data={
@@ -2191,13 +2192,13 @@ class insurancePayments extends Component {
                                   columns={this.state.applyPlanPaymentColumns}
                                   //itemChange={this.applyItemChanged}
                                   onSortChange={this.onSortChange}
-                                  // pageChange={this.pageChange}
-                                  // isEditable={true}
-                                  // totalCount={
-                                  //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                                  //     ? this.props.patientApplys[0].totalCount
-                                  //     : this.props.patientApplys.length
-                                  // }
+                                // pageChange={this.pageChange}
+                                // isEditable={true}
+                                // totalCount={
+                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                //     ? this.props.patientApplys[0].totalCount
+                                //     : this.props.patientApplys.length
+                                // }
                                 ></GridComponent>
                               </div>
                             </div>
@@ -2217,7 +2218,7 @@ class insurancePayments extends Component {
                       <fieldset
                         className="fieldsetStyle"
                         style={{
-                          width:this.state.gridDetails,
+                          width: this.state.gridDetails,
                           marginTop: "5px",
                           marginBottom: "5px",
                           // height: "85px",
@@ -2293,9 +2294,9 @@ class insurancePayments extends Component {
                                 data={this.props.paymentAssignments}
                                 totalCount={
                                   this.props.paymentAssignments != null &&
-                                  this.props.paymentAssignments.length > 0
+                                    this.props.paymentAssignments.length > 0
                                     ? this.props.paymentAssignments[0]
-                                        .totalCount
+                                      .totalCount
                                     : this.props.paymentAssignments.length
                                 }
                                 height="550px"

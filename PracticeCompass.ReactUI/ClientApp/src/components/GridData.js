@@ -60,9 +60,11 @@ export const CurrencyCell = (props) => {
   let column = props.myProp.columns.find((x) => x.field == props.field);
   let columnStyle={};
   let isNegative=false;
-  if(!isNaN(+props.dataItem[props.field]) && (Number(props.dataItem[props.field]<0))){
+  let value=Number(props.dataItem[props.field]);
+  if(!isNaN(+props.dataItem[props.field]) && (value<0)){
     columnStyle.color="red";
     isNegative=true;
+    value=value*-1;
   }
   if (column.fontColor)columnStyle.color=column.fontColor;
   if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
@@ -76,10 +78,8 @@ export const CurrencyCell = (props) => {
         }
       }}
     >
-      {props.dataItem[props.field] == null ||
-      props.dataItem[props.field].toString().includes("$")
-        ? props.dataItem[props.field]
-        :(isNegative?'(':'') + '$' +Number(props.dataItem[props.field]).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')+(isNegative?')':'')  }
+      {props.dataItem[props.field] == null || props.dataItem[props.field].toString().includes("$") ? props.dataItem[props.field]
+        : '$' +(isNegative?'(':'') + (value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'))+(isNegative?')':'')  }
     </td>
   );
 };

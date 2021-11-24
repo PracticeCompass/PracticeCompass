@@ -22,7 +22,8 @@ export class CurrencyGridCell extends React.Component {
     }
   };
  currencyFormat(num,isNegative) {
-    return (isNegative?'(':'') +('$' + Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'))+(isNegative?')':'')
+     num= isNegative ? Number(num) * -1 : Number(num);
+    return '$' +(isNegative ? '(' : '') + (Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')) +(isNegative ? ')' : '')
  }
   render() {
     const { dataItem } = this.props;
