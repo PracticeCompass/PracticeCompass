@@ -40,17 +40,17 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/plan/PlanDetailsGet")]
-        public PhysicianDetails PlanDetailsGet(int providerId)
+        public PlanDetails PlanDetailsGet(int providerId)
         {
             try
             {
-                PhysicianDetails Result = unitOfWork.PlanRepository.PlanDetailsGet(providerId);
+                PlanDetails Result = unitOfWork.PlanRepository.PlanDetailsGet(providerId);
                 return Result;
             }
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new PhysicianDetails();
+                return new PlanDetails();
             }
         }
 

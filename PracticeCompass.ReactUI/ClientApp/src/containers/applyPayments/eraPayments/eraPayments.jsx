@@ -473,7 +473,7 @@ class EraPayments extends Component {
                       Find
                     </ButtonComponent>
                   </div>
-                  <div style={{ marginLeft: "10px" }}>
+                  <div style={{ marginLeft: "10px",width:"95px" }}>
                     <label className="userInfoLabel">Sender Account </label>
                   </div>
                   <div style={{ width: "147px" }}>
@@ -487,7 +487,7 @@ class EraPayments extends Component {
                       }
                     ></TextBox>
                   </div>
-                  <div style={{ marginLeft: "10px" }}>
+                  <div style={{ marginLeft: "10px",width:"102px" }}>
                     <label className="userInfoLabel">Receiver Account </label>
                   </div>
                   <div style={{ width: "147px" }}>
@@ -500,6 +500,33 @@ class EraPayments extends Component {
                         })
                       }
                     ></TextBox>
+                  </div>
+                  <div style={{ float: "left", marginLeft: "10px" }}>
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary action-button"
+                      onClick={this.ERAPaymentGridSearch}
+                    >
+                      Search
+                    </ButtonComponent>
+                  </div>
+                  <div style={{ float: "left" }} >
+                    <ButtonComponent
+                      icon="search"
+                      type="search"
+                      classButton="infraBtn-primary"
+                      ref={(node) => {
+                        if (node) {
+                          node.style.setProperty("height", "22px", "important");
+                        }
+                      }}
+                    // onClick={(e) =>
+                    //   this.setState({ practiceVisibleInsurance: true })
+                    // }
+                    >
+                      Manual Match
+                    </ButtonComponent>
                   </div>
                 </div>
                 <div
@@ -597,29 +624,6 @@ class EraPayments extends Component {
                       value={this.state.posted}
                       onChange={(e) => this.setState({ posted: e.value })}
                     />
-                  </div>
-                  <div style={{ float: "left", marginLeft: "10px" }}>
-                    <ButtonComponent
-                      icon="search"
-                      type="search"
-                      classButton="infraBtn-primary action-button"
-                      onClick={this.ERAPaymentGridSearch}
-                    >
-                      Search
-                    </ButtonComponent>
-                  </div>
-                  <div style={{ float: "left" }}>
-                    <ButtonComponent
-                      icon="search"
-                      type="search"
-                      classButton="infraBtn-primary"
-                      style={{ height: "22px !important;" }}
-                    // onClick={(e) =>
-                    //   this.setState({ practiceVisibleInsurance: true })
-                    // }
-                    >
-                      Manual Match
-                    </ButtonComponent>
                   </div>
                   <div
                     style={{

@@ -8,7 +8,7 @@ namespace PracticeCompass.Core.Repositories
     {
 
         public List<PlanList> PlansGridGet(int planID, string Zip, int skip, string SortColumn, string SortDirection);
-        public PhysicianDetails PlanDetailsGet(int providerId);
+        public PlanDetails PlanDetailsGet(int providerId);
 
     }
 }
