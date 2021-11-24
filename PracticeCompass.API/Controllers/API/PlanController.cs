@@ -40,11 +40,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/plan/PlanDetailsGet")]
-        public PlanDetails PlanDetailsGet(int providerId)
+        public PlanDetails PlanDetailsGet(int planId)
         {
             try
             {
-                PlanDetails Result = unitOfWork.PlanRepository.PlanDetailsGet(providerId);
+                PlanDetails Result = unitOfWork.PlanRepository.PlanDetailsGet(planId);
                 return Result;
             }
             catch (Exception ex)

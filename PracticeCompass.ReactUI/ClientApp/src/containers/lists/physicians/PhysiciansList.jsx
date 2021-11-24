@@ -223,13 +223,20 @@ class PhysiciansList extends Component {
     }
   };
   physicianGridSearch = async (refreshData = true) => {
+    let zipValue =this.state.Zip;
+    if (this.state.Zip && zipValue.replaceAll(' ','').length < 7) {
+       zipValue =zipValue.replaceAll(' ','').match(/\d+/)[0];
+      this.setState({
+        Zip: zipValue
+      })
+    }
     var physicianGrid = {
       ProviderID: this.state.selectedProviderId
         ? this.state.selectedProviderId
         : 0,
       firstName: this.state.firstName ?? '',
       lastName: this.state.lastName ?? '',
-      ZIP: this.state.Zip ?? 0,
+      ZIP: zipValue ?? '',
       // skip: refreshData ? 0 : this.props.Patients.length,
       skip: 0,
       SortColumn: this.state.selectedSortColumn

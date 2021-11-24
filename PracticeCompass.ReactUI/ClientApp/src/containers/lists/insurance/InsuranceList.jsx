@@ -43,7 +43,7 @@ function mapDispatchToProps(dispatch) {
       ),
     getPlans: (searchGrid) => dispatch(getPlans(searchGrid)),
     SaveGridColumns: (name, columns) =>
-    dispatch(SaveGridColumns(name, columns)),
+      dispatch(SaveGridColumns(name, columns)),
     GetGridColumns: (name) => dispatch(GetGridColumns(name)),
   };
 }
@@ -65,24 +65,24 @@ class Insurance extends Component {
     name: null,
     listName: null,
     take: 28,
-    insuranceColumns:insuranceColumns
+    insuranceColumns: insuranceColumns
   }
   onSortChange = () => {
 
   }
-  componentDidMount=()=>{
+  componentDidMount = () => {
     this.getGridColumns();
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions);
   }
-  componentDidUpdate=(event)=>{
-    if(event.UiExpand != this.props.UiExpand){
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
       this.updateDimensions();
     }
   }
   updateDimensions() {
     this.setState({
-      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 273)
     })
   }
   getGridColumns = async () => {
@@ -95,11 +95,18 @@ class Insurance extends Component {
     this.setState({ refreshGrid: true });
   };
   planGridSearch = async (refreshData = true) => {
-    var plaGrid = {
+    let zipValue =this.state.Zip;
+    if (this.state.Zip && zipValue.replaceAll(' ','').length < 7) {
+       zipValue =zipValue.replaceAll(' ','').match(/\d+/)[0];
+      this.setState({
+        Zip: zipValue
+      })
+    }
+    var planGrid = {
       PlanID: this.state.selectedPlanId
         ? this.state.selectedPlanId
         : 0,
-      ZIP: this.state.Zip ?? '',
+      ZIP: zipValue ?? '',
       // skip: refreshData ? 0 : this.props.Patients.length,
       skip: 0,
       SortColumn: this.state.selectedSortColumn
@@ -107,7 +114,7 @@ class Insurance extends Component {
         : "",
       SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
     };
-    await this.props.getPlans(plaGrid);
+    await this.props.getPlans(planGrid);
   };
   getFilters(filter) {
     if (filter !== undefined) filter = "";
@@ -227,11 +234,28 @@ class Insurance extends Component {
       none: false,
     });
   };
-  onPlanGridDoubleSelectionChange = () => {
-
+  onPlanGridDoubleSelectionChange = (event) => {
+    this.props.setInsuranceDetailExpanded();
+    this.props.setInsuranceDetails(event.dataItem);
   }
-  onPlanGridSelectionChange = () => {
-
+  onPlanGridSelectionChange = (event) => {
+    this.setState({ selectedPlan: event.dataItem });
+  }
+  openPlanRow = () => {
+    if (this.state.selectedPlan) {
+      this.props.setInsuranceDetailExpanded();
+      this.props.setInsuranceDetails(this.state.selectedPlan);
+    } else {
+      this.setState({
+        warning: true,
+        message: "Please Select Plan.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+    }
   }
   toggleShowColumnsDialog = () => {
     this.setState({
@@ -259,7 +283,7 @@ class Insurance extends Component {
         Show_HidePlanDialogVisible: false,
       });
     }
-    this.setState({refreshGrid:true});
+    this.setState({ refreshGrid: true });
   };
   render() {
     return (
@@ -489,7 +513,7 @@ class Insurance extends Component {
                   icon="edit"
                   classButton="infraBtn-primary details-button  "
                   onClick={() => {
-                    this.props.setInsuranceDetailExpanded();
+                    this.openPlanRow();
                   }}
                 >
                   Plan Details
@@ -524,42 +548,42 @@ class Insurance extends Component {
             width: this.state.gridWidth,
           }}
         >
-        <div className="accordion" id="accordionExample">
-          <div
-            className="card bg-light mb-3"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-              marginTop: "5px",
-            }}
-          >
+          <div className="accordion" id="accordionExample">
             <div
-              id="collapseOne"
-              className="collapse show"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              className="card bg-light mb-3"
+              style={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginTop: "5px",
+              }}
             >
-              <GridComponent
-                id="physicianGrid"
-                data={this.props.plans}
-                columns={
-                 this.state.insuranceColumns
-                }
-                height="640px"
-                width="100%"
-                onSelectionChange={this.onPlanGridSelectionChange}
-                onRowDoubleClick={this.onPlanGridDoubleSelectionChange}
-                selectionMode="single"
-                sortColumns={[]}
-                onSortChange={this.onSortChange}
-                idGetter={idGetterInsuranceList}
-                take={this.state.take}
-                DATA_ITEM_KEY="planId"
-              ></GridComponent>
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                <GridComponent
+                  id="physicianGrid"
+                  data={this.props.plans}
+                  columns={
+                    this.state.insuranceColumns
+                  }
+                  height="640px"
+                  width="100%"
+                  onSelectionChange={this.onPlanGridSelectionChange}
+                  onRowDoubleClick={this.onPlanGridDoubleSelectionChange}
+                  selectionMode="single"
+                  sortColumns={[]}
+                  onSortChange={this.onSortChange}
+                  idGetter={idGetterInsuranceList}
+                  take={this.state.take}
+                  DATA_ITEM_KEY="planId"
+                ></GridComponent>
+              </div>
             </div>
           </div>
         </div>
-</div>
       </Fragment>
 
 

@@ -23,7 +23,7 @@ namespace PracticeCompass.Data.Repositories
         {
             var data = this.db.QueryMultiple("uspPlanDetailsGet", new
             {
-                @ProviderID = providerId,
+                @PlanID = providerId,
             }, commandType: CommandType.StoredProcedure);
             return data.Read<PlanDetails>().FirstOrDefault();
         }

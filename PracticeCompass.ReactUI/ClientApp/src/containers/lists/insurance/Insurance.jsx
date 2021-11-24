@@ -30,7 +30,7 @@ class Insurance extends Component {
   handleSelect = () => {};
   setInsuranceDetails = (insurance) => {
     this.setState({
-      InsuranceDetails: insurance,
+      PlanDetails: insurance,
       InsuranceDetailExpanded: true,
       InsuranceListExpanded: false,
     });
@@ -56,6 +56,7 @@ class Insurance extends Component {
           >
             <InsuranceDetails
               setInsuranceExpanded={this.setInsuranceExpanded}
+              PlanDetails={this.state.PlanDetails}
             ></InsuranceDetails>
           </PanelBarItem>
         </PanelBar>

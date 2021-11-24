@@ -31,13 +31,13 @@ export const getPlans =
   };
 
   export const getPlanDetails=
-  (ProviderID) =>
+  (PlanID) =>
   async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       const resp = await axios({
         method: "GET",
-        url: `${config.baseUrl}/physician/PhysicianDetailsGet?providerId=${ProviderID}`,
+        url: `${config.baseUrl}/plan/PlanDetailsGet?planId=${PlanID}`,
       });
       return resp.data ;
     } catch (error) {

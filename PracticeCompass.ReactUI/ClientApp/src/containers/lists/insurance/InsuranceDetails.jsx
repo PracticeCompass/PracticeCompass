@@ -7,7 +7,7 @@ import TextBox from "../../../components/TextBox";
 import DropDown from "../../../components/DropDown";
 import CheckboxComponent from "../../../components/Checkbox";
 import { TextArea } from "@progress/kendo-react-inputs";
-import {GetInsuranceRecord} from "../../../redux/actions/Insurance"
+import {getPlanDetails} from "../../../redux/actions/plans"
 import {
   countryStateGetUrl
 } from "../../processPatients/patients/patientDetails/patientDetailSummary/patientDetailSummaryData.js";
@@ -19,7 +19,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    GetInsuranceRecord: (planId) => dispatch(GetInsuranceRecord(planId)),
+    getPlanDetails: (planId) => dispatch(getPlanDetails(planId)),
   };
 }
 class InsuranceDetails extends Component {
@@ -28,12 +28,30 @@ class InsuranceDetails extends Component {
     eDI:null
   }
   componentDidMount=async ()=>{
-   let result= await this.props.GetInsuranceRecord(232562);
-   this.setState({name:result?.carrierCode,listName:result?.sortName,
-    Address1:result?.line1,Address2:result?.line2,City:result?.City,
-    City:result?.City,Zip:result?.dnZip,eDI:result?.ediOptions,
-     website:result?.webURL,state:result?.state,
-     HomePhone:result?.number})
+    debugger;
+    if(this.props.PlanDetails){
+      debugger;
+   let result= await this.props.getPlanDetails(this.props.PlanDetails.planId);
+   this.setState({
+     name:result?.planName,
+     listName:result?.companyName,
+     Address1:result?.address1,
+     Address2:result?.address2,
+     City:result?.city,
+     Zip:result?.zip,
+     Statevalue: {
+      stateCode: result?.stateCode
+    },
+    faxPhone:result?.faxPhone,
+     eDI:result?.ediOptions,
+     website:result?.webURL,
+     state:result?.state,
+     HomePhone: result?.homePhone,
+     WorkPhone: result?.workPhone,
+     Ext: result?.workPhoneExt,
+     CellPhone: result?.mobilePhone,
+    })
+   }
   }
   render() {
     return (
@@ -275,7 +293,28 @@ class InsuranceDetails extends Component {
                   </div>
                 </div>
               </div>
-
+              <div
+                  className="rowHeight"
+                  style={{ display: "flex", flexFlow: "row nowrap" }}
+                >
+                  <div style={{ width: "356px" }}>
+                    <div style={{ float: "left", marginLeft: "53px" }}>
+                      <label className="userInfoLabel">Fax</label>
+                    </div>
+                    <div className="PhoneStyle" style={{ float: "left" }}>
+                      <TextBox
+                        type="maskedTextBox"
+                        format="(###) ###-####"
+                        placeholder="(000) 000-0000"
+                        className="unifyHeight"
+                        value={this.state.faxPhone}
+                        onValueChange={(e) =>
+                          this.setState({ faxPhone: e.target.value })
+                        }
+                      ></TextBox>
+                    </div>
+                  </div>
+                </div>
 
 
               <div style={{ width: "100%" }}>

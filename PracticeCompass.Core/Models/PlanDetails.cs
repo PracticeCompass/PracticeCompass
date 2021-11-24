@@ -30,6 +30,8 @@ namespace PracticeCompass.Core.Models
         public string StateCode { get; set; }
         public string Zip { get; set; }
         public string Email { get; set; }
+        public string WebURL { get; set; }
+        public string EDIOptions { get; set; }
 
         #endregion
 
