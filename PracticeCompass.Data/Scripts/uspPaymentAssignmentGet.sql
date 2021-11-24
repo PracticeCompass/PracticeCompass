@@ -18,8 +18,8 @@ AS
 BEGIN
 
 Select PaymentSID,PaymentAssignment.ChargeSID,ActivityCount,PaymentAssignment.AccountSID ,Account.AccountNumber,Entity.SortName  , CONVERT(varchar,PaymentAssignment.PostDate,101) as PostDate,
-+ '$' +  Convert(varchar(50),cast(PaymentAssignment.Amount as money),1) AS Amount,PaymentAssignment.PatientBilled,PaymentAssignment.PatientStatement,
-'$' +  Convert(varchar(50),isnull((Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts),0)) as ChargeBalance
+Convert(varchar(50),PaymentAssignment.Amount ,1) AS Amount,PaymentAssignment.PatientBilled,PaymentAssignment.PatientStatement,
+Convert(varchar(50),isnull((Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts),0)) as ChargeBalance
 from PaymentAssignment inner join Account on PaymentAssignment.AccountSID = Account.AccountSID
 inner join Entity on Account.GuarantorID = Entity.EntitySID
 left outer join Charge on PaymentAssignment.ChargeSID = Charge.ChargeSID

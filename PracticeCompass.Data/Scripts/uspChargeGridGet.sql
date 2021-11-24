@@ -16,7 +16,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	
-select ClaimCharge.ChargeSID , CONVERT(varchar,ProcedureEvent.FromServiceDate,101) AS FromServiceDate, ProcedureEvent.ProcedureCode ,  '$ ' + convert(varchar,cast(Charge.Amount as money), 1) as Amount ,
+select ClaimCharge.ChargeSID , CONVERT(varchar,ProcedureEvent.FromServiceDate,101) AS FromServiceDate, ProcedureEvent.ProcedureCode , convert(varchar,Charge.Amount,1) as Amount ,
 Mod1.[Modifier] as Mod1 , Mod2.[Modifier] as Mod2 , Dag1.[DiagnosisCode] as Diag1 , Dag2.[DiagnosisCode] as Diag2,
 ProcedureEvent.Units , 
 case when Charge.RespCoverageOrder=1 then 'Active' END as Prim,

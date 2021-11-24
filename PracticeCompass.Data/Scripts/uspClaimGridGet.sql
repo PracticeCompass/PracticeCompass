@@ -73,7 +73,7 @@ BEGIN
 	
 set @SQL= 'select distinct COUNT(*) OVER() as totalCount,
    convert(varchar,Claim.ClaimSID,10) as GridID,
-   Claim.ClaimSID,Claim.ClaimNumber, ' + '''$ ''' + ' + Convert(varchar(50),cast(max(PlanClaim.TotalClaimAmount)as money),1) as TotalClaimAmount ,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmountValue,' + '''$ ''' + ' + Convert(varchar(50),cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money),1) AS OutStandingBalanace , 
+   Claim.ClaimSID,Claim.ClaimNumber, Convert(varchar(50),max(PlanClaim.TotalClaimAmount),1) as TotalClaimAmount ,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmountValue, Convert(varchar(50),(SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) ,1) AS OutStandingBalanace , 
    cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money) AS OutStandingBalanaceValue
 ,Practice.SortName as practiceName,Practice.PracticeID as PracticeID,Person.SortName as patientName , dbo.FuncClaimDestGet(Claim.ClaimSID) as Destination 
 ,Provider.SortName as ProviderName , convert(varchar,Max(ProcedureEvent.FromServiceDate),101) as DOS , convert(Date,Max(ProcedureEvent.FromServiceDate),101) as DOSDate ,

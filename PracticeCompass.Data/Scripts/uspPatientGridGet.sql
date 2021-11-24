@@ -79,7 +79,7 @@ BEGIN
 		end
 
 set @SQL=	'Select distinct COUNT(*) OVER() as totalCount, CONVERT(varchar,patient.PracticeID,50) + CONVERT(varchar,Person.PersonID,50) as PatientgridID,  patient.PracticeID, Person.PersonID , Person.PersonNumber , patient.PatientID, 
-	person.LastName as DNLastName , person.FirstName as DNFirstName,  CONVERT(varchar,person.DOB,101) as DOB , CONVERT(Date,person.DOB,101) as DOBValue ,' + '''$ ''' + ' + convert(varchar,cast(Account.Balance as money), 1) as Balance,
+	person.LastName as DNLastName , person.FirstName as DNFirstName,  CONVERT(varchar,person.DOB,101) as DOB , CONVERT(Date,person.DOB,101) as DOBValue ,convert(varchar,Account.Balance , 1) as Balance,
 	cast(Account.Balance as money) as BalanceValue,Address.Line1 as Address, Address.City , Address.State , case LEN(LTRIM(RTRIM(Address.Zip)))
                             when 9 then
                             STUFF(Address.Zip, 6, 0, ''-'') 
