@@ -179,10 +179,14 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 throw new Exception("TraceNumber (TRN[2]) not found.");
             }
+            var TracePayerIdent=(from s in transactionEnvelope.Segments where s.Name == "REF" && s[1] == "2U" select s).FirstOrDefault();
+            if (TracePayerIdent != null)
+            {
+                eRa.financialInformation.ReferenceIdentificationNumber = TracePayerIdent[2];
+            }
             eRa.financialInformation.TraceTypeCode = reAssociationTrace[1];
-            eRa.financialInformation.ReferenceIdentificationNumber = reAssociationTrace[2];
             eRa.financialInformation.TraceOrigCompanySupplCode = reAssociationTrace[3];
-            eRa.financialInformation.CheckTraceNbr = reAssociationTrace[4];
+            eRa.financialInformation.CheckTraceNbr = reAssociationTrace[2];
             var productionDateSegment = (from s in transactionEnvelope.Segments where s.Name == "DTM" && s[1] == "405" select s).FirstOrDefault();
             if (productionDateSegment != null && !string.IsNullOrEmpty(productionDateSegment[2]))
             {

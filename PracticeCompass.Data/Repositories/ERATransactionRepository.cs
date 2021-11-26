@@ -76,6 +76,7 @@ namespace PracticeCompass.Data.Repositories
             var ERSClaimMonetaryAmts = new List<ERSClaimMonetaryAmt>();
             var ERSChargeIndustryCodes = new List<ERSChargeIndustryCode>();
             using var txScope = new TransactionScope();
+            var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
             for (var era = 0; era < transactions.Count; era++)
             {
                 var random = new Random();
@@ -85,7 +86,7 @@ namespace PracticeCompass.Data.Repositories
                 var ERSRemittenceSID = random.Next(1000, 999999);
                 string PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
                 string ERSPaymentHeaderMAXRowID = GetMAXRowID("ERSPaymentHeader", ERSPaymentHeaders.Count != 0 ? ERSPaymentHeaders[ERSPaymentHeaders.Count - 1].prrowid : "0");
-
+                var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
                 for (var p = 0; p < transactions[era].SupplementalAmounts.Count; p++)
                 {
 
@@ -93,9 +94,9 @@ namespace PracticeCompass.Data.Repositories
                     ERSClaimMonetaryAmts.Add(new ERSClaimMonetaryAmt
                     {
                         prrowid = ERSClaimMonetaryAmtMAXRowID,
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -112,9 +113,9 @@ namespace PracticeCompass.Data.Repositories
                     ERSClaimReferences.Add(new ERSClaimReference
                     {
                         prrowid = ERSClaimReferenceMAXRowID,
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -128,9 +129,9 @@ namespace PracticeCompass.Data.Repositories
                 ERSPaymentHeaders.Add(new ERSPaymentHeader
                 {
                     prrowid = ERSPaymentHeaderMAXRowID,
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
@@ -147,25 +148,29 @@ namespace PracticeCompass.Data.Repositories
                     SenderAcctNbrQualifier = transactions[era].financialInformation.senderAccountNbrQualifier,
                     SenderBankAcctNbr = transactions[era].financialInformation.senderAccountNumber,
                     PayerSupplCode = transactions[era].financialInformation.OriginCompanySupplementalCode,
-                    RemitPayerIdent = transactions[era].financialInformation.CompanyId,
+                    RemitPayerIdent = transactions[era].Interchangedata.ReceiverIdentifier,
                     ReceiverDFIIDNbrQualifier = transactions[era].financialInformation.RoutingNumber,
-                    ReceiverAcctNbr = transactions[era].financialInformation.receiverDfiNumber,
+                    ReceiverAcctNbr = transactions[era].financialInformation.receiverAccountNumber,
                     ReceiverAcctNbrQualifier = transactions[era].financialInformation.receiverAcctNumberQualifier,
-                    ReceiverBankIDNbr = transactions[era].financialInformation.receiverAccountNumber,
+                    ReceiverBankIDNbr = transactions[era].financialInformation.receiverDfiNumber,
                     CheckIssueDate = transactions[era].financialInformation.PaymentEffectiveDate,
                     TraceTypeCode = transactions[era].financialInformation.TraceTypeCode,
                     TraceOrigCompanySupplCode = transactions[era].financialInformation.TraceOrigCompanySupplCode,
                     CheckTraceNbr = transactions[era].financialInformation.CheckTraceNbr,
                     TracePayerIdent = transactions[era].financialInformation.ReferenceIdentificationNumber,
-                    RecordStatus="r"
+                    RecordStatus="r",
+                    DeletedAfterPost="N",
+                    PaymentNotBalanced=false,
+                    OriginalPaymentAmt= transactions[era].financialInformation.TotalPaidAmount,
+                    PayerNameText= transactions[era].Payer.Name
 
                 });
                 ERSPaymentParty.Add(new ERSPaymentParty
                 {
                     prrowid = PaymentPartyMAXRowID,
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
@@ -189,9 +194,9 @@ namespace PracticeCompass.Data.Repositories
                 ERSClaimContacts.Add(new ERSClaimContact
                 {
                     prrowid = PaymentPartyMAXRowID,
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
@@ -205,9 +210,9 @@ namespace PracticeCompass.Data.Repositories
                 ERSClaimContactNbrs.Add(new ERSClaimContactNbr
                 {
                     prrowid = ClaimContactNbrMAXRowID,
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
-                    CreateStamp = DateTime.Now.ToString(),
+                    CreateStamp = timestamp,
                     CreateUser = 88,
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
@@ -223,7 +228,7 @@ namespace PracticeCompass.Data.Repositories
                 ERSPaymentParty.Add(new ERSPaymentParty
                 {
                     prrowid = PaymentPartyMAXRowID,
-                    TimeStamp = DateTime.Now.ToString(),
+                    TimeStamp = timestamp,
                     LastUser = 88,
                     CreateStamp = DateTime.Now.ToString(),
                     CreateUser = 88,
@@ -254,9 +259,9 @@ namespace PracticeCompass.Data.Repositories
                         prrowid = ProviderAdjustmentMAXRowID,
                         RemitterProviderID = transactions[era].ProviderAdjustments[provadj].ProviderIdentifer,
                         AdjustmentReasonCode = transactions[era].ProviderAdjustments[provadj].AdjustmentReason,
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -286,9 +291,9 @@ namespace PracticeCompass.Data.Repositories
                         ERSClaimData.Add(new ERSClaimData
                         {
                             prrowid = ERSClaimDataMAXRowID,
-                            TimeStamp = DateTime.Now.ToString(),
+                            TimeStamp = timestamp,
                             LastUser = 88,
-                            CreateStamp = DateTime.Now.ToString(),
+                            CreateStamp = timestamp,
                             CreateUser = 88,
                             Pro2SrcPDB = "medman",
                             pro2created = DateTime.Now,
@@ -316,9 +321,9 @@ namespace PracticeCompass.Data.Repositories
                     string ClaimNameMAXRowID = GetMAXRowID("ERSClaimName", ERSClaimNames.Count != 0 ? ERSClaimNames[ERSClaimNames.Count - 1].prrowid : "0");
                     ERSClaimNames.Add(new ERSClaimName  //NM1*QC
                     {
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -338,9 +343,9 @@ namespace PracticeCompass.Data.Repositories
                     ClaimNameMAXRowID = GetMAXRowID("ERSClaimName", ERSClaimNames.Count != 0 ? ERSClaimNames[ERSClaimNames.Count - 1].prrowid : "0");
                     ERSClaimNames.Add(new ERSClaimName  //NM1*82
                     {
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -360,9 +365,9 @@ namespace PracticeCompass.Data.Repositories
                     string ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
                     ERSClaimDates.Add(new ERSClaimDate  //050
                     {
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -375,9 +380,9 @@ namespace PracticeCompass.Data.Repositories
                     ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
                     ERSClaimDates.Add(new ERSClaimDate  //232
                     {
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -390,9 +395,9 @@ namespace PracticeCompass.Data.Repositories
                     ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
                     ERSClaimDates.Add(new ERSClaimDate  //233
                     {
-                        TimeStamp = DateTime.Now.ToString(),
+                        TimeStamp = timestamp,
                         LastUser = 88,
-                        CreateStamp = DateTime.Now.ToString(),
+                        CreateStamp = timestamp,
                         CreateUser = 88,
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
@@ -411,9 +416,9 @@ namespace PracticeCompass.Data.Repositories
                             string ClaimDateofserviceMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
                             ERSClaimDates.Add(new ERSClaimDate  //050
                             {
-                                TimeStamp = DateTime.Now.ToString(),
+                                TimeStamp = timestamp,
                                 LastUser = 88,
-                                CreateStamp = DateTime.Now.ToString(),
+                                CreateStamp = timestamp,
                                 CreateUser = 88,
                                 Pro2SrcPDB = "medman",
                                 pro2created = DateTime.Now,
@@ -434,9 +439,9 @@ namespace PracticeCompass.Data.Repositories
                             {
                                 prrowid= ERSChargeIndustryCodeMAXRowID,
                                 ERSChargeSID= ERSChargeSID,
-                                TimeStamp = DateTime.Now.ToString(),
+                                TimeStamp = timestamp,
                                 LastUser = 88,
-                                CreateStamp = DateTime.Now.ToString(),
+                                CreateStamp = timestamp,
                                 CreateUser = 88,
                                 Pro2SrcPDB = "medman",
                                 pro2created = DateTime.Now,
@@ -462,7 +467,7 @@ namespace PracticeCompass.Data.Repositories
                                 ClaimPaymentRemarkCode05 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks.Count >= 5 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks[4].Code : null,
                                 ClaimESRDPaymentAmt = null,
                                 NonpayableProfComponentAmt = null,
-                                TimeStamp = DateTime.Now.ToString(),
+                                TimeStamp = timestamp,
                                 LastUser = 88,
                                 CreateStamp = DateTime.Now.ToString(),
                                 CreateUser = 88,
@@ -489,9 +494,9 @@ namespace PracticeCompass.Data.Repositories
                             NUBCRevenueCode = procedure.RevenueCode,
                             UnitsOfServicePaidCount = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].ServiceLineItems[mod].Units,
                             OrigUnitsOfServiceCount = 0,
-                            TimeStamp = DateTime.Now.ToString(),
+                            TimeStamp = timestamp,
                             LastUser = 88,
-                            CreateStamp = DateTime.Now.ToString(),
+                            CreateStamp = timestamp,
                             CreateUser = 88,
                             Pro2SrcPDB = "medman",
                             pro2created = DateTime.Now,
@@ -514,9 +519,9 @@ namespace PracticeCompass.Data.Repositories
                                 AdjustmentReasonCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].Adjustments[adj].AdjustmentModel[adjmodel].Reason.IdentifyingCode,
                                 AdjustmentAmt = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].Adjustments[adj].AdjustmentModel[adjmodel].MonetaryAmount,
                                 AdjustmentQuantity = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].Adjustments[adj].AdjustmentModel[adjmodel].Quantity,
-                                TimeStamp = DateTime.Now.ToString(),
+                                TimeStamp = timestamp,
                                 LastUser = 88,
-                                CreateStamp = DateTime.Now.ToString(),
+                                CreateStamp = timestamp,
                                 CreateUser = 88,
                                 Pro2SrcPDB = "medman",
                                 pro2created = DateTime.Now,
@@ -530,7 +535,7 @@ namespace PracticeCompass.Data.Repositories
                 }
             }
             var claimadjSQL = "INSERT INTO [dbo].[ERSClaimAdjustment]  VALUES (@prrowid,@ERSClaimSID,@ClaimAdjustmentGroupCode,@AdjustmentReasonCode,@AdjustmentAmt,@AdjustmentQuantity,@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var claimadj = this.db.Execute(claimadjSQL, ClaimAdjustments);
+            //var claimadj = this.db.Execute(claimadjSQL, ClaimAdjustments);
             var ServiceInfoSQL = "INSERT INTO [dbo].[ERSChargeServiceInfo]  VALUES  (@prrowid" +
             ", @ERSChargeSID , @ERSClaimSID , @ProductServiceIDQualifier, @ProductServiceID , @ProcedureModifier01" +
             ", @ProcedureModifier02 , @ProcedureModifier03 , @ProcedureModifier04 , @ProcedureCodeDescription" +
@@ -538,41 +543,41 @@ namespace PracticeCompass.Data.Repositories
             ", @OrigProductServiceIDQualifier , @OrigProductServiceID , @OrigProcedureModifier01 , @OrigProcedureModifier02" +
             ", @OrigProcedureModifier03 , @OrigProcedureModifier04 , @OrigProcedureCodeDescription , @OrigUnitsOfServiceCount" +
             ", @TimeStamp , @LastUser , @CreateStamp , @CreateUser , @Pro2SrcPDB , @pro2created ,@pro2modified)";
-            var Serv = this.db.Execute(ServiceInfoSQL, ChargeServiceInfos);
+            //var Serv = this.db.Execute(ServiceInfoSQL, ChargeServiceInfos);
             var outpatientSQL = "INSERT INTO [dbo].[ERSMedicareOutpatAdj]  VALUES  (@prrowid" +
                 ",@ERSClaimSID,@ReimbursementRate,@ClaimHCPCSPayableAmt,@ClaimPaymentRemarkCode01," +
                 "@ClaimPaymentRemarkCode02,@ClaimPaymentRemarkCode03,@ClaimPaymentRemarkCode04,@ClaimPaymentRemarkCode05," +
                 "@ClaimESRDPaymentAmt,@NonpayableProfComponentAmt, @TimeStamp , @LastUser , @CreateStamp , @CreateUser , @Pro2SrcPDB , @pro2created ,@pro2modified)";
-            var outpat = this.db.Execute(outpatientSQL, outpatientlist);
+            //var outpat = this.db.Execute(outpatientSQL, outpatientlist);
             var provideradjSQL = "INSERT INTO [dbo].[ERSPmtProvLevelAdj]  VALUES (@prrowid, @ERSPaymentSID,@RemitterProviderID" +
            ", @FiscalPeriodDate, @AdjustmentReasonCode, @ProviderAdjustmentID, @AdjCorrection," +
            "@ProviderAdjustmentAmt, @TimeStamp, @LastUser, @CreateStamp, @CreateUser," +
            "@OrigAdjustmentCode, @MedicareCode, @FinancialControlNumber, @HICNumber," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var provad = this.db.Execute(provideradjSQL, ProviderAdjustments);
+            //var provad = this.db.Execute(provideradjSQL, ProviderAdjustments);
             var claimDateSQL = "INSERT INTO [dbo].[ERSClaimDate] VALUES (@prrowid ,@ERSClaimSID, @DateTimeQualifier," +
            "@ClaimDate, @TimeStamp,@LastUser, @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var dates = this.db.Execute(claimDateSQL, ERSClaimDates);
+            //var dates = this.db.Execute(claimDateSQL, ERSClaimDates);
             var PaymentPartySQL = "INSERT INTO [dbo].[ERSPaymentParty] VALUES (@prrowid, @ERSPaymentSID, @EntityIDCode," +
            "@Name, @IDCodeQualifier, @IDCode, @AddressInfo01, @AddressInfo02," +
            "@CityName, @StateCode, @PostalCode, @CountryCode, @LocationQualifier," +
            "@LocationID, @TimeStamp, @LastUser, @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var PayParty = this.db.Execute(PaymentPartySQL, ERSPaymentParty);
+            //var PayParty = this.db.Execute(PaymentPartySQL, ERSPaymentParty);
             var ERSClaimContactSQL = "INSERT INTO [dbo].[ERSClaimContact]VALUES (@prrowid,  @ERSClaimSID, @ContactFunctionCode," +
            "@ClaimContactName, @TimeStamp,@LastUser,  @CreateStamp," +
            "@CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
+            //var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
             var ERSClaimContactNbrSQL = "INSERT INTO[dbo].[ERSClaimContactNbr]  VALUES(@prrowid, @ERSClaimSID, @CommunicationsNbrQualifier," +
           "@ContactFunctionCode, @ClaimContactCommunicationsNbr, @ClaimContactCommunicationsExt, @TimeStamp," +
           "@LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ContactNbr = this.db.Execute(ERSClaimContactNbrSQL, ERSClaimContactNbrs);
+            //var ContactNbr = this.db.Execute(ERSClaimContactNbrSQL, ERSClaimContactNbrs);
             var ERSClaimNameSQL = "INSERT INTO [dbo].[ERSClaimName] VALUES (@prrowid,  @ERSClaimSID, @EntityIDCode, @IDCodeQualifier," +
            "@IDCode, @EntityTypeQualifier, @NameLastOrOrgName,  @NameFirst, @NameMiddle," +
            "@NameSuffix, @TimeStamp,  @LastUser,  @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ClaimName = this.db.Execute(ERSClaimNameSQL, ERSClaimNames);
+            //var ClaimName = this.db.Execute(ERSClaimNameSQL, ERSClaimNames);
             var ERSPaymentHeaderSQL = "INSERT INTO [dbo].[ERSPaymentHeader] VALUES (@prrowid, @ERSPaymentSID,  @RemittanceSID, @RemittanceSourceCode, @ParameterGroupCode," +
            "@TransHandlingCode, @TotalActualProviderPaymentAmt,  @CreditOrDebitFlagCode, @PaymentMethodCode, @PaymentFormatCode," +
            "@SenderDFIIDNbrQualifier, @SenderDFINbr,  @SenderAcctNbrQualifier, @SenderBankAcctNbr, @RemitPayerIdent," +
@@ -588,17 +593,17 @@ namespace PracticeCompass.Data.Repositories
              "@PayerClaimControlNumber, @FacilityTypeCode, @ClaimFrequencyTypeCode, @DiagnosisRelatedGroupCode," +
              "@DiagnosisRelatedGroupWeight, @DischargeFraction, @TimeStamp, @LastUser, @CreateStamp," +
              "@CreateUser, @ClaimDetail, @SkipClaim, @Posted, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
+            //var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
             var ERSClaimReferenceSQL = "INSERT INTO [dbo].[ERSClaimReference]VALUES (@prrowid, @ERSClaimSID, @ReferenceIDQualifier," +
            "@ReferenceID, @TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB," +
            "@pro2created,@pro2modified)";
-            var ClaimReferenc = this.db.Execute(ERSClaimReferenceSQL, ERSClaimReferences);
+            //var ClaimReferenc = this.db.Execute(ERSClaimReferenceSQL, ERSClaimReferences);
             var ERSClaimMonetaryAmtSQL = "INSERT INTO [dbo].[ERSClaimMonetaryAmt] VALUES (@prrowid, @ERSClaimSID,@AmtQualifierCode,@ClaimSupplementalInfoAmt," +
            "@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var ClaimMonetaryAmt = this.db.Execute(ERSClaimMonetaryAmtSQL, ERSClaimMonetaryAmts);
+            //var ClaimMonetaryAmt = this.db.Execute(ERSClaimMonetaryAmtSQL, ERSClaimMonetaryAmts);
             var ERSChargeIndustryCodeSQL = "INSERT INTO [dbo].[ERSChargeIndustryCode] VALUES (@prrowid, @ERSChargeSID,@CodeListQualifierCode, @IndustryCode, @TimeStamp," +
            "@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var ChargeIndustryCode = this.db.Execute(ERSChargeIndustryCodeSQL, ERSChargeIndustryCodes);
+            //var ChargeIndustryCode = this.db.Execute(ERSChargeIndustryCodeSQL, ERSChargeIndustryCodes);
             txScope.Complete();
             return true;
         }

@@ -149,7 +149,7 @@ namespace PracticeCompass.API.Controllers.API
                 {
                     var filename = Path.GetFileName(files[f]);
                     var fileText = System.IO.File.ReadAllText(files[f]);
-                    var parseddata = ERAParser.Process835EraMessage(fileText, "_", "~", "^");
+                    var parseddata = ERAParser.Process835EraMessage(fileText, "~", "*", ":");
                     var parseddatajson =JsonConvert.SerializeObject(parseddata, Formatting.Indented);
                     var debuggerpath = Path.Combine(@"C:\PracticeCompas\DebuggingERA", filename + ".debugging.txt");
                     if (System.IO.File.Exists(debuggerpath))
