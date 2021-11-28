@@ -22,8 +22,8 @@ Mod1.[Modifier] as Modifier1 , Mod2.Modifier as Modifier2 , Mod3.Modifier as Mod
 , Mod4.Modifier as Modifier4 , Diag1.DiagnosisCode as Diag1
 , Diag2.DiagnosisCode as Diag2, Diag3.DiagnosisCode as Diag3, Diag4.DiagnosisCode as Diag4
 , Diag5.DiagnosisCode as Diag5, Diag6.DiagnosisCode as Diag6, Diag7.DiagnosisCode as Diag7
-, Diag8.DiagnosisCode as Diag8 , Ailment.AuthorizationNumber , ProcedureEvent.StaffID as RenderingID ,
-[Provider].SortName as RenderingName , SupervisingStaff.StaffID as SupervisingID,
+, Diag8.DiagnosisCode as Diag8 , Ailment.AuthorizationNumber , ProcedureEvent.StaffID as RenderingID,ProcedureEvent.ReferralSID as ReferralSID ,
+[Provider].SortName as RenderingName , SupervisingStaff.StaffID as SupervisingID,ReferralProvider.SortName as ReferralName,
 SupervisingProvider.SortName as SupervisingName ,
 Charge.ApprovedAmount , (charge.Amount - Charge.ApprovedAmount) as PatientPortion , 
 charge.GuarantorReceipts as PatientPaid ,
@@ -53,7 +53,9 @@ left outer join [Provider] on [Provider].[ProviderID] = RenderingStaff.StaffID
 left outer join Staff as SupervisingStaff on  ProcedureEvent.PracticeID = SupervisingStaff.PracticeID 
 and ProcedureEvent.SupervisingStaffID =  SupervisingStaff.StaffID
 left outer join [Provider] as SupervisingProvider on SupervisingProvider.[ProviderID] = SupervisingStaff.StaffID
-
+left outer join Staff as ReferralStaff on ProcedureEvent.PracticeID = ReferralStaff.PracticeID 
+and ProcedureEvent.ReferralSID = ReferralStaff.StaffID
+left outer join [Provider] as ReferralProvider on [Provider].[ProviderID] = ReferralStaff.StaffID
 where Charge.ChargeSID = @ChargeSID
 END
 GO

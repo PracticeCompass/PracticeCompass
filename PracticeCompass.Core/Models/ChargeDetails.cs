@@ -43,7 +43,8 @@ namespace PracticeCompass.Core.Models
         public float ChargeBalance { get; set; }
         public string RecordStatus { get; set; }
         public string CurrentStatus { get; set; }
-
+        public string ReferralSID { get; set; }
+        public string ReferralName { get; set; }
 
         #endregion
 

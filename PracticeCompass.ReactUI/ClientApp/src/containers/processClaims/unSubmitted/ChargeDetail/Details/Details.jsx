@@ -44,6 +44,7 @@ function mapStateToProps(state) {
     modifiers4: state.charageDetails.modifiers?.filter((x) => x.order == 4),
     dropDownCpts: state.lookups.cpts,
     dropDownICD10: state.lookups.iCD10s,
+    dropDownphysicians: state.lookups.physicians,
   };
 }
 
@@ -86,7 +87,7 @@ class Details extends Component {
     authorizationNumber: null,
     rendering: null,
     ordering: null,
-    referring: null,
+    supervising: null,
     chargeAmount: null,
     patientPortion: null,
     allowed: null,
@@ -134,77 +135,123 @@ class Details extends Component {
         this.props.ChargeDetails.chargeSID
       );
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag1
-        ).length == 0
+        chargeDetailsData.renderingID != null &&
+        (this.props.dropDownphysicians == null ||
+          this.props.dropDownphysicians.filter(
+            (x) => x.entityId == chargeDetailsData.renderingID
+          ).length == 0)
+      ) {
+        await this.props.SaveLookups(
+          chargeDetailsData.renderingID,
+          "Physician"
+        );
+      }
+      if (
+        chargeDetailsData.referralSID != null &&
+        (this.props.dropDownphysicians == null ||
+          this.props.dropDownphysicians.filter(
+            (x) => x.entityId == chargeDetailsData.referralSID
+          ).length == 0)
+      ) {
+        await this.props.SaveLookups(
+          chargeDetailsData.referralSID,
+          "Physician"
+        );
+      }
+      if (
+        chargeDetailsData.supervisingID != null &&
+        (this.props.dropDownphysicians == null ||
+          this.props.dropDownphysicians.filter(
+            (x) => x.entityId == chargeDetailsData.supervisingID
+          ).length == 0)
+      ) {
+        await this.props.SaveLookups(
+          chargeDetailsData.supervisingID,
+          "Physician"
+        );
+      }
+      if (
+        chargeDetailsData.diag1 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag1
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag1, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag2
-        ).length == 0
+        chargeDetailsData.diag2 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag2
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag2, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag3
-        ).length == 0
+        chargeDetailsData.diag3 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag3
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag3, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag4
-        ).length == 0
+        chargeDetailsData.diag4 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag4
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag4, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag5
-        ).length == 0
+        chargeDetailsData.diag5 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag5
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag5, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag6
-        ).length == 0
+        chargeDetailsData.diag6 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag6
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag6, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag7
-        ).length == 0
+        chargeDetailsData.diag7 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag7
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag7, "ICD10");
       }
       if (
-        this.props.dropDownICD10 == null ||
-        this.props.dropDownICD10.filter(
-          (x) => x.entityId == chargeDetailsData.diag8
-        ).length == 0
+        chargeDetailsData.diag8 != null &&
+        (this.props.dropDownICD10 == null ||
+          this.props.dropDownICD10.filter(
+            (x) => x.entityId == chargeDetailsData.diag8
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag8, "ICD10");
       }
       if (
-        this.props.dropDownCpts == null ||
-        this.props.dropDownCpts.filter(
-          (x) => x.entityId == chargeDetailsData.procedureCode
-        ).length == 0
+        chargeDetailsData.procedureCode != null &&
+        (this.props.dropDownCpts == null ||
+          this.props.dropDownCpts.filter(
+            (x) => x.entityId == chargeDetailsData.procedureCode
+          ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.procedureCode, "CPT");
       }
+
       await this.setState({
         // patientId: claimDetails.patientID,
         chargeDetailsSummary: chargeDetailsData,
@@ -361,6 +408,24 @@ class Details extends Component {
             ? this.props.dropDownICD10.filter(
                 (x) => x.entityId == chargeDetailsData.diag8
               )[0].entityName
+            : null,
+        rendering:
+          chargeDetailsData.renderingID != null
+            ? this.props.dropDownphysicians.filter(
+                (x) => x.entityId == chargeDetailsData.renderingID
+              )[0]
+            : null,
+        ordering:
+          chargeDetailsData.referralSID != null
+            ? this.props.dropDownphysicians.filter(
+                (x) => x.entityId == chargeDetailsData.referralSID
+              )[0]
+            : null,
+        supervising:
+          chargeDetailsData.supervisingID != null
+            ? this.props.dropDownphysicians.filter(
+                (x) => x.entityId == chargeDetailsData.supervisingID
+              )[0]
             : null,
         authorizationNumber: chargeDetailsData.authorizationNumber,
         units: chargeDetailsData.chargeDetailsData,
@@ -1311,7 +1376,7 @@ class Details extends Component {
                     </div>
                   </div>
                 </div>
-                <div style={{ float: "left", width: "345px" }}>
+                <div style={{ float: "left", width: "400px" }}>
                   <div style={{ display: "flex", flexFlow: "row" }}>
                     <div style={{ float: "left" }}>
                       <div style={{ float: "left", marginLeft: "10px" }}>
@@ -1350,8 +1415,8 @@ class Details extends Component {
                     <fieldset
                       className="fieldsetStyle"
                       style={{
-                        width: "325px",
-                        height: "150px",
+                        width: "380px",
+                        height: "120px",
                         marginLeft: "10px",
                       }}
                     >
@@ -1370,16 +1435,24 @@ class Details extends Component {
                           }}
                         >
                           <div style={{ float: "left" }}>
-                            <div style={{ float: "left", marginLeft: "21px" }}>
+                            <div style={{ float: "left", marginLeft: "61px" }}>
                               <label className="userInfoLabel">Rendering</label>
                             </div>
                             <div style={{ float: "left", width: "173px" }}>
                               <DropDown
                                 className="unifyHeight"
-                                data={medicalProcType}
+                                textField="entityName"
+                                dataItemKey="entityId"
+                                data={this.props.dropDownphysicians}
+                                defaultValue={this.state.rendering}
                                 value={this.state.rendering}
                                 onChange={(e) =>
-                                  this.setState({ rendering: e.value })
+                                  this.setState({
+                                    rendering: {
+                                      entityName: e.value?.entityName,
+                                      entityId: e.value?.entityId,
+                                    },
+                                  })
                                 }
                               ></DropDown>
                             </div>
@@ -1402,16 +1475,26 @@ class Details extends Component {
                         </div>
                         <div style={{ display: "flex", flexFlow: "row" }}>
                           <div style={{ float: "left" }}>
-                            <div style={{ float: "left", marginLeft: "28px" }}>
-                              <label className="userInfoLabel">Ordering</label>
+                            <div style={{ float: "left", marginLeft: "10px" }}>
+                              <label className="userInfoLabel">
+                                Ordering\Referring
+                              </label>
                             </div>
                             <div style={{ float: "left", width: "173px" }}>
                               <DropDown
                                 className="unifyHeight"
-                                data={medicalProcType}
+                                textField="entityName"
+                                dataItemKey="entityId"
+                                data={this.props.dropDownphysicians}
+                                defaultValue={this.state.ordering}
                                 value={this.state.ordering}
                                 onChange={(e) =>
-                                  this.setState({ ordering: e.value })
+                                  this.setState({
+                                    ordering: {
+                                      entityName: e.value?.entityName,
+                                      entityId: e.value?.entityId,
+                                    },
+                                  })
                                 }
                               ></DropDown>
                             </div>
@@ -1434,39 +1517,7 @@ class Details extends Component {
                         </div>
                         <div style={{ display: "flex", flexFlow: "row" }}>
                           <div style={{ float: "left" }}>
-                            <div style={{ float: "left", marginLeft: "26px" }}>
-                              <label className="userInfoLabel">Referring</label>
-                            </div>
-                            <div style={{ float: "left", width: "173px" }}>
-                              <DropDown
-                                className="unifyHeight"
-                                data={medicalProcType}
-                                value={this.state.referring}
-                                onChange={(e) =>
-                                  this.setState({ referring: e.value })
-                                }
-                              ></DropDown>
-                            </div>
-                            <div style={{ float: "left", marginTop: "-3px" }}>
-                              <ButtonComponent
-                                icon="search"
-                                type="search"
-                                classButton="infraBtn-primary find-button"
-                                onClick={(e) =>
-                                  this.setState({
-                                    providerVisible: true,
-                                    providerTitle: "Referring",
-                                  })
-                                }
-                              >
-                                Find
-                              </ButtonComponent>
-                            </div>
-                          </div>
-                        </div>
-                        <div style={{ display: "flex", flexFlow: "row" }}>
-                          <div style={{ float: "left" }}>
-                            <div style={{ float: "left", marginLeft: "13px" }}>
+                            <div style={{ float: "left", marginLeft: "53px" }}>
                               <label className="userInfoLabel">
                                 Supervising
                               </label>
@@ -1474,10 +1525,18 @@ class Details extends Component {
                             <div style={{ float: "left", width: "173px" }}>
                               <DropDown
                                 className="unifyHeight"
-                                data={medicalProcType}
-                                value={this.state.referring}
+                                textField="entityName"
+                                dataItemKey="entityId"
+                                data={this.props.dropDownphysicians}
+                                defaultValue={this.state.supervising}
+                                value={this.state.supervising}
                                 onChange={(e) =>
-                                  this.setState({ referring: e.value })
+                                  this.setState({
+                                    supervising: {
+                                      entityName: e.value?.entityName,
+                                      entityId: e.value?.entityId,
+                                    },
+                                  })
                                 }
                               ></DropDown>
                             </div>
@@ -1537,6 +1596,7 @@ class Details extends Component {
                             type="numeric"
                             className="unifyHeight"
                             format="c2"
+                            disabled={true}
                             value={this.state.chargeAmount}
                             onChange={(e) =>
                               this.setState({
@@ -1560,6 +1620,7 @@ class Details extends Component {
                             type="numeric"
                             className="unifyHeight"
                             format="c2"
+                            disabled={true}
                             value={this.state.allowed}
                             onChange={(e) =>
                               this.setState({
@@ -1585,6 +1646,7 @@ class Details extends Component {
                             type="numeric"
                             className="unifyHeight"
                             format="c2"
+                            disabled={true}
                             value={this.state.patientPortion}
                             onChange={(e) =>
                               this.setState({
@@ -1601,15 +1663,14 @@ class Details extends Component {
                     >
                       <div style={{ float: "left" }}>
                         <div style={{ float: "left", marginLeft: "49px" }}>
-                          <label className="userInfoLabel">
-                            Plan Portion
-                          </label>
+                          <label className="userInfoLabel">Plan Portion</label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>
                           <TextBox
                             type="numeric"
                             className="unifyHeight"
                             format="c2"
+                            disabled={true}
                             value={this.state.insurancePortion}
                             onChange={(e) =>
                               this.setState({
@@ -1633,6 +1694,7 @@ class Details extends Component {
                             type="numeric"
                             className="unifyHeight"
                             format="c2"
+                            disabled={true}
                             value={this.state.paidAmount}
                             onChange={(e) =>
                               this.setState({
@@ -1658,6 +1720,7 @@ class Details extends Component {
                             type="numeric"
                             className="unifyHeight"
                             format="c2"
+                            disabled={true}
                             value={this.state.chargeBalance}
                             onChange={(e) =>
                               this.setState({

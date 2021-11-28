@@ -182,14 +182,14 @@ namespace PracticeCompass.API.Controllers.API
                 foreach (var row in LedgerData)
                 {
   
-                    row.AmountStr = row.Amount == null? "" : "$ " + row.Amount;
+                    row.AmountStr = row.Amount == null? "" : row.Amount.ToString();
                     if (row.ActivityType == "Charge Details")
                     {
                         TotalAmount = row.Amount == null? 0 : row.Amount.Value;
                     }
                     if(row.ActivityType == "Txn")
                     {
-                        row.BalanceStr = "$ " + (TotalAmount + (row.Amount == null ? 0 : row.Amount.Value));
+                        row.BalanceStr = (TotalAmount + (row.Amount == null ? 0 : row.Amount.Value)).ToString();
                         TotalAmount = TotalAmount +( row.Amount == null ? 0 : row.Amount.Value);
                     }
 

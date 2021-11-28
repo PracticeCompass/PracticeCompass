@@ -162,7 +162,7 @@ class PatientDetailSummary extends Component {
     OtherWorkPhone: null,
     OtherExt: null,
     OtherCellPhone: null,
-    gridWidth:0
+    gridWidth: 0,
   };
   handleSelect = (e) => {
     this.setState({ selected: e.selected });
@@ -262,15 +262,15 @@ class PatientDetailSummary extends Component {
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions);
   }
-  componentDidUpdate=(event)=>{
-    if(event.UiExpand != this.props.UiExpand){
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
       this.updateDimensions();
     }
-  }
+  };
   updateDimensions() {
     this.setState({
-      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 310)
-    })
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 310),
+    });
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -650,7 +650,6 @@ class PatientDetailSummary extends Component {
           )}
           <div style={{ display: "flex", flexFlow: "row" }}>
             <div style={{ float: "left" }}>
-
               <div
                 className="rowHeight"
                 style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -1098,6 +1097,7 @@ class PatientDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.copay}
                     onChange={(e) =>
@@ -1116,6 +1116,7 @@ class PatientDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.Pre_PayAmount}
                     onChange={(e) =>
@@ -1134,6 +1135,7 @@ class PatientDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.PaidAmount}
                     onChange={(e) =>
@@ -1152,6 +1154,7 @@ class PatientDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.PatientPortion}
                     onChange={(e) =>
@@ -1170,6 +1173,7 @@ class PatientDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.InsurancePortion}
                     onChange={(e) =>
@@ -1188,6 +1192,7 @@ class PatientDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.TotalDue}
                     onChange={(e) =>
@@ -1205,7 +1210,7 @@ class PatientDetailSummary extends Component {
           style={{
             display: "flex",
             flexFlow: "row",
-            width: this.state.gridWidth
+            width: this.state.gridWidth,
           }}
         >
           <div className="accordion" id="accordionExample">

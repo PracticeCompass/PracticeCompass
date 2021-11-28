@@ -29,20 +29,20 @@ namespace PracticeCompass.API.Controllers.API
                     {
                         if (charge.ActivityType== "Create Charge")
                         {
-                            charge.AmountValue = "$ " + charge.ChargeAmount;
-                            charge.ChargeAmountValue = "$ 0.00";
+                            charge.AmountValue = charge.ChargeAmount.ToString();
+                            charge.ChargeAmountValue = "0.00";
                             continue;
                         }
                         else if(charge.ActivityType== "Charge Void")
                         {
-                            charge.ChargeAmountValue = "$ 0.00";
-                            charge.AmountValue = "$ 0.00";
+                            charge.ChargeAmountValue = "0.00";
+                            charge.AmountValue = "0.00";
                             continue;
                         }
                         updatedChargeAmount = updatedChargeAmount + charge.Amount;
                         charge.ChargeAmount = updatedChargeAmount;
-                        charge.AmountValue = "$ " + charge.Amount;
-                        charge.ChargeAmountValue = "$ " + charge.ChargeAmount;
+                        charge.AmountValue = charge.Amount.ToString();
+                        charge.ChargeAmountValue = charge.ChargeAmount.ToString();
 
 
                     }

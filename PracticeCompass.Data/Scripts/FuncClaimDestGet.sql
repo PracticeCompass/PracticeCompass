@@ -24,12 +24,12 @@ BEGIN
 	--       @Secstatus varchar(50) , @Thirdstatus varchar(50), @maxCoverage int
 
 
-		   select @Dest = case when LowestRespCoverageOrder=1 then 'Primary'
-		                       when LowestRespCoverageOrder=2 then 'Secondary'
-							   when LowestRespCoverageOrder=3 then 'Tertiary'
-							   when LowestRespCoverageOrder=99 then 'Patient'
+		   select @Dest = case when LowestRespCoverageOrder=1 then '1'
+		                       when LowestRespCoverageOrder=2 then '2'
+							   when LowestRespCoverageOrder=3 then '3'
+							   when LowestRespCoverageOrder=99 then '99'
 							   when LowestRespCoverageOrder=0 then '0'
-							   when LowestRespCoverageOrder=4 then 'Quaternary'
+							   when LowestRespCoverageOrder=4 then '4'
 		                     ELSE  '' END
 		   from Claim where ClaimSID=@calimID
 

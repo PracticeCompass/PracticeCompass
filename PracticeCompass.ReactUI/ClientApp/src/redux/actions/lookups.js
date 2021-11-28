@@ -10,7 +10,7 @@ import {
   FILTERS_ICD10,
   GET_MODIFIER_LIST,
   GET_MODIFIER_LIST_FAILED,
-  SET_COMPANIES_LIST
+  SET_COMPANIES_LIST,
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
@@ -34,7 +34,7 @@ export const SaveLookups =
 export const GetLookupsByEnityName =
   (EntityName) => async (dispatch, getState) => {
     try {
-      dispatch(uiStartLoading());
+      // dispatch(uiStartLoading());
       const userId = getState().account.userId;
       const resp = await axios({
         method: "GET",
@@ -52,12 +52,12 @@ export const GetLookupsByEnityName =
       else if (EntityName == "Company") dispatch(setCompanies(resp.data));
     } catch (error) {
     } finally {
-      dispatch(uiStopLoading());
+      // dispatch(uiStopLoading());
     }
   };
 export const GetModifier = () => async (dispatch, getState) => {
   try {
-    dispatch(uiStartLoading());
+    // dispatch(uiStartLoading());
     await dispatch(setModifierList([]));
     const resp = await axios({
       method: "GET",
@@ -71,12 +71,12 @@ export const GetModifier = () => async (dispatch, getState) => {
       payload: error,
     });
   } finally {
-    dispatch(uiStopLoading());
+    // dispatch(uiStopLoading());
   }
 };
 export const GetLookups = () => async (dispatch, getState) => {
   try {
-    dispatch(uiStartLoading());
+    // dispatch(uiStartLoading());
     dispatch(GetModifier());
     const userId = getState().account.userId;
     const respPatient = await axios({
@@ -128,10 +128,10 @@ export const GetLookups = () => async (dispatch, getState) => {
     });
     dispatch(setCompanies(companies.data));
 
-    dispatch(uiStopLoading());
+    // dispatch(uiStopLoading());
   } catch (error) {
   } finally {
-    dispatch(uiStopLoading());
+    // dispatch(uiStopLoading());
   }
 };
 export const isExist = (list = [], item = {}) => {

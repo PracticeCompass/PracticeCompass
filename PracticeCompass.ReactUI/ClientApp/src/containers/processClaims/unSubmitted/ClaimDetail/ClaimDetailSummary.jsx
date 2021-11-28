@@ -502,6 +502,7 @@ class ClaimDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.copay}
                     onChange={(e) =>
@@ -520,6 +521,7 @@ class ClaimDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.claimTotal}
                     onChange={(e) =>
@@ -538,6 +540,7 @@ class ClaimDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.insurancePaid}
                     onChange={(e) =>
@@ -556,6 +559,7 @@ class ClaimDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.patientPaid}
                     onChange={(e) =>
@@ -574,6 +578,7 @@ class ClaimDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.adjustments}
                     onChange={(e) =>
@@ -592,6 +597,7 @@ class ClaimDetailSummary extends Component {
                   <TextBox
                     type="numeric"
                     format="c2"
+                    disabled={true}
                     className="unifyHeight"
                     value={this.state.claimBallance}
                     onChange={(e) =>

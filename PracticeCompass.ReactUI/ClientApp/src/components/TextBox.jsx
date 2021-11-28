@@ -25,7 +25,7 @@ const GetItemHtml = (items) => {
         mask={props.mask}
         className="unifyHeight"
         placeholder={props.placeholder}
-        
+        disabled={props.disabled ?? false}
         onChange={props.onValueChange}
       />
     );
@@ -35,6 +35,7 @@ const GetItemHtml = (items) => {
         className="unifyHeight"
         mask={props.mask}
         value={props.value ?? ""}
+        disabled={props.disabled ?? false}
         readonly={props.readonly ?? false}
         defaultValue={props.defaultValue}
         onChange={props.onChange}
