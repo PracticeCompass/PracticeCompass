@@ -65,3 +65,4 @@ uspPhysicianGridGet.sql
 uspPositionGet.sql
 uspPhysicianDetailsGet.sql
 uspPlanGridGet.sql
+uspPlanDetailsGet.sql
