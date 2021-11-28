@@ -11,7 +11,7 @@ import {
   recordStatusLookUp,
   CptColumns,
   ProviderColumns,
-  ICDcolumns,
+  ICDcolumns
 } from "../ChargeDetailData";
 import CheckboxComponent from "components/Checkbox";
 import FindDialogComponent from "../../../../common/findDialog";
@@ -21,7 +21,7 @@ import {
   GetICD10Codes,
   GetCPTCodes,
   resetCPTCodes,
-  GetCharageDetails,
+  GetCharageDetails
 } from "../../../../../redux/actions/chargeDetail";
 import { SaveLookups } from "../../../../../redux/actions/lookups";
 
@@ -38,13 +38,13 @@ function mapStateToProps(state) {
   return {
     ICD10List: state.charageDetails.icd10List,
     CptList: state.charageDetails.cptList,
-    modifiers1: state.charageDetails.modifiers?.filter((x) => x.order == 1),
-    modifiers2: state.charageDetails.modifiers?.filter((x) => x.order == 2),
-    modifiers3: state.charageDetails.modifiers?.filter((x) => x.order == 3),
-    modifiers4: state.charageDetails.modifiers?.filter((x) => x.order == 4),
+    modifiers1: state.charageDetails.modifiers?.filter(x => x.order == 1),
+    modifiers2: state.charageDetails.modifiers?.filter(x => x.order == 2),
+    modifiers3: state.charageDetails.modifiers?.filter(x => x.order == 3),
+    modifiers4: state.charageDetails.modifiers?.filter(x => x.order == 4),
     dropDownCpts: state.lookups.cpts,
     dropDownICD10: state.lookups.iCD10s,
-    dropDownphysicians: state.lookups.physicians,
+    dropDownphysicians: state.lookups.physicians
   };
 }
 
@@ -52,12 +52,12 @@ function mapDispatchToProps(dispatch) {
   return {
     GetICD10Codes: (filter, refreshData, skip) =>
       dispatch(GetICD10Codes(filter, refreshData, skip)),
-    GetCPTCodes: (filter) => dispatch(GetCPTCodes(filter)),
+    GetCPTCodes: filter => dispatch(GetCPTCodes(filter)),
     resetCPTCodes: () => dispatch(resetCPTCodes()),
-    GetCharageDetails: (chargeSID) => dispatch(GetCharageDetails(chargeSID)),
+    GetCharageDetails: chargeSID => dispatch(GetCharageDetails(chargeSID)),
     ResetICD10Codes: () => dispatch(ResetICD10Codes()),
     SaveLookups: (EntityValueID, EntityName) =>
-      dispatch(SaveLookups(EntityValueID, EntityName)),
+      dispatch(SaveLookups(EntityValueID, EntityName))
   };
 }
 
@@ -123,7 +123,7 @@ class Details extends Component {
     icd10_5: null,
     icd10_6: null,
     icd10_7: null,
-    icd10_8: null,
+    icd10_8: null
   };
   async componentDidMount() {
     if (
@@ -138,7 +138,7 @@ class Details extends Component {
         chargeDetailsData.renderingID != null &&
         (this.props.dropDownphysicians == null ||
           this.props.dropDownphysicians.filter(
-            (x) => x.entityId == chargeDetailsData.renderingID
+            x => x.entityId == chargeDetailsData.renderingID
           ).length == 0)
       ) {
         await this.props.SaveLookups(
@@ -150,7 +150,7 @@ class Details extends Component {
         chargeDetailsData.referralSID != null &&
         (this.props.dropDownphysicians == null ||
           this.props.dropDownphysicians.filter(
-            (x) => x.entityId == chargeDetailsData.referralSID
+            x => x.entityId == chargeDetailsData.referralSID
           ).length == 0)
       ) {
         await this.props.SaveLookups(
@@ -162,7 +162,7 @@ class Details extends Component {
         chargeDetailsData.supervisingID != null &&
         (this.props.dropDownphysicians == null ||
           this.props.dropDownphysicians.filter(
-            (x) => x.entityId == chargeDetailsData.supervisingID
+            x => x.entityId == chargeDetailsData.supervisingID
           ).length == 0)
       ) {
         await this.props.SaveLookups(
@@ -174,7 +174,7 @@ class Details extends Component {
         chargeDetailsData.diag1 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag1
+            x => x.entityId == chargeDetailsData.diag1
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag1, "ICD10");
@@ -183,7 +183,7 @@ class Details extends Component {
         chargeDetailsData.diag2 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag2
+            x => x.entityId == chargeDetailsData.diag2
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag2, "ICD10");
@@ -192,7 +192,7 @@ class Details extends Component {
         chargeDetailsData.diag3 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag3
+            x => x.entityId == chargeDetailsData.diag3
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag3, "ICD10");
@@ -201,7 +201,7 @@ class Details extends Component {
         chargeDetailsData.diag4 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag4
+            x => x.entityId == chargeDetailsData.diag4
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag4, "ICD10");
@@ -210,7 +210,7 @@ class Details extends Component {
         chargeDetailsData.diag5 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag5
+            x => x.entityId == chargeDetailsData.diag5
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag5, "ICD10");
@@ -219,7 +219,7 @@ class Details extends Component {
         chargeDetailsData.diag6 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag6
+            x => x.entityId == chargeDetailsData.diag6
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag6, "ICD10");
@@ -228,7 +228,7 @@ class Details extends Component {
         chargeDetailsData.diag7 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag7
+            x => x.entityId == chargeDetailsData.diag7
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag7, "ICD10");
@@ -237,7 +237,7 @@ class Details extends Component {
         chargeDetailsData.diag8 != null &&
         (this.props.dropDownICD10 == null ||
           this.props.dropDownICD10.filter(
-            (x) => x.entityId == chargeDetailsData.diag8
+            x => x.entityId == chargeDetailsData.diag8
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.diag8, "ICD10");
@@ -246,7 +246,7 @@ class Details extends Component {
         chargeDetailsData.procedureCode != null &&
         (this.props.dropDownCpts == null ||
           this.props.dropDownCpts.filter(
-            (x) => x.entityId == chargeDetailsData.procedureCode
+            x => x.entityId == chargeDetailsData.procedureCode
           ).length == 0)
       ) {
         await this.props.SaveLookups(chargeDetailsData.procedureCode, "CPT");
@@ -265,44 +265,44 @@ class Details extends Component {
         cptCode:
           chargeDetailsData.procedureCode !== null
             ? this.props.dropDownCpts.filter(
-                (x) => x.entityId == chargeDetailsData.procedureCode
+                x => x.entityId == chargeDetailsData.procedureCode
               )[0]
             : null,
         cptCodeDescription: chargeDetailsData.procedureDescription,
         modifier1:
           chargeDetailsData.modifier1 !== null
             ? this.props.modifiers1.filter(
-                (x) => x.modifier == chargeDetailsData.modifier1
+                x => x.modifier == chargeDetailsData.modifier1
               )[0]
             : null,
         modifier2:
           chargeDetailsData.modifier2 !== null
             ? this.props.modifiers2.filter(
-                (x) => x.modifier == chargeDetailsData.modifier2
+                x => x.modifier == chargeDetailsData.modifier2
               )[0]
             : null,
         modifier3:
           chargeDetailsData.modifier3 !== null
             ? this.props.modifiers3.filter(
-                (x) => x.modifier == chargeDetailsData.modifier3
+                x => x.modifier == chargeDetailsData.modifier3
               )[0]
             : null,
         modifier4:
           chargeDetailsData.modifier4 !== null
             ? this.props.modifiers4.filter(
-                (x) => x.modifier == chargeDetailsData.modifier4
+                x => x.modifier == chargeDetailsData.modifier4
               )[0]
             : null,
         recordStatus:
           chargeDetailsData.recordStatus !== null
             ? recordStatusLookUp.filter(
-                (x) => x.id == chargeDetailsData.recordStatus
+                x => x.id == chargeDetailsData.recordStatus
               )[0]
             : null,
         currentStatus:
           chargeDetailsData.currentStatus !== null
             ? currentStatusLookup.filter(
-                (x) => x.id == chargeDetailsData.currentStatus
+                x => x.id == chargeDetailsData.currentStatus
               )[0]
             : null,
         from:
@@ -316,123 +316,123 @@ class Details extends Component {
         icd10_1:
           chargeDetailsData.diag1 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag1
+                x => x.entityId == chargeDetailsData.diag1
               )[0]
             : null,
         icd10_2:
           chargeDetailsData.diag2 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag2
+                x => x.entityId == chargeDetailsData.diag2
               )[0]
             : null,
         icd10_3:
           chargeDetailsData.diag3 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag3
+                x => x.entityId == chargeDetailsData.diag3
               )[0]
             : null,
         icd10_4:
           chargeDetailsData.diag4 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag4
+                x => x.entityId == chargeDetailsData.diag4
               )[0]
             : null,
         icd10_5:
           chargeDetailsData.diag5 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag5
+                x => x.entityId == chargeDetailsData.diag5
               )[0]
             : null,
         icd10_6:
           chargeDetailsData.diag6 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag6
+                x => x.entityId == chargeDetailsData.diag6
               )[0]
             : null,
         icd10_7:
           chargeDetailsData.diag7 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag7
+                x => x.entityId == chargeDetailsData.diag7
               )[0]
             : null,
         icd10_8:
           chargeDetailsData.diag8 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag8
+                x => x.entityId == chargeDetailsData.diag8
               )[0]
             : null,
         descriptionICD1:
           chargeDetailsData.diag1 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag1
+                x => x.entityId == chargeDetailsData.diag1
               )[0].entityName
             : null,
         descriptionICD2:
           chargeDetailsData.diag2 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag2
+                x => x.entityId == chargeDetailsData.diag2
               )[0].entityName
             : null,
         descriptionICD3:
           chargeDetailsData.diag3 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag3
+                x => x.entityId == chargeDetailsData.diag3
               )[0].entityName
             : null,
         descriptionICD4:
           chargeDetailsData.diag4 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag4
+                x => x.entityId == chargeDetailsData.diag4
               )[0].entityName
             : null,
         descriptionICD5:
           chargeDetailsData.diag5 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag5
+                x => x.entityId == chargeDetailsData.diag5
               )[0].entityName
             : null,
         descriptionICD6:
           chargeDetailsData.diag6 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag6
+                x => x.entityId == chargeDetailsData.diag6
               )[0].entityName
             : null,
         descriptionICD7:
           chargeDetailsData.diag7 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag7
+                x => x.entityId == chargeDetailsData.diag7
               )[0].entityName
             : null,
         descriptionICD8:
           chargeDetailsData.diag8 != null
             ? this.props.dropDownICD10.filter(
-                (x) => x.entityId == chargeDetailsData.diag8
+                x => x.entityId == chargeDetailsData.diag8
               )[0].entityName
             : null,
         rendering:
           chargeDetailsData.renderingID != null
             ? this.props.dropDownphysicians.filter(
-                (x) => x.entityId == chargeDetailsData.renderingID
+                x => x.entityId == chargeDetailsData.renderingID
               )[0]
             : null,
         ordering:
           chargeDetailsData.referralSID != null
             ? this.props.dropDownphysicians.filter(
-                (x) => x.entityId == chargeDetailsData.referralSID
+                x => x.entityId == chargeDetailsData.referralSID
               )[0]
             : null,
         supervising:
           chargeDetailsData.supervisingID != null
             ? this.props.dropDownphysicians.filter(
-                (x) => x.entityId == chargeDetailsData.supervisingID
+                x => x.entityId == chargeDetailsData.supervisingID
               )[0]
             : null,
         authorizationNumber: chargeDetailsData.authorizationNumber,
-        units: chargeDetailsData.chargeDetailsData,
+        units: chargeDetailsData.chargeDetailsData
       });
     }
   }
-  handleSelect = (e) => {
+  handleSelect = e => {
     this.setState({ selected: e.selected });
   };
 
@@ -443,31 +443,31 @@ class Details extends Component {
       skip
     );
   };
-  onCptCodeSelectionChange = (event) => {
+  onCptCodeSelectionChange = event => {
     if (event.dataItem != null) {
       this.setState({
         cptCode: {
           entityName: event.dataItem.description,
-          entityId: event.dataItem.procedureCode,
-        },
+          entityId: event.dataItem.procedureCode
+        }
       });
     }
   };
-  onCptCodeDoubleClick = (event) => {
+  onCptCodeDoubleClick = event => {
     if (event.dataItem != null) {
       this.setState({
         cptCode: {
           entityName: event.dataItem.description,
-          entityId: event.dataItem.procedureCode,
+          entityId: event.dataItem.procedureCode
         },
-        cptCodeDescription: event.dataItem.description,
+        cptCodeDescription: event.dataItem.description
       });
       this.props.SaveLookups(event.dataItem.procedureCode, "CPT");
     }
     this.cancelCptCodeDialog(null);
   };
-  onCptCodeKeyDown = (event) => {};
-  cancelCptCodeDialog = (event) => {
+  onCptCodeKeyDown = event => {};
+  cancelCptCodeDialog = event => {
     this.props.resetCPTCodes();
     this.setState({ cptDialogVisible: false });
     this.setState({ cptSearchText: null });
@@ -475,7 +475,7 @@ class Details extends Component {
   cptSearch = async () => {
     this.props.GetCPTCodes(this.state.cptSearchText ?? "");
   };
-  cancelProviderDialog = (event) => {
+  cancelProviderDialog = event => {
     this.props.resetCPTCodes();
     this.setState({ providerVisible: false });
     this.setState({ providerText: null });
@@ -485,69 +485,69 @@ class Details extends Component {
       this.setState({
         icd10_1: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD1: shortDescription,
+        descriptionICD1: shortDescription
       });
     } else if (this.state.visiableICD2) {
       this.setState({
         icd10_2: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD2: shortDescription,
+        descriptionICD2: shortDescription
       });
     } else if (this.state.visiableICD3) {
       this.setState({
         icd10_3: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD3: shortDescription,
+        descriptionICD3: shortDescription
       });
     } else if (this.state.visiableICD4) {
       this.setState({
         icd10_4: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD4: shortDescription,
+        descriptionICD4: shortDescription
       });
     } else if (this.state.visiableICD5) {
       this.setState({
         icd10_5: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD5: shortDescription,
+        descriptionICD5: shortDescription
       });
     } else if (this.state.visiableICD6) {
       this.setState({
         icd10_6: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD6: shortDescription,
+        descriptionICD6: shortDescription
       });
     } else if (this.state.visiableICD7) {
       this.setState({
         icd10_7: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD7: shortDescription,
+        descriptionICD7: shortDescription
       });
     } else if (this.state.visiableICD8) {
       this.setState({
         icd10_8: {
           entityName: shortDescription,
-          entityId: diagnosisCode,
+          entityId: diagnosisCode
         },
-        descriptionICD8: shortDescription,
+        descriptionICD8: shortDescription
       });
     }
   };
-  onICD10SelectionChange = (event) => {
+  onICD10SelectionChange = event => {
     var selectedDataItems = event.dataItems.slice(
       event.startRowIndex,
       event.endRowIndex + 1
@@ -557,7 +557,7 @@ class Details extends Component {
       selectedDataItems[0].shortDescription
     );
   };
-  onICD10DoubleClick = async (event) => {
+  onICD10DoubleClick = async event => {
     await this.props.SaveLookups(event.dataItem.diagnosisCode, "ICD10");
     this.setSelectedIcd10Codes(
       event.dataItem.diagnosisCode,
@@ -567,7 +567,7 @@ class Details extends Component {
     //this.selectPatient();
     this.toggleICD10Dialog();
   };
-  onICD10KeyDown = (event) => {
+  onICD10KeyDown = event => {
     var selectedDataItems = event.dataItems.slice(
       event.startRowIndex,
       event.endRowIndex + 1
@@ -579,7 +579,7 @@ class Details extends Component {
   };
   cancelICD10Dialog = () => {
     this.setState({
-      icd10SearchText: null,
+      icd10SearchText: null
     });
     this.toggleICD10Dialog();
   };
@@ -595,7 +595,7 @@ class Details extends Component {
       this.state.visiableICD8
     ) {
       this.setState({
-        icd10SearchText: null,
+        icd10SearchText: null
       });
       this.props.ResetICD10Codes();
     }
@@ -607,7 +607,7 @@ class Details extends Component {
       visiableICD5: false,
       visiableICD6: false,
       visiableICD7: false,
-      visiableICD8: false,
+      visiableICD8: false
     });
   };
   render() {
@@ -625,9 +625,9 @@ class Details extends Component {
             title="ICD Search"
             placeholder="Enter ICD Code , Short or Long Description"
             searcTextBoxValue={this.state.icd10SearchText}
-            onTextSearchChange={(e) => {
+            onTextSearchChange={e => {
               this.setState({
-                icd10SearchText: e.value,
+                icd10SearchText: e.value
               });
             }}
             clickOnSearch={this.icd10CodesSearch}
@@ -642,16 +642,16 @@ class Details extends Component {
             cancelDialog={this.cancelICD10Dialog}
             pageChange={this.pageChange}
             getNextData={true}
-          ></FindDialogComponent>
+          />
         )}
         {this.state.cptDialogVisible && (
           <FindDialogComponent
             title="Cpt Search"
             placeholder="Enter Cpt Code"
             searcTextBoxValue={this.state.cptSearchText}
-            onTextSearchChange={(e) => {
+            onTextSearchChange={e => {
               this.setState({
-                cptSearchText: e.value,
+                cptSearchText: e.value
               });
             }}
             clickOnSearch={this.cptSearch}
@@ -664,16 +664,16 @@ class Details extends Component {
             idGetterLookup={cptGetterCode}
             toggleDialog={this.cancelCptCodeDialog}
             cancelDialog={this.cancelCptCodeDialog}
-          ></FindDialogComponent>
+          />
         )}
         {this.state.providerVisible && (
           <FindDialogComponent
             title={this.state.providerTitle}
             placeholder={"Enter " + this.state.providerTitle}
             searcTextBoxValue={this.state.providerText}
-            onTextSearchChange={(e) => {
+            onTextSearchChange={e => {
               this.setState({
-                providerText: e.value,
+                providerText: e.value
               });
             }}
             clickOnSearch={this.cptSearch}
@@ -686,7 +686,7 @@ class Details extends Component {
             idGetterLookup={cptGetterCode}
             toggleDialog={this.cancelProviderDialog}
             cancelDialog={this.cancelProviderDialog}
-          ></FindDialogComponent>
+          />
         )}
         <div style={{ width: "100%", padding: "5px", height: "300px" }}>
           <div style={{ display: "flex", flexFlow: "row" }}>
@@ -705,20 +705,20 @@ class Details extends Component {
                       textField="entityId"
                       dataItemKey="entityId"
                       value={this.state.cptCode}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({
-                          cptCodeDescription: e.value?.entityName,
+                          cptCodeDescription: e.value?.entityName
                         })
                       }
                       data={this.props.dropDownCpts}
-                    ></DropDown>
+                    />
                   </div>
                   <div style={{ float: "left", marginTop: "-3px" }}>
                     <ButtonComponent
                       icon="search"
                       type="search"
                       classButton="infraBtn-primary find-button"
-                      onClick={(e) => this.setState({ cptDialogVisible: true })}
+                      onClick={e => this.setState({ cptDialogVisible: true })}
                     >
                       Find
                     </ButtonComponent>
@@ -732,10 +732,10 @@ class Details extends Component {
                     <TextBox
                       value={this.state.cptCodeDescription}
                       className="unifyHeight"
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ cptCodeDescription: e.value })
                       }
-                    ></TextBox>
+                    />
                   </div>
                 </div>
                 <div style={{ float: "left", width: "305px" }}>
@@ -748,12 +748,12 @@ class Details extends Component {
                         type="numeric"
                         className="unifyHeight"
                         value={this.state.units}
-                        onChange={(e) =>
+                        onChange={e =>
                           this.setState({
-                            units: e.value,
+                            units: e.value
                           })
                         }
-                      ></TextBox>
+                      />
                     </div>
                   </div>
                   <div style={{ float: "left" }}>
@@ -766,12 +766,12 @@ class Details extends Component {
                         className="unifyHeight"
                         format="c2"
                         value={this.state.charge}
-                        onChange={(e) =>
+                        onChange={e =>
                           this.setState({
-                            charge: e.value,
+                            charge: e.value
                           })
                         }
-                      ></TextBox>
+                      />
                     </div>
                   </div>
                 </div>
@@ -790,8 +790,8 @@ class Details extends Component {
                       placeholder="MM/DD/YYYY"
                       format="M/dd/yyyy"
                       value={this.state.from}
-                      onChange={(e) => this.setState({ from: e.value })}
-                    ></DatePicker>
+                      onChange={e => this.setState({ from: e.value })}
+                    />
                   </div>
                 </div>
                 <div style={{ float: "left" }}>
@@ -804,8 +804,8 @@ class Details extends Component {
                       placeholder="MM/DD/YYYY"
                       format="M/dd/yyyy"
                       value={this.state.to}
-                      onChange={(e) => this.setState({ to: e.value })}
-                    ></DatePicker>
+                      onChange={e => this.setState({ to: e.value })}
+                    />
                   </div>
                 </div>
                 <div style={{ float: "left" }}>
@@ -817,10 +817,10 @@ class Details extends Component {
                       className="unifyHeight"
                       data={medicalProcType}
                       value={this.state.medicalProcType}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ medicalProcType: e.value })
                       }
-                    ></DropDown>
+                    />
                   </div>
                   <div style={{ float: "left", marginLeft: "10px" }}>
                     <label className="userInfoLabel">Record Status</label>
@@ -829,7 +829,7 @@ class Details extends Component {
                     style={{
                       float: "left",
                       width: "140px",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                   >
                     <DropDown
@@ -838,8 +838,8 @@ class Details extends Component {
                       dataItemKey="id"
                       data={recordStatusLookUp}
                       value={this.state.recordStatus}
-                      onChange={(e) => this.setState({ recordStatus: e.value })}
-                    ></DropDown>
+                      onChange={e => this.setState({ recordStatus: e.value })}
+                    />
                   </div>
                 </div>
                 {/* <div
@@ -871,7 +871,7 @@ class Details extends Component {
                     style={{
                       float: "left",
                       width: "105px",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                   >
                     <DropDown
@@ -880,14 +880,14 @@ class Details extends Component {
                       dataItemKey="modifier"
                       data={this.props.modifiers1}
                       value={this.state.modifier1}
-                      onChange={(e) => this.setState({ modifier1: e.value })}
-                    ></DropDown>
+                      onChange={e => this.setState({ modifier1: e.value })}
+                    />
                   </div>
                   <div
                     style={{
                       float: "left",
                       width: "105px",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                   >
                     <DropDown
@@ -896,14 +896,14 @@ class Details extends Component {
                       dataItemKey="modifier"
                       data={this.props.modifiers2}
                       value={this.state.modifier2}
-                      onChange={(e) => this.setState({ modifier2: e.value })}
-                    ></DropDown>
+                      onChange={e => this.setState({ modifier2: e.value })}
+                    />
                   </div>
                   <div
                     style={{
                       float: "left",
                       width: "105px",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                   >
                     <DropDown
@@ -912,14 +912,14 @@ class Details extends Component {
                       dataItemKey="modifier"
                       data={this.props.modifiers3}
                       value={this.state.modifier3}
-                      onChange={(e) => this.setState({ modifier3: e.value })}
-                    ></DropDown>
+                      onChange={e => this.setState({ modifier3: e.value })}
+                    />
                   </div>
                   <div
                     style={{
                       float: "left",
                       width: "105px",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                   >
                     <DropDown
@@ -928,8 +928,8 @@ class Details extends Component {
                       dataItemKey="modifier"
                       data={this.props.modifiers4}
                       value={this.state.modifier4}
-                      onChange={(e) => this.setState({ modifier4: e.value })}
-                    ></DropDown>
+                      onChange={e => this.setState({ modifier4: e.value })}
+                    />
                   </div>
                   <div style={{ float: "left", marginLeft: "4px" }}>
                     <label className="userInfoLabel">Current Status</label>
@@ -938,7 +938,7 @@ class Details extends Component {
                     style={{
                       float: "left",
                       width: "368px",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                   >
                     <DropDown
@@ -947,10 +947,8 @@ class Details extends Component {
                       dataItemKey="id"
                       data={currentStatusLookup}
                       value={this.state.currentStatus}
-                      onChange={(e) =>
-                        this.setState({ currentStatus: e.value })
-                      }
-                    ></DropDown>
+                      onChange={e => this.setState({ currentStatus: e.value })}
+                    />
                   </div>
                 </div>
               </div>
@@ -973,22 +971,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_1}
                             value={this.state.icd10_1}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_1: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD1: e.value?.entityName,
+                                descriptionICD1: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD1: true });
                           }}
                         >
@@ -1004,10 +1002,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD1}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD1: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1025,22 +1023,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_2}
                             value={this.state.icd10_2}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_2: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD2: e.value?.entityName,
+                                descriptionICD2: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD2: true });
                           }}
                         >
@@ -1056,10 +1054,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD2}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD2: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1077,22 +1075,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_3}
                             value={this.state.icd10_3}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_3: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD3: e.value?.entityName,
+                                descriptionICD3: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD3: true });
                           }}
                         >
@@ -1108,10 +1106,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD3}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD3: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1129,22 +1127,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_4}
                             value={this.state.icd10_4}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_4: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD4: e.value?.entityName,
+                                descriptionICD4: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD4: true });
                           }}
                         >
@@ -1160,10 +1158,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD4}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD4: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1181,22 +1179,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_5}
                             value={this.state.icd10_5}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_5: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD5: e.value?.entityName,
+                                descriptionICD5: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD5: true });
                           }}
                         >
@@ -1212,10 +1210,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD5}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD5: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1233,22 +1231,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_6}
                             value={this.state.icd10_6}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_6: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD6: e.value?.entityName,
+                                descriptionICD6: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD6: true });
                           }}
                         >
@@ -1264,10 +1262,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD6}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD6: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1285,22 +1283,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_7}
                             value={this.state.icd10_7}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_7: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD7: e.value?.entityName,
+                                descriptionICD7: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD7: true });
                           }}
                         >
@@ -1316,10 +1314,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD7}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD7: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1337,22 +1335,22 @@ class Details extends Component {
                             dataItemKey="entityId"
                             defaultValue={this.state.icd10_8}
                             value={this.state.icd10_8}
-                            onChange={(e) => {
+                            onChange={e => {
                               this.setState({
                                 icd10_8: {
                                   entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId,
+                                  entityId: e.value?.entityId
                                 },
-                                descriptionICD8: e.value?.entityName,
+                                descriptionICD8: e.value?.entityName
                               });
                             }}
-                          ></DropDown>
+                          />
                         </div>
                         <ButtonComponent
                           icon="search"
                           type="search"
                           classButton="infraBtn-primary find-button"
-                          onClick={(e) => {
+                          onClick={e => {
                             this.setState({ visiableICD8: true });
                           }}
                         >
@@ -1368,10 +1366,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.descriptionICD8}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ descriptionICD8: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1388,10 +1386,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.authorizationNumber}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ authorizationNumber: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1404,10 +1402,10 @@ class Details extends Component {
                         <TextBox
                           value={this.state.referralNumber}
                           className="unifyHeight"
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({ referralNumber: e.value })
                           }
-                        ></TextBox>
+                        />
                       </div>
                     </div>
                   </div>
@@ -1417,7 +1415,7 @@ class Details extends Component {
                       style={{
                         width: "380px",
                         height: "120px",
-                        marginLeft: "10px",
+                        marginLeft: "10px"
                       }}
                     >
                       <legend
@@ -1431,7 +1429,7 @@ class Details extends Component {
                           style={{
                             display: "flex",
                             flexFlow: "row",
-                            marginTop: "20px",
+                            marginTop: "20px"
                           }}
                         >
                           <div style={{ float: "left" }}>
@@ -1446,25 +1444,25 @@ class Details extends Component {
                                 data={this.props.dropDownphysicians}
                                 defaultValue={this.state.rendering}
                                 value={this.state.rendering}
-                                onChange={(e) =>
+                                onChange={e =>
                                   this.setState({
                                     rendering: {
                                       entityName: e.value?.entityName,
-                                      entityId: e.value?.entityId,
-                                    },
+                                      entityId: e.value?.entityId
+                                    }
                                   })
                                 }
-                              ></DropDown>
+                              />
                             </div>
                             <div style={{ float: "left", marginTop: "-3px" }}>
                               <ButtonComponent
                                 icon="search"
                                 type="search"
                                 classButton="infraBtn-primary find-button"
-                                onClick={(e) =>
+                                onClick={e =>
                                   this.setState({
                                     providerVisible: true,
-                                    providerTitle: "Rendering",
+                                    providerTitle: "Rendering"
                                   })
                                 }
                               >
@@ -1488,25 +1486,25 @@ class Details extends Component {
                                 data={this.props.dropDownphysicians}
                                 defaultValue={this.state.ordering}
                                 value={this.state.ordering}
-                                onChange={(e) =>
+                                onChange={e =>
                                   this.setState({
                                     ordering: {
                                       entityName: e.value?.entityName,
-                                      entityId: e.value?.entityId,
-                                    },
+                                      entityId: e.value?.entityId
+                                    }
                                   })
                                 }
-                              ></DropDown>
+                              />
                             </div>
                             <div style={{ float: "left", marginTop: "-3px" }}>
                               <ButtonComponent
                                 icon="search"
                                 type="search"
                                 classButton="infraBtn-primary find-button"
-                                onClick={(e) =>
+                                onClick={e =>
                                   this.setState({
                                     providerVisible: true,
-                                    providerTitle: "Ordering",
+                                    providerTitle: "Ordering"
                                   })
                                 }
                               >
@@ -1530,25 +1528,25 @@ class Details extends Component {
                                 data={this.props.dropDownphysicians}
                                 defaultValue={this.state.supervising}
                                 value={this.state.supervising}
-                                onChange={(e) =>
+                                onChange={e =>
                                   this.setState({
                                     supervising: {
                                       entityName: e.value?.entityName,
-                                      entityId: e.value?.entityId,
-                                    },
+                                      entityId: e.value?.entityId
+                                    }
                                   })
                                 }
-                              ></DropDown>
+                              />
                             </div>
                             <div style={{ float: "left", marginTop: "-3px" }}>
                               <ButtonComponent
                                 icon="search"
                                 type="search"
                                 classButton="infraBtn-primary find-button"
-                                onClick={(e) =>
+                                onClick={e =>
                                   this.setState({
                                     providerVisible: true,
-                                    providerTitle: "Supervising",
+                                    providerTitle: "Supervising"
                                   })
                                 }
                               >
@@ -1569,7 +1567,7 @@ class Details extends Component {
                   className="fieldsetStyle"
                   style={{
                     width: "263px",
-                    height: "183px",
+                    height: "183px"
                   }}
                 >
                   <legend
@@ -1584,7 +1582,7 @@ class Details extends Component {
                       style={{
                         display: "flex",
                         flexFlow: "row",
-                        marginTop: "5px",
+                        marginTop: "5px"
                       }}
                     >
                       <div style={{ float: "left" }}>
@@ -1598,12 +1596,12 @@ class Details extends Component {
                             format="c2"
                             disabled={true}
                             value={this.state.chargeAmount}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({
-                                chargeAmount: e.value,
+                                chargeAmount: e.value
                               })
                             }
-                          ></TextBox>
+                          />
                         </div>
                       </div>
                     </div>
@@ -1622,12 +1620,12 @@ class Details extends Component {
                             format="c2"
                             disabled={true}
                             value={this.state.allowed}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({
-                                allowed: e.value,
+                                allowed: e.value
                               })
                             }
-                          ></TextBox>
+                          />
                         </div>
                       </div>
                     </div>
@@ -1648,12 +1646,12 @@ class Details extends Component {
                             format="c2"
                             disabled={true}
                             value={this.state.patientPortion}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({
-                                patientPortion: e.value,
+                                patientPortion: e.value
                               })
                             }
-                          ></TextBox>
+                          />
                         </div>
                       </div>
                     </div>
@@ -1672,12 +1670,12 @@ class Details extends Component {
                             format="c2"
                             disabled={true}
                             value={this.state.insurancePortion}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({
-                                insurancePortion: e.value,
+                                insurancePortion: e.value
                               })
                             }
-                          ></TextBox>
+                          />
                         </div>
                       </div>
                     </div>
@@ -1696,12 +1694,12 @@ class Details extends Component {
                             format="c2"
                             disabled={true}
                             value={this.state.paidAmount}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({
-                                paidAmount: e.value,
+                                paidAmount: e.value
                               })
                             }
-                          ></TextBox>
+                          />
                         </div>
                       </div>
                     </div>
@@ -1722,19 +1720,19 @@ class Details extends Component {
                             format="c2"
                             disabled={true}
                             value={this.state.chargeBalance}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({
-                                chargeBalance: e.value,
+                                chargeBalance: e.value
                               })
                             }
-                          ></TextBox>
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
                 </fieldset>
               </div>
-              <div style={{ display: "flex", flexFlow: "row" }}></div>
+              <div style={{ display: "flex", flexFlow: "row" }} />
             </div>
           </div>
         </div>

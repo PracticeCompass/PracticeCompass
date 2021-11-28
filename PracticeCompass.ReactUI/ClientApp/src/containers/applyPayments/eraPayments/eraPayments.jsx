@@ -2,13 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import RadioButtonComponent from "../../../components/RadioButton";
 import { PanelBar, PanelBarItem } from "@progress/kendo-react-layout";
-import {
-
-  masterColumns,
-
-  PracticeColumns,
-
-} from "./eraPaymentsData";
+import { masterColumns, PracticeColumns } from "./eraPaymentsData";
 import $ from "jquery";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
@@ -16,15 +10,18 @@ import GridComponent from "../../../components/Grid";
 import DropDown from "../../../components/DropDown";
 import TextBox from "../../../components/TextBox";
 import CheckboxComponent from "../../../components/Checkbox";
-import DatePickerComponent from "../../../components/DatePicker"
+import DatePickerComponent from "../../../components/DatePicker";
 import config from "../../../config";
 import SaveFilterComponent from "../../common/saveFilter";
 import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
-import EraPaymentsDialogComponent from "./eraPaymentsDialog"
-import { GetGridColumns, SaveGridColumns } from "../../../redux/actions/GridColumns"
+import EraPaymentsDialogComponent from "./eraPaymentsDialog";
+import {
+  GetGridColumns,
+  SaveGridColumns,
+} from "../../../redux/actions/GridColumns";
 import {
   resetPatientList,
   resetInsuranceList,
@@ -32,9 +29,12 @@ import {
   getPracticeList,
   resetPracticeList,
 } from "../../../redux/actions/patient";
-import { getERAPaymentHeader, GetERAPaymentDetails } from "../../../redux/actions/payments";
-import { AmountFilter, detailsColumns, Days } from "./eraPaymentsData"
-import EditableGrid from "../../../components/editableGrid"
+import {
+  getERAPaymentHeader,
+  GetERAPaymentDetails,
+} from "../../../redux/actions/payments";
+import { AmountFilter, detailsColumns, Days } from "./eraPaymentsData";
+import EditableGrid from "../../../components/editableGrid";
 import Show_HideDialogComponent from "../../common/show_hideDialog";
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
@@ -49,7 +49,7 @@ function mapStateToProps(state) {
     dropDownPractices: state.lookups.practices,
     practiceList: state.patients.paractices,
     eRApayments: state.payments.eRApayments,
-    UiExpand: state.ui.UiExpand
+    UiExpand: state.ui.UiExpand,
   };
 }
 
@@ -61,10 +61,33 @@ function mapDispatchToProps(dispatch) {
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
-    GetERAPaymentDetails: (PaymentSID) => dispatch(GetERAPaymentDetails(PaymentSID)),
+    GetERAPaymentDetails: (PaymentSID) =>
+      dispatch(GetERAPaymentDetails(PaymentSID)),
     resetPracticeList: () => dispatch(resetPracticeList()),
-    getERAPaymentHeader: (PracticeID, IsPosted, Amount, CheckNumber, AmountType, SenderAccount, ReceiverAccount, PostDate, Days) =>
-      dispatch(getERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber, AmountType, SenderAccount, ReceiverAccount, PostDate, Days))
+    getERAPaymentHeader: (
+      PracticeID,
+      IsPosted,
+      Amount,
+      CheckNumber,
+      AmountType,
+      SenderAccount,
+      ReceiverAccount,
+      PostDate,
+      Days
+    ) =>
+      dispatch(
+        getERAPaymentHeader(
+          PracticeID,
+          IsPosted,
+          Amount,
+          CheckNumber,
+          AmountType,
+          SenderAccount,
+          ReceiverAccount,
+          PostDate,
+          Days
+        )
+      ),
   };
 }
 
@@ -95,54 +118,60 @@ class EraPayments extends Component {
     transactionHeader: "Payment Transactions ",
     masterColumns: masterColumns,
     detailsColumns: detailsColumns,
-    gridWidth:0
+    gridWidth: 0,
   };
   componentDidMount = () => {
     this.getGridColumns();
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions);
-  }
-  componentDidUpdate=(event)=>{
-    if(event.UiExpand != this.props.UiExpand){
+  };
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
       this.updateDimensions();
     }
-  }
+  };
   updateDimensions() {
     this.setState({
       gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 290),
-    })
+    });
   }
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
-    let currentColumns = await this.props.GetGridColumns('ERAPayment');
-    let ERAPaymentDetails = await this.props.GetGridColumns('ERAPaymentDetails');
+    let currentColumns = await this.props.GetGridColumns("ERAPayment");
+    let ERAPaymentDetails = await this.props.GetGridColumns(
+      "ERAPaymentDetails"
+    );
 
     if (currentColumns != null && currentColumns != "") {
       currentColumns = JSON.parse(currentColumns?.columns) ?? masterColumns;
       this.setState({ masterColumns: currentColumns });
     }
     if (ERAPaymentDetails != null && ERAPaymentDetails != "") {
-      ERAPaymentDetails = JSON.parse(ERAPaymentDetails?.columns) ?? detailsColumns;
+      ERAPaymentDetails =
+        JSON.parse(ERAPaymentDetails?.columns) ?? detailsColumns;
       this.setState({ detailsColumns: ERAPaymentDetails });
     }
-  }
-
+  };
 
   getParacticesUrl(filter) {
     return `${config.baseUrl}/patient/PracticesGet?sortname=${filter}`;
   }
   applyItemChanged = (event) => {
-    const field = event.field || '';
+    const field = event.field || "";
     const inEditID = event.dataItem["ersChargeSID"];
-    let data = this.state.eRADetailsPayments.map(item => item["ersChargeSID"] === inEditID ? {
-      ...item,
-      [field]: event.value,
-      isEdit: true
-    } : item);
+    let data = this.state.eRADetailsPayments.map((item) =>
+      item["ersChargeSID"] === inEditID
+        ? {
+            ...item,
+            [field]: event.value,
+            isEdit: true,
+          }
+        : item
+    );
     this.setState({
-      eRADetailsPayments: data
+      eRADetailsPayments: data,
     });
-  }
+  };
   practiceSearch = () => {
     this.props.getPracticeList(this.state.practiceSearchText);
   };
@@ -177,7 +206,7 @@ class EraPayments extends Component {
       });
     }
   };
-  onSortChange = () => { };
+  onSortChange = () => {};
   onPracticeSelectionChange = (event) => {
     var selectedDataItems = event.dataItems.slice(
       event.startRowIndex,
@@ -193,8 +222,15 @@ class EraPayments extends Component {
       event.dataItem.practiceID,
       event.dataItem.sortName
     );
-
-    this.props.SaveLookups(event.dataItem.practiceID, "Practice");
+    if (
+      event.dataItem.practiceID != null &&
+      (this.props.dropDownPractices == null ||
+        this.props.dropDownPractices.filter(
+          (x) => x.entityId == event.dataItem.practiceID
+        ).length == 0)
+    ) {
+      await this.props.SaveLookups(event.dataItem.practiceID, "Practice");
+    }
     //this.selectPatient();
     this.togglePracticeDialog();
   };
@@ -234,74 +270,104 @@ class EraPayments extends Component {
     });
   };
   ERAPaymentGridSearch = async () => {
-
-    this.props.getERAPaymentHeader(this.state.insurancePracticeID?.entityId, this.state.posted ? "p" : "r",
-      this.state.amountFilter ?? 0, this.state.checkNumber ? this.state.checkNumber : "",
-      this.state.amountType ? this.state.amountType.id : null, this.state.senderAccount ?? "", this.state.receiverAccount ?? "",
-      this.state.checkIssue ? new Date(this.state.checkIssue).toLocaleDateString() : "", this.state.day?.id ?? 0)
-  }
+    this.props.getERAPaymentHeader(
+      this.state.insurancePracticeID?.entityId,
+      this.state.posted ? "p" : "r",
+      this.state.amountFilter ?? 0,
+      this.state.checkNumber ? this.state.checkNumber : "",
+      this.state.amountType ? this.state.amountType.id : null,
+      this.state.senderAccount ?? "",
+      this.state.receiverAccount ?? "",
+      this.state.checkIssue
+        ? new Date(this.state.checkIssue).toLocaleDateString()
+        : "",
+      this.state.day?.id ?? 0
+    );
+  };
   onERAPaymentGridSelectionChange = (event) => {
-    let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
-      ? event.dataItem
-      : event.dataItems[event.endRowIndex]
+    let ERAPaymentDetails =
+      event.dataItems == null || event.dataItems.length == 0
+        ? event.dataItem
+        : event.dataItems[event.endRowIndex];
     if (ERAPaymentDetails.practiceID != null) {
-      ERAPaymentDetails.detailsPracticeID =
-      {
+      ERAPaymentDetails.detailsPracticeID = {
         entityId: ERAPaymentDetails.practiceID,
         entityName: ERAPaymentDetails.practiceName,
-
-      }
+      };
     }
 
     this.setState({
-      ERAPaymentDetails
+      ERAPaymentDetails,
     });
-  }
+  };
   onERAPaymentGridDoubleSelectionChange = async (event) => {
-    let ERAPaymentDetails = event.dataItems == null || event.dataItems.length == 0
-      ? event.dataItem
-      : event.dataItems[event.endRowIndex]
+    let ERAPaymentDetails =
+      event.dataItems == null || event.dataItems.length == 0
+        ? event.dataItem
+        : event.dataItems[event.endRowIndex];
     if (ERAPaymentDetails.practiceID != null) {
-      ERAPaymentDetails.detailsPracticeID =
-      {
+      ERAPaymentDetails.detailsPracticeID = {
         entityId: ERAPaymentDetails.practiceID,
         entityName: ERAPaymentDetails.practiceName,
-
-      }
+      };
     }
     let header = "Payment Transactions ";
-    
+
     if (ERAPaymentDetails && ERAPaymentDetails.detailsPracticeID != null) {
-      header = header + "----Practice: " + ERAPaymentDetails.detailsPracticeID.entityName + "     ";
+      header =
+        header +
+        "----Practice: " +
+        ERAPaymentDetails.detailsPracticeID.entityName +
+        "     ";
     }
-    if (ERAPaymentDetails && ERAPaymentDetails.totalActualProviderPaymentAmt != null) {
-      header = header + "----Total Payment: " + (ERAPaymentDetails.totalActualProviderPaymentAmt.toString().includes('$') ? "" : this.currencyFormat(ERAPaymentDetails.totalActualProviderPaymentAmt));
+    if (
+      ERAPaymentDetails &&
+      ERAPaymentDetails.totalActualProviderPaymentAmt != null
+    ) {
+      header =
+        header +
+        "----Total Payment: " +
+        (ERAPaymentDetails.totalActualProviderPaymentAmt
+          .toString()
+          .includes("$")
+          ? ""
+          : this.currencyFormat(
+              ERAPaymentDetails.totalActualProviderPaymentAmt
+            ));
     }
     await this.setState({
       ERAPaymentDetails,
-      transactionHeader: header
+      transactionHeader: header,
     });
     //let eRAPayments = await this.props.GetERAPaymentDetails(1971933);
-    let eRADetailsPayments = await this.props.GetERAPaymentDetails(ERAPaymentDetails.ersPaymentSID);
+    let eRADetailsPayments = await this.props.GetERAPaymentDetails(
+      ERAPaymentDetails.ersPaymentSID
+    );
     this.setState({
-      eRADetailsPayments
+      eRADetailsPayments,
     });
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
-  }
+  };
   currencyFormat(num) {
-    return '$' + Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
- }
-  onERADetailsPaymentGridSelectionChange = (event) => {
-
+    return (
+      "$" +
+      Number(num)
+        .toFixed(2)
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    );
   }
+  onERADetailsPaymentGridSelectionChange = (event) => {};
   onERADetailsPaymentGridDoubleSelectionChange = (event) => {
-     this.setState({
-      ShowEditERARow:true,
-      ERAItemDetails:event.dataItem
-     });
-  }
+    this.setState({
+      ShowEditERARow: true,
+      ERAItemDetails: event.dataItem,
+    });
+  };
   toggleShowColumnsDialog = () => {
-    this.setState({ Show_HideERADialogVisible: false, Show_HideDetailsERADialogVisible: false });
+    this.setState({
+      Show_HideERADialogVisible: false,
+      Show_HideDetailsERADialogVisible: false,
+    });
   };
   SaveColumnsShow = async (columns) => {
     if (!columns.find((x) => x.hide != true)) {
@@ -347,16 +413,16 @@ class EraPayments extends Component {
       });
     }
   };
-  toggleERAPaymentDialog=()=>{
+  toggleERAPaymentDialog = () => {
     this.setState({
-      ShowEditERARow: false
-    })
-  }
-  savePaymentTransaction=(item)=>{
-        this.setState({
-          ShowEditERARow: false
-        })
-      }
+      ShowEditERARow: false,
+    });
+  };
+  savePaymentTransaction = (item) => {
+    this.setState({
+      ShowEditERARow: false,
+    });
+  };
   render() {
     return (
       <Fragment>
@@ -400,29 +466,27 @@ class EraPayments extends Component {
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
             this.state.practiceVisibleSubInsurance) && (
-              <FindDialogComponent
-                title="Practice Search"
-                placeholder="Enter Practice Name"
-                searcTextBoxValue={this.state.practiceSearchText}
-                onTextSearchChange={(e) => {
-                  this.setState({
-                    practiceSearchText: e.value,
-                  });
-                }}
-                clickOnSearch={this.practiceSearch}
-                dataItemKey="practiceID"
-                data={this.props.practiceList}
-                columns={PracticeColumns}
-                onSelectionChange={this.onPracticeSelectionChange}
-                onRowDoubleClick={this.onPracticeDoubleClick}
-                onKeyDown={this.onPracticeKeyDown}
-                idGetterLookup={idGetterPracticeID}
-                toggleDialog={this.cancelPracticeDialog}
-                cancelDialog={this.cancelPracticeDialog}
-              ></FindDialogComponent>
-            )}
-
-
+            <FindDialogComponent
+              title="Practice Search"
+              placeholder="Enter Practice Name"
+              searcTextBoxValue={this.state.practiceSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  practiceSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.practiceSearch}
+              dataItemKey="practiceID"
+              data={this.props.practiceList}
+              columns={PracticeColumns}
+              onSelectionChange={this.onPracticeSelectionChange}
+              onRowDoubleClick={this.onPracticeDoubleClick}
+              onKeyDown={this.onPracticeKeyDown}
+              idGetterLookup={idGetterPracticeID}
+              toggleDialog={this.cancelPracticeDialog}
+              cancelDialog={this.cancelPracticeDialog}
+            ></FindDialogComponent>
+          )}
 
           <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
             <PanelBarItem
@@ -473,7 +537,7 @@ class EraPayments extends Component {
                       Find
                     </ButtonComponent>
                   </div>
-                  <div style={{ marginLeft: "10px",width:"95px" }}>
+                  <div style={{ marginLeft: "10px", width: "95px" }}>
                     <label className="userInfoLabel">Sender Account </label>
                   </div>
                   <div style={{ width: "147px" }}>
@@ -487,7 +551,7 @@ class EraPayments extends Component {
                       }
                     ></TextBox>
                   </div>
-                  <div style={{ marginLeft: "10px",width:"102px" }}>
+                  <div style={{ marginLeft: "10px", width: "102px" }}>
                     <label className="userInfoLabel">Receiver Account </label>
                   </div>
                   <div style={{ width: "147px" }}>
@@ -511,7 +575,7 @@ class EraPayments extends Component {
                       Search
                     </ButtonComponent>
                   </div>
-                  <div style={{ float: "left" }} >
+                  <div style={{ float: "left" }}>
                     <ButtonComponent
                       icon="search"
                       type="search"
@@ -521,9 +585,9 @@ class EraPayments extends Component {
                           node.style.setProperty("height", "22px", "important");
                         }
                       }}
-                    // onClick={(e) =>
-                    //   this.setState({ practiceVisibleInsurance: true })
-                    // }
+                      // onClick={(e) =>
+                      //   this.setState({ practiceVisibleInsurance: true })
+                      // }
                     >
                       Manual Match
                     </ButtonComponent>
@@ -535,7 +599,7 @@ class EraPayments extends Component {
                     display: "flex",
                     flexFlow: "row",
                     width: "100%",
-                    marginBottom: "5px"
+                    marginBottom: "5px",
                   }}
                 >
                   <div style={{ marginLeft: "11px" }}>
@@ -644,7 +708,6 @@ class EraPayments extends Component {
                     </ButtonComponent>
                   </div>
                 </div>
-
               </div>
               <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                 <div className="accordion" id="accordionExample">
@@ -661,7 +724,7 @@ class EraPayments extends Component {
                       className="collapse show"
                       aria-labelledby="headingOne"
                       data-parent="#accordionExample"
-                      style={{ width: this.state.gridWidth}}
+                      style={{ width: this.state.gridWidth }}
                     >
                       <GridComponent
                         id="ERAPayment"
@@ -669,7 +732,9 @@ class EraPayments extends Component {
                         skip={0}
                         take={21}
                         onSelectionChange={this.onERAPaymentGridSelectionChange}
-                        onRowDoubleClick={this.onERAPaymentGridDoubleSelectionChange}
+                        onRowDoubleClick={
+                          this.onERAPaymentGridDoubleSelectionChange
+                        }
                         // getSelectedItems={this.getSelectedClaims}
                         // selectionMode="multiple"
                         DATA_ITEM_KEY="ersPaymentSID"
@@ -685,7 +750,7 @@ class EraPayments extends Component {
                         //hasCheckBox={true}
                         sortColumns={[]}
                         onSortChange={this.onSortChange}
-                      // pageChange={this.pageChange}
+                        // pageChange={this.pageChange}
                       ></GridComponent>
                     </div>
                   </div>
@@ -699,7 +764,13 @@ class EraPayments extends Component {
               title={this.state.transactionHeader}
             >
               <div style={{ width: "100%" }}>
-                <div style={{ display: "flex", flexFlow: "row nowrap", width: "100%" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexFlow: "row nowrap",
+                    width: "100%",
+                  }}
+                >
                   {/* <div style={{ marginLeft: "50px" }}>
                     <label className="userInfoLabel">Practice </label>
                   </div>
@@ -757,7 +828,7 @@ class EraPayments extends Component {
                     classButton="infraBtn-primary"
                     // onClick={() => { this.ApplyListChanged() }}
                     style={{ marginTop: "2px", marginLeft: "10px" }}
-                  // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
+                    // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
                   >
                     Post
                   </ButtonComponent>
@@ -773,14 +844,18 @@ class EraPayments extends Component {
                       type="add"
                       classButton="infraBtn-primary action-button"
                       onClick={() => {
-                        this.setState({ Show_HideDetailsERADialogVisible: true });
+                        this.setState({
+                          Show_HideDetailsERADialogVisible: true,
+                        });
                       }}
                     >
                       Edit Grid
                     </ButtonComponent>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+                <div
+                  style={{ display: "flex", flexFlow: "row", width: "100%" }}
+                >
                   <div className="accordion" id="accordionExample">
                     <div
                       className="card bg-light mb-3"
@@ -807,18 +882,22 @@ class EraPayments extends Component {
                           editColumn={"ersChargeSID"}
                           DATA_ITEM_KEY="ersChargeSID"
                           idGetter={idGetterDetailsPaymentID}
-                          onSelectionChange={this.onERADetailsPaymentGridSelectionChange}
-                          onRowDoubleClick={this.onERADetailsPaymentGridDoubleSelectionChange}
+                          onSelectionChange={
+                            this.onERADetailsPaymentGridSelectionChange
+                          }
+                          onRowDoubleClick={
+                            this.onERADetailsPaymentGridDoubleSelectionChange
+                          }
                           columns={this.state.detailsColumns}
                           itemChange={this.applyItemChanged}
                           onSortChange={this.onSortChange}
                           // pageChange={this.pageChange}
                           isEditable={true}
-                        // totalCount={
-                        //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                        //     ? this.props.patientApplys[0].totalCount
-                        //     : this.props.patientApplys.length
-                        // }
+                          // totalCount={
+                          //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                          //     ? this.props.patientApplys[0].totalCount
+                          //     : this.props.patientApplys.length
+                          // }
                         ></EditableGrid>
                       </div>
                     </div>
