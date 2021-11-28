@@ -28,9 +28,7 @@ class InsuranceDetails extends Component {
     eDI:null
   }
   componentDidMount=async ()=>{
-    debugger;
     if(this.props.PlanDetails){
-      debugger;
    let result= await this.props.getPlanDetails(this.props.PlanDetails.planId);
    this.setState({
      name:result?.planName,

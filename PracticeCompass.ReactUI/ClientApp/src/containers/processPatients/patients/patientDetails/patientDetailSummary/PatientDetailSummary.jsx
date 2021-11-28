@@ -165,6 +165,9 @@ class PatientDetailSummary extends Component {
     gridWidth: 0,
   };
   handleSelect = (e) => {
+    if(this.state.Insured == "S" || this.state.Insured == "Self"){
+      return;
+    }
     this.setState({ selected: e.selected });
   };
   practiceSearch = () => {
@@ -185,6 +188,7 @@ class PatientDetailSummary extends Component {
   onPatientDetailClick = (event) => {};
   onPatientDetailKeyDown = (event) => {};
   async componentDidMount() {
+    this.updateDimensions();
     await this.props.resetInsuranceGridGet();
     if (
       this.props.patientDetails != null &&
@@ -259,7 +263,7 @@ class PatientDetailSummary extends Component {
       await this.props.InsuranceGridGet(this.props.patientDetails.patientID);
     }
     this.getGridColumns();
-    this.updateDimensions();
+
     window.addEventListener("resize", this.updateDimensions);
   }
   componentDidUpdate = (event) => {

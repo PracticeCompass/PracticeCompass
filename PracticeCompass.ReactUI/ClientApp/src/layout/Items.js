@@ -120,7 +120,7 @@ export const itemsList = [
     description: "Lists",
     id: 16,
     ["data-expanded"]: false,
-    route: "/lists/physicians",
+    route: "/lists/plan",
   },
   {
     text: "Plan",
