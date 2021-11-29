@@ -34,7 +34,7 @@ dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSI
 '' as AlertCode
 
  from ERSClaimData
-inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
+inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID and ERSClaimName.EntityIDCode='QC'
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
 inner join [dbo].[ERSChargeDate] on ERSChargeDate.ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID and DateTimeQualifier=472
 left outer join PlanClaim on PlanClaim.PlanICN = ERSClaimData.PayerClaimControlNumber
