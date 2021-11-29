@@ -24,8 +24,8 @@ namespace PracticeCompass.Common.Models
         public Provider Provider { set; get; }
         public Carrier Carrier { set; get; }
         public DateTime ClaimReceivedDate { set; get; }
-        public DateTime StatementStartDate { set; get; }
-        public DateTime StatementEndDate { set; get; }
+        public DateTime? StatementStartDate { set; get; }
+        public DateTime? StatementEndDate { set; get; }
         public OutpatientAdjudication OutPatientAdjudication { set; get; }
         public List<ServiceLine> ServiceLineItems { set; get; }
         public List<ClaimAdjustment> Adjustments { set; get; }
@@ -48,8 +48,8 @@ namespace PracticeCompass.Common.Models
             this.Provider = new Provider();
             this.Carrier = new Carrier();
             this.ClaimReceivedDate = new DateTime(1900, 1, 1);
-            this.StatementStartDate = new DateTime(1900, 1, 1);
-            this.StatementEndDate = new DateTime(1900, 1, 1);
+            this.StatementStartDate = null;
+            this.StatementEndDate =null;
             this.OutPatientAdjudication = new OutpatientAdjudication();
             this.ServiceLineItems = new List<ServiceLine>();
             this.Adjustments = new List<ClaimAdjustment>();

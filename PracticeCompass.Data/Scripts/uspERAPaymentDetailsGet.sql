@@ -30,7 +30,7 @@ sum([ERSChargeClaimAdjustment].AdjustmentAmt) as ChargeClaimAdjustmentAmt ,
 sum(ERSClaimAdjustment.AdjustmentAmt) as ClaimAdjustmentAmt , '' as ERSClaimAdjustmentreason,
 sum(ERSPmtProvLevelAdj.ProviderAdjustmentAmt) as ProviderAdjustmentAmt , '' as PmtProvLevelAdjReason ,
 dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment,
-dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment_,
+'' as comment_,
 '' as AlertCode
 
  from ERSClaimData
