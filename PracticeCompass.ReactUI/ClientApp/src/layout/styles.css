@@ -318,3 +318,7 @@ button {
 .k-grid td, .k-grid .k-grid-content, .k-grid .k-grid-header-locked, .k-grid .k-grid-content-locked {
   padding: 1px !important;
 }
+.k-tooltip-content{
+  word-wrap: break-word;
+  max-width: 250px;
+}

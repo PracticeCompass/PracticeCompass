@@ -358,3 +358,7 @@ legend {
 .k-item k-state-active k-tab-on-top{
   color: black !important;
 }
+.k-tooltip-content{
+  word-wrap: break-word;
+  max-width: 250px;
+}
