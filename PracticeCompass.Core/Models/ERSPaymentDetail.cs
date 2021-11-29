@@ -32,5 +32,6 @@ namespace PracticeCompass.Core.Models
         public string comment { get; set; }
         public string AlertCode { get; set; }
         public string comment_ { get; set; }
+        public string type { get; set; }
     }
 }
