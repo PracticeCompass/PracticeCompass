@@ -30,11 +30,11 @@ sum([ERSChargeClaimAdjustment].AdjustmentAmt) as ChargeClaimAdjustmentAmt ,
 sum(ERSClaimAdjustment.AdjustmentAmt) as ClaimAdjustmentAmt , '' as ERSClaimAdjustmentreason,
 sum(ERSPmtProvLevelAdj.ProviderAdjustmentAmt) as ProviderAdjustmentAmt , '' as PmtProvLevelAdjReason ,
 dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment,
-dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment_,
+'' as comment_,
 '' as AlertCode
 
  from ERSClaimData
-inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID
+inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID and ERSClaimName.EntityIDCode='QC'
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
 inner join [dbo].[ERSChargeDate] on ERSChargeDate.ERSChargeSID = ERSChargeServiceInfo.ERSChargeSID and DateTimeQualifier=472
 left outer join PlanClaim on PlanClaim.PlanICN = ERSClaimData.PayerClaimControlNumber

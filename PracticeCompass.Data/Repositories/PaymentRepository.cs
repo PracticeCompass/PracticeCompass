@@ -273,7 +273,12 @@ namespace PracticeCompass.Data.Repositories
         public List<ERAPaymentDetail> GetERAPaymentDetails(int ERSPaymentSID)
         {
             var data = this.db.QueryMultiple("uspERAPaymentDetailsGet", new { @ERSPaymentSID = ERSPaymentSID }, commandType: CommandType.StoredProcedure);
-            return data.Read<ERAPaymentDetail>().ToList();
+           var results= data.Read<ERAPaymentDetail>().ToList();
+            foreach (var item in results)
+            {
+                if (string.IsNullOrEmpty(item.comment_)) item.comment_ = item.comment;
+            }
+            return results;
         }
 
         public void Remove(Payment entity)

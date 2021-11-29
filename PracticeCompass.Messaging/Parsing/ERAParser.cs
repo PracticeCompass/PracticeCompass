@@ -297,10 +297,10 @@ namespace PracticeCompass.Messaging.Parsing
                 {
                     throw new Exception("claim detailed loops  (CLP) not found");
                 }
-                var claimDetail = new ClaimDetails();
+                
                 for (int j = 0; j < claimDetailedLoops.Count; j++)
                 {
-
+                    var claimDetail = new ClaimDetails();
                     List<Segment> claimChildSegments = childSegments.GetRange(childSegments.IndexOf(claimDetailedLoops[j]),
                         j == (claimDetailedLoops.Count - 1) ? childSegments.Count - childSegments.IndexOf(claimDetailedLoops[j])
                             : childSegments.IndexOf(claimDetailedLoops[j + 1]) - childSegments.IndexOf(claimDetailedLoops[j]));
