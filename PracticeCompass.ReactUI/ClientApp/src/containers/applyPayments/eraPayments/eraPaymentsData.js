@@ -132,7 +132,7 @@ export const detailsColumns = [
   },
   {
     field: "alertCode",
-    title: "recommendation",
+    title: "Recommendation",
     minWidth: 300,
     orderIndex: 11,
     //isCustomCell:true,  
