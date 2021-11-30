@@ -66,3 +66,4 @@ uspPositionGet.sql
 uspPhysicianDetailsGet.sql
 uspPlanGridGet.sql
 uspPlanDetailsGet.sql
+uspERSTableDelete.sql

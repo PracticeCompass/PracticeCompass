@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
 using PracticeCompass.Common.Models;
+using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Models.ERS;
 using PracticeCompass.Core.Repositories;
+using System.Linq;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -94,6 +96,13 @@ namespace PracticeCompass.Data.Repositories
                 string PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
                 string ERSPaymentHeaderMAXRowID = GetMAXRowID("ERSPaymentHeader", ERSPaymentHeaders.Count != 0 ? ERSPaymentHeaders[ERSPaymentHeaders.Count - 1].prrowid : "0");
                 var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+
+                var ref6R = transactions[era].ClaimHeaderGroups[0].ClaimRemittanceAdviceItems[0].ServiceLineItems[0].ControlNumber;
+                var Charges = new List<Charge>();
+                string sql = "SELECT * FROM Charge WHERE chargeSID = @ids";
+                var Chargesresults = this.db.QueryMultiple(sql, new { ids = ref6R });
+                Charges = Chargesresults.Read<Charge>().ToList();
+                var practiceID = Charges[0].PracticeID;
                 #region ERSPaymentHeader
                 ERSPaymentHeaders.Add(new ERSPaymentHeader
                 {
@@ -131,7 +140,8 @@ namespace PracticeCompass.Data.Repositories
                     DeletedAfterPost = "N",
                     PaymentNotBalanced = false,
                     OriginalPaymentAmt = transactions[era].financialInformation.TotalPaidAmount,
-                    PayerNameText = transactions[era].Payer.Name
+                    PayerNameText = transactions[era].Payer.Name,
+                    PracticeID = practiceID
 
                 });
                 #endregion

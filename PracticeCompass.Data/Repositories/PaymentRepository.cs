@@ -136,7 +136,10 @@ namespace PracticeCompass.Data.Repositories
                 var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
                 // update Charge
                 var chargerow = Charges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
+                if(paymentmodel.PaymentType == "G")
                 chargerow.GuarantorReceipts = paymentmodel.AmountPaid;
+                else
+                chargerow.InsuranceReceipts = paymentmodel.AmountPaid;
                 chargerow.Adjustments = paymentmodel.Adjustment;
                 chargerow.pro2modified = DateTime.Now;
                 chargerow.TimeStamp = timestamp;
