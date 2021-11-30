@@ -4,27 +4,27 @@ export const columnsclaimNote = [
     title: "ID",
     minWidth: 80,
     orderIndex: 1,
-    hide: true,
+    hide: true
   },
   {
     field: "body",
     title: "Note",
     minWidth: 1500,
-    orderIndex: 2,
-  },
+    orderIndex: 2
+  }
 ];
 export const columns = [
   {
     field: "fromServiceDate",
     title: "from DOS",
     minWidth: 70,
-    orderIndex: 1,
+    orderIndex: 1
   },
   {
     field: "procedureCode",
     title: "Procedure",
     minWidth: 70,
-    orderIndex: 2,
+    orderIndex: 2
   },
   {
     field: "amount",
@@ -32,37 +32,37 @@ export const columns = [
     minWidth: 100,
     orderIndex: 3,
     type: "currency",
-    isCustomCell: true,
+    isCustomCell: true
   },
   {
     field: "mod1",
     title: "Mod 1",
     minWidth: 70,
-    orderIndex: 4,
+    orderIndex: 4
   },
   {
     field: "mod2",
     title: "Mod 2",
     minWidth: 70,
-    orderIndex: 5,
+    orderIndex: 5
   },
   {
     field: "diag1",
     title: "Diag1",
     minWidth: 70,
-    orderIndex: 6,
+    orderIndex: 6
   },
   {
     field: "diag2",
     title: "Diag2",
     minWidth: 70,
-    orderIndex: 7,
+    orderIndex: 7
   },
   {
     field: "units",
     title: "Units",
     minWidth: 50,
-    orderIndex: 8,
+    orderIndex: 8
   },
   {
     field: "amount",
@@ -70,43 +70,43 @@ export const columns = [
     minWidth: 100,
     orderIndex: 9,
     type: "currency",
-    isCustomCell: true,
+    isCustomCell: true
   },
   {
     field: "prim",
-    title: "1",
+    title: "Plan 1",
     minWidth: 70,
-    orderIndex: 10,
+    orderIndex: 10
   },
   {
     field: "seC",
-    title: "2",
+    title: "Plan 2",
     minWidth: 70,
-    orderIndex: 11,
+    orderIndex: 11
   },
   {
     field: "patient",
     title: "Patient",
     minWidth: 100,
-    orderIndex: 12,
-    },
-    {
-        field: "recordStatus",
-        title: "Record Status",
-        minWidth: 100,
-        orderIndex: 13,
-    },
-    {
-        field: "currentStatus",
-        title: "Current Status",
-        minWidth: 100,
-        orderIndex: 14,
-    },
+    orderIndex: 12
+  },
+  {
+    field: "recordStatus",
+    title: "Record Status",
+    minWidth: 100,
+    orderIndex: 13
+  },
+  {
+    field: "currentStatus",
+    title: "Current Status",
+    minWidth: 100,
+    orderIndex: 14
+  },
   {
     field: "providerName",
     title: "Rendering",
     minWidth: 150,
-    orderIndex: 15,
+    orderIndex: 15
     // minWidth: 65,
   },
   {
@@ -114,8 +114,8 @@ export const columns = [
     title: "ID",
     minWidth: 80,
     orderIndex: 16,
-    hide: true,
-  },
+    hide: true
+  }
 ];
 
 export const submissionHistoryColumns = [
@@ -123,37 +123,37 @@ export const submissionHistoryColumns = [
     field: "statusCount",
     title: "Status Count",
     minWidth: 50,
-    orderIndex: 1,
+    orderIndex: 1
   },
   {
     field: "reportType",
     title: "Report Type",
     minWidth: 50,
-    orderIndex: 2,
+    orderIndex: 2
   },
   {
     field: "statusCategory",
     title: "Status Category",
     minWidth: 50,
-    orderIndex: 3,
+    orderIndex: 3
   },
   {
     field: "statusSource",
     title: "Status Source",
     minWidth: 50,
-    orderIndex: 4,
+    orderIndex: 4
   },
   {
     field: "statusDate",
     title: "Status Date",
     minWidth: 70,
-    orderIndex: 5,
+    orderIndex: 5
   },
   {
     field: "claimStatus",
     title: "Claim Status",
     minWidth: 100,
-    orderIndex: 6,
+    orderIndex: 6
   },
   {
     field: "amountPaid",
@@ -161,25 +161,25 @@ export const submissionHistoryColumns = [
     minWidth: 100,
     orderIndex: 7,
     type: "currency",
-    isCustomCell: true,
+    isCustomCell: true
   },
   {
     field: "payerClaimID",
     title: "Payer Claim ID",
     minWidth: 100,
-    orderIndex: 8,
+    orderIndex: 8
   },
   {
     field: "errorMessage",
     title: "Error Message",
     minWidth: 650,
     orderIndex: 9,
-    showToolTip: true,
+    showToolTip: true
   },
   {
     field: "gridId",
     title: "ID",
     minWidth: 50,
-    hide: true,
-  },
+    hide: true
+  }
 ];

@@ -10,7 +10,10 @@ import Show_HideDialogComponent from "../../../common/show_hideDialog";
 import NotificationComponent from "../../../common/notification";
 import { getter } from "@progress/kendo-react-common";
 import { GetCharageActivity } from "../../../../redux/actions/chargeDetail";
-import {GetGridColumns,SaveGridColumns} from "../../../../redux/actions/GridColumns"
+import {
+  GetGridColumns,
+  SaveGridColumns
+} from "../../../../redux/actions/GridColumns";
 const DATA_ITEM_KEY_CHARGES_Activity = "gridID";
 const idGetterChargesActivity = getter(DATA_ITEM_KEY_CHARGES_Activity);
 function mapStateToProps(state) {
@@ -19,10 +22,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    GetCharageActivity: (chargeSID) => dispatch(GetCharageActivity(chargeSID)),
-    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
-    SaveGridColumns: (name, columns) =>
-      dispatch(SaveGridColumns(name, columns)),
+    GetCharageActivity: chargeSID => dispatch(GetCharageActivity(chargeSID)),
+    GetGridColumns: name => dispatch(GetGridColumns(name)),
+    SaveGridColumns: (name, columns) => dispatch(SaveGridColumns(name, columns))
   };
 }
 
@@ -38,7 +40,7 @@ class ChargeDetail extends Component {
     timer: 5000,
     chargeID: 0,
     chargeActivity: null,
-    chargeListColumns:columns
+    chargeListColumns: columns
   };
   async componentDidMount() {
     if (
@@ -52,54 +54,61 @@ class ChargeDetail extends Component {
       await this.setState({
         // patientId: claimDetails.patientID,
         chargeActivity: chargeActivityData,
-        chargeID: this.props.ChargeDetails.chargeSID,
+        chargeID: this.props.ChargeDetails.chargeSID
       });
     }
     this.getGridColumns();
   }
   getGridColumns = async () => {
-    this.setState({ refreshGrid: false});
-    let currentColumns = await this.props.GetGridColumns('chargeDetailsId');
-    if(currentColumns !=null && currentColumns !=""){
-       currentColumns=JSON.parse(currentColumns?.columns) ?? columns ;
-       this.setState({ chargeListColumns: currentColumns});
+    this.setState({ refreshGrid: false });
+    let currentColumns = await this.props.GetGridColumns("chargeDetailsId");
+    if (currentColumns != null && currentColumns != "") {
+      currentColumns = JSON.parse(currentColumns?.columns) ?? columns;
+      this.setState({ chargeListColumns: currentColumns });
     }
-    this.setState({ refreshGrid: true});
-  }
-  handleSelect = (e) => {
+    this.setState({ refreshGrid: true });
+  };
+  handleSelect = e => {
     this.setState({ selected: e.selected });
   };
   toggleShowColumnsDialog = () => {
     this.setState({ Show_HideDialogVisible: false });
   };
   onSortChange = () => {};
-  SaveColumnsShow =async (columns) => {
-    if (!columns.find((x) => x.hide != true)) {
+  SaveColumnsShow = async columns => {
+    if (!columns.find(x => x.hide != true)) {
       this.setState({ Show_HideDialogVisible: false });
       this.setState({ warning: true, message: "Cann't hide all columns" });
       setTimeout(() => {
         this.setState({
-          warning: false,
+          warning: false
         });
       }, this.state.timer);
       return;
     } else {
       this.setState({ refreshGrid: false });
       //localStorage.setItem("chargeDetailsId", JSON.stringify(columns));
-      let GridColumns= await this.props.SaveGridColumns("chargeDetailsId", JSON.stringify(columns));
-      this.setState({ chargeListColumns: JSON.parse(GridColumns?.columns), Show_HideDialogVisible: false });
+      let GridColumns = await this.props.SaveGridColumns(
+        "chargeDetailsId",
+        JSON.stringify(columns)
+      );
+      this.setState({
+        chargeListColumns: JSON.parse(GridColumns?.columns),
+        Show_HideDialogVisible: false
+      });
       setTimeout(() => {
         this.setState({ refreshGrid: true });
       }, 10);
     }
   };
+  onChargeActivitySelection = () => {};
   closeNotification = () => {
     this.setState({
       success: false,
       error: false,
       warning: false,
       info: false,
-      none: false,
+      none: false
     });
   };
   render() {
@@ -111,7 +120,7 @@ class ChargeDetail extends Component {
             overflow: "hidden",
             marginTop: "10px",
             marginBottom: "5px",
-            paddingBottom: "5px",
+            paddingBottom: "5px"
           }}
         >
           <NotificationComponent
@@ -122,15 +131,13 @@ class ChargeDetail extends Component {
             warning={this.state.warning}
             info={this.state.info}
             none={this.state.none}
-          ></NotificationComponent>
+          />
           {this.state.Show_HideDialogVisible && (
             <Show_HideDialogComponent
-              columns={
-                this.state.chargeListColumns
-              }
+              columns={this.state.chargeListColumns}
               toggleShowColumnsDialog={this.toggleShowColumnsDialog}
               SaveColumnsShow={this.SaveColumnsShow}
-            ></Show_HideDialogComponent>
+            />
           )}
           <TabStrip
             className="userManagmentTabStrip"
@@ -138,10 +145,10 @@ class ChargeDetail extends Component {
             onSelect={this.handleSelect}
           >
             <TabStripTab title="Details" selected="true">
-              <Details ChargeDetails={this.props.ChargeDetails}></Details>
+              <Details ChargeDetails={this.props.ChargeDetails} />
             </TabStripTab>
             <TabStripTab title="Added Codes">
-              <AddedCodes ChargeDetails={this.props.ChargeDetails}></AddedCodes>
+              <AddedCodes ChargeDetails={this.props.ChargeDetails} />
             </TabStripTab>
             {/* <TabStripTab title="Charge Notes">
               <ClaimDetailSubmissionHistory></ClaimDetailSubmissionHistory>
@@ -152,7 +159,7 @@ class ChargeDetail extends Component {
           style={{
             float: "left",
             marginLeft: "10px",
-            right: "0",
+            right: "0"
           }}
         >
           <ButtonComponent
@@ -169,7 +176,7 @@ class ChargeDetail extends Component {
             float: "right",
             position: "absolute",
             marginRight: "10px",
-            right: "0",
+            right: "0"
           }}
         >
           <ButtonComponent
@@ -193,7 +200,7 @@ class ChargeDetail extends Component {
             style={{
               marginLeft: "10px",
               marginRight: "10px",
-              marginTop: "5px",
+              marginTop: "5px"
             }}
           >
             <div
@@ -205,13 +212,11 @@ class ChargeDetail extends Component {
               {this.state.refreshGrid && (
                 <GridComponent
                   id="chargeDetailsId"
-                  columns={
-                    this.state.chargeListColumns
-                  }
+                  columns={this.state.chargeListColumns}
                   skip={0}
                   take={15}
-                  // onSelectionChange={this.onClaimGridSelectionChange}
-                  // onRowDoubleClick={this.onClaimGridDoubleSelectionChange}
+                  onSelectionChange={this.onChargeActivitySelection}
+                  onRowDoubleClick={this.onChargeActivitySelection}
                   selectionMode="single"
                   DATA_ITEM_KEY={DATA_ITEM_KEY_CHARGES_Activity}
                   idGetter={idGetterChargesActivity}
@@ -220,7 +225,7 @@ class ChargeDetail extends Component {
                   width="100%"
                   sortColumns={[]}
                   onSortChange={this.onSortChange}
-                ></GridComponent>
+                />
               )}
             </div>
           </div>

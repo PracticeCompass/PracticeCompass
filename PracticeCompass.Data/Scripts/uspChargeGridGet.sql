@@ -17,10 +17,10 @@ BEGIN
 	SET NOCOUNT ON;
 	
 select ClaimCharge.ChargeSID , CONVERT(varchar,ProcedureEvent.FromServiceDate,101) AS FromServiceDate, ProcedureEvent.ProcedureCode , convert(varchar,Charge.Amount,1) as Amount ,
-Mod1.[Modifier] as Mod1 , Mod2.[Modifier] as Mod2 , Dag1.[DiagnosisCode] as Diag1 , Dag2.[DiagnosisCode] as Diag2,
+Mod1.[Modifier] as Mod1 , Mod2.[Modifier] as Mod2 , Dag1.[DiagnosisCode] as Diag1 , Dag2.[DiagnosisCode] as Diag2,ProcedureEvent.StaffID as RenderingID,[Provider].SortName as ProviderName,
 ProcedureEvent.Units , 
 case when Charge.RespCoverageOrder=1 then 'Active' END as Prim,
-case when Charge.RespCoverageOrder=2 then 'Active' END as SeC,
+case when Charge.RespCoverageOrder=2 then 'Active' END as SeC, 
 case when Charge.RespCoverageOrder=99 then 'Active' END as Patient,
 --,Provider.SortName as ProviderName
 Charge.RecordStatus,charge.CurrentStatus
@@ -31,6 +31,9 @@ left outer join [dbo].[ProcedureEventModifier] as Mod1 on Mod1.[ProcedureEventSI
 left outer join [dbo].[ProcedureEventModifier] as Mod2 on Mod2.[ProcedureEventSID] = ProcedureEvent.ProcedureEventSID and Mod2.[Order]=2
 left outer join [dbo].ProcedureEventDiag as Dag1 on Dag1.[ProcedureEventSID] = ProcedureEvent.ProcedureEventSID and Dag1.[Order]=1
 left outer join [dbo].ProcedureEventDiag as Dag2 on Dag2.[ProcedureEventSID] = ProcedureEvent.ProcedureEventSID and Dag2.[Order]=2
+left outer join Staff as RenderingStaff on ProcedureEvent.PracticeID = RenderingStaff.PracticeID 
+and ProcedureEvent.StaffID = RenderingStaff.StaffID
+left outer join [Provider] on [Provider].[ProviderID] = RenderingStaff.StaffID
 --left outer join PendingCharge on ProcedureEvent.EncounterSID = PendingCharge.EncounterSID
 --left outer join Provider on Provider.ProviderID = PendingCharge.PerformingProviderID
 where ClaimCharge.ClaimSID=@ClaimSID

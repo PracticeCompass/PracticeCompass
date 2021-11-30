@@ -23,7 +23,10 @@ import {
   resetCPTCodes,
   GetCharageDetails
 } from "../../../../../redux/actions/chargeDetail";
-import { SaveLookups } from "../../../../../redux/actions/lookups";
+import {
+  SaveLookups,
+  GetLookupsByEnityName
+} from "../../../../../redux/actions/lookups";
 
 const DATA_ITEM_KEY_ICD = "diagnosisCode";
 const idGetterIcd = getter(DATA_ITEM_KEY_ICD);
@@ -57,7 +60,9 @@ function mapDispatchToProps(dispatch) {
     GetCharageDetails: chargeSID => dispatch(GetCharageDetails(chargeSID)),
     ResetICD10Codes: () => dispatch(ResetICD10Codes()),
     SaveLookups: (EntityValueID, EntityName) =>
-      dispatch(SaveLookups(EntityValueID, EntityName))
+      dispatch(SaveLookups(EntityValueID, EntityName)),
+    GetLookupsByEnityName: EntityName =>
+      dispatch(GetLookupsByEnityName(EntityName))
   };
 }
 
@@ -134,42 +139,6 @@ class Details extends Component {
       let chargeDetailsData = await this.props.GetCharageDetails(
         this.props.ChargeDetails.chargeSID
       );
-      if (
-        chargeDetailsData.renderingID != null &&
-        (this.props.dropDownphysicians == null ||
-          this.props.dropDownphysicians.filter(
-            x => x.entityId == chargeDetailsData.renderingID
-          ).length == 0)
-      ) {
-        await this.props.SaveLookups(
-          chargeDetailsData.renderingID,
-          "Physician"
-        );
-      }
-      if (
-        chargeDetailsData.referralSID != null &&
-        (this.props.dropDownphysicians == null ||
-          this.props.dropDownphysicians.filter(
-            x => x.entityId == chargeDetailsData.referralSID
-          ).length == 0)
-      ) {
-        await this.props.SaveLookups(
-          chargeDetailsData.referralSID,
-          "Physician"
-        );
-      }
-      if (
-        chargeDetailsData.supervisingID != null &&
-        (this.props.dropDownphysicians == null ||
-          this.props.dropDownphysicians.filter(
-            x => x.entityId == chargeDetailsData.supervisingID
-          ).length == 0)
-      ) {
-        await this.props.SaveLookups(
-          chargeDetailsData.supervisingID,
-          "Physician"
-        );
-      }
       if (
         chargeDetailsData.diag1 != null &&
         (this.props.dropDownICD10 == null ||
@@ -251,7 +220,45 @@ class Details extends Component {
       ) {
         await this.props.SaveLookups(chargeDetailsData.procedureCode, "CPT");
       }
-
+      if (
+        chargeDetailsData.renderingID != null &&
+        (this.props.dropDownphysicians == null ||
+          this.props.dropDownphysicians.filter(
+            x => x.entityId == chargeDetailsData.renderingID
+          ).length == 0)
+      ) {
+        await this.props.SaveLookups(
+          chargeDetailsData.renderingID,
+          "Physician"
+        );
+      }
+      if (
+        chargeDetailsData.referralSID != null &&
+        (this.props.dropDownphysicians == null ||
+          this.props.dropDownphysicians.filter(
+            x => x.entityId == chargeDetailsData.referralSID
+          ).length == 0)
+      ) {
+        await this.props.SaveLookups(
+          chargeDetailsData.referralSID,
+          "Physician"
+        );
+      }
+      if (
+        chargeDetailsData.supervisingID != null &&
+        (this.props.dropDownphysicians == null ||
+          this.props.dropDownphysicians.filter(
+            x => x.entityId == chargeDetailsData.supervisingID
+          ).length == 0)
+      ) {
+        await this.props.SaveLookups(
+          chargeDetailsData.supervisingID,
+          "Physician"
+        );
+      }
+      await this.props.GetLookupsByEnityName("Physician");
+      await this.props.SaveLookups(chargeDetailsData.referralSID, "ICD10");
+      await this.props.SaveLookups(chargeDetailsData.referralSID, "CPT");
       await this.setState({
         // patientId: claimDetails.patientID,
         chargeDetailsSummary: chargeDetailsData,

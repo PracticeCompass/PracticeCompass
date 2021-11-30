@@ -68,7 +68,7 @@ BEGIN
 		when 'tertiaryStatus' then 'order by PlanClaimTertiary.CurrentStatus '+@SortDirection+''
 		when 'destination' then 'order by Destination '+@SortDirection+''
 		when 'notes' then 'order by Claim.ClaimSID '+@SortDirection+''
-		else 'order by Claim.ClaimSID'
+		else 'order by convert(Date,Max(ProcedureEvent.FromServiceDate),101) desc'
 		end
 	
 set @SQL= 'select distinct COUNT(*) OVER() as totalCount,

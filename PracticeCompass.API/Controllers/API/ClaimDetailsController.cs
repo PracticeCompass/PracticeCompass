@@ -48,7 +48,16 @@ namespace PracticeCompass.API.Controllers.API
         {
             try
             {
-                return unitOfWork.ClaimDetailsRepository.ChargeGridGet(ClaimSID);
+                List<ChargeDTO> Charges = new List<ChargeDTO>();
+                Charges = unitOfWork.ClaimDetailsRepository.ChargeGridGet(ClaimSID);
+                foreach (var charge in Charges)
+                {
+                    if (charge.SeC == "Active")
+                    {
+                        charge.Prim = "Done";
+                    }
+                }
+                return Charges;
             }
             catch (Exception ex)
             {
