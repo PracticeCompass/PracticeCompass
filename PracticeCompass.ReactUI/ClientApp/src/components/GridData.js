@@ -78,8 +78,7 @@ export const CurrencyCell = (props) => {
         }
       }}
     >
-      {props.dataItem[props.field] == null || props.dataItem[props.field].toString().includes("$") ? props.dataItem[props.field]
-        : '$' +(isNegative?'(':'') + (value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'))+(isNegative?')':'')  }
+       {(column.isEmptyZero && Number(value)==0)?  '':'$' +(isNegative?'(':'') + (value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'))+(isNegative?')':'')  }
     </td>
   );
 };

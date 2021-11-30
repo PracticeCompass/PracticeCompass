@@ -33,7 +33,7 @@ export const PracticeColumns = [
 
 export const detailsColumns = [
   {
-    field: "id",
+    field: "ersChargeSID",
     title: "ID",
     minWidth: 250,
     orderIndex: 0,
@@ -75,7 +75,8 @@ export const detailsColumns = [
     minWidth: 100,
     orderIndex: 4,
     type: "currency",
-    editable: false
+    editable: false,
+    isEmptyZero:true
   },
   {
     field: "lineItemProviderPaymentAmt" ,
@@ -83,7 +84,8 @@ export const detailsColumns = [
     minWidth: 100,
     orderIndex: 5,
     type: "currency",
-    editable: false
+    editable: false,
+    isEmptyZero:true
   },
   {
     type: "currency",
@@ -92,7 +94,7 @@ export const detailsColumns = [
     minWidth: 100,
     orderIndex: 6,
     editable: false,
-    fontColor:"red",
+    // fontColor:"red",
     //fontWeight:"900"
 
   },
@@ -129,8 +131,8 @@ export const detailsColumns = [
       showToolTip: true
   },
   {
-      field: "alertCode",
-    title: "Suggestion",
+    field: "alertCode",
+    title: "recommendation",
     minWidth: 300,
     orderIndex: 11,
     //isCustomCell:true,  

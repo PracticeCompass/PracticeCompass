@@ -10,11 +10,15 @@ function mapDispatchToProps(dispatch) {
     };
 }
 export class DropDownCell extends React.Component {
-  localizedData = [{
+  charageData = [{
     value:"Physician Responsibility",text:"Physician Responsibility"},
     {value:"Move responsibility to the next level. Secondary/tertiary insurance or patient.",text:"Move responsibility to the next level. Secondary/tertiary insurance or patient."},
     {value:"Patient responsibility",text:"Patient responsibility"},
     {value:"Manual Processing",text:"Manual Processing"},
+  ];
+  detailsData = [{
+    value:"Accepted",text:"Accepted"},
+    {value:"Rejected",text:"Rejected"}
   ];
   handleChange = e => {
     if (this.props.onChange) {
@@ -35,12 +39,13 @@ export class DropDownCell extends React.Component {
     } = this.props;
     const field = this.props.field || '';
     const dataValue = dataItem[field] === null ? '' : dataItem[field];
+    const Items=dataItem["type"]=="Charge"? this.charageData:this.detailsData;
     return <td>
             {dataItem.inEdit || this.props.editor == "edit" ? 
             
       <ComboBox style={{
         width: "300px",height:"18px"
-      }} onChange={this.handleChange} value={this.localizedData.find(c => c.value === dataValue)} data={this.localizedData} textField="text" /> : dataValue?.toString()}
+      }} onChange={this.handleChange} value={Items.find(c => c.value === dataValue)} data={Items} textField="text" /> : dataValue?.toString()}
           </td>;
   }
 

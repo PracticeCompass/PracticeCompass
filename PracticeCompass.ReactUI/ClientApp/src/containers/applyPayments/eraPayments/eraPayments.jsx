@@ -369,6 +369,7 @@ class EraPayments extends Component {
       Show_HideDetailsERADialogVisible: false,
     });
   };
+  
   SaveColumnsShow = async (columns) => {
     if (!columns.find((x) => x.hide != true)) {
       this.setState({ Show_HideERADialogVisible: false });
@@ -423,6 +424,32 @@ class EraPayments extends Component {
       ShowEditERARow: false,
     });
   };
+  onRowRender(trElement, props) {
+    const type = props.dataItem.type;
+    const bold = {
+      fontWeight: "bold"
+    };
+    const normal = {
+      fontWeight: "normal"
+    };
+    let trProps = {
+      style: normal,
+    };
+    switch (type) {
+      case "Charge":
+        trProps = { style: bold };
+        break;
+      default:
+        trProps = { style: normal };
+        break;
+    }
+
+    return React.cloneElement(
+      trElement,
+      { ...trProps },
+      trElement.props.children
+    );
+  }
   render() {
     return (
       <Fragment>
@@ -875,6 +902,8 @@ class EraPayments extends Component {
                         <EditableGrid
                           data={this.state.eRADetailsPayments}
                           id="ERAPaymentDetails"
+                          activeRowRender={true}
+                          onRowRender={this.onRowRender}
                           skip={0}
                           take={21}
                           height="560px"

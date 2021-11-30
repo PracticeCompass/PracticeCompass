@@ -56,7 +56,8 @@ export class CurrencyGridCell extends React.Component {
             onChange={this.handleChange}
           ></TextBox>
         ) : (
-            this.currencyFormat(dataValue,isNegative)
+           (column.isEmptyZero && Number(dataValue)==0)?  '':
+            (this.currencyFormat(dataValue,isNegative))
         )}
       </td>
     );
