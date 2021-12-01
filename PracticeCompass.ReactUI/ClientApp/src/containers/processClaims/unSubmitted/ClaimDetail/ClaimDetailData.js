@@ -94,13 +94,17 @@ export const columns = [
     field: "recordStatus",
     title: "Record Status",
     minWidth: 100,
-    orderIndex: 13
+      orderIndex: 13,
+      showToolTip: true
+
   },
   {
     field: "currentStatus",
     title: "Current Status",
     minWidth: 100,
-    orderIndex: 14
+      orderIndex: 14,
+      showToolTip: true
+
   },
   {
     field: "providerName",

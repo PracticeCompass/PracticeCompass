@@ -23,7 +23,20 @@ case when Charge.RespCoverageOrder=1 then 'Active' END as Prim,
 case when Charge.RespCoverageOrder=2 then 'Active' END as SeC, 
 case when Charge.RespCoverageOrder=99 then 'Active' END as Patient,
 --,Provider.SortName as ProviderName
-Charge.RecordStatus,charge.CurrentStatus
+Charge.RecordStatus,charge.CurrentStatus,
+case when Charge.RecordStatus = 'O' then 'Open' End as RecordStatus_ ,
+case when Charge.RecordStatus = 'P' then 'Satisfied' End as RecordStatus_ ,
+case when Charge.RecordStatus = 'S' then 'Voided' End as RecordStatus_ ,
+case when Charge.RecordStatus = 'V' then 'Over Paid' End as RecordStatus_ ,
+
+case when Charge.CurrentStatus = 'G' then 'Guarantor responsible charge' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'GA' then 'Responsibility automatically transferred to guarantor' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'GT' then 'Responsibility manually transferred to guarantor' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'I' then 'Insurance responsible charge' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'IF' then 'Responsibility forwarded to insurance' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'IR' then 'IR' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'IT' then 'Responsibility manually transferred to insurance' End as CurrentStatus_ ,
+case when Charge.CurrentStatus = 'IU' then 'Unbilled insurance responsible charge' End as CurrentStatus_ 
 from ClaimCharge
 inner join ProcedureEvent on ProcedureEvent.ChargeSID = ClaimCharge.ChargeSID
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID

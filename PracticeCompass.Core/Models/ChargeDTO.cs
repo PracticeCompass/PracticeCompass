@@ -17,5 +17,7 @@
         public string ProviderName { get; set; }
         public string RecordStatus { get; set; }
         public string CurrentStatus { get; set; }
+        public string RecordStatus_ { get; set; }
+        public string CurrentStatus_ { get; set; }
     }
 }
