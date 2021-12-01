@@ -77,24 +77,30 @@ namespace PracticeCompass.Data.Repositories
             var ERSClaimData = new List<ERSClaimData>();
             var ERSClaimReferences = new List<ERSClaimReference>();
             var ERSClaimMonetaryAmts = new List<ERSClaimMonetaryAmt>();
+            var ERSChargeMonetaryAmts = new List<ERSChargeMonetaryAmt>();
             var ERSChargeIndustryCodes = new List<ERSChargeIndustryCode>();
+            var ERSRemittanceFileInstance = new List<ERSRemittanceFileInstance>();
             using var txScope = new TransactionScope();
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
             var ERSClaimSID = 0;
             var ERSPaymentSID = 0;
             var ERSChargeSID = 0;
+            var ERSRemittenceSID = 0;
             for (var era = 0; era < transactions.Count; era++)
             {
                 
                 var random = new Random();
                 
                 var maxpaymentSid = 0;
+                var maxremittenceSid = 0;
                 if (era != 0) {
                     maxpaymentSid = ERSPaymentSID;
+                    maxremittenceSid = ERSRemittenceSID;
                 }
                 ERSPaymentSID = practiceCompassHelper.GetMAXColumnid("ERSPaymentHeader", "ERSPaymentSID", maxpaymentSid);
-                var ERSRemittenceSID = random.Next(1000, 999999);
+                ERSRemittenceSID = practiceCompassHelper.GetMAXColumnid("ERSRemittanceFileInstance", "RemittanceSID", maxremittenceSid);
                 string PaymentPartyMAXRowID = GetMAXRowID("ERSPaymentParty", ERSPaymentParty.Count != 0 ? ERSPaymentParty[ERSPaymentParty.Count - 1].prrowid : "0");
+                string RemittenceSIDMAXRowID = GetMAXRowID("ERSRemittanceFileInstance", ERSRemittanceFileInstance.Count != 0 ? ERSRemittanceFileInstance[ERSRemittanceFileInstance.Count - 1].prrowid : "0");
                 string ERSPaymentHeaderMAXRowID = GetMAXRowID("ERSPaymentHeader", ERSPaymentHeaders.Count != 0 ? ERSPaymentHeaders[ERSPaymentHeaders.Count - 1].prrowid : "0");
                 var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
 
@@ -104,6 +110,26 @@ namespace PracticeCompass.Data.Repositories
                 var Chargesresults = this.db.QueryMultiple(sql, new { ids = ref6R });
                 Charges = Chargesresults.Read<Charge>().ToList();
                 var practiceID = Charges[0].PracticeID;
+                #region ERSRemittanceFileInstance
+                ERSRemittanceFileInstance.Add(new ERSRemittanceFileInstance
+                {
+                    CreateStamp=timestamp,
+                    CreateUser=88,
+                    LastUser=88,
+                    PracticeID=practiceID,
+                    pro2created=DateTime.Now,
+                    RemittanceSID= ERSRemittenceSID,
+                    RecordStatus="R",
+                    TimeStamp=timestamp,
+                    pro2modified=DateTime.Now,
+                    Pro2SrcPDB="medman",
+                    prrowid= RemittenceSIDMAXRowID,
+                    RemittanceSourceCode="MMNS",
+                    DateReceived=DateTime.Now.Date,
+                    DateFinished= DateTime.Now.Date,
+                    FileArchiveSID=null
+                });
+                #endregion
                 #region ERSPaymentHeader
                 ERSPaymentHeaders.Add(new ERSPaymentHeader
                 {
@@ -142,7 +168,9 @@ namespace PracticeCompass.Data.Repositories
                     PaymentNotBalanced = false,
                     OriginalPaymentAmt = transactions[era].financialInformation.TotalPaidAmount,
                     PayerNameText = transactions[era].Payer.Name,
-                    PracticeID = practiceID
+                    PracticeID = practiceID,
+                    RuralHealth="",
+                    RemittanceSourceCode="MMNS"
 
                 });
                 #endregion
@@ -229,9 +257,9 @@ namespace PracticeCompass.Data.Repositories
                             PayerClaimControlNumber = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].PayerControlId,
                             FacilityTypeCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].FacilityTypeCode,
                             ClaimFrequencyTypeCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ClaimFrequencyTypeCode,
-                            DiagnosisRelatedGroupCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DiagnosisRelatedGroupCode,
-                            DiagnosisRelatedGroupWeight = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DiagnosisRelatedGroupWeight,
-                            DischargeFraction = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DischargeFraction,
+                            DiagnosisRelatedGroupCode = string.IsNullOrEmpty(transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DiagnosisRelatedGroupCode)?null: transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DiagnosisRelatedGroupCode,
+                            DiagnosisRelatedGroupWeight = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DiagnosisRelatedGroupWeight??null,
+                            DischargeFraction = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].DischargeFraction??null,
                             Posted = false,
                             SkipClaim = false,
                             ClaimDetail = ""
@@ -281,6 +309,30 @@ namespace PracticeCompass.Data.Repositories
                             NameLastOrOrgName = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Provider.LastName
 
                         });
+                        if (!string.IsNullOrEmpty(transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].TransferTo.Name))
+                        {
+                            ClaimNameMAXRowID = GetMAXRowID("ERSClaimName", ERSClaimNames.Count != 0 ? ERSClaimNames[ERSClaimNames.Count - 1].prrowid : "0");
+                            ERSClaimNames.Add(new ERSClaimName  //NM1*TT
+                            {
+                                TimeStamp = timestamp,
+                                LastUser = 88,
+                                CreateStamp = timestamp,
+                                CreateUser = 88,
+                                Pro2SrcPDB = "medman",
+                                pro2created = DateTime.Now,
+                                pro2modified = DateTime.Now,
+                                ERSClaimSID = ERSClaimSID,
+                                prrowid = ClaimNameMAXRowID,
+                                EntityIDCode = "TT",
+                                EntityTypeQualifier = "2",
+                                IDCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].TransferTo.Identifier,
+                                IDCodeQualifier = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].TransferTo.Qualifier,
+                                NameFirst = "",
+                                NameMiddle = "",
+                                NameSuffix = "",
+                                NameLastOrOrgName = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].TransferTo.Name
+                            });
+                        }
 
                         string ClaimDateMAXRowID = GetMAXRowID("ERSClaimDate", ERSClaimDates.Count != 0 ? ERSClaimDates[ERSClaimDates.Count - 1].prrowid : "0");
                         ERSClaimDates.Add(new ERSClaimDate  //050
@@ -373,6 +425,31 @@ namespace PracticeCompass.Data.Repositories
 
                             });
                         }
+                        if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count > 0)//MOA
+                        {
+                            string outpatientMAXRowID = GetMAXRowID("ERSMedicareOutpatAdj", outpatientlist.Count != 0 ? outpatientlist[outpatientlist.Count - 1].prrowid : "0");
+                            outpatientlist.Add(new ERSMedicareOutpatAdj
+                            {
+                                prrowid = outpatientMAXRowID,
+                                ERSClaimSID = ERSClaimSID,
+                                ReimbursementRate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.MedicareMedicaidReimbursementRate,
+                                ClaimHCPCSPayableAmt = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.HcpcsMonetaryAmount,
+                                ClaimPaymentRemarkCode01 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 1 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks[0].Code : null,
+                                ClaimPaymentRemarkCode02 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 2 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks[1].Code : null,
+                                ClaimPaymentRemarkCode03 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 3 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks[2].Code : null,
+                                ClaimPaymentRemarkCode04 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 4 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks[3].Code : null,
+                                ClaimPaymentRemarkCode05 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 5 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks[4].Code : null,
+                                ClaimESRDPaymentAmt = null,
+                                NonpayableProfComponentAmt = null,
+                                TimeStamp = timestamp,
+                                LastUser = 88,
+                                CreateStamp = DateTime.Now.ToString(),
+                                CreateUser = 88,
+                                Pro2SrcPDB = "medman",
+                                pro2created = DateTime.Now,
+                                pro2modified = DateTime.Now,
+                            });
+                        }
                         #region modifiers segment SVC
                         for (var mod = 0; mod < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems.Count; mod++)
                         {
@@ -395,16 +472,14 @@ namespace PracticeCompass.Data.Repositories
                                 prrowid = ClaimDateofserviceMAXRowID,
                                 ERSChargeSID= ERSChargeSID
                             });
-                            string ChargeServiceInfoMAXRowID = GetMAXRowID("ERSChargeServiceInfo", ChargeServiceInfos.Count != 0 ? ChargeServiceInfos[ChargeServiceInfos.Count - 1].prrowid : "0");
-
-                            string outpatientMAXRowID = GetMAXRowID("ERSMedicareOutpatAdj", outpatientlist.Count != 0 ? outpatientlist[outpatientlist.Count - 1].prrowid : "0");
-                            if (!string.IsNullOrEmpty(transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes.CodeListQualifierCode))
+                            #region ERSChargeMonetaryAmt
+                            for (var p = 0; p < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ServiceLineSupplementalAmounts.Count; p++)
                             {
-                                string ERSChargeIndustryCodeMAXRowID = GetMAXRowID("ERSChargeIndustryCode", ERSChargeIndustryCodes.Count != 0 ? ERSChargeIndustryCodes[ERSChargeIndustryCodes.Count - 1].prrowid : "0");
-                                ERSChargeIndustryCodes.Add(new ERSChargeIndustryCode
+
+                                string ERSClaimMonetaryAmtMAXRowID = GetMAXRowID("ERSChargeMonetaryAmt", ERSChargeMonetaryAmts.Count != 0 ? ERSChargeMonetaryAmts[ERSChargeMonetaryAmts.Count - 1].prrowid : "0");
+                                ERSChargeMonetaryAmts.Add(new ERSChargeMonetaryAmt
                                 {
-                                    prrowid = ERSChargeIndustryCodeMAXRowID,
-                                    ERSChargeSID = ERSChargeSID,
+                                    prrowid = ERSClaimMonetaryAmtMAXRowID,
                                     TimeStamp = timestamp,
                                     LastUser = 88,
                                     CreateStamp = timestamp,
@@ -412,37 +487,40 @@ namespace PracticeCompass.Data.Repositories
                                     Pro2SrcPDB = "medman",
                                     pro2created = DateTime.Now,
                                     pro2modified = DateTime.Now,
-                                    CodeListQualifierCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes.CodeListQualifierCode,
-                                    IndustryCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes.IndustryCode
-
+                                    AmtQualifierCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ServiceLineSupplementalAmounts[p].Type,
+                                    ERSChargeSID = ERSChargeSID,
+                                    ServiceSupplementalAmt = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ServiceLineSupplementalAmounts[p].Amount
                                 });
+
                             }
-                            var procedure = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Procedure;
-                            if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count > 0)
+                            #endregion
+
+                            string ChargeServiceInfoMAXRowID = GetMAXRowID("ERSChargeServiceInfo", ChargeServiceInfos.Count != 0 ? ChargeServiceInfos[ChargeServiceInfos.Count - 1].prrowid : "0");
+
+                            for (var CIC = 0; CIC < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes.Count; CIC++)//LQ
                             {
-                                outpatientlist.Add(new ERSMedicareOutpatAdj
+
+                                if (!string.IsNullOrEmpty(transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes[CIC].CodeListQualifierCode))
                                 {
-                                    prrowid = outpatientMAXRowID,
-                                    ERSClaimSID = ERSClaimSID,
-                                    ReimbursementRate = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.MedicareMedicaidReimbursementRate,
-                                    ClaimHCPCSPayableAmt = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.HcpcsMonetaryAmount,
-                                    ClaimPaymentRemarkCode01 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 1 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks[0].Code : null,
-                                    ClaimPaymentRemarkCode02 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 2 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks[1].Code : null,
-                                    ClaimPaymentRemarkCode03 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 3 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks[2].Code : null,
-                                    ClaimPaymentRemarkCode04 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 4 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks[3].Code : null,
-                                    ClaimPaymentRemarkCode05 = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].OutPatientAdjudication.Remarks.Count >= 5 ? transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[0].OutPatientAdjudication.Remarks[4].Code : null,
-                                    ClaimESRDPaymentAmt = null,
-                                    NonpayableProfComponentAmt = null,
-                                    TimeStamp = timestamp,
-                                    LastUser = 88,
-                                    CreateStamp = DateTime.Now.ToString(),
-                                    CreateUser = 88,
-                                    Pro2SrcPDB = "medman",
-                                    pro2created = DateTime.Now,
-                                    pro2modified = DateTime.Now,
-                                });
+                                    string ERSChargeIndustryCodeMAXRowID = GetMAXRowID("ERSChargeIndustryCode", ERSChargeIndustryCodes.Count != 0 ? ERSChargeIndustryCodes[ERSChargeIndustryCodes.Count - 1].prrowid : "0");
+                                    ERSChargeIndustryCodes.Add(new ERSChargeIndustryCode
+                                    {
+                                        prrowid = ERSChargeIndustryCodeMAXRowID,
+                                        ERSChargeSID = ERSChargeSID,
+                                        TimeStamp = timestamp,
+                                        LastUser = 88,
+                                        CreateStamp = timestamp,
+                                        CreateUser = 88,
+                                        Pro2SrcPDB = "medman",
+                                        pro2created = DateTime.Now,
+                                        pro2modified = DateTime.Now,
+                                        CodeListQualifierCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes[CIC].CodeListQualifierCode,
+                                        IndustryCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ChargeIndustryCodes[CIC].IndustryCode
+                                    });
+                                }
                             }
 
+                            var procedure = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Procedure;
                             ChargeServiceInfos.Add(new ERSChargeServiceInfo
                             {
                                 prrowid = ChargeServiceInfoMAXRowID,
@@ -513,26 +591,6 @@ namespace PracticeCompass.Data.Repositories
                 }
 
                 #endregion
-                for (var p = 0; p < transactions[era].SupplementalAmounts.Count; p++)
-                {
-
-                    string ERSClaimMonetaryAmtMAXRowID = GetMAXRowID("ERSClaimMonetaryAmt", ERSClaimMonetaryAmts.Count != 0 ? ERSClaimMonetaryAmts[ERSClaimMonetaryAmts.Count - 1].prrowid : "0");
-                    ERSClaimMonetaryAmts.Add(new ERSClaimMonetaryAmt
-                    {
-                        prrowid = ERSClaimMonetaryAmtMAXRowID,
-                        TimeStamp = timestamp,
-                        LastUser = 88,
-                        CreateStamp = timestamp,
-                        CreateUser = 88,
-                        Pro2SrcPDB = "medman",
-                        pro2created = DateTime.Now,
-                        pro2modified = DateTime.Now,
-                        ERSClaimSID = ERSClaimSID,
-                        AmtQualifierCode = transactions[era].SupplementalAmounts[p].Type,
-                        ClaimSupplementalInfoAmt = transactions[era].SupplementalAmounts[p].Amount
-                    });
-
-                }
                 for (var refe = 0; refe < transactions[era].ERAReferences.Count; refe++)
                 {
                     string ERSClaimReferenceMAXRowID = GetMAXRowID("ERSClaimReference", ERSClaimReferences.Count != 0 ? ERSClaimReferences[ERSClaimReferences.Count - 1].prrowid : "0");
@@ -618,7 +676,7 @@ namespace PracticeCompass.Data.Repositories
             var ERSClaimContactSQL = "INSERT INTO [dbo].[ERSClaimContact]VALUES (@prrowid,  @ERSClaimSID, @ContactFunctionCode," +
            "@ClaimContactName, @TimeStamp,@LastUser,  @CreateStamp," +
            "@CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
+           var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
             var ERSClaimContactNbrSQL = "INSERT INTO[dbo].[ERSClaimContactNbr]  VALUES(@prrowid, @ERSClaimSID, @CommunicationsNbrQualifier," +
           "@ContactFunctionCode, @ClaimContactCommunicationsNbr, @ClaimContactCommunicationsExt, @TimeStamp," +
           "@LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
@@ -643,7 +701,7 @@ namespace PracticeCompass.Data.Repositories
              "@PayerClaimControlNumber, @FacilityTypeCode, @ClaimFrequencyTypeCode, @DiagnosisRelatedGroupCode," +
              "@DiagnosisRelatedGroupWeight, @DischargeFraction, @TimeStamp, @LastUser, @CreateStamp," +
              "@CreateUser, @ClaimDetail, @SkipClaim, @Posted, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
+           var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
             var ERSClaimReferenceSQL = "INSERT INTO [dbo].[ERSClaimReference]VALUES (@prrowid, @ERSClaimSID, @ReferenceIDQualifier," +
            "@ReferenceID, @TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB," +
            "@pro2created,@pro2modified)";
@@ -656,7 +714,11 @@ namespace PracticeCompass.Data.Repositories
             var ChargeIndustryCode = this.db.Execute(ERSChargeIndustryCodeSQL, ERSChargeIndustryCodes);
             var ERSChargeDateCodeSQL = "INSERT INTO [dbo].[ERSChargeDate]VALUES(@prrowid,@ERSChargeSID,@DateTimeQualifier,@ServiceDate,@TimeStamp,@LastUser,@CreateStamp,"+
             "@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var ERSChargeDateCode = this.db.Execute(ERSChargeDateCodeSQL, ERSChargeDates);
+             var ERSChargeDateCode = this.db.Execute(ERSChargeDateCodeSQL, ERSChargeDates);
+            var ERSChargeMonetaryAmtSQL = "INSERT INTO [dbo].[ERSChargeMonetaryAmt] VALUES(@prrowid,@ERSChargeSID,@AmtQualifierCode,@ServiceSupplementalAmt,@TimeStamp," +
+            "@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
+            var ChargeMonetaryAmt = this.db.Execute(ERSChargeMonetaryAmtSQL, ERSChargeMonetaryAmts);
+
             txScope.Complete();
             return true;
         }

@@ -187,6 +187,8 @@ namespace PracticeCompass.Messaging.Parsing
             eRa.financialInformation.TraceTypeCode = reAssociationTrace[1];
             eRa.financialInformation.TraceOrigCompanySupplCode = reAssociationTrace[3];
             eRa.financialInformation.CheckTraceNbr = reAssociationTrace[2];
+           //if( reAssociationTrace.Fields.Count >=4)
+           // eRa.financialInformation.parameterGroupCode = reAssociationTrace.Fields.Count >= 4? reAssociationTrace[4]: "Default";
             var productionDateSegment = (from s in transactionEnvelope.Segments where s.Name == "DTM" && s[1] == "405" select s).FirstOrDefault();
             if (productionDateSegment != null && !string.IsNullOrEmpty(productionDateSegment[2]))
             {
@@ -354,6 +356,13 @@ namespace PracticeCompass.Messaging.Parsing
                         claimDetail.Patient.Qualifier = patientSegment[8];
                         claimDetail.Patient.Identifier = patientSegment[9];
                     }
+                    var transferto  = (from s in claimChildSegments where s.Name == "NM1" && s[1] == "TT" && s[2] == "2" select s).FirstOrDefault();
+                    if (transferto != null)
+                    {
+                        claimDetail.TransferTo.Name = transferto[3];
+                        claimDetail.TransferTo.Qualifier = transferto[8];
+                        claimDetail.TransferTo.Identifier = transferto[9];
+                    }
                     var subscriberSegment = (from s in claimChildSegments where s.Name == "NM1" && s[1] == "IL" && s[2] == "1" select s).FirstOrDefault();
                     if (subscriberSegment != null)
                     {
@@ -406,24 +415,6 @@ namespace PracticeCompass.Messaging.Parsing
                         eRa.Payer.NbrFunctionCode = payercommunication[1];
                         eRa.Payer.ClaimContactCommunicationsNbr = payercommunication[4];
                     }
-                    var supplementalAmountSegments = (from s in claimChildSegments where s.Name == "AMT" select s).ToList();
-                    if (supplementalAmountSegments != null && supplementalAmountSegments.Count > 0)
-                    {
-                        for (int s = 0; s < supplementalAmountSegments.Count; s++)
-                        {
-                            var supplementalAmnt = new ServiceLineSupplementalAmount();
-                            if (!string.IsNullOrEmpty(supplementalAmountSegments[s][1]))
-                            {
-                                supplementalAmnt.Type = supplementalAmountSegments[s][1];
-                                decimal amount = -1;
-                                if (!string.IsNullOrEmpty(supplementalAmountSegments[s][2]) && decimal.TryParse(supplementalAmountSegments[s][2], out amount))
-                                {
-                                    supplementalAmnt.Amount = amount;
-                                }
-                            }
-                            eRa.SupplementalAmounts.Add(supplementalAmnt);
-                        }
-                    }
                     var statementFromDateSegment = (from s in claimChildSegments where s.Name == "DTM" && s[1] == "232" select s).FirstOrDefault();
                     if (statementFromDateSegment != null && !string.IsNullOrEmpty(statementFromDateSegment[2]))
                     {
@@ -450,9 +441,9 @@ namespace PracticeCompass.Messaging.Parsing
                         // Remarks (5 remark codes per MOA segment, starting of 3rd element)
                         for (int remarks = 0; remarks < 5; remarks++)
                         {
-                            if (!string.IsNullOrEmpty(outpatientAdjudicationSegment[i + 3]))
+                            if (!string.IsNullOrEmpty(outpatientAdjudicationSegment[remarks + 3]))
                             {
-                                claimDetail.OutPatientAdjudication.Remarks.Add(GetRemarkFromCode(outpatientAdjudicationSegment[i + 3]));
+                                claimDetail.OutPatientAdjudication.Remarks.Add(GetRemarkFromCode(outpatientAdjudicationSegment[remarks + 3]));
                             }
                         }
                     }
@@ -832,12 +823,20 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 serviceLine.ControlNumber = controlNumberSegment[2];
             }
-            var ChargeIndustryCode = (from s in serviceLineChildSegments where s.Name == "LQ"  select s).FirstOrDefault();
-            if (ChargeIndustryCode != null )
+            var ChargeIndustryCode = (from s in serviceLineChildSegments where s.Name == "LQ" select s).ToList();
+
+            if (ChargeIndustryCode != null)
             {
-                serviceLine.ChargeIndustryCodes.CodeListQualifierCode = ChargeIndustryCode[1];
-                serviceLine.ChargeIndustryCodes.IndustryCode = ChargeIndustryCode[2];
+                foreach (var chargeIC in ChargeIndustryCode)
+                {
+                    serviceLine.ChargeIndustryCodes.Add(new ChargeIndustryCode
+                    {
+                        CodeListQualifierCode = chargeIC[1],
+                        IndustryCode = chargeIC[2]
+                    });
+                }
             }
+
             var renderingProviderIds = new List<string> { "0B", "1A", "1B", "1C", "1D", "1G", "1H", "1J", "D3", "G2", "LU", "HPI", "SY", "TJ" };
             var renderingProviderSegment = (from s
                                                 in serviceLineChildSegments
@@ -864,7 +863,24 @@ namespace PracticeCompass.Messaging.Parsing
                 var adj = GetClaimAdjustment(adjustmentSegments[i]);
                 serviceLine.Adjustments.Add(adj);
             }
-
+            var supplementalAmountSegments = (from s in serviceLineChildSegments where s.Name == "AMT" select s).ToList();
+            if (supplementalAmountSegments != null && supplementalAmountSegments.Count > 0)
+            {
+                for (int s = 0; s < supplementalAmountSegments.Count; s++)
+                {
+                    var supplementalAmnt = new ServiceLineSupplementalAmount();
+                    if (!string.IsNullOrEmpty(supplementalAmountSegments[s][1]))
+                    {
+                        supplementalAmnt.Type = supplementalAmountSegments[s][1];
+                        decimal amount = -1;
+                        if (!string.IsNullOrEmpty(supplementalAmountSegments[s][2]) && decimal.TryParse(supplementalAmountSegments[s][2], out amount))
+                        {
+                            supplementalAmnt.Amount = amount;
+                        }
+                    }
+                    serviceLine.ServiceLineSupplementalAmounts.Add(supplementalAmnt);
+                }
+            }
             return serviceLine;
         }
         private static ClaimAdjustment GetClaimAdjustment(Segment segment)

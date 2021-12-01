@@ -19,6 +19,7 @@ namespace PracticeCompass.Common.Models
         public string DiagnosisRelatedGroupCode { set; get; }
         public decimal? DiagnosisRelatedGroupWeight { set; get; }
         public decimal? DischargeFraction { set; get; }
+        public TransferTo TransferTo { get; set; }
         public Patient Patient { set; get; }
         public Subscriber Subscriber { set; get; }
         public Provider Provider { set; get; }
@@ -44,6 +45,7 @@ namespace PracticeCompass.Common.Models
             this.Type = string.Empty;
             this.PayerControlId = string.Empty;
             this.Patient = new Patient();
+            this.TransferTo = new TransferTo();
             this.Subscriber = new Subscriber();
             this.Provider = new Provider();
             this.Carrier = new Carrier();

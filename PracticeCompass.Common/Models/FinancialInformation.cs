@@ -22,6 +22,7 @@ namespace PracticeCompass.Common.Models
         public DateTime PaymentEffectiveDate { set; get; }
         public string ReferenceIdentificationNumber { set; get; }
         public string TraceOrigCompanySupplCode { set; get; }
+        public string parameterGroupCode { get; set; }
         public string CheckTraceNbr { set; get; }
         public string TraceTypeCode { set; get; }
         public FinancialInformation()
