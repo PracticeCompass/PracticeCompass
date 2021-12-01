@@ -40,7 +40,8 @@ export class DropDownCell extends React.Component {
     const field = this.props.field || '';
     const dataValue = dataItem[field] === null ? '' : dataItem[field];
     const Items=dataItem["type"]=="Charge"? this.charageData:this.detailsData;
-    return <td style={{backgroundColor:"blue"}}>
+    const itemStyle=dataItem["type"]=="Charge"?{backgroundColor:"blue"}:{};
+    return <td style={itemStyle}>
             {dataItem.inEdit || this.props.editor == "edit" ? 
             
       <ComboBox style={{
