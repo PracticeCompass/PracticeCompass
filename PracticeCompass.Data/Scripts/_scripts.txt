@@ -67,3 +67,4 @@ uspPhysicianDetailsGet.sql
 uspPlanGridGet.sql
 uspPlanDetailsGet.sql
 uspERSTableDelete.sql
+FuncGetClaimOutStandingBalance.sql

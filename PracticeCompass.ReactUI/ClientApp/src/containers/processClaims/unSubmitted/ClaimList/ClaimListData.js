@@ -117,10 +117,10 @@ export const columns = [
   },
 ];
 export const sortColumns = [
-  // {
-  //   field: "dos",
-  //   dir: "asc",
-  // },
+    {
+        field: "dos",
+        dir: "desc",
+    },
 ];
 export const DOSFilter = [
   {

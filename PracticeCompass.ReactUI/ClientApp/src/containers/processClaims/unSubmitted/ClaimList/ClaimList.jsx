@@ -145,7 +145,7 @@ class ClaimList extends Component {
     super();
     this.updateDimensions = this.updateDimensions.bind(this);
   }
-  state = {
+    state = {
     patientNameSelected: null,
     guarantorSelected: null,
     insuranceNameSelected: null,
@@ -589,7 +589,9 @@ class ClaimList extends Component {
       guarantorIDSelectedState: null,
       insuranceSelectedState: "",
       insuranceIDSelectedState: null,
-      completedCalims: false,
+        completedCalims: false,
+        selectedSortColumn: null,
+        sortDirection : null,
     });
   };
   filterChange = async (event) => {
@@ -713,9 +715,9 @@ class ClaimList extends Component {
         : 0,
       Skip: refreshData ? 0 : this.props.Claims.length,
       SortColumn: this.state.selectedSortColumn
-        ? this.state.selectedSortColumn
-        : "",
-      SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
+            ? this.state.selectedSortColumn
+            : sortColumns[0].field,
+        SortDirection: this.state.sortDirection ? this.state.sortDirection : sortColumns[0].dir,
     };
     this.props.getclaims(claimGrid, refreshData);
   };

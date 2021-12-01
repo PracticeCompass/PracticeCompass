@@ -29,7 +29,7 @@ export const GetICD10Codes =
       });
       // return resp.data && resp.data.length>0?resp.data[0].shortDescription:'';
       let copyData = resp.data;
-      if (!refreshData) copyData = resp.data.concat(backUpData);
+        if (!refreshData) copyData = backUpData.concat(resp.data);
       await dispatch(setICD10List(copyData || []));
     } catch (error) {
       await dispatch(setICD10List([]));

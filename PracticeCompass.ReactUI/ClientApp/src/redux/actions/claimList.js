@@ -53,7 +53,7 @@ export const getguarantorList =
         }&skip=${skip}`,
       });
       let copyData = resp.data;
-      if (!refreshData) copyData = resp.data.concat(backUpData);
+        if (!refreshData) copyData = backUpData.concat(resp.data);
       await dispatch(setGuarantorList(copyData || []));
     } catch (error) {
       await dispatch(setGuarantorList([]));
@@ -117,7 +117,7 @@ export const getclaims =
         }`,
       });
       let copyData = resp.data;
-      if (!refreshData) copyData = resp.data.concat(backUpData);
+      if (!refreshData) copyData = backUpData.concat(resp.data); //resp.data.concat(backUpData);
       await dispatch(setClaims(copyData || []));
     } catch (error) {
       await dispatch(setClaims([]));
@@ -145,7 +145,7 @@ export const getPhysicianList =
       });
       //await dispatch(setPhysicians(resp.data || []));
       let copyData = resp.data;
-      if (!refreshData) copyData = resp.data.concat(backUpData);
+        if (!refreshData) copyData = backUpData.concat(resp.data);
       await dispatch(setPhysicians(copyData || []));
     } catch (error) {
       await dispatch(setPhysicians([]));

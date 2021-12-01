@@ -51,7 +51,7 @@ BEGIN
 		else ''
 		end
 		set @completedclaimsfilter=Case @IncludeCompletedClaims
-		when 0 then 'and (((Charge.Amount - (Charge.InsuranceReceipts + Charge.GuarantorReceipts + Charge.Adjustments) > 0) and (charge.CurrentStatus != ''V'' OR charge.CurrentStatus != ''P'')) or Claim.LowestRespCoverageOrder != 99)'
+		when 0 then 'and dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) > 0  and Claim.LowestRespCoverageOrder != 99'
 		when 1 then ''
 		else ''
 		end
@@ -59,8 +59,8 @@ BEGIN
 		when 'dos' then 'order by convert(Date,Max(ProcedureEvent.FromServiceDate),101) '+@SortDirection+''
 		when 'patientName' then 'order by Person.SortName '+@SortDirection+''
 		when 'claimNumber' then 'order by Claim.ClaimNumber '+@SortDirection+''
-		when 'totalClaimAmount' then 'order by cast(max(PlanClaim.TotalClaimAmount)as money) '+@SortDirection+''
-		when 'outStandingBalanace' then 'order by cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money) '+@SortDirection+''
+		when 'totalClaimAmount' then 'order by TotalClaimAmount '+@SortDirection+''
+		when 'outStandingBalanace' then 'order by OutStandingBalanace '+@SortDirection+''
 		when 'practiceName' then 'order by Practice.SortName '+@SortDirection+''
 		when 'providerName' then 'order by Provider.SortName '+@SortDirection+''
 		when 'primaryStatus' then 'order by PlanClaimPrimary.CurrentStatus '+@SortDirection+''
@@ -68,13 +68,13 @@ BEGIN
 		when 'tertiaryStatus' then 'order by PlanClaimTertiary.CurrentStatus '+@SortDirection+''
 		when 'destination' then 'order by Destination '+@SortDirection+''
 		when 'notes' then 'order by Claim.ClaimSID '+@SortDirection+''
-		else 'order by convert(Date,Max(ProcedureEvent.FromServiceDate),101) desc'
+		else ''
 		end
 	
 set @SQL= 'select distinct COUNT(*) OVER() as totalCount,
    convert(varchar,Claim.ClaimSID,10) as GridID,
-   Claim.ClaimSID,Claim.ClaimNumber, Convert(varchar(50),max(PlanClaim.TotalClaimAmount),1) as TotalClaimAmount ,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmountValue, Convert(varchar(50),(SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) ,1) AS OutStandingBalanace , 
-   cast((SUM(Charge.Amount) - (SUM(Charge.InsuranceReceipts) + SUM(Charge.GuarantorReceipts) + SUM(Charge.Adjustments))) as Money) AS OutStandingBalanaceValue
+   Claim.ClaimSID,Claim.ClaimNumber,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmount, 
+  dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) AS OutStandingBalanace
 ,Practice.SortName as practiceName,Practice.PracticeID as PracticeID,Person.SortName as patientName , dbo.FuncClaimDestGet(Claim.ClaimSID) as Destination 
 ,Provider.SortName as ProviderName , convert(varchar,Max(ProcedureEvent.FromServiceDate),101) as DOS , convert(Date,Max(ProcedureEvent.FromServiceDate),101) as DOSDate ,
 PlanClaimPrimary.CurrentStatus as PrimaryStatus ,
@@ -130,7 +130,6 @@ and
 and
 ('+ convert(varchar, @PhysicianID,10) +'=0 or PlanClaim.PerformingProviderID= '+ convert(varchar, @PhysicianID,10) +')'
 
-print @SQL
 set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
 print @SQL
  exec(@SQL)

@@ -92,7 +92,7 @@ export const getpatientList =
         &Skip=${skip}`,
       });
       let copyData = resp.data;
-      if (!refreshData) copyData = resp.data.concat(backUpData);
+        if (!refreshData) copyData = backUpData.concat(resp.data);
       await dispatch(setPatientList(copyData || []));
     } catch (error) {
       await dispatch(setPatientList([]));
@@ -120,7 +120,7 @@ export const getinsuranceList =
           }&skip=${skip}`,
         });
         let copyData = resp.data;
-        if (!refreshData) copyData = resp.data.concat(backUpData);
+        if (!refreshData) copyData = backUpData.concat(resp.data);
         await dispatch(setInsuranceList(copyData || []));
     } catch (error) {
       await dispatch(setInsuranceList([]));
@@ -272,7 +272,7 @@ export const getPatients =
         }`,
       });
       let copyData = resp.data;
-      if (!refreshData) copyData = resp.data.concat(backUpData);
+        if (!refreshData) copyData = backUpData.concat(resp.data);
 
       await dispatch(setPatients(copyData || []));
     } catch (error) {
