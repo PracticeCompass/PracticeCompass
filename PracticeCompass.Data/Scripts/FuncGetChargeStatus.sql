@@ -10,12 +10,13 @@ create or ALTER     FUNCTION [dbo].[FuncGetChargeStatus]
 (
 	@calimID int
 )
-RETURNS @chargeStatus Table ([ClaimSID] Int ,[ChargeSID] Int , [SourceID] Int , [Amount] Decimal , [CurrentStatus] Varchar(50) )
+RETURNS @chargeStatus Table ([ChargeSID] Int , [SourceID] Int , [Amount] Decimal , [CoverageOrder] Int )
 AS
 BEGIN
-		Insert Into @chargeStatus select ClaimSID,ChargeActivity.ChargeSID,SourceID,Amount,CurrentStatus from 
-		  ClaimCharge inner join ChargeActivity on ClaimCharge.ChargeSID = ChargeActivity.ChargeSID where 
-		  SourceType ='I' and ActivityType = 'PMT' and ClaimCharge.ClaimSID = @calimID 
+		Insert Into @chargeStatus select ChargeActivity.ChargeSID,SourceID,Amount,CoverageOrder from 
+		  ClaimCharge inner join ChargeActivity on ClaimCharge.ChargeSID = ChargeActivity.ChargeSID
+		  inner join PlanClaim on ClaimCharge.ClaimSID = PlanClaim.ClaimSID and ChargeActivity.SourceID = PlanID
+		  where SourceType ='I' and ActivityType = 'PMT' and ClaimCharge.ClaimSID = @calimID 
 
 		  	RETURN 
 	-- Return the result of the function
