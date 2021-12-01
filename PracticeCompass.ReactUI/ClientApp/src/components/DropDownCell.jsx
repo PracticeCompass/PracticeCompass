@@ -17,8 +17,9 @@ export class DropDownCell extends React.Component {
     {value:"Manual Processing",text:"Manual Processing"},
   ];  
   charageData= [{
-    value:"Accepted",text:"Accepted"},
-    {value:"Rejected",text:"Rejected"}
+    value:"Accepted,Apply all",text:"Accepted,Apply all"},
+    {value:"Denied because of contract",text:"Denied because of contract"},
+    {value:"Zero or low pay",text:"Zero or low pay"},
   ];
   handleChange = e => {
     if (this.props.onChange) {
@@ -40,7 +41,19 @@ export class DropDownCell extends React.Component {
     const field = this.props.field || '';
     const dataValue = dataItem[field] === null ? '' : dataItem[field];
     const Items=dataItem["type"]=="Charge"? this.charageData:this.detailsData;
-    const itemStyle=dataItem["type"]=="Charge"?{backgroundColor:"blue"}:{};
+    let itemStyle={};
+    if(dataItem["type"]=="Charge"){
+      if(dataValue=="Accepted,Apply all"){
+        itemStyle={backgroundColor:"green"};
+      }
+      else if(dataValue=="Denied because of contract"){
+        itemStyle={backgroundColor:"red"};
+      }else if(dataValue=="Zero or low pay"){
+        itemStyle={backgroundColor:"yellow"};
+      }
+    }
+
+
     return <td style={itemStyle}>
             {dataItem.inEdit || this.props.editor == "edit" ? 
             

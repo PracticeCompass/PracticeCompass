@@ -906,7 +906,6 @@ class EraPayments extends Component {
                           onRowRender={this.onRowRender}
                           skip={0}
                           take={21}
-                          height="560px"
                           width="100%"
                           editColumn={"ersChargeSID"}
                           DATA_ITEM_KEY="ersChargeSID"
@@ -921,6 +920,8 @@ class EraPayments extends Component {
                           itemChange={this.applyItemChanged}
                           onSortChange={this.onSortChange}
                           // pageChange={this.pageChange}
+                          height={window.innerHeight - 220}
+                          noPageable={true}
                           isEditable={true}
                           // totalCount={
                           //   this.props.patientApplys != null && this.props.patientApplys.length > 0
