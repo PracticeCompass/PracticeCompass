@@ -10,13 +10,13 @@ function mapDispatchToProps(dispatch) {
     };
 }
 export class DropDownCell extends React.Component {
-  charageData = [{
+  detailsData = [{
     value:"Physician Responsibility",text:"Physician Responsibility"},
     {value:"Move responsibility to the next level. Secondary/tertiary insurance or patient.",text:"Move responsibility to the next level. Secondary/tertiary insurance or patient."},
     {value:"Patient responsibility",text:"Patient responsibility"},
     {value:"Manual Processing",text:"Manual Processing"},
-  ];
-  detailsData = [{
+  ];  
+  charageData= [{
     value:"Accepted",text:"Accepted"},
     {value:"Rejected",text:"Rejected"}
   ];
