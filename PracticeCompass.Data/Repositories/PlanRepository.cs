@@ -27,7 +27,14 @@ namespace PracticeCompass.Data.Repositories
             }, commandType: CommandType.StoredProcedure);
             return data.Read<PlanDetails>().FirstOrDefault();
         }
-
+        public List<PlanGroup> PlanGroupGet(string search)
+        {
+            var data = this.db.QueryMultiple("uspPlanGroupGet", new
+            {
+                @search= search
+            }, commandType: CommandType.StoredProcedure);
+            return data.Read<PlanGroup>().ToList();
+        }
         public List<PlanList> PlansGridGet(int planID,  string Zip, int skip, string SortColumn, string SortDirection)
         {
             var data = this.db.QueryMultiple("uspPlanGridGet", new

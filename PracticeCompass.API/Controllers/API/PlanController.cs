@@ -53,6 +53,21 @@ namespace PracticeCompass.API.Controllers.API
                 return new PlanDetails();
             }
         }
+        [HttpGet]
+        [Route("api/plan/PlanGroupGet")]
+        public List<PlanGroup> PlanGroupGet(string search)
+        {
+            try
+            {
+                List<PlanGroup> Result = unitOfWork.PlanRepository.PlanGroupGet(search);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<PlanGroup>();
+            }
+        }
 
     }
 }
