@@ -13,7 +13,7 @@ namespace PracticeCompass.Common.Models
         public string Suffix { set; get; }
         public string NPI { set; get; }
         public string IDCodeQualifier { set; get; }
-        
+        public string qualifier { get; set; }
         public List<ProviderSecIdentifier> SecondaryIdentifiers { set; get; }
         public Provider()
         {
@@ -23,6 +23,7 @@ namespace PracticeCompass.Common.Models
             this.Suffix = string.Empty;
             this.NPI = string.Empty;
             this.SecondaryIdentifiers = new List<ProviderSecIdentifier>();
+            qualifier = "";
         }
     }
 }

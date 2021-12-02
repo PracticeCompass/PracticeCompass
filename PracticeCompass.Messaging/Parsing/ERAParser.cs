@@ -102,6 +102,19 @@ namespace PracticeCompass.Messaging.Parsing
                             var era = GetERAInformation(transactionEnvelope, InternalSeparator);
                             if (era != null)
                             {
+                                var ERSPmtPartyReference = new List<string> { "2U", "EO", "HI", "NF", "0B", "D3", "PQ", "TJ", "F2", "EV" };
+                                var ERSPmtPartyReferenceSegments = (from s
+                                                                    in segments
+                                                                where s.Name == "REF" && ERSPmtPartyReference.Contains(s[1])
+                                                                select s).ToList();
+                                for(var pmref=0; pmref< ERSPmtPartyReferenceSegments.Count; pmref++)
+                                {
+                                    era.ERSPmtPartyReferences.Add(new ERAReference
+                                    {
+                                        ReferenceID = ERSPmtPartyReferenceSegments[pmref][2],
+                                        ReferenceIDQualifier = ERSPmtPartyReferenceSegments[pmref][1]
+                                    });
+                                }
                                 var referencequalifiers= new List<string> { "0B", "1B", "1D", "1H", "1L", "1W", "28", "6P", "9A", "9C", "BB", "CCR", "CE", "EA", "F8", "G1", "G2", "IG", "SY" };
                                 var messagereferences = (from s in segments where s.Name == "REF" && referencequalifiers.Contains(s[1]) select s).ToList();
                                 for (int f = 0; f < messagereferences.Count; f++)
@@ -858,15 +871,16 @@ namespace PracticeCompass.Messaging.Parsing
             {
 
                 var type = GetSecondaryProviderType(renderingProviderSegment[1]);
-                if (type == ProviderSecIdentifierType.NPI)
-                {
+                serviceLine.RenderingProvider.qualifier = renderingProviderSegment[1];
+                //if (type == ProviderSecIdentifierType.NPI)
+                //{
                     serviceLine.RenderingProvider.NPI = renderingProviderSegment[2];
-                }
-                else
-                {
-                    var id = new ProviderSecIdentifier { Type = type, Identifier = renderingProviderSegment[2] };
-                    serviceLine.RenderingProvider.SecondaryIdentifiers.Add(id);
-                }
+                //}
+                //else
+                //{
+                //    var id = new ProviderSecIdentifier { Type = type, Identifier = renderingProviderSegment[2] };
+                //    serviceLine.RenderingProvider.SecondaryIdentifiers.Add(id);
+                //}
             }
             
             var adjustmentSegments = (from s in serviceLineChildSegments where s.Name == "CAS" select s).ToList();

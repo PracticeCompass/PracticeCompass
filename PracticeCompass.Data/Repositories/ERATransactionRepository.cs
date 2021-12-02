@@ -83,6 +83,10 @@ namespace PracticeCompass.Data.Repositories
             var ERSPmtPartyContacts = new List<ERSPmtPartyContact>();
             var ERSPmtPartyContactNbrs = new List<ERSPmtPartyContactNbr>();
             var ERSRemittanceDates = new List<ERSRemittanceDate>();
+            var ERSChargeClaimAdjustments = new List<ERSChargeClaimAdjustment>();
+            var ERSChargeMsgCodes = new List<ERSChargeMsgCode>();
+            var ERSChargeReferences = new List<ERSChargeReference>();
+            var ERSPmtPartyReferences = new List<ERSPmtPartyReference>();
             using var txScope = new TransactionScope();
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
             var ERSClaimSID = 0;
@@ -113,6 +117,29 @@ namespace PracticeCompass.Data.Repositories
                 var Chargesresults = this.db.QueryMultiple(sql, new { ids = ref6R });
                 Charges = Chargesresults.Read<Charge>().ToList();
                 var practiceID = Charges[0].PracticeID;
+
+                #region ERSPmtPartyReference
+                for(var pmt=0;pmt< transactions[era].ERSPmtPartyReferences.Count; pmt++)
+                {
+                    string ERSPmtPartyReferenceMAXRowID = GetMAXRowID("ERSPmtPartyReference", ERSPmtPartyReferences.Count != 0 ? ERSPmtPartyReferences[ERSPmtPartyReferences.Count - 1].prrowid : "0");
+
+                    ERSPmtPartyReferences.Add(new ERSPmtPartyReference
+                    {
+                        CreateStamp=timestamp,
+                        CreateUser=88,
+                        EntityIDCode="",
+                        ERSPaymentSID= ERSPaymentSID,
+                        LastUser=88,
+                        pro2created=DateTime.Now,
+                        pro2modified=DateTime.Now,
+                        Pro2SrcPDB="medman",
+                        prrowid= ERSPmtPartyReferenceMAXRowID,
+                        ReferenceID= transactions[era].ERSPmtPartyReferences[pmt].ReferenceID,
+                        ReferenceIDQualifier= transactions[era].ERSPmtPartyReferences[pmt].ReferenceIDQualifier,
+                        TimeStamp=timestamp
+                    });
+                }
+                #endregion
                 #region ERSRemittanceDate
                 string ERSRemittanceDateMAXRowID = GetMAXRowID("ERSRemittanceDate", ERSRemittanceDates.Count != 0 ? ERSRemittanceDates[ERSRemittanceDates.Count - 1].prrowid : "0");
                 ERSRemittanceDates.Add(new ERSRemittanceDate
@@ -516,6 +543,7 @@ namespace PracticeCompass.Data.Repositories
                                 pro2modified = DateTime.Now,
                             });
                         }
+
                         #region modifiers segment SVC
                         for (var mod = 0; mod < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems.Count; mod++)
                         {
@@ -538,6 +566,101 @@ namespace PracticeCompass.Data.Repositories
                                 prrowid = ClaimDateofserviceMAXRowID,
                                 ERSChargeSID= ERSChargeSID
                             });
+                            if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ControlNumber != "")//6r
+                            {
+                                string ERSChargeReferenceMAXRowID = GetMAXRowID("ERSChargeReference", ERSChargeReferences.Count != 0 ? ERSChargeReferences[ERSChargeReferences.Count - 1].prrowid : "0");
+
+                                #region ERSChargeReference
+                                ERSChargeReferences.Add(new ERSChargeReference
+                                {
+                                    CreateStamp = timestamp,
+                                    CreateUser = 88,
+                                    LastUser = 88,
+                                    ERSChargeSID = ERSChargeSID,
+                                    pro2modified = DateTime.Now,
+                                    pro2created = DateTime.Now,
+                                    Pro2SrcPDB = "medman",
+                                    prrowid = ERSChargeReferenceMAXRowID,
+                                    TimeStamp = timestamp,
+                                    ReferenceID= transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ControlNumber,
+                                    ReferenceIDQualifier="6R"
+                                });
+                                #endregion
+                            }
+                            if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].RenderingProvider.qualifier != "")
+                            {
+                                string ERSChargeReferenceMAXRowID = GetMAXRowID("ERSChargeReference", ERSChargeReferences.Count != 0 ? ERSChargeReferences[ERSChargeReferences.Count - 1].prrowid : "0");
+
+                                #region ERSChargeReference
+                                ERSChargeReferences.Add(new ERSChargeReference
+                                {
+                                    CreateStamp = timestamp,
+                                    CreateUser = 88,
+                                    LastUser = 88,
+                                    ERSChargeSID = ERSChargeSID,
+                                    pro2modified = DateTime.Now,
+                                    pro2created = DateTime.Now,
+                                    Pro2SrcPDB = "medman",
+                                    prrowid = ERSChargeReferenceMAXRowID,
+                                    TimeStamp = timestamp,
+                                    ReferenceID = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].RenderingProvider.NPI,
+                                    ReferenceIDQualifier = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].RenderingProvider.qualifier
+                                });
+                                #endregion
+                            }
+                            if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Adjustments.Count > 0)
+                            {
+                                for (var adj = 0; adj < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Adjustments.Count; adj++)
+                                {
+                                    for (var adjmod = 0; adjmod < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Adjustments[adj].AdjustmentModel.Count; adjmod++)
+                                    {
+                                        string ERSChargeClaimAdjustmentMAXRowID = GetMAXRowID("ERSChargeClaimAdjustment", ERSChargeClaimAdjustments.Count != 0 ? ERSChargeClaimAdjustments[ERSChargeClaimAdjustments.Count - 1].prrowid : "0");
+                                        var adjmodel = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Adjustments[adj].AdjustmentModel[adjmod];
+                                        #region ERSChargeClaimAdjustment
+                                        ERSChargeClaimAdjustments.Add(new ERSChargeClaimAdjustment
+                                        {
+                                            AdjustmentAmt = adjmodel.MonetaryAmount,
+                                            AdjustmentQuantity= adjmodel.Quantity,
+                                            AdjustmentReasonCode= adjmodel.Reason.IdentifyingCode,
+                                            CreateStamp=timestamp,
+                                            CreateUser=88,
+                                            ERSChargeSID=ERSChargeSID,
+                                            LastUser=88,
+                                            pro2created=DateTime.Now,
+                                            pro2modified= DateTime.Now,
+                                            Pro2SrcPDB="medman",
+                                            prrowid= ERSChargeClaimAdjustmentMAXRowID,
+                                            TimeStamp=timestamp,
+                                            ClaimAdjustmentGroupCode= transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Adjustments[adj].Type
+
+                                        });
+                                        #endregion
+                                        #region ERSChargeMsgCode
+                                        string ERSChargeMsgCodeMAXRowID = GetMAXRowID("ERSChargeMsgCode", ERSChargeMsgCodes.Count != 0 ? ERSChargeMsgCodes[ERSChargeMsgCodes.Count - 1].prrowid : "0");
+
+                                        ERSChargeMsgCodes.Add(new ERSChargeMsgCode
+                                        {
+                                            TimeStamp=timestamp,
+                                            CreateUser=88,
+                                            CreateStamp=timestamp,
+                                            LastUser=88,
+                                            ERSChargeSID=ERSChargeSID,
+                                            pro2created=DateTime.Now,
+                                            pro2modified= DateTime.Now,
+                                            Pro2SrcPDB="medman",
+                                            Quantity= adjmodel.Quantity,
+                                            Amount= adjmodel.MonetaryAmount,
+                                            MessageCode=adjmodel.Reason.IdentifyingCode+"." + transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].Adjustments[adj].Type,
+                                            prrowid= ERSChargeMsgCodeMAXRowID,
+                                            SortOrder= ERSChargeMsgCodes.Count()+1
+                                        });
+                                        #endregion
+
+                                    }
+
+                                }
+                            }
+
                             #region ERSChargeMonetaryAmt
                             for (var p = 0; p < transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].ServiceLineItems[mod].ServiceLineSupplementalAmounts.Count; p++)
                             {
@@ -793,8 +916,20 @@ namespace PracticeCompass.Data.Repositories
             //var ERSPmtPartyContact = this.db.Execute(ERSPmtPartyContactSql, ERSPmtPartyContacts);
             var ERSRemittanceDateSql = "INSERT INTO [dbo].[ERSRemittanceDate]VALUES(@prrowid,@RemittanceSID,@DateTimeQualifier,@Date,@TimeStamp"+
            ", @LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ERSRemittanceDat= this.db.Execute(ERSRemittanceDateSql, ERSRemittanceDates);
-
+            //var ERSRemittanceDat= this.db.Execute(ERSRemittanceDateSql, ERSRemittanceDates);
+            var ERSChargeClaimAdjustmentSQL = "INSERT INTO [dbo].[ERSChargeClaimAdjustment] VALUES(@prrowid,@ERSChargeSID,@ClaimAdjustmentGroupCode,@AdjustmentReasonCode,"+
+           "@AdjustmentAmt,@AdjustmentQuantity,@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB"+
+           ",@pro2created,@pro2modified)";
+            //var ERSChargeClaimAdjustmnt = this.db.Execute(ERSChargeClaimAdjustmentSQL, ERSChargeClaimAdjustments);
+            var ERSChargeMsgCodeSQL = "INSERT INTO [dbo].[ERSChargeMsgCode]VALUES(@prrowid,@ERSChargeSID,@MessageCode,@TimeStamp,@LastUser,@CreateStamp"+
+           ", @CreateUser, @SortOrder, @Amount, @Quantity, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            //var ERSChargeMsgCod = this.db.Execute(ERSChargeMsgCodeSQL, ERSChargeMsgCodes);
+            var ERSChargeReferenceSQL = "INSERT INTO [dbo].[ERSChargeReference]VALUES(@prrowid,@ERSChargeSID,@ReferenceIDQualifier,@ReferenceID,@TimeStamp"+
+           ", @LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            //var ERSChargeReferenc = this.db.Execute(ERSChargeReferenceSQL, ERSChargeReferences);
+            var ERSPmtPartyReferenceSQL = "INSERT INTO [dbo].[ERSPmtPartyReference]VALUES(@prrowid,@ERSPaymentSID,@EntityIDCode,@ReferenceIDQualifier,@ReferenceID"+
+           ", @TimeStamp, @LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            var ERSPmtPartyReferen = this.db.Execute(ERSPmtPartyReferenceSQL, ERSPmtPartyReferences);
             txScope.Complete();
             return true;
         }

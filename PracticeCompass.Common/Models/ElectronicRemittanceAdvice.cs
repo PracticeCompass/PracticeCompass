@@ -16,6 +16,7 @@ namespace PracticeCompass.Common.Models
         public PayeeIdentifier Payee { set; get; }
         public List<ClaimHeaderGroup> ClaimHeaderGroups { set; get; }
         public List<ERAReference> ERAReferences { set; get; }
+        public List<ERAReference> ERSPmtPartyReferences { get; set; }
         public List<ProviderAdjustment> ProviderAdjustments { set; get; }
         public ElectronicRemittanceAdvice()
         {
@@ -30,6 +31,7 @@ namespace PracticeCompass.Common.Models
             PayerIDCode = "";
             PayerName = "";
             PayerAddress = new Address();
+            ERSPmtPartyReferences = new List<ERAReference>();
         }
     }
 }
