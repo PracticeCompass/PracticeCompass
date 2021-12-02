@@ -24,6 +24,7 @@ namespace PracticeCompass.Common.Models
         public Subscriber Subscriber { set; get; }
         public Provider Provider { set; get; }
         public Carrier Carrier { set; get; }
+        public PayerIdentifier Payer { get; set; }
         public DateTime ClaimReceivedDate { set; get; }
         public DateTime? StatementStartDate { set; get; }
         public DateTime? StatementEndDate { set; get; }
@@ -55,6 +56,7 @@ namespace PracticeCompass.Common.Models
             this.OutPatientAdjudication = new OutpatientAdjudication();
             this.ServiceLineItems = new List<ServiceLine>();
             this.Adjustments = new List<ClaimAdjustment>();
+            this.Payer = new PayerIdentifier();
         }
 
     }

@@ -80,6 +80,9 @@ namespace PracticeCompass.Data.Repositories
             var ERSChargeMonetaryAmts = new List<ERSChargeMonetaryAmt>();
             var ERSChargeIndustryCodes = new List<ERSChargeIndustryCode>();
             var ERSRemittanceFileInstance = new List<ERSRemittanceFileInstance>();
+            var ERSPmtPartyContacts = new List<ERSPmtPartyContact>();
+            var ERSPmtPartyContactNbrs = new List<ERSPmtPartyContactNbr>();
+            var ERSRemittanceDates = new List<ERSRemittanceDate>();
             using var txScope = new TransactionScope();
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
             var ERSClaimSID = 0;
@@ -110,6 +113,69 @@ namespace PracticeCompass.Data.Repositories
                 var Chargesresults = this.db.QueryMultiple(sql, new { ids = ref6R });
                 Charges = Chargesresults.Read<Charge>().ToList();
                 var practiceID = Charges[0].PracticeID;
+                #region ERSRemittanceDate
+                string ERSRemittanceDateMAXRowID = GetMAXRowID("ERSRemittanceDate", ERSRemittanceDates.Count != 0 ? ERSRemittanceDates[ERSRemittanceDates.Count - 1].prrowid : "0");
+                ERSRemittanceDates.Add(new ERSRemittanceDate
+                {
+                    CreateStamp=timestamp,
+                    TimeStamp=timestamp,
+                    CreateUser=88,
+                    LastUser=88,
+                    Date= transactions[era].ProductionDate,
+                    DateTimeQualifier="405",
+                    pro2created=DateTime.Now,
+                    pro2modified=DateTime.Now,
+                    Pro2SrcPDB="medman",
+                    prrowid= ERSRemittanceDateMAXRowID,
+                    RemittanceSID= ERSRemittenceSID
+                });
+                #endregion
+                for (var pyr=0; pyr < transactions[era].Payer.Count; pyr++)
+                {
+                    #region ERSPmtPartyContact
+                    string ERSPmtPartyContactMAXRowID = GetMAXRowID("ERSPmtPartyContact", ERSPmtPartyContacts.Count != 0 ? ERSPmtPartyContacts[ERSPmtPartyContacts.Count - 1].prrowid : "0");
+
+                    ERSPmtPartyContacts.Add(new ERSPmtPartyContact
+                    {
+                        CreateStamp = timestamp,
+                        CreateUser = 88,
+                        EntityIDCode = "PR",
+                        LastUser = 88,
+                        Name = transactions[era].Payer[pyr].ClaimContactName,
+                        ERSPaymentSID = ERSPaymentSID,
+                        pro2created = DateTime.Now,
+                        pro2modified = DateTime.Now,
+                        Pro2SrcPDB = "medman",
+                        prrowid = ERSPmtPartyContactMAXRowID,
+                        ContactFunctionCode = transactions[era].Payer[pyr].ContactFunctionCode,
+                        TimeStamp = timestamp
+
+                    });
+                    #endregion
+                    #region ERSPmtPartyContactNbr
+                    string ERSPmtPartyContactNbrMAXRowID = GetMAXRowID("ERSPmtPartyContactNbr", ERSPmtPartyContactNbrs.Count != 0 ? ERSPmtPartyContactNbrs[ERSPmtPartyContactNbrs.Count - 1].prrowid : "0");
+
+                    ERSPmtPartyContactNbrs.Add(new ERSPmtPartyContactNbr
+                    {
+                        TimeStamp = timestamp,
+                        CreateStamp = timestamp,
+                        LastUser = 88,
+                        CreateUser = 88,
+                        pro2modified = DateTime.Now,
+                        pro2created = DateTime.Now,
+                        Pro2SrcPDB = "medman",
+                        ERSPaymentSID = ERSPaymentSID,
+                        prrowid = ERSPmtPartyContactNbrMAXRowID,
+                        CommunicationsExt = "",
+                        CommunicationsNbr = transactions[era].Payer[pyr].ClaimContactCommunicationsNbr,
+                        CommunicationsNbrQualifier = transactions[era].Payer[pyr].NbrFunctionCode,
+                        ContactFunctionCode = transactions[era].Payer[pyr].ContactFunctionCode,
+                        EntityIDCode = "PR"
+
+                    });
+                    #endregion
+                }
+
                 #region ERSRemittanceFileInstance
                 ERSRemittanceFileInstance.Add(new ERSRemittanceFileInstance
                 {
@@ -167,7 +233,7 @@ namespace PracticeCompass.Data.Repositories
                     DeletedAfterPost = "N",
                     PaymentNotBalanced = false,
                     OriginalPaymentAmt = transactions[era].financialInformation.TotalPaidAmount,
-                    PayerNameText = transactions[era].Payer.Name,
+                    PayerNameText = transactions[era].PayerName,
                     PracticeID = practiceID,
                     RuralHealth="",
                     RemittanceSourceCode="MMNS"
@@ -187,16 +253,16 @@ namespace PracticeCompass.Data.Repositories
                     pro2modified = DateTime.Now,
                     ERSPaymentSID = ERSPaymentSID,
                     EntityIDCode = "PR",
-                    Name = transactions[era].Payer.Name,
-                    AddressInfo01 = transactions[era].Payer.Address.Line1,
-                    AddressInfo02 = transactions[era].Payer.Address.Line2,
-                    PostalCode = transactions[era].Payer.Address.ZipCode,
-                    StateCode = transactions[era].Payer.Address.State,
-                    CityName = transactions[era].Payer.Address.City,
+                    Name = transactions[era].PayerName,
+                    AddressInfo01 = transactions[era].PayerAddress.Line1,
+                    AddressInfo02 = transactions[era].PayerAddress.Line2,
+                    PostalCode = transactions[era].PayerAddress.ZipCode,
+                    StateCode = transactions[era].PayerAddress.State,
+                    CityName = transactions[era].PayerAddress.City,
                     CountryCode = "",
                     LocationID = "",
                     LocationQualifier = "",
-                    IDCode = String.IsNullOrEmpty(transactions[era].Payer.IDCode)? transactions[era].Interchangedata.ReceiverIdentifier : transactions[era].Payer.IDCode,
+                    IDCode = String.IsNullOrEmpty(transactions[era].PayerIDCode)? transactions[era].Interchangedata.ReceiverIdentifier : transactions[era].PayerIDCode,
                     IDCodeQualifier = ""
 
                 });
@@ -385,7 +451,7 @@ namespace PracticeCompass.Data.Repositories
                                 prrowid = ClaimDateMAXRowID
                             });
                         }
-                        if (transactions[era].Payer.ClaimContactName != "")
+                        if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.ClaimContactName != "")
                         {
                             string ClaimContactMAXRowID = GetMAXRowID("ERSClaimContact", ERSClaimContacts.Count != 0 ? ERSClaimContacts[ERSClaimContacts.Count - 1].prrowid : "0");
                             ERSClaimContacts.Add(new ERSClaimContact
@@ -399,12 +465,12 @@ namespace PracticeCompass.Data.Repositories
                                 pro2created = DateTime.Now,
                                 pro2modified = DateTime.Now,
                                 ERSClaimSID = ERSClaimSID,
-                                ClaimContactName = transactions[era].Payer.ClaimContactName,
-                                ContactFunctionCode = transactions[era].Payer.ContactFunctionCode
+                                ClaimContactName = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.ClaimContactName,
+                                ContactFunctionCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.ContactFunctionCode
 
                             });
                         }
-                        if (transactions[era].Payer.ClaimContactCommunicationsNbr != "")
+                        if (transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.ClaimContactCommunicationsNbr != "")
                         {
                             string ClaimContactNbrMAXRowID = GetMAXRowID("ERSClaimContactNbr", ERSClaimContactNbrs.Count != 0 ? ERSClaimContactNbrs[ERSClaimContactNbrs.Count - 1].prrowid : "0");
                             ERSClaimContactNbrs.Add(new ERSClaimContactNbr
@@ -418,9 +484,9 @@ namespace PracticeCompass.Data.Repositories
                                 pro2created = DateTime.Now,
                                 pro2modified = DateTime.Now,
                                 ERSClaimSID = ERSClaimSID,
-                                ClaimContactCommunicationsNbr = transactions[era].Payer.ClaimContactCommunicationsNbr,
-                                CommunicationsNbrQualifier = transactions[era].Payer.CommunicationsNbrQualifier,
-                                ContactFunctionCode = transactions[era].Payer.NbrFunctionCode,
+                                ClaimContactCommunicationsNbr = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.ClaimContactCommunicationsNbr,
+                                CommunicationsNbrQualifier = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.CommunicationsNbrQualifier,
+                                ContactFunctionCode = transactions[era].ClaimHeaderGroups[HG].ClaimRemittanceAdviceItems[HGItems].Payer.NbrFunctionCode,
                                 ClaimContactCommunicationsExt = ""
 
                             });
@@ -643,7 +709,7 @@ namespace PracticeCompass.Data.Repositories
                
             }
             var claimadjSQL = "INSERT INTO [dbo].[ERSClaimAdjustment]  VALUES (@prrowid,@ERSClaimSID,@ClaimAdjustmentGroupCode,@AdjustmentReasonCode,@AdjustmentAmt,@AdjustmentQuantity,@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var claimadj = this.db.Execute(claimadjSQL, ClaimAdjustments);
+            //var claimadj = this.db.Execute(claimadjSQL, ClaimAdjustments);
             var ServiceInfoSQL = "INSERT INTO [dbo].[ERSChargeServiceInfo]  VALUES  (@prrowid" +
             ", @ERSChargeSID , @ERSClaimSID , @ProductServiceIDQualifier, @ProductServiceID , @ProcedureModifier01" +
             ", @ProcedureModifier02 , @ProcedureModifier03 , @ProcedureModifier04 , @ProcedureCodeDescription" +
@@ -651,41 +717,41 @@ namespace PracticeCompass.Data.Repositories
             ", @OrigProductServiceIDQualifier , @OrigProductServiceID , @OrigProcedureModifier01 , @OrigProcedureModifier02" +
             ", @OrigProcedureModifier03 , @OrigProcedureModifier04 , @OrigProcedureCodeDescription , @OrigUnitsOfServiceCount" +
             ", @TimeStamp , @LastUser , @CreateStamp , @CreateUser , @Pro2SrcPDB , @pro2created ,@pro2modified)";
-            var Serv = this.db.Execute(ServiceInfoSQL, ChargeServiceInfos);
+            //var Serv = this.db.Execute(ServiceInfoSQL, ChargeServiceInfos);
             var outpatientSQL = "INSERT INTO [dbo].[ERSMedicareOutpatAdj]  VALUES  (@prrowid" +
                 ",@ERSClaimSID,@ReimbursementRate,@ClaimHCPCSPayableAmt,@ClaimPaymentRemarkCode01," +
                 "@ClaimPaymentRemarkCode02,@ClaimPaymentRemarkCode03,@ClaimPaymentRemarkCode04,@ClaimPaymentRemarkCode05," +
                 "@ClaimESRDPaymentAmt,@NonpayableProfComponentAmt, @TimeStamp , @LastUser , @CreateStamp , @CreateUser , @Pro2SrcPDB , @pro2created ,@pro2modified)";
-            var outpat = this.db.Execute(outpatientSQL, outpatientlist);
+            //var outpat = this.db.Execute(outpatientSQL, outpatientlist);
             var provideradjSQL = "INSERT INTO [dbo].[ERSPmtProvLevelAdj]  VALUES (@prrowid, @ERSPaymentSID,@RemitterProviderID" +
            ", @FiscalPeriodDate, @AdjustmentReasonCode, @ProviderAdjustmentID, @AdjCorrection," +
            "@ProviderAdjustmentAmt, @TimeStamp, @LastUser, @CreateStamp, @CreateUser," +
            "@OrigAdjustmentCode, @MedicareCode, @FinancialControlNumber, @HICNumber," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var provad = this.db.Execute(provideradjSQL, ProviderAdjustments);
+           // var provad = this.db.Execute(provideradjSQL, ProviderAdjustments);
             var claimDateSQL = "INSERT INTO [dbo].[ERSClaimDate] VALUES (@prrowid ,@ERSClaimSID, @DateTimeQualifier," +
            "@ClaimDate, @TimeStamp,@LastUser, @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var dates = this.db.Execute(claimDateSQL, ERSClaimDates);
+           // var dates = this.db.Execute(claimDateSQL, ERSClaimDates);
             var PaymentPartySQL = "INSERT INTO [dbo].[ERSPaymentParty] VALUES (@prrowid, @ERSPaymentSID, @EntityIDCode," +
            "@Name, @IDCodeQualifier, @IDCode, @AddressInfo01, @AddressInfo02," +
            "@CityName, @StateCode, @PostalCode, @CountryCode, @LocationQualifier," +
            "@LocationID, @TimeStamp, @LastUser, @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var PayParty = this.db.Execute(PaymentPartySQL, ERSPaymentParty);
+            //var PayParty = this.db.Execute(PaymentPartySQL, ERSPaymentParty);
             var ERSClaimContactSQL = "INSERT INTO [dbo].[ERSClaimContact]VALUES (@prrowid,  @ERSClaimSID, @ContactFunctionCode," +
            "@ClaimContactName, @TimeStamp,@LastUser,  @CreateStamp," +
            "@CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
-           var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
+           //var ClmContact = this.db.Execute(ERSClaimContactSQL, ERSClaimContacts);
             var ERSClaimContactNbrSQL = "INSERT INTO[dbo].[ERSClaimContactNbr]  VALUES(@prrowid, @ERSClaimSID, @CommunicationsNbrQualifier," +
           "@ContactFunctionCode, @ClaimContactCommunicationsNbr, @ClaimContactCommunicationsExt, @TimeStamp," +
           "@LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ContactNbr = this.db.Execute(ERSClaimContactNbrSQL, ERSClaimContactNbrs);
+           // var ContactNbr = this.db.Execute(ERSClaimContactNbrSQL, ERSClaimContactNbrs);
             var ERSClaimNameSQL = "INSERT INTO [dbo].[ERSClaimName] VALUES (@prrowid,  @ERSClaimSID, @EntityIDCode, @IDCodeQualifier," +
            "@IDCode, @EntityTypeQualifier, @NameLastOrOrgName,  @NameFirst, @NameMiddle," +
            "@NameSuffix, @TimeStamp,  @LastUser,  @CreateStamp, @CreateUser," +
            "@Pro2SrcPDB, @pro2created, @pro2modified)";
-            var ClaimName = this.db.Execute(ERSClaimNameSQL, ERSClaimNames);
+           // var ClaimName = this.db.Execute(ERSClaimNameSQL, ERSClaimNames);
             var ERSPaymentHeaderSQL = "INSERT INTO [dbo].[ERSPaymentHeader] VALUES (@prrowid, @ERSPaymentSID,  @RemittanceSID, @RemittanceSourceCode, @ParameterGroupCode," +
            "@TransHandlingCode, @TotalActualProviderPaymentAmt,  @CreditOrDebitFlagCode, @PaymentMethodCode, @PaymentFormatCode," +
            "@SenderDFIIDNbrQualifier, @SenderDFINbr,  @SenderAcctNbrQualifier, @SenderBankAcctNbr, @RemitPayerIdent," +
@@ -695,29 +761,39 @@ namespace PracticeCompass.Data.Repositories
            "@PaymentSID, @DeletedAfterPost, @OriginalPaymentAmt, @CBOERAPaymentSID, @ReportStorageSID," +
            "@ReportStorageParams, @PracticeID, @DateReceived, @FileArchiveSID, @Pro2SrcPDB," +
            "@pro2created, @pro2modified)";
-            var PaymentHeader = this.db.Execute(ERSPaymentHeaderSQL, ERSPaymentHeaders);
+           // var PaymentHeader = this.db.Execute(ERSPaymentHeaderSQL, ERSPaymentHeaders);
             var ERSClaimDataSQL = "INSERT INTO[dbo].[ERSClaimData] VALUES(@prrowid, @ERSClaimSID, @ERSPaymentSID, @PatientControlNbr, @ClaimStatusCode," +
              "@TotalClaimChargeAmt, @ClaimPaymentAmt, @PatientResponsibilityAmt, @ClaimFilingIndicatorCode," +
              "@PayerClaimControlNumber, @FacilityTypeCode, @ClaimFrequencyTypeCode, @DiagnosisRelatedGroupCode," +
              "@DiagnosisRelatedGroupWeight, @DischargeFraction, @TimeStamp, @LastUser, @CreateStamp," +
              "@CreateUser, @ClaimDetail, @SkipClaim, @Posted, @Pro2SrcPDB, @pro2created, @pro2modified)";
-           var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
+           //var ClaimData = this.db.Execute(ERSClaimDataSQL, ERSClaimData);
             var ERSClaimReferenceSQL = "INSERT INTO [dbo].[ERSClaimReference]VALUES (@prrowid, @ERSClaimSID, @ReferenceIDQualifier," +
            "@ReferenceID, @TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB," +
            "@pro2created,@pro2modified)";
-            var ClaimReferenc = this.db.Execute(ERSClaimReferenceSQL, ERSClaimReferences);
+            //var ClaimReferenc = this.db.Execute(ERSClaimReferenceSQL, ERSClaimReferences);
             var ERSClaimMonetaryAmtSQL = "INSERT INTO [dbo].[ERSClaimMonetaryAmt] VALUES (@prrowid, @ERSClaimSID,@AmtQualifierCode,@ClaimSupplementalInfoAmt," +
            "@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var ClaimMonetaryAmt = this.db.Execute(ERSClaimMonetaryAmtSQL, ERSClaimMonetaryAmts);
+           // var ClaimMonetaryAmt = this.db.Execute(ERSClaimMonetaryAmtSQL, ERSClaimMonetaryAmts);
             var ERSChargeIndustryCodeSQL = "INSERT INTO [dbo].[ERSChargeIndustryCode] VALUES (@prrowid, @ERSChargeSID,@CodeListQualifierCode, @IndustryCode, @TimeStamp," +
            "@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var ChargeIndustryCode = this.db.Execute(ERSChargeIndustryCodeSQL, ERSChargeIndustryCodes);
+           // var ChargeIndustryCode = this.db.Execute(ERSChargeIndustryCodeSQL, ERSChargeIndustryCodes);
             var ERSChargeDateCodeSQL = "INSERT INTO [dbo].[ERSChargeDate]VALUES(@prrowid,@ERSChargeSID,@DateTimeQualifier,@ServiceDate,@TimeStamp,@LastUser,@CreateStamp,"+
             "@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-             var ERSChargeDateCode = this.db.Execute(ERSChargeDateCodeSQL, ERSChargeDates);
+            // var ERSChargeDateCode = this.db.Execute(ERSChargeDateCodeSQL, ERSChargeDates);
             var ERSChargeMonetaryAmtSQL = "INSERT INTO [dbo].[ERSChargeMonetaryAmt] VALUES(@prrowid,@ERSChargeSID,@AmtQualifierCode,@ServiceSupplementalAmt,@TimeStamp," +
             "@LastUser,@CreateStamp,@CreateUser,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var ChargeMonetaryAmt = this.db.Execute(ERSChargeMonetaryAmtSQL, ERSChargeMonetaryAmts);
+           // var ChargeMonetaryAmt = this.db.Execute(ERSChargeMonetaryAmtSQL, ERSChargeMonetaryAmts);
+           var ERSPmtPartyContactNbrSql= "INSERT INTO [dbo].[ERSPmtPartyContactNbr]VALUES(@prrowid,@ERSPaymentSID,@EntityIDCode,@ContactFunctionCode"+
+           ", @CommunicationsNbrQualifier, @CommunicationsNbr, @CommunicationsExt, @TimeStamp, @LastUser" +
+           ", @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
+           // var ERSPmtPartyContactn = this.db.Execute(ERSPmtPartyContactNbrSql, ERSPmtPartyContactNbrs);
+            var ERSPmtPartyContactSql = "INSERT INTO [dbo].[ERSPmtPartyContact]VALUES(@prrowid,@ERSPaymentSID,@EntityIDCode,@ContactFunctionCode,@Name"+
+           ", @TimeStamp, @LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            //var ERSPmtPartyContact = this.db.Execute(ERSPmtPartyContactSql, ERSPmtPartyContacts);
+            var ERSRemittanceDateSql = "INSERT INTO [dbo].[ERSRemittanceDate]VALUES(@prrowid,@RemittanceSID,@DateTimeQualifier,@Date,@TimeStamp"+
+           ", @LastUser, @CreateStamp, @CreateUser, @Pro2SrcPDB, @pro2created, @pro2modified)";
+            var ERSRemittanceDat= this.db.Execute(ERSRemittanceDateSql, ERSRemittanceDates);
 
             txScope.Complete();
             return true;

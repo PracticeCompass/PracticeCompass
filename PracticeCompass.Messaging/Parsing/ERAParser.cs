@@ -202,32 +202,44 @@ namespace PracticeCompass.Messaging.Parsing
             {
                 throw new Exception("Payer Identification Segment  (N1) not found");
             }
-            eRa.Payer.Name = payerIdentification[2];
+            eRa.PayerName = payerIdentification[2];
             if (payerIdentification.Fields.Count >= 4)
-                eRa.Payer.IDCode = payerIdentification[4];
+                eRa.PayerIDCode = payerIdentification[4];
             var payerAddress = transactionEnvelope.Segments[transactionEnvelope.Segments.IndexOf(payerIdentification) + 1];
             if (payerAddress == null)
             {
                 throw new Exception("Payer address Segment  (N3) not found");
             }
-            eRa.Payer.Address.Line1 = payerAddress[1];
-            eRa.Payer.Address.Line2 = string.IsNullOrEmpty(payerAddress[2]) ?
+            eRa.PayerAddress.Line1 = payerAddress[1];
+            eRa.PayerAddress.Line2 = string.IsNullOrEmpty(payerAddress[2]) ?
                    "" : payerAddress[2];
             var payerCity = transactionEnvelope.Segments[transactionEnvelope.Segments.IndexOf(payerAddress) + 1];
             if (payerAddress == null)
             {
                 throw new Exception("Payer City Segment  (N4) not found");
             }
-            eRa.Payer.Address.City = payerCity[1];
-            eRa.Payer.Address.State = payerCity[2];
-            eRa.Payer.Address.ZipCode = payerCity[3];
-            var payercontactinfo = transactionEnvelope.Segments[transactionEnvelope.Segments.IndexOf(payerCity) + 1];
+            eRa.PayerAddress.City = payerCity[1];
+            eRa.PayerAddress.State = payerCity[2];
+            eRa.PayerAddress.ZipCode = payerCity[3];
+            var firstlx = (from s in transactionEnvelope.Segments where s.Name == "LX" select s).FirstOrDefault();
+            var payercontactinfo=(from s in transactionEnvelope.Segments where s.Name == "PER" && transactionEnvelope.Segments.IndexOf(s) <
+             transactionEnvelope.Segments.IndexOf(firstlx) && transactionEnvelope.Segments.IndexOf(s) >
+             transactionEnvelope.Segments.IndexOf(payerCity) select s).ToList();
             if (payercontactinfo == null)
             {
                 throw new Exception("Payer Contact Info Segment  (PER) not found");
             }
-            eRa.Payer.ContactFunctionCode = payercontactinfo[1];
-            eRa.Payer.ClaimContactName = payercontactinfo[2];
+            foreach (var payercont in payercontactinfo)
+            {
+                eRa.Payer.Add(new PayerIdentifier
+                {
+                    CommunicationsNbrQualifier = payercont[1],
+                    NbrFunctionCode = payercont[3],
+                    ClaimContactCommunicationsNbr = payercont[4],
+                    ContactFunctionCode = payercont[1],
+                    ClaimContactName = payercont[2]
+                });
+            }
 
             var payeeIdentifier = (from s in transactionEnvelope.Segments where s.Name == "N1" && s[1] == "PE" select s).FirstOrDefault();
             if (payeeIdentifier == null)
@@ -356,6 +368,13 @@ namespace PracticeCompass.Messaging.Parsing
                         claimDetail.Patient.Qualifier = patientSegment[8];
                         claimDetail.Patient.Identifier = patientSegment[9];
                     }
+                    var claimpayer = (from s in claimChildSegments where s.Name == "PER" select s).FirstOrDefault();
+                    if (claimpayer != null)
+                    {
+                        claimDetail.Payer.CommunicationsNbrQualifier = claimpayer[3];
+                        claimDetail.Payer.NbrFunctionCode = claimpayer[1];
+                        claimDetail.Payer.ClaimContactCommunicationsNbr = claimpayer[4];
+                    }
                     var transferto  = (from s in claimChildSegments where s.Name == "NM1" && s[1] == "TT" && s[2] == "2" select s).FirstOrDefault();
                     if (transferto != null)
                     {
@@ -407,13 +426,6 @@ namespace PracticeCompass.Messaging.Parsing
                     {
                         claimDetail.ClaimReceivedDate = new DateTime(int.Parse(claimReceivedDateSegment[2].Substring(0, 4)),
                             int.Parse(claimReceivedDateSegment[2].Substring(4, 2)), int.Parse(claimReceivedDateSegment[2].Substring(6, 2)));
-                    }
-                    var payercommunication = (from s in claimChildSegments where s.Name == "PER" && s[1] == "CX" select s).FirstOrDefault();
-                    if (payercommunication != null)
-                    {
-                        eRa.Payer.CommunicationsNbrQualifier = payercommunication[3];
-                        eRa.Payer.NbrFunctionCode = payercommunication[1];
-                        eRa.Payer.ClaimContactCommunicationsNbr = payercommunication[4];
                     }
                     var statementFromDateSegment = (from s in claimChildSegments where s.Name == "DTM" && s[1] == "232" select s).FirstOrDefault();
                     if (statementFromDateSegment != null && !string.IsNullOrEmpty(statementFromDateSegment[2]))
