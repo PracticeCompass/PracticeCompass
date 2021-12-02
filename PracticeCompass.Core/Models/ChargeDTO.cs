@@ -11,6 +11,11 @@
         public string Diag1 { get; set; }
         public string Diag2 { get; set; }
         public decimal? Units { get; set; }
+        public decimal? OutStandingBalance { get; set; }
+        public decimal? Plan1 { get; set; }
+        public decimal? Plan2 { get; set; }
+        public decimal? PatientPaid { get; set; }
+        public int RespCoverageOrder { get; set; }
         public string Prim { get; set; }
         public string SeC { get; set; }
         public string Patient { get; set; }

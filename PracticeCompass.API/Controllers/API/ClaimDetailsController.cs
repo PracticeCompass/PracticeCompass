@@ -52,9 +52,107 @@ namespace PracticeCompass.API.Controllers.API
                 Charges = unitOfWork.ClaimDetailsRepository.ChargeGridGet(ClaimSID);
                 foreach (var charge in Charges)
                 {
-                    if (charge.SeC == "Active")
+                    if (charge.OutStandingBalance > 0)
                     {
-                        charge.Prim = "Done";
+                        switch (charge.RespCoverageOrder)
+                        {
+                            case 1:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "Billed";
+                                break;
+                            case 2:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                if (charge.Plan2 != null && charge.Plan2 != 0)
+                                    charge.SeC = "Paid";
+                                else if (charge.Plan2 == null || charge.Plan2 == 0)
+                                    charge.SeC = "Billed"; 
+                                break;
+                            case 99:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                if (charge.Plan2 != null && charge.Plan2 != 0)
+                                    charge.SeC = "Paid";
+                                else if (charge.Plan2 == null || charge.Plan2 == 0)
+                                    charge.SeC = "No Paid";
+                                if (charge.PatientPaid != null && charge.PatientPaid != 0)
+                                    charge.Patient = "Paid";
+                                else if (charge.PatientPaid == null || charge.PatientPaid == 0)
+                                    charge.Patient = "No Paid";
+                                break;
+                            default:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                if (charge.Plan2 != null && charge.Plan2 != 0)
+                                    charge.SeC = "Paid";
+                                else if (charge.Plan2 == null || charge.Plan2 == 0)
+                                    charge.SeC = "No Paid";
+                                if (charge.PatientPaid != null && charge.PatientPaid != 0)
+                                    charge.Patient = "Paid";
+                                else if (charge.PatientPaid == null || charge.PatientPaid == 0)
+                                    charge.Patient = "No Paid";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (charge.RespCoverageOrder)
+                        {
+                            case 1:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                break;
+                            case 2:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                if (charge.Plan2 != null && charge.Plan2 != 0)
+                                    charge.SeC = "Paid";
+                                else if (charge.Plan2 == null || charge.Plan2 == 0)
+                                    charge.SeC = "No Paid";
+                                break;
+                            case 99:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                if (charge.Plan2 != null && charge.Plan2 != 0)
+                                    charge.SeC = "Paid";
+                                else if (charge.Plan2 == null || charge.Plan2 == 0)
+                                    charge.SeC = "No Paid";
+                                if (charge.PatientPaid != null && charge.PatientPaid != 0)
+                                    charge.Patient = "Paid";
+                                else if (charge.PatientPaid == null || charge.PatientPaid == 0)
+                                    charge.Patient = "No Paid";
+
+                                break;
+
+                            default:
+                                if (charge.Plan1 != null && charge.Plan1 != 0)
+                                    charge.Prim = "Paid";
+                                else if (charge.Plan1 == null || charge.Plan1 == 0)
+                                    charge.Prim = "No Paid";
+                                if (charge.Plan2 != null && charge.Plan2 != 0)
+                                    charge.SeC = "Paid";
+                                else if (charge.Plan2 == null || charge.Plan2 == 0)
+                                    charge.SeC = "No Paid";
+                                if (charge.PatientPaid != null && charge.PatientPaid != 0)
+                                    charge.Patient = "Paid";
+                                else if (charge.PatientPaid == null || charge.PatientPaid == 0)
+                                    charge.Patient = "No Paid";
+                                break;
+                        }
                     }
                 }
                 return Charges;

@@ -16,12 +16,13 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	
-select ClaimCharge.ChargeSID , CONVERT(varchar,ProcedureEvent.FromServiceDate,101) AS FromServiceDate, ProcedureEvent.ProcedureCode , convert(varchar,Charge.Amount,1) as Amount ,
+select ClaimCharge.ChargeSID , CONVERT(varchar,ProcedureEvent.FromServiceDate,101) AS FromServiceDate, ProcedureEvent.ProcedureCode , Charge.Amount,
+Charge.Amount - (Charge.InsuranceReceipts + Charge.GuarantorReceipts + Charge.Adjustments) as OutStandingBalance,
 Mod1.[Modifier] as Mod1 , Mod2.[Modifier] as Mod2 , Dag1.[DiagnosisCode] as Diag1 , Dag2.[DiagnosisCode] as Diag2,ProcedureEvent.StaffID as RenderingID,[Provider].SortName as ProviderName,
-ProcedureEvent.Units , 
-case when Charge.RespCoverageOrder=1 then 'Active' END as Prim,
-case when Charge.RespCoverageOrder=2 then 'Active' END as SeC, 
-case when Charge.RespCoverageOrder=99 then 'Active' END as Patient,
+ProcedureEvent.Units , Charge.RespCoverageOrder,
+--case when Charge.RespCoverageOrder=1 then 'Active' END as Prim,
+--case when Charge.RespCoverageOrder=2 then 'Active' END as SeC, 
+--case when Charge.RespCoverageOrder=99 then 'Active' END as Patient,
 --,Provider.SortName as ProviderName
 Charge.RecordStatus,charge.CurrentStatus,
 case when Charge.RecordStatus = 'O' then 'Open' 
@@ -36,8 +37,8 @@ case when Charge.CurrentStatus = 'G' then 'Guarantor responsible charge'
  when Charge.CurrentStatus = 'IF' then 'Responsibility forwarded to insurance' 
  when Charge.CurrentStatus = 'IR' then 'IR' 
  when Charge.CurrentStatus = 'IT' then 'Responsibility manually transferred to insurance' 
- when Charge.CurrentStatus = 'IU' then 'Unbilled insurance responsible charge' 
-End as CurrentStatus_ 
+ when Charge.CurrentStatus = 'IU' then 'Unbilled insurance responsible charge'
+End as CurrentStatus_ ,ChargeStatus.Plan1, ChargeStatus.Plan2,ChargeStatus.Patient as PatientPaid
 from ClaimCharge
 inner join ProcedureEvent on ProcedureEvent.ChargeSID = ClaimCharge.ChargeSID
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID
@@ -48,12 +49,11 @@ left outer join [dbo].ProcedureEventDiag as Dag2 on Dag2.[ProcedureEventSID] = P
 left outer join Staff as RenderingStaff on ProcedureEvent.PracticeID = RenderingStaff.PracticeID 
 and ProcedureEvent.StaffID = RenderingStaff.StaffID
 left outer join [Provider] on [Provider].[ProviderID] = RenderingStaff.StaffID
+left outer Join dbo.FuncGetChargeStatus(@ClaimSID) As ChargeStatus on ClaimCharge.ChargeSID = ChargeStatus.ChargeSID
 --left outer join PendingCharge on ProcedureEvent.EncounterSID = PendingCharge.EncounterSID
 --left outer join Provider on Provider.ProviderID = PendingCharge.PerformingProviderID
 where ClaimCharge.ClaimSID=@ClaimSID
 Order by  ClaimCharge.ChargeSID 
-
-
 
 END
 GO
