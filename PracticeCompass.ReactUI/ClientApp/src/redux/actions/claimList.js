@@ -109,7 +109,7 @@ export const getclaims =
           searchCriteria.Batch
         }&CoverageOrder=${searchCriteria.InsuranceOrder}&InsuranceStatus=${
           searchCriteria.InsuranceStatus
-        }&IncludeCompletedClaims=${searchCriteria.completedCalims}
+            }&IncludeCompletedClaims=${searchCriteria.completedClaims}&IncludeCashClaims=${searchCriteria.CashClaims}
       &Skip=${searchCriteria.Skip}&SortColumn=${
           searchCriteria.SortColumn ? searchCriteria.SortColumn : ""
         }&SortDirection=${

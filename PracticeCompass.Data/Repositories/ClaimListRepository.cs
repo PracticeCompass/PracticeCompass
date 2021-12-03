@@ -79,7 +79,7 @@ namespace PracticeCompass.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public List<Claim> ClaimGridGet(int PatientID, int PracticeID, int PhysicianID, int DOSType, string DOSvalue, string PatientClass, int InsuranceType, int InsuranceID, string BillNumber,string ClaimIcnNumber, int Age, int ClaimValue, string CoverageOrder, string InsuranceStatus, string Batch, int GuarantorID, bool IncludeCompletedClaims,int Skip, string SortColumn, string SortDirection)
+        public List<Claim> ClaimGridGet(int PatientID, int PracticeID, int PhysicianID, int DOSType, string DOSvalue, string PatientClass, int InsuranceType, int InsuranceID, string BillNumber,string ClaimIcnNumber, int Age, int ClaimValue, string CoverageOrder, string InsuranceStatus, string Batch, int GuarantorID, bool IncludeCompletedClaims, bool IncludeCashClaims,int Skip, string SortColumn, string SortDirection)
         {
             var data = this.db.QueryMultiple("uspClaimGridGet", new
             {
@@ -100,7 +100,8 @@ namespace PracticeCompass.Data.Repositories
                 @Batch = Batch,
                 @GuarantorID = GuarantorID,
                 @IncludeCompletedClaims = IncludeCompletedClaims,
-                @Skip= Skip,
+                @IncludeCashClaims = IncludeCashClaims,
+                @Skip = Skip,
                 @SortColumn = SortColumn,
                 @SortDirection =SortDirection
             },

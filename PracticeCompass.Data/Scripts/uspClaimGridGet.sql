@@ -6,8 +6,7 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
---exec uspClaimGridGet @PatientID=0,@PracticeID=0,@PhysicianID=0,@DOSType=0,@DOSvalue=N'',@PatientClass=N'',@InsuranceType=0,@InsuranceID=0,@BillNumber=N'0',@ClaimIcnNumber=N'0',@Age=0,@TotalClaimAmount=0,@Batch=N'',@GuarantorID=0,@InsuranceStatus=N'',@CoverageOrder=N'',@IncludeCompletedClaims = 0-- =============================================
--- =============================================
+--exec uspClaimGridGet @PatientID=0,@PracticeID=0,@PhysicianID=0,@DOSType=0,@DOSvalue=N'',@PatientClass=N'',@InsuranceType=0,@InsuranceID=0,@BillNumber=N'',@ClaimIcnNumber=N'0',@Age=0,@InsuranceStatus=N'',@CoverageOrder=N'',@TotalClaimAmount=0,@Batch=N'',@GuarantorID=0,@IncludeCompletedClaims=0,@IncludeCashClaims=0,@Skip=0,@SortColumn=N'dos',@SortDirection=N'desc'-- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet] 
 @PatientID int, 
 @PracticeID int, 
@@ -26,6 +25,7 @@ CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet]
 @Batch varchar(50),
 @GuarantorID int,
 @IncludeCompletedClaims int,
+@IncludeCashClaims int,
 @Skip int=0,
 @SortColumn varchar(50)='',
 @SortDirection varchar(50)=''
@@ -34,24 +34,29 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300)
+	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300), @cashclaimsfilter varchar(300)
 
 	 	set @DOSfilter=Case @DOSType 
-		when 1 then 'and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
-		when 2 then 'and (PlanClaim.FromDate < '''+@DOSvalue+''' )'
-		when 3 then 'and (PlanClaim.FromDate > '''+@DOSvalue+''' )'
+		when 1 then ' and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
+		when 2 then ' and (PlanClaim.FromDate < '''+@DOSvalue+''' )'
+		when 3 then ' and (PlanClaim.FromDate > '''+@DOSvalue+''' )'
 		else ''
 		end
 
 
 		set @insurancefilter=Case @InsuranceType 
-		when 1 then 'and ((PlanClaim.PlanID= '+convert(varchar, @InsuranceID,10)+'  )and (PlanClaim.CoverageOrder = 1))'
-		when 2 then 'and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  )and (PlanClaim.CoverageOrder = 2))'
-		when 3 then 'and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  )and (PlanClaim.CoverageOrder = 3))'
+		when 1 then ' and ((PlanClaim.PlanID= '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 1))'
+		when 2 then ' and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 2))'
+		when 3 then ' and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 3))'
 		else ''
 		end
 		set @completedclaimsfilter=Case @IncludeCompletedClaims
-		when 0 then 'and dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) > 0  and Claim.LowestRespCoverageOrder != 99'
+		when 0 then ' and dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) > 0  and Claim.LowestRespCoverageOrder != 99'
+		when 1 then ''
+		else ''
+		end
+		set @cashclaimsfilter=Case @IncludeCashClaims
+		when 0 then ' and Claim.LowestRespCoverageOrder != 0'
 		when 1 then ''
 		else ''
 		end
@@ -130,7 +135,7 @@ and
 and
 ('+ convert(varchar, @PhysicianID,10) +'=0 or PlanClaim.PerformingProviderID= '+ convert(varchar, @PhysicianID,10) +')'
 
-set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
+set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + @cashclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
 print @SQL
  exec(@SQL)
 
