@@ -6,6 +6,7 @@
         public string ActivityCount { get; set; }
         public string ActivityType { get; set; }
         public string SourceType { get; set; }
+        public string SourceName { get; set; }
         public string PostDate { get; set; }
         public decimal Amount { get; set; }
         public decimal ChargeAmount { get; set; }

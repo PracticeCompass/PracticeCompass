@@ -43,9 +43,10 @@ BEGIN
 		when 'P' then 'Practice'
 		else  SourceType
 		end As SourceType
-		,CONVERT(varchar,ChargeActivity.PostDate,101) as PostDate,ChargeActivity.Amount as Amount, Charge.Amount as ChargeAmount,DisplayText,ProcedureEvent.ProcedureCode
+		,CONVERT(varchar,ChargeActivity.PostDate,101) as PostDate,ChargeActivity.Amount as Amount, Charge.Amount as ChargeAmount,DisplayText,ProcedureEvent.ProcedureCode, Entity.SortName as SourceName
    from ChargeActivity inner join Charge on ChargeActivity.ChargeSID = Charge.ChargeSID 
    inner join ProcedureEvent on Charge.ChargeSID = ProcedureEvent.ChargeSID 
+   left outer join Entity on ChargeActivity.SourceID = Entity.EntitySID
    --inner join [Procedure] on ProcedureEvent.ProcedureCode = [Procedure].ProcedureCode
    where ChargeActivity.ChargeSID = @ChargeSID
    order by ActivityCount
