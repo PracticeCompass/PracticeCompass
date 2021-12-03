@@ -76,7 +76,7 @@ BEGIN
 		else ''
 		end
 	
-set @SQL= 'select distinct COUNT(*) OVER() as totalCount,
+set @SQL= 'select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
    convert(varchar,Claim.ClaimSID,10) as GridID,
    Claim.ClaimSID,Claim.ClaimNumber,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmount, 
   dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) AS OutStandingBalanace
@@ -135,7 +135,7 @@ and
 and
 ('+ convert(varchar, @PhysicianID,10) +'=0 or PlanClaim.PerformingProviderID= '+ convert(varchar, @PhysicianID,10) +')'
 
-set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + @cashclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
+set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + @cashclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus,Patient.PatientID '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
 print @SQL
  exec(@SQL)
 

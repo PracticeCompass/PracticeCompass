@@ -8,6 +8,7 @@ namespace PracticeCompass.Core.Models
     {
         public string GridID { get; set; }
         public string ClaimSID { get; set; }
+        public string PatientID { get; set; }
         public string ClaimNumber { get; set; }
         public string TotalClaimAmount { get; set; }
         public string OutStandingBalanace { get; set; }

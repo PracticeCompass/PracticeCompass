@@ -195,7 +195,7 @@ class PatientDetailSummary extends Component {
       this.state.patientId != this.props.patientDetails.patientID
     ) {
       let patientDetails = await this.props.GetPatientDetails(
-        this.props.patientDetails.personID,
+          this.props.patientDetails.patientID,
         this.props.patientDetails.practiceID
       );
       if (patientDetails == null) return;

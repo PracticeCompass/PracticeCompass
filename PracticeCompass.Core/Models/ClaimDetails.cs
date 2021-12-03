@@ -15,6 +15,8 @@ namespace PracticeCompass.Core.Models
         public string SortName { get; set; }
         public string PracticeName { get; set; }
         public string PracticeID { get; set; }
+        public string PatientID { get; set; }
+        public string PersonID { get; set; }
         public string PracticeCode { get; set; }
         public int?  StaffID { get; set; }
         public string OriginalCRN { get; set; }
