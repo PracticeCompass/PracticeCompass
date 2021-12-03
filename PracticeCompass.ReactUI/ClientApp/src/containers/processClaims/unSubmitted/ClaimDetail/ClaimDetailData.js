@@ -151,22 +151,23 @@ export const submissionHistoryColumns = [
         orderIndex: 2
     },
     {
-        field: "statusCategory",
-        title: "Status Category",
-        minWidth: 50,
-        orderIndex: 3
-    },
-    {
         field: "statusSource",
         title: "Status Source",
         minWidth: 50,
-        orderIndex: 4
+        orderIndex: 3
     },
     {
         field: "statusDate",
         title: "Status Date",
         minWidth: 70,
-        orderIndex: 5
+        orderIndex: 4
+    },
+    {
+        field: "statusCategory",
+        title: "Status Category",
+        minWidth: 100,
+        orderIndex: 5,
+        showToolTip: true
     },
     {
         field: "claimStatus",

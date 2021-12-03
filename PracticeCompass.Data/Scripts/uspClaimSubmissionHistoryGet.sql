@@ -20,9 +20,10 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-   select convert(varchar,PlanID,10) + convert(varchar,ClaimSID,10) + convert(varchar,StatusCount,10)  as GridId ,PlanID,ClaimSID,ReportType,StatusCategory,StatusCount,
+   select convert(varchar,PlanID,10) + convert(varchar,ClaimSID,10) + convert(varchar,StatusCount,10)  as GridId ,PlanID,ClaimSID,ReportType,StatusCategory,StatusCount,CCStatusCode.Description as StatusCategory_,
    StatusSource,CONVERT(varchar,CONVERT(Date,SUBSTRING(StatusDateStamp, 1, charindex('-',StatusDateStamp)-1),101),101) as StatusDate,ClaimStatus, Convert(varchar(50),AmountPaid ,1) as AmountPaid ,PayerClaimID,ErrorMessage 
-   from PlanClaimStatus
-   where ClaimSID = @ClaimSID
+   from PlanClaimStatus 
+   left outer join CCStatusCode on PlanClaimStatus.StatusCategory = CCStatusCode.StatusCode
+   where ClaimSID = @ClaimSID and CCStatusCode.StatusType = 'P'
    order by PlanID, StatusCount
 END

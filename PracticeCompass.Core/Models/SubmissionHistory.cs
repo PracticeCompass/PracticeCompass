@@ -12,6 +12,7 @@ namespace PracticeCompass.Core.Models
         public int ClaimSID { get; set; }
         public string ReportType { get; set; }
         public string StatusCategory { get; set; }
+        public string StatusCategory_ { get; set; }
         public int StatusCount { get; set; }
         public string StatusSource { get; set; }
         public string StatusDate { get; set; }
