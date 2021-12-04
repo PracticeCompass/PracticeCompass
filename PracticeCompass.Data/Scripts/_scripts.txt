@@ -69,3 +69,4 @@ uspPlanDetailsGet.sql
 uspERSTableDelete.sql
 FuncGetClaimOutStandingBalance.sql
 FuncGetChargeStatus.sql
+uspPlanGroupGet.sql
