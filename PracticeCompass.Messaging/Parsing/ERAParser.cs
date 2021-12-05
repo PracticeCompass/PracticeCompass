@@ -862,27 +862,32 @@ namespace PracticeCompass.Messaging.Parsing
                 }
             }
 
-            var renderingProviderIds = new List<string> { "0B", "1A", "1B", "1C", "1D", "1G", "1H", "1J", "D3", "G2", "LU", "HPI", "SY", "TJ" };
+            var renderingProviderIds = new List<string> { "0B", "1A", "1B", "1C", "0K", "1D", "1G", "1H", "1J", "D3", "G2", "LU", "HPI", "SY", "TJ" };
             var renderingProviderSegment = (from s
                                                 in serviceLineChildSegments
                                             where s.Name == "REF" && renderingProviderIds.Contains(s[1])
-                                            select s).FirstOrDefault();
+                                            select s).ToList();
             if (renderingProviderSegment != null)
             {
-
-                var type = GetSecondaryProviderType(renderingProviderSegment[1]);
-                serviceLine.RenderingProvider.qualifier = renderingProviderSegment[1];
-                //if (type == ProviderSecIdentifierType.NPI)
-                //{
-                    serviceLine.RenderingProvider.NPI = renderingProviderSegment[2];
-                //}
-                //else
-                //{
-                //    var id = new ProviderSecIdentifier { Type = type, Identifier = renderingProviderSegment[2] };
-                //    serviceLine.RenderingProvider.SecondaryIdentifiers.Add(id);
-                //}
+                for (var p = 0; p < renderingProviderSegment.Count; p++)
+                {
+                    var type = GetSecondaryProviderType(renderingProviderSegment[p][1]);
+                    serviceLine.RenderingProviders.Add(new Provider
+                    {
+                        qualifier = renderingProviderSegment[p][1],
+                        NPI = renderingProviderSegment[p][2]
+                    });
+                    //if (type == ProviderSecIdentifierType.NPI)
+                    //{
+                    //}
+                    //else
+                    //{
+                    //    var id = new ProviderSecIdentifier { Type = type, Identifier = renderingProviderSegment[2] };
+                    //    serviceLine.RenderingProvider.SecondaryIdentifiers.Add(id);
+                    //}
+                }
             }
-            
+
             var adjustmentSegments = (from s in serviceLineChildSegments where s.Name == "CAS" select s).ToList();
             for (int i = 0; i < adjustmentSegments.Count; i++)
             {

@@ -12,7 +12,7 @@ namespace PracticeCompass.Common.Models
         public int Units { set; get; }
         public DateTime? DateOfService { set; get; }
         public string ControlNumber { set; get; }
-        public Provider RenderingProvider { set; get; }
+        public List<Provider>RenderingProviders { set; get; }
         public List<ChargeIndustryCode> ChargeIndustryCodes { set; get; }
         public List<ServiceLineSupplementalAmount> ServiceLineSupplementalAmounts { get; set; }
         public List<ClaimAdjustment> Adjustments { set; get; }
@@ -23,7 +23,7 @@ namespace PracticeCompass.Common.Models
             this.PaidMonetaryAmount = 0;
             this.Units = 1;
             this.ControlNumber = string.Empty;
-            this.RenderingProvider = new Provider();
+            this.RenderingProviders = new List<Provider>();
             this.Adjustments = new List<ClaimAdjustment>();
             this.ChargeIndustryCodes = new List<ChargeIndustryCode>();
             this.ServiceLineSupplementalAmounts = new List<ServiceLineSupplementalAmount>();

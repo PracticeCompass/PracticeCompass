@@ -20,11 +20,11 @@ Declare  @ERSPaymentSID int
 
 select @ERSPaymentSID=ERSPaymentSID from ERSPaymentHeader  where CheckTraceNbr=@CheckTraceNbr
 
-delete from ERSPaymentHeader  where CheckTraceNbr=@CheckTraceNbr
+
 
 delete from ERSPaymentParty where ERSPaymentSID=@ERSPaymentSID and EntityIDCode in ('PR','PE')
 
-delete from ERSClaimData where ERSPaymentSID=@ERSPaymentSID 
+
 
 delete from ERSClaimContact where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
 
@@ -35,10 +35,14 @@ delete from ERSClaimName where ERSClaimSID in (select ERSClaimSID from ERSClaimD
 
 delete from ERSClaimDate  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
  
-delete from [dbo].[ERSChargeServiceInfo]  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
+
+
+delete  from ERSChargeDate  where ERSChargeSID in (select ERSChargeSID from [dbo].[ERSChargeServiceInfo]  
+where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID ))
 
 delete from ERSChargeIndustryCode where ERSChargeSID in (select ERSChargeSID from [dbo].[ERSChargeServiceInfo]  
 where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID ))
+
 
 delete from ERSMedicareOutpatAdj  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
 
@@ -50,7 +54,6 @@ delete from ERSClaimReference where ERSClaimSID in (select ERSClaimSID from ERSC
 
 delete from ERSPmtProvLevelAdj where ERSPaymentSID=@ERSPaymentSID
 
-delete from ERSMedicareOutpatAdj  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
 
 delete from ERSChargeClaimAdjustment  where ERSChargeSID in (select ERSChargeSID from [dbo].[ERSChargeServiceInfo]  
 where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID ))
@@ -64,9 +67,9 @@ where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@
 delete from [dbo].[ERSChargeMonetaryAmt] where ERSChargeSID in (select ERSChargeSID from [dbo].[ERSChargeServiceInfo]  
 where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID ))
 
-delete from [dbo].[ERSClaimMsgCode]  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
+--delete from [dbo].[ERSClaimMsgCode]  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
 
-delete from [dbo].[ERSClaimQuantity] where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
+--delete from [dbo].[ERSClaimQuantity] where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
 
 delete from  [dbo].[ERSPmtPartyContact]  where ERSPaymentSID=@ERSPaymentSID
 
@@ -82,5 +85,7 @@ from ERSPaymentHeader  where CheckTraceNbr=@CheckTraceNbr)
 
 delete from [dbo].[ERSRemittanceFileInstance]  where RemittanceSID in (select RemittanceSID
 from ERSPaymentHeader  where CheckTraceNbr=@CheckTraceNbr)
-
+delete from ERSClaimData where ERSPaymentSID=@ERSPaymentSID 
+delete from ERSPaymentHeader  where CheckTraceNbr=@CheckTraceNbr
+delete from [dbo].[ERSChargeServiceInfo]  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )
 END
