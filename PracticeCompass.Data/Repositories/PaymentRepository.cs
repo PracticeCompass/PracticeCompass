@@ -16,13 +16,10 @@ namespace PracticeCompass.Data.Repositories
     public class PaymentRepository : IPaymentRepository
     {
         private IDbConnection db;
-        string licenseName = ""; //... PRO license name
-        string licenseKey = ""; //... PRO license key
         public PaymentRepository(string connString)
 
         { 
             this.db = new SqlConnection(connString);
-            DapperPlusManager.AddLicense(licenseName, licenseKey);
         }
         public Task AddAsync(Payment entity)
         {
