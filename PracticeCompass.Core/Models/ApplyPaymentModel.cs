@@ -13,6 +13,7 @@ namespace PracticeCompass.Core.Models
         public float Adjustment { get; set; }
         public string PaymentType { get; set; } // G : Patient , I Insurace 
         public int? PlanID { get; set; }
+        public float PaymentRemaining { get; set; }
 
     }
 }

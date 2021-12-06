@@ -138,9 +138,19 @@ namespace PracticeCompass.Data.Repositories
             var PlanClaimCharges = new List<PlanClaimCharge>();
 
             var chargeIDs = applyPaymentModel.Select(x => x.ChargeSID);
+            var paymentID = applyPaymentModel[0].PaymentSID;
             string sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
+
+            var Payments = new Payment();
+            string paymentSql = "SELECT * FROM Payment WHERE PaymentSID = @ids";
+            var Paymentsresults = this.db.QueryMultiple(paymentSql, new { ids = paymentID });
+            Payments = Paymentsresults.Read<Payment>().FirstOrDefault();
+            if (applyPaymentModel[0].PaymentRemaining == 0)
+            {
+                Payments.FullyApplied = "Y";
+            }
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
 
             foreach (var paymentmodel in applyPaymentModel)
@@ -247,9 +257,14 @@ namespace PracticeCompass.Data.Repositories
                 chargerow.Adjustments = paymentmodel.Adjustment;
                 chargerow.pro2modified = DateTime.Now;
                 chargerow.TimeStamp = timestamp;
+                if ((chargerow.Amount - (Decimal)(chargerow.InsuranceReceipts + chargerow.GuarantorReceipts + chargerow.Adjustments)) == 0)
+                {
+                    chargerow.RecordStatus = "S";
+                }
             }
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
+            this.db.BulkUpdate(Payments);
             var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
            "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
            ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +

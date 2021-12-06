@@ -6,10 +6,7 @@ namespace PracticeCompass.Core.Models
 {
     public class Payment
     {
-        public Payment()
-        {
-        }
-
+        public string prrowid { get; set; }
         public string PaymentSID { get; set; }
         public string PracticeName { get; set; }
         public string PostDate { get; set; }
