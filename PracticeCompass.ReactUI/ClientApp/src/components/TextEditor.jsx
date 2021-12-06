@@ -2,6 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { Editor, EditorTools } from "@progress/kendo-react-editor";
+import $ from "jquery";
 const {
   Bold,
   Italic,
@@ -45,15 +46,15 @@ function mapDispatchToProps(dispatch) {
   return {};
 }
 export class TextEditor extends React.Component {
-
   render() {
 
     return (
       <Editor
+      id="eraTextEditor"
       tools={[
       ]}
       contentStyle={{
-        height: 850,
+        height: 850
       }}
       defaultContent={this.props.content}
     />

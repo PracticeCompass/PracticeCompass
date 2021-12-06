@@ -31,7 +31,7 @@ class ERA extends Component {
   }
   state={
     ERAColumns:ERAColumns,
-    content:"test",
+    content:"",
     refresh:true
   }
   componentDidMount(){
