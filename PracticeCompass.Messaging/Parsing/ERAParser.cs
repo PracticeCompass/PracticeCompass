@@ -10,6 +10,7 @@ using PracticeCompass.Core.Common;
 using Microsoft.Extensions.Configuration;
 using PracticeCompass.Common.Models;
 using PracticeCompass.Common.Enums;
+using PracticeCompass.Core.Models;
 
 namespace PracticeCompass.Messaging.Parsing
 {

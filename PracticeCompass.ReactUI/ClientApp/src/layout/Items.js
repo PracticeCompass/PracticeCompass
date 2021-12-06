@@ -150,4 +150,19 @@ export const itemsList = [
     parentId: 16,
     route: "/lists/transactions",
   },
+  {
+    text: "Document Manager",
+    icon: "k-i-menu",
+    description: "Document Manager",
+    id: 21,
+    ["data-expanded"]: false,
+    route: "/documentManager",
+  },
+  {
+    text: "Documents",
+    icon: "k-i-inbox",
+    id: 22,
+    parentId: 21,
+    route: "/documentManager",
+  },
 ];

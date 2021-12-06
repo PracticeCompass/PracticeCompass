@@ -23,6 +23,7 @@ import ERA from "../containers/automationTasks/ERA";
 
 import DrawerContainer from "./DrawerContainer";
 import "./styles.css";
+import DocumentManager from "../containers/documentManager/DocumentManager";
 class Main extends Component {
   setxpanded = (event) => {
     this.props.UiExpand(event);
@@ -120,6 +121,7 @@ class Main extends Component {
                 component={Claims}
               />
               <Route exact={true} path="/automationTasks/era" component={ERA} />
+              <Route exact={true} path="/documentManager" component={DocumentManager} />
             </Switch>
           </DrawerContainer>
         </HashRouter>

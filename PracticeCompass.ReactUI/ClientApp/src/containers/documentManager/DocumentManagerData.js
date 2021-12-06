@@ -1,5 +1,5 @@
 
-export const ERAColumns = [
+export const documentColumns = [
     {
       field: "fileID",
       title: "ID",
