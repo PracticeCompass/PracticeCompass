@@ -125,6 +125,12 @@ export const GET_PLANS_FAILS="GET_PLANS_FAILS";
 export const GET_PLANS_GROUP="GET_PLANS_GROUP";
 export const GET_PLANS_GROUP_FAILS="GET_PLANS_GROUP";
 
+export const GET_FILES="GET_FILES";
+export const GET_FILES_FAILED="GET_FILES_FAILED";
+
+
+
+
 
 
 

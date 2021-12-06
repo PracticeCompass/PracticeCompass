@@ -11,6 +11,7 @@ using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Models.ERS;
 using PracticeCompass.Core.Repositories;
 using System.Linq;
+using System.IO;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -984,6 +985,37 @@ namespace PracticeCompass.Data.Repositories
         public Task<ERSClaimAdjustment> SingleOrDefaultAsync(Expression<Func<ERSClaimAdjustment, bool>> predicate, bool trackChanges = false)
         {
             throw new NotImplementedException();
+        }
+
+        public List<FileModel> GetFiles()
+        {
+            string root = @"C:\Claims\ClearingHouseReports\ExtractedFiles\20140320091925";
+            var files = from file in
+            System.IO.Directory.EnumerateFiles(root)
+                        select file;
+            List<FileModel> filesModels = new List<FileModel>();
+            int index = 1;
+            foreach (var file in files)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(file);
+                DateTime lastWriteTime = File.GetLastWriteTime(file);
+                if (fileName.StartsWith('Z'))
+                {
+                    filesModels.Add(new FileModel()
+                    {
+                        FileID = index,
+                        FileName = fileName,
+                        FilePath = file,
+                        lastWriteTime=lastWriteTime.ToString("MM/dd/yyyy h:mm tt"),
+                    });
+                }
+                index = index + 1;
+            }
+            return filesModels;
+        }
+        public string GetFileContent(string path)
+        {
+            return  @File.ReadAllText(path);
         }
     }
 }
