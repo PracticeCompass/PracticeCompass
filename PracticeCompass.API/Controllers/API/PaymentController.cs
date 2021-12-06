@@ -112,6 +112,7 @@ namespace PracticeCompass.API.Controllers.API
         {
             try
             {
+                if (Class == "null") Class = "";
                 string prrowid = "";
                 unitOfWork.PaymentRepository.InsertUpdatePayment( prrowid,PaymentSID,  PracticeID,  PostDate,  Source,  PayorID,  Class,  Amount,  Method,
              CreditCard,  AuthorizationCode,  Voucher,  CreateMethod, CurrentUser, CurrentUser);

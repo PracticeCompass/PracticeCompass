@@ -760,13 +760,13 @@ class insurancePayments extends Component {
   saveInsurancePaymentDetails = async () => {
     let resp = await this.props.savePayment(
       this.state.paymentSID ?? 0,
-      this.state.subInsurancePracticeID?.entityId,
+        this.state.subInsurancePracticeID ? this.state.subInsurancePracticeID.entityId : 0,
       this.state.txnDataDetails
         ? new Date(this.state.txnDataDetails).toLocaleDateString()
         : null,
       "I",
       this.state.insuranceDetailsID,
-      this.state.payment_calss?.lookupCode,
+        this.state.payment_calss ? this.state.payment_calss.lookupCode : null,
       this.state.amountDetails,
       this.state.methodDetails?.value,
       this.state.creditCardDetails?.code,
