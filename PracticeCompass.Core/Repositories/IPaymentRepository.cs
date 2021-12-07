@@ -4,10 +4,10 @@ using PracticeCompass.Core.Models;
 
 namespace PracticeCompass.Core.Repositories
 {
-    public interface IPaymentRepository:IRepository<Payment>
+    public interface IPaymentRepository:IRepository<PaymentDTO>
     {
-        List<Payment> GetInsurancePayment(int PracticeID , int PatientID, int DateType, string Datevalue, bool Fullyapplied);
-        List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied);
+        List<PaymentDTO> GetInsurancePayment(int PracticeID , int PatientID, int DateType, string Datevalue, bool Fullyapplied);
+        List<PaymentDTO> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied);
         List<PaymentClass> GetPaymentClass();
         PaymentDetails GetPaymentDetails(int PaymentSID);
         List<PaymentAssignmentDTO> GetPaymentAssignment(int PaymentSID);
