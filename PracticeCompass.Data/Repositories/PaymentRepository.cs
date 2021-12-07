@@ -316,6 +316,8 @@ namespace PracticeCompass.Data.Repositories
             foreach (var item in results)
             {
                 if (string.IsNullOrEmpty(item.comment_)) item.comment_ = item.comment;
+                if (item.comment == "Records are Matched")
+                    item.AlertCode = "Accepted,Apply all";
             }
             return results;
         }

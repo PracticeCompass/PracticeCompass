@@ -58,7 +58,7 @@ export class DropDownCell extends React.Component {
             {dataItem.inEdit || this.props.editor == "edit" ? 
             
       <ComboBox style={{
-        width: "300px",height:"18px"
+        width: "250px",height:"18px"
       }} onChange={this.handleChange} value={Items.find(c => c.value === dataValue)} data={Items} textField="text" /> : dataValue?.toString()}
           </td>;
   }
