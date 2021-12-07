@@ -188,5 +188,21 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
 
+        [HttpGet]
+        [Route("api/payment/ERAPost")]
+        public bool ERAPost(string CheckTraceNbr)
+        {
+            try
+            {
+                return unitOfWork.ERAPostingRepository.PostERA(CheckTraceNbr);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+
     }
 }
