@@ -17,7 +17,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/InsurancePaymentGet")]
-        public List<Payment> InsurancePaymentGet(int PracticeID, int InsuranceID,int DateType ,string Datevalue , bool Fullyapplied = false)
+        public List<PaymentDTO> InsurancePaymentGet(int PracticeID, int InsuranceID,int DateType ,string Datevalue , bool Fullyapplied = false)
         {
             try
             {
@@ -27,12 +27,12 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<Payment>();
+                return new List<PaymentDTO>();
             }
         }
         [HttpGet]
         [Route("api/payment/PatientPaymentGet")]
-        public List<Payment> PatientPaymentGet(int PracticeID, int PatientID, int DateType , string Datevalue, bool Fullyapplied = false)
+        public List<PaymentDTO> PatientPaymentGet(int PracticeID, int PatientID, int DateType , string Datevalue, bool Fullyapplied = false)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<Payment>();
+                return new List<PaymentDTO>();
             }
         }
         [HttpGet]
