@@ -143,10 +143,10 @@ namespace PracticeCompass.Data.Repositories
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
 
-            var Payments = new PaymentDTO();
+            var Payments = new Payment();
             string paymentSql = "SELECT * FROM Payment WHERE PaymentSID = @ids";
             var Paymentsresults = this.db.QueryMultiple(paymentSql, new { ids = paymentID });
-            Payments = Paymentsresults.Read<PaymentDTO>().FirstOrDefault();
+            Payments = Paymentsresults.Read<Payment>().FirstOrDefault();
             if (applyPaymentModel[0].PaymentRemaining == 0)
             {
                 Payments.FullyApplied = "Y";
