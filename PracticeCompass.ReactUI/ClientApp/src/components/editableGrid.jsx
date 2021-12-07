@@ -244,7 +244,7 @@ class EditableGrid extends React.Component {
             rowRender={this.rowRender}
             pager={this.Currentpager}
             style={{
-              height: this.props.height ?? "400px",
+              height: this.props.height ?? "100%",
               width: this.props.width ?? "100%",
             }}
             id={this.props.id}
@@ -274,7 +274,9 @@ class EditableGrid extends React.Component {
             // onKeyDown={(event) => this.props.isEditable != true && this.props.onKeyDown(event)}
             onRowDoubleClick={(event) => this.props.onRowDoubleClick(event)}
             data={
-              this.props.isEditable
+              this.props.noPageable?
+              this.props.data:
+              (this.props.isEditable
                 ? this.props.data
                   ? this.props.data
                       .slice(this.state.skip, this.state.take + this.state.skip)
@@ -292,7 +294,7 @@ class EditableGrid extends React.Component {
                       [SELECTED_FIELD]:
                         this.state.selectedState[this.props.idGetter(item)],
                     }))
-                : []
+                : [])
             }
             skip={this.state.skip}
             take={this.state.take}
