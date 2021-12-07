@@ -21,46 +21,46 @@ namespace PracticeCompass.Data.Repositories
         {
             this.db = new SqlConnection(connString);
         }
-        public Task AddAsync(Payment entity)
+        public Task AddAsync(PaymentDTO entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddRangeAsync(IEnumerable<Payment> entities)
+        public Task AddRangeAsync(IEnumerable<PaymentDTO> entities)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Expression<Func<Payment, bool>> predicate)
+        public Task<int> CountAsync(Expression<Func<PaymentDTO, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Payment>> FindAsync(Expression<Func<Payment, bool>> predicate, bool trackChanges = false)
+        public Task<IEnumerable<PaymentDTO>> FindAsync(Expression<Func<PaymentDTO, bool>> predicate, bool trackChanges = false)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Payment> FirstOrDefaultAsync(Expression<Func<Payment, bool>> predicate, bool trackChanges = false)
+        public Task<PaymentDTO> FirstOrDefaultAsync(Expression<Func<PaymentDTO, bool>> predicate, bool trackChanges = false)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Payment>> GetAllAsync(bool trackChanges = false)
+        public Task<IEnumerable<PaymentDTO>> GetAllAsync(bool trackChanges = false)
         {
             throw new NotImplementedException();
         }
 
-        public List<Payment> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue, bool Fullyapplied)
+        public List<PaymentDTO> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue, bool Fullyapplied)
         {
             var data = this.db.QueryMultiple("uspInsurancePaymentGet", new { @PracticeID = PracticeID, @InsuranceID = InsuranceID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
-            return data.Read<Payment>().ToList();
+            return data.Read<PaymentDTO>().ToList();
         }
 
-        public List<Payment> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied)
+        public List<PaymentDTO> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied)
         {
             var data = this.db.QueryMultiple("uspPatientPaymentGet", new { @PracticeID = PracticeID, @PatientID = PatientID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
-            return data.Read<Payment>().ToList();
+            return data.Read<PaymentDTO>().ToList();
         }
 
         public PaymentDetails GetPaymentDetails(int PaymentSID)
@@ -143,10 +143,10 @@ namespace PracticeCompass.Data.Repositories
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
 
-            var Payments = new Payment();
+            var Payments = new PaymentDTO();
             string paymentSql = "SELECT * FROM Payment WHERE PaymentSID = @ids";
             var Paymentsresults = this.db.QueryMultiple(paymentSql, new { ids = paymentID });
-            Payments = Paymentsresults.Read<Payment>().FirstOrDefault();
+            Payments = Paymentsresults.Read<PaymentDTO>().FirstOrDefault();
             if (applyPaymentModel[0].PaymentRemaining == 0)
             {
                 Payments.FullyApplied = "Y";
@@ -320,17 +320,17 @@ namespace PracticeCompass.Data.Repositories
             return results;
         }
 
-        public void Remove(Payment entity)
+        public void Remove(PaymentDTO entity)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveRange(IEnumerable<Payment> entities)
+        public void RemoveRange(IEnumerable<PaymentDTO> entities)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Payment> SingleOrDefaultAsync(Expression<Func<Payment, bool>> predicate, bool trackChanges = false)
+        public Task<PaymentDTO> SingleOrDefaultAsync(Expression<Func<PaymentDTO, bool>> predicate, bool trackChanges = false)
         {
             throw new NotImplementedException();
         }
