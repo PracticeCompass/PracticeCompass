@@ -328,7 +328,7 @@ namespace PracticeCompass.Messaging.Parsing
                 
                 for (int j = 0; j < claimDetailedLoops.Count; j++)
                 {
-                    var claimDetail = new ClaimDetails();
+                    var claimDetail = new Common.Models.ClaimDetails();
                     List<Segment> claimChildSegments = childSegments.GetRange(childSegments.IndexOf(claimDetailedLoops[j]),
                         j == (claimDetailedLoops.Count - 1) ? childSegments.Count - childSegments.IndexOf(claimDetailedLoops[j])
                             : childSegments.IndexOf(claimDetailedLoops[j + 1]) - childSegments.IndexOf(claimDetailedLoops[j]));
