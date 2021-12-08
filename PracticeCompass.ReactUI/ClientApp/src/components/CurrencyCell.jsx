@@ -38,6 +38,10 @@ export class CurrencyGridCell extends React.Component {
     }
     if (column.fontColor)columnStyle.color =column.fontColor;
     if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
+    if(dataItem["type"]=="Charge"){
+      columnStyle.borderTopWidth="3px";
+      columnStyle.borderTopColor="black";
+    }
     return (
       <td style={columnStyle}
       ref={(node) => {

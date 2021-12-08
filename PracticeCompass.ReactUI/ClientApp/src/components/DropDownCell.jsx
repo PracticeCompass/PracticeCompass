@@ -17,7 +17,7 @@ export class DropDownCell extends React.Component {
     {value:"Manual Processing",text:"Manual Processing"},
   ];  
   charageData= [{
-    value:"Accepted,Apply all",text:"Accepted,Apply all"},
+    value:"Accepted,Apply all",text:"Accepted, Apply all"},
     {value:"Denied because of contract",text:"Denied because of contract"},
     {value:"Zero or low pay",text:"Zero or low pay"},
   ];
@@ -44,12 +44,14 @@ export class DropDownCell extends React.Component {
     let itemStyle={};
     if(dataItem["type"]=="Charge"){
       if(dataValue=="Accepted,Apply all"){
-        itemStyle={backgroundColor:"green"};
+        itemStyle={backgroundColor:"green",borderTopWidth:"3px",borderTopColor:"black"};
       }
       else if(dataValue=="Denied because of contract"){
-        itemStyle={backgroundColor:"red"};
+        itemStyle={backgroundColor:"red",borderTopWidth:"3px",borderTopColor:"black"};
       }else if(dataValue=="Zero or low pay"){
-        itemStyle={backgroundColor:"yellow"};
+        itemStyle={backgroundColor:"yellow",borderTopWidth:"3px",borderTopColor:"black"};
+      }else{
+        itemStyle={borderTopWidth:"3px",borderTopColor:"black"}
       }
     }
 
@@ -58,7 +60,7 @@ export class DropDownCell extends React.Component {
             {dataItem.inEdit || this.props.editor == "edit" ? 
             
       <ComboBox style={{
-        width: "250px",height:"18px"
+        width: "100%",height:"18px"
       }} onChange={this.handleChange} value={Items.find(c => c.value === dataValue)} data={Items} textField="text" /> : dataValue?.toString()}
           </td>;
   }

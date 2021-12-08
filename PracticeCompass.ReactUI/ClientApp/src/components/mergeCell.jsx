@@ -35,8 +35,13 @@ export class MergeCell extends React.Component {
        text=text+ dataItem[items[i].text]+" "+items[i].s+" ";
     }
     text= text.trimEnd().replace(/,\s*$/, "").replace(/\/$/, "");
+    let columnStyle={};
+    if(dataItem["type"]=="Charge"){
+      columnStyle.borderTopWidth="3px";
+      columnStyle.borderTopColor="black";
+    }
     return (
-      <td>
+      <td style={columnStyle}>
          {text}
       </td>
     )

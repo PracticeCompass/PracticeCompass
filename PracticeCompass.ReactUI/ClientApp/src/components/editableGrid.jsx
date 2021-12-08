@@ -44,15 +44,20 @@ function mapDispatchToProps(dispatch) {
 
 class ColumnNameCell extends React.Component {
   render() {
+    let columnStyle={};
+    if(this.props.dataItem["type"]=="Charge"){
+      columnStyle.borderTopWidth="3px";
+      columnStyle.borderTopColor="black";
+    }
     if (this.props.dataItem[this.props.field + "_"] !== undefined) {
       return (
-        <td title={this.props.dataItem[this.props.field + "_"]}>
+        <td style={columnStyle} title={this.props.dataItem[this.props.field + "_"]}>
           {this.props.dataItem[this.props.field]}
         </td>
       );
     } else {
       return (
-        <td title={this.props.dataItem[this.props.field]}>
+        <td style={columnStyle} title={this.props.dataItem[this.props.field]}>
           {this.props.dataItem[this.props.field]}
         </td>
       );

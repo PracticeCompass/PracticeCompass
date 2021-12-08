@@ -18,6 +18,7 @@ import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
 import EraPaymentsDialogComponent from "./eraPaymentsDialog";
+import { RadioGroup } from "@progress/kendo-react-inputs";
 import {
   GetGridColumns,
   SaveGridColumns,
@@ -44,6 +45,12 @@ const idGetterDetailsPaymentID = getter(DATA_ITEM_KEY_DETAILS_PAYMENT);
 
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
+const filters = [
+  { label: "Charge", value: "Charge" },
+  { label: "Detail", value: "Detail" },
+  { label: "All", value: "All" },
+];
+
 function mapStateToProps(state) {
   return {
     dropDownPractices: state.lookups.practices,
@@ -119,6 +126,7 @@ class EraPayments extends Component {
     masterColumns: masterColumns,
     detailsColumns: detailsColumns,
     gridWidth: 0,
+    applyFilterChecked:"All"
   };
   componentDidMount = () => {
     this.getGridColumns();
@@ -162,14 +170,24 @@ class EraPayments extends Component {
     let data = this.state.eRADetailsPayments.map((item) =>
       item["ersChargeSID"] === inEditID
         ? {
-            ...item,
-            [field]: event.value,
-            isEdit: true,
-          }
+          ...item,
+          [field]: event.value,
+          isEdit: true,
+        }
         : item
+    );
+    let filterData = this.state.filtereRADetailsPayments.map((item) =>
+    item["ersChargeSID"] === inEditID
+      ? {
+        ...item,
+        [field]: event.value,
+        isEdit: true,
+      }
+      : item
     );
     this.setState({
       eRADetailsPayments: data,
+      filtereRADetailsPayments:filterData
     });
   };
   practiceSearch = () => {
@@ -206,7 +224,7 @@ class EraPayments extends Component {
       });
     }
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   onPracticeSelectionChange = (event) => {
     var selectedDataItems = event.dataItems.slice(
       event.startRowIndex,
@@ -332,8 +350,8 @@ class EraPayments extends Component {
           .includes("$")
           ? ""
           : this.currencyFormat(
-              ERAPaymentDetails.totalActualProviderPaymentAmt
-            ));
+            ERAPaymentDetails.totalActualProviderPaymentAmt
+          ));
     }
     await this.setState({
       ERAPaymentDetails,
@@ -345,6 +363,7 @@ class EraPayments extends Component {
     );
     this.setState({
       eRADetailsPayments,
+      filtereRADetailsPayments:eRADetailsPayments
     });
     $("#ERADetailsPaymentSearch").children("span").trigger("click");
   };
@@ -356,7 +375,7 @@ class EraPayments extends Component {
         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
     );
   }
-  onERADetailsPaymentGridSelectionChange = (event) => {};
+  onERADetailsPaymentGridSelectionChange = (event) => { };
   onERADetailsPaymentGridDoubleSelectionChange = (event) => {
     this.setState({
       ShowEditERARow: true,
@@ -369,7 +388,7 @@ class EraPayments extends Component {
       Show_HideDetailsERADialogVisible: false,
     });
   };
-  
+
   SaveColumnsShow = async (columns) => {
     if (!columns.find((x) => x.hide != true)) {
       this.setState({ Show_HideERADialogVisible: false });
@@ -424,9 +443,11 @@ class EraPayments extends Component {
       ShowEditERARow: false,
     });
   };
-  onRowRender(trElement, props) {
+  onRowRender = (trElement, props) => {
     const type = props.dataItem.type;
     const bold = {
+      borderTopWidth: "3px",
+      borderTopColor: "black",
       fontWeight: "bold"
     };
     const normal = {
@@ -443,12 +464,38 @@ class EraPayments extends Component {
         trProps = { style: normal };
         break;
     }
-
+    for (let i = 0; i < trElement.props.children.length; i++) {
+      let childElement = { ... this.renderCell(trElement.props.children[i], trProps) };
+      trElement.props.children[i] = childElement;
+    }
     return React.cloneElement(
       trElement,
       { ...trProps },
       trElement.props.children
     );
+  }
+  renderCell = (trElement, trProps) => {
+    return React.cloneElement(
+      trElement,
+      { ...trProps }
+    );
+  }
+  applyFilter = async (e) => {
+    this.setState({applyFilterChecked:e.value});
+    if(e.value=="Charge"){
+      this.setState({
+        filtereRADetailsPayments:this.state.eRADetailsPayments.filter(x=>x.type=="Charge")
+      });
+    }
+    else if(e.value=="Detail"){
+      this.setState({
+        filtereRADetailsPayments:this.state.eRADetailsPayments.filter(x=>x.type=="Detail")
+      });
+    }else{
+      this.setState({
+        filtereRADetailsPayments:this.state.eRADetailsPayments
+      });
+    }
   }
   render() {
     return (
@@ -493,27 +540,27 @@ class EraPayments extends Component {
             this.state.practiceVisibleSubPatient ||
             this.state.practiceVisibleInsurance ||
             this.state.practiceVisibleSubInsurance) && (
-            <FindDialogComponent
-              title="Practice Search"
-              placeholder="Enter Practice Name"
-              searcTextBoxValue={this.state.practiceSearchText}
-              onTextSearchChange={(e) => {
-                this.setState({
-                  practiceSearchText: e.value,
-                });
-              }}
-              clickOnSearch={this.practiceSearch}
-              dataItemKey="practiceID"
-              data={this.props.practiceList}
-              columns={PracticeColumns}
-              onSelectionChange={this.onPracticeSelectionChange}
-              onRowDoubleClick={this.onPracticeDoubleClick}
-              onKeyDown={this.onPracticeKeyDown}
-              idGetterLookup={idGetterPracticeID}
-              toggleDialog={this.cancelPracticeDialog}
-              cancelDialog={this.cancelPracticeDialog}
-            ></FindDialogComponent>
-          )}
+              <FindDialogComponent
+                title="Practice Search"
+                placeholder="Enter Practice Name"
+                searcTextBoxValue={this.state.practiceSearchText}
+                onTextSearchChange={(e) => {
+                  this.setState({
+                    practiceSearchText: e.value,
+                  });
+                }}
+                clickOnSearch={this.practiceSearch}
+                dataItemKey="practiceID"
+                data={this.props.practiceList}
+                columns={PracticeColumns}
+                onSelectionChange={this.onPracticeSelectionChange}
+                onRowDoubleClick={this.onPracticeDoubleClick}
+                onKeyDown={this.onPracticeKeyDown}
+                idGetterLookup={idGetterPracticeID}
+                toggleDialog={this.cancelPracticeDialog}
+                cancelDialog={this.cancelPracticeDialog}
+              ></FindDialogComponent>
+            )}
 
           <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
             <PanelBarItem
@@ -612,9 +659,9 @@ class EraPayments extends Component {
                           node.style.setProperty("height", "22px", "important");
                         }
                       }}
-                      // onClick={(e) =>
-                      //   this.setState({ practiceVisibleInsurance: true })
-                      // }
+                    // onClick={(e) =>
+                    //   this.setState({ practiceVisibleInsurance: true })
+                    // }
                     >
                       Manual Match
                     </ButtonComponent>
@@ -777,7 +824,7 @@ class EraPayments extends Component {
                         //hasCheckBox={true}
                         sortColumns={[]}
                         onSortChange={this.onSortChange}
-                        // pageChange={this.pageChange}
+                      // pageChange={this.pageChange}
                       ></GridComponent>
                     </div>
                   </div>
@@ -855,7 +902,7 @@ class EraPayments extends Component {
                     classButton="infraBtn-primary"
                     // onClick={() => { this.ApplyListChanged() }}
                     style={{ marginTop: "2px", marginLeft: "10px" }}
-                    // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
+                  // disabled={this.state.disableApply || (this.state.filterApplyPlanPayments== null || this.state.filterApplyPlanPayments.filter(item=>item.isEdit).length==0)}
                   >
                     Post
                   </ButtonComponent>
@@ -892,6 +939,12 @@ class EraPayments extends Component {
                         marginTop: "5px",
                       }}
                     >
+                      <RadioGroup
+                        data={filters}
+                        value={this.state.applyFilterChecked}
+                        onChange={this.applyFilter}
+                        layout="horizontal"
+                      />
                       <div
                         id="collapseOne"
                         className="collapse show"
@@ -900,7 +953,7 @@ class EraPayments extends Component {
                         style={{ width: this.state.gridWidth }}
                       >
                         <EditableGrid
-                          data={this.state.eRADetailsPayments}
+                          data={this.state.filtereRADetailsPayments}
                           id="ERAPaymentDetails"
                           activeRowRender={true}
                           onRowRender={this.onRowRender}
@@ -920,14 +973,14 @@ class EraPayments extends Component {
                           itemChange={this.applyItemChanged}
                           onSortChange={this.onSortChange}
                           // pageChange={this.pageChange}
-                          // height={window.innerHeight - 220}
+                          height={window.innerHeight - 100}
                           noPageable={true}
                           isEditable={true}
-                          // totalCount={
-                          //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                          //     ? this.props.patientApplys[0].totalCount
-                          //     : this.props.patientApplys.length
-                          // }
+                        // totalCount={
+                        //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                        //     ? this.props.patientApplys[0].totalCount
+                        //     : this.props.patientApplys.length
+                        // }
                         ></EditableGrid>
                       </div>
                     </div>
