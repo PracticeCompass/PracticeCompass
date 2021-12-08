@@ -115,11 +115,17 @@ namespace PracticeCompass.Data.Repositories
                 //GetPlanClaim 1 record
                 var PlanClaim = new PlanClaim();
                 sql = "select * from PlanClaim where PlanICN== @PlanICN";
-               // PlanClaim = this.db.QueryFirst<PlanClaim>(sql, new { PlanICN = PlanICN });
-                //select PlanClaimCharge.* from PlanClaimCharge inner join PlanClaim on PlanClaim.PlanID = PlanClaimCharge.PlanID
-                //and PlanClaim.ClaimSID = PlanClaimCharge.ClaimSID and PlanClaim.PolicyNumber = PlanClaimCharge.PolicyNumber
-                //where PlanICN in (select PayerClaimControlNumber from ERSClaimData where ERSPaymentSID = 605884 )
+                // PlanClaim = this.db.QueryFirst<PlanClaim>(sql, new { PlanICN = PlanICN });
 
+                //Get PlanClaimCharge
+                #region Get_PlanClaimCharge
+                var PlanClaimCharge = new List<PlanClaimCharge>();
+                sql = @"  select PlanClaimCharge.* from PlanClaimCharge inner join PlanClaim on PlanClaim.PlanID = PlanClaimCharge.PlanID
+                and PlanClaim.ClaimSID = PlanClaimCharge.ClaimSID and PlanClaim.PolicyNumber = PlanClaimCharge.PolicyNumber
+                where PlanICN in (select PayerClaimControlNumber from ERSClaimData where ERSPaymentSID = @PaymentSID )";
+                var PlanClaimCharges = this.db.QueryMultiple(sql, new { ERSPaymentSID = ERSPaymentHeader.PaymentSID });
+                PlanClaimCharge = PlanClaimCharges.Read<PlanClaimCharge>().ToList(); 
+                #endregion
 
                 //Add Payment Record
                 // Update PaymentHeader add Payment SID
@@ -132,13 +138,16 @@ namespace PracticeCompass.Data.Repositories
                     var Charge = new Charge();
                     sql = "select * from charge where ChargeSID= = @ChargeSID";
                     Charge = this.db.QueryFirst<Charge>(sql, new { ChargeSID = ERSCharge.ReferenceID });
-                    
+
                     //update Charge update insurance reciept  ,approved amount 
                     //Charge.ApprovedAmount=
                     //Charge.InsuranceReceipts=
 
                     //update adjustment
                     //Add Charge Activity 
+
+                    // add PlanClaimChargeRemit
+                    // PlanClaimChargeRemitAdj
                 }
 
                 var PlanClaimChargeMonetaryAmt = new List<PlanClaimChargeMonetaryAmt>();
@@ -161,13 +170,13 @@ namespace PracticeCompass.Data.Repositories
                         CreateStamp= timestamp,
                         TimeStamp=timestamp,
                         QualifierCode= ERSChargemontAmt.AmtQualifierCode,
-                        
-
+                        ClaimSID = PlanClaimCharge.FirstOrDefault(x=>x.ChargeSID== ERSChargemontAmt.ERSChargeSID).ClaimSID,
+                        PlanID = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).PlanID,
+                        PolicyNumber = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).PolicyNumber,
+                        LineItem= PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).LineItem,
+                        RemitCount = 1
                     });
                 }
-
-
-
 
                 return true;
             }

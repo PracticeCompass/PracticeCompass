@@ -10,6 +10,7 @@ namespace PracticeCompass.Core.Models
         {
         }
 
+        public string GridID { get; set; }
         public int ERSClaimSID { get; set; }
         public int ERSChargeSID { get; set; }
         public string PayerClaimControlNumber { get; set; }

@@ -1,6 +1,6 @@
-USE [medman]
+USE [Medman]
 GO
-/****** Object:  StoredProcedure [dbo].[uspClaimDetailsGet]    Script Date: 8/6/2021 10:29:33 AM ******/
+/****** Object:  StoredProcedure [dbo].[uspERAPaymentDetailsGet]    Script Date: 12/8/2021 1:24:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11,7 +11,7 @@ GO
 -- Description:	Get ERAPaymentDetails Grid Data on Payment Header Grid select
 -- exec uspERAPaymentDetailsGet 1971933
 -- =============================================
-Create or Alter   PROCEDURE [dbo].[uspERAPaymentDetailsGet] 
+ALTER     PROCEDURE [dbo].[uspERAPaymentDetailsGet] 
 	-- Add the parameters for the stored procedure here
     @ERSPaymentSID int 
 AS
@@ -20,7 +20,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	select * from (
-select 'Charge' as type,ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,(ERSClaimName.NameLastOrOrgName+', '+ERSClaimName.NameFirst) as NameFirst,
+select convert(varchar,ERSChargeServiceInfo.ERSChargeSID) as GridID, 'Charge' as type,ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,(ERSClaimName.NameLastOrOrgName+', '+ERSClaimName.NameFirst) as NameFirst,
  ERSChargeServiceInfo.ProcedureModifier01
 ,ERSChargeServiceInfo.ProcedureModifier02,ERSChargeServiceInfo.ProductServiceID , 
 CONVERT(varchar,[ERSChargeDate].ServiceDate,101) as ServiceDate,
@@ -52,7 +52,7 @@ ERSChargeServiceInfo.LineItemChargeAmt,ERSChargeServiceInfo.LineItemProviderPaym
 
 
 union all 
-select 'Detail' as type,
+select convert(varchar,ERSChargeServiceInfo.ERSChargeSID)+convert(varchar,[ERSChargeClaimAdjustment].ClaimAdjustmentGroupCode)+convert(varchar,[ERSChargeClaimAdjustment].AdjustmentReasonCode)  as GridID,'Detail' as type,
 ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber,'' as ClaimNumber,'' as NameLastOrOrgName,
 '' as NameFirst,
 '' asProcedureModifier01
