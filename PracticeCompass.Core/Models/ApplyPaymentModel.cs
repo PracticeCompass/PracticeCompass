@@ -9,11 +9,11 @@ namespace PracticeCompass.Core.Models
         public int ChargeSID { get; set; }
         public int PaymentSID { get; set; }
         public int PayorID { get; set; }
-        public float AmountPaid { get; set; }
-        public float Adjustment { get; set; }
+        public decimal AmountPaid { get; set; }
+        public decimal Adjustment { get; set; }
         public string PaymentType { get; set; } // G : Patient , I Insurace 
         public int? PlanID { get; set; }
-        public float PaymentRemaining { get; set; }
+        public decimal PaymentRemaining { get; set; }
 
     }
 }

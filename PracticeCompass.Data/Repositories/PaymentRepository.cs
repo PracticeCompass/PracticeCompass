@@ -134,6 +134,7 @@ namespace PracticeCompass.Data.Repositories
         {
             var ChargeActivities = new List<ChargeActivity>();
             var Charges = new List<Charge>();
+            var Accountrow = new Account();
             var PaymentAssignments = new List<PaymentAssignment>();
             var PlanClaimCharges = new List<PlanClaimCharge>();
 
@@ -164,6 +165,11 @@ namespace PracticeCompass.Data.Repositories
                 string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
                 int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? 
                     ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0, string.Format("Where ChargeSID = {0}", paymentmodel.ChargeSID.ToString()));
+
+                sql = "select * from account where AccountSID= @AccountSID)";
+                Accountrow = this.db.QueryFirst<Account>(sql, new { AccountSID = chargerow.AccountSID });
+                Accountrow.Balance = Accountrow.Balance + gurantorDiff + insuranceDiff + adjustamnetsDiff;
+
                 if (gurantorDiff != 0 || insuranceDiff != 0)
                 {
                     // ChargeActivity
@@ -260,11 +266,13 @@ namespace PracticeCompass.Data.Repositories
                 if ((chargerow.Amount - (Decimal)(chargerow.InsuranceReceipts + chargerow.GuarantorReceipts + chargerow.Adjustments)) == 0)
                 {
                     chargerow.RecordStatus = "S";
+                    chargerow.DateSatisfied = DateTime.Now.Date;
                 }
             }
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
             this.db.BulkUpdate(Payments);
+            this.db.BulkUpdate(Accountrow);
             var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
            "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
            ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +

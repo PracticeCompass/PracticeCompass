@@ -36,9 +36,9 @@ namespace PracticeCompass.Core.Models
         public int? LastUser { get; set; }
         public string CreateStamp { get; set; }
         public int? CreateUser { get; set; }
-        public float? GuarantorReceipts { get; set; }
-        public float? InsuranceReceipts { get; set; }
-        public float? Adjustments { get; set; }
+        public decimal? GuarantorReceipts { get; set; }
+        public decimal? InsuranceReceipts { get; set; }
+        public decimal? Adjustments { get; set; }
         public string Voucher { get; set; }
         public string RespPartyType { get; set; }
         public int? RespPartyID { get; set; }
