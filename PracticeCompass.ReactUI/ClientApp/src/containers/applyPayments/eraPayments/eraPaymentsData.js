@@ -33,8 +33,16 @@ export const PracticeColumns = [
 
 export const detailsColumns = [
   {
-    field: "ersChargeSID",
+    field: "gridID",
     title: "ID",
+    minWidth: 250,
+    orderIndex: 0,
+    hide: true,
+    editable: false
+  },
+  {
+    field: "ersChargeSID",
+    title: "ersChargeSID",
     minWidth: 250,
     orderIndex: 0,
     hide: true,

@@ -40,7 +40,7 @@ import Show_HideDialogComponent from "../../common/show_hideDialog";
 
 const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
-const DATA_ITEM_KEY_DETAILS_PAYMENT = "ChargeSID";
+const DATA_ITEM_KEY_DETAILS_PAYMENT = "gridID";
 const idGetterDetailsPaymentID = getter(DATA_ITEM_KEY_DETAILS_PAYMENT);
 
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
@@ -166,9 +166,9 @@ class EraPayments extends Component {
   }
   applyItemChanged = (event) => {
     const field = event.field || "";
-    const inEditID = event.dataItem["ersChargeSID"];
+    const inEditID = event.dataItem["gridID"];
     let data = this.state.eRADetailsPayments.map((item) =>
-      item["ersChargeSID"] === inEditID
+      item["gridID"] === inEditID
         ? {
           ...item,
           [field]: event.value,
@@ -177,7 +177,7 @@ class EraPayments extends Component {
         : item
     );
     let filterData = this.state.filtereRADetailsPayments.map((item) =>
-    item["ersChargeSID"] === inEditID
+    item["gridID"] === inEditID
       ? {
         ...item,
         [field]: event.value,
@@ -960,8 +960,8 @@ class EraPayments extends Component {
                           skip={0}
                           take={21}
                           width="100%"
-                          editColumn={"ersChargeSID"}
-                          DATA_ITEM_KEY="ersChargeSID"
+                          editColumn={"gridID"}
+                          DATA_ITEM_KEY="gridID"
                           idGetter={idGetterDetailsPaymentID}
                           onSelectionChange={
                             this.onERADetailsPaymentGridSelectionChange
