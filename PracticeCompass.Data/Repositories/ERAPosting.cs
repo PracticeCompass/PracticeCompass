@@ -60,7 +60,7 @@ namespace PracticeCompass.Data.Repositories
                 var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
                 var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
                 //Get Payment Header 1 record
-                #region Get_PaymentHeader
+                #region Get_ERSPaymentHeader
                 var ERSPaymentHeader = new ERSPaymentHeader();
                 string sql = "SELECT * FROM ERSPaymentHeader WHERE CheckTraceNbr = @CheckTraceNbr";
                 ERSPaymentHeader = this.db.QueryFirst<ERSPaymentHeader>(sql, new { CheckTraceNbr = CheckTraceNbr });
@@ -125,7 +125,7 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 //Add Payment Record
-                // Update PaymentHeader add Payment SID
+                // Update ERS_PaymentHeader add Payment SID
 
                 //Update PLanClaim 
                 //Insert Plan Claim Data 
@@ -140,7 +140,7 @@ namespace PracticeCompass.Data.Repositories
                     //Charge.ApprovedAmount=
                     //Charge.InsuranceReceipts=
 
-                    //update adjustment
+                    //update charge table field adjustment
                     //Add Charge Activity 
 
                     // add PlanClaimChargeRemit
