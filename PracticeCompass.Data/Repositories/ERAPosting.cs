@@ -63,12 +63,14 @@ namespace PracticeCompass.Data.Repositories
                 #region Get_PaymentHeader
                 var ERSPaymentHeader = new ERSPaymentHeader();
                 string sql = "SELECT * FROM ERSPaymentHeader WHERE CheckTraceNbr = @CheckTraceNbr";
-                ERSPaymentHeader = this.db.QueryFirst<ERSPaymentHeader>(sql, new { CheckTraceNbr = CheckTraceNbr }); 
+                ERSPaymentHeader = this.db.QueryFirst<ERSPaymentHeader>(sql, new { CheckTraceNbr = CheckTraceNbr });
                 #endregion
 
                 // Get Plan ID
+                #region Get_PlanID
                 sql = "select PlanID from [Plan] where PayerID in(select payerID from payer where EnvoyPayerID = @ESRTracePayerIdent)";
-                int PLanID = this.db.QueryFirst<int>(sql, new { ESRTracePayerIdent = ERSPaymentHeader.CheckTraceNbr });
+                int PLanID = this.db.QueryFirst<int>(sql, new { ESRTracePayerIdent = ERSPaymentHeader.CheckTraceNbr }); 
+                #endregion
                 //Get Charges 
                 #region Get_Charges
                 var ERSChargeReferences = new List<ERSChargeReference>();
@@ -79,7 +81,7 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 //Get Claim Data
-                #region Get_ClaimData
+                #region Get_ERSClaimData
                 var ERSClaimData = new List<ERSClaimData>();
                 sql = @"select * from ERSClaimData where ERSPaymentSID=@ERSPaymentSID";
                 var ERSclaim = this.db.QueryMultiple(sql, new { ERSPaymentSID = ERSPaymentHeader.PaymentSID });
@@ -87,7 +89,7 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 // Get Charge Service info 
-                #region Get_ChargeServiceInfo
+                #region Get_ERSChargeServiceInfo
                 var ERSChargeServiceInfo = new List<ERSChargeServiceInfo>();
                 sql = @"select * from [dbo].[ERSChargeServiceInfo]  where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID )";
                 var ERSchargeinfo = this.db.QueryMultiple(sql, new { ERSPaymentSID = ERSPaymentHeader.PaymentSID });
@@ -95,7 +97,7 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 // Get Charge Claim Adj
-                #region Get_ChargeClaimAdj
+                #region Get_ERSChargeClaimAdj
                 var ERSChargeClaimAdjustment = new List<ERSChargeClaimAdjustment>();
                 sql = @"select *from ERSChargeClaimAdjustment  where ERSChargeSID in (select ERSChargeSID from [dbo].[ERSChargeServiceInfo]  
                         where ERSClaimSID in (select ERSClaimSID from ERSClaimData where ERSPaymentSID=@ERSPaymentSID ))";
@@ -111,11 +113,6 @@ namespace PracticeCompass.Data.Repositories
                 var ERSchargeMonetaryAmt = this.db.QueryMultiple(sql, new { ERSPaymentSID = ERSPaymentHeader.PaymentSID });
                 ERSChargeMonetaryAmt = ERSchargeMonetaryAmt.Read<ERSChargeMonetaryAmt>().ToList();
                 #endregion
-
-                //GetPlanClaim 1 record
-                var PlanClaim = new PlanClaim();
-                sql = "select * from PlanClaim where PlanICN== @PlanICN";
-                // PlanClaim = this.db.QueryFirst<PlanClaim>(sql, new { PlanICN = PlanICN });
 
                 //Get PlanClaimCharge
                 #region Get_PlanClaimCharge
@@ -147,7 +144,7 @@ namespace PracticeCompass.Data.Repositories
                     //Add Charge Activity 
 
                     // add PlanClaimChargeRemit
-                    // PlanClaimChargeRemitAdj
+                    // add PlanClaimChargeRemitAdj
                 }
 
                 var PlanClaimChargeMonetaryAmt = new List<PlanClaimChargeMonetaryAmt>();
@@ -157,7 +154,6 @@ namespace PracticeCompass.Data.Repositories
 
                     PlanClaimChargeMonetaryAmt.Add(new PlanClaimChargeMonetaryAmt
                     {
-                        
                         CreateUser = 88,
                         LastUser = 88,
                         pro2created = DateTime.Now,
