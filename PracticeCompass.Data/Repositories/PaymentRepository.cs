@@ -138,16 +138,21 @@ namespace PracticeCompass.Data.Repositories
             var PaymentAssignments = new List<PaymentAssignment>();
             var PlanClaimCharges = new List<PlanClaimCharge>();
 
+            #region Get_Charges
             var chargeIDs = applyPaymentModel.Select(x => x.ChargeSID);
-            var paymentID = applyPaymentModel[0].PaymentSID;
             string sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
+            #endregion
 
+            #region Get_Payments
+            var paymentID = applyPaymentModel[0].PaymentSID;
             var Payments = new Payment();
             string paymentSql = "SELECT * FROM Payment WHERE PaymentSID = @ids";
             var Paymentsresults = this.db.QueryMultiple(paymentSql, new { ids = paymentID });
             Payments = Paymentsresults.Read<Payment>().FirstOrDefault();
+            #endregion
+
             if (applyPaymentModel[0].PaymentRemaining == 0)
             {
                 Payments.FullyApplied = "Y";
@@ -163,15 +168,12 @@ namespace PracticeCompass.Data.Repositories
                 var insuranceDiff = paymentmodel.PaymentType == "I" ? paymentmodel.AmountPaid - chargerow.InsuranceReceipts : 0;
                 var adjustamnetsDiff = paymentmodel.Adjustment - chargerow.Adjustments;
                 string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
-                int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? 
+                int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount", ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ?
                     ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0, string.Format("Where ChargeSID = {0}", paymentmodel.ChargeSID.ToString()));
-
-                sql = "select * from account where AccountSID= @AccountSID)";
-                Accountrow = this.db.QueryFirst<Account>(sql, new { AccountSID = chargerow.AccountSID });
-                Accountrow.Balance = Accountrow.Balance + gurantorDiff + insuranceDiff + adjustamnetsDiff;
 
                 if (gurantorDiff != 0 || insuranceDiff != 0)
                 {
+                    #region ChargeActivity_PMT
                     // ChargeActivity
 
                     ChargeActivities.Add(new Core.Models.ChargeActivity
@@ -179,7 +181,7 @@ namespace PracticeCompass.Data.Repositories
                         prrowid = ChargeActivityMAXRowID,
                         ChargeSID = paymentmodel.ChargeSID,
                         ActivityCount = maxactivitycount,
-                        Amount = insuranceDiff != 0 ? insuranceDiff : gurantorDiff ,
+                        Amount = insuranceDiff != 0 ? insuranceDiff : gurantorDiff,
                         ActivityType = "PMT",
                         SourceType = paymentmodel.PaymentType,
                         SourceID = paymentmodel.PayorID,
@@ -198,7 +200,9 @@ namespace PracticeCompass.Data.Repositories
                         DisplayText = ""
 
                     });
+                    #endregion
                     //PaymentAssignment
+                    #region PaymentAssignment
                     var PaymentAssignmentMAXRowID = practiceCompassHelper.GetMAXprrowid("PaymentAssignment", PaymentAssignments.Count() != 0 ? PaymentAssignments[PaymentAssignments.Count() - 1].prrowid : "0");
                     var PAmaxactivitycount = practiceCompassHelper.GetMAXColumnid("PaymentAssignment", "ActivityCount",
                      PaymentAssignments.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? PaymentAssignments[PaymentAssignments.Count() - 1].ActivityCount.Value : 0);
@@ -223,9 +227,11 @@ namespace PracticeCompass.Data.Repositories
                         CreditedPlanID = paymentmodel.PlanID
 
                     });
+                    #endregion
                 }
                 if (adjustamnetsDiff != 0)
                 {
+                    #region ChargeActivity_Adj
                     ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
                     maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
                         ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0
@@ -253,8 +259,10 @@ namespace PracticeCompass.Data.Repositories
                         PatientStatement = "",
                         DisplayText = ""
                     });
+                    #endregion
                 }
 
+                #region update_Charge
 
                 if (paymentmodel.PaymentType == "G")
                     chargerow.GuarantorReceipts = paymentmodel.AmountPaid;
@@ -263,20 +271,29 @@ namespace PracticeCompass.Data.Repositories
                 chargerow.Adjustments = paymentmodel.Adjustment;
                 chargerow.pro2modified = DateTime.Now;
                 chargerow.TimeStamp = timestamp;
-                if ((chargerow.Amount - (Decimal)(chargerow.InsuranceReceipts + chargerow.GuarantorReceipts + chargerow.Adjustments)) == 0)
+                if ((chargerow.Amount - (chargerow.InsuranceReceipts + chargerow.GuarantorReceipts + chargerow.Adjustments)) == 0)
                 {
                     chargerow.RecordStatus = "S";
                     chargerow.DateSatisfied = DateTime.Now.Date;
                 }
+                #endregion
+
+                #region Update_Account
+                sql = "select * from account where AccountSID= @AccountSID)";
+                Accountrow = this.db.QueryFirst<Account>(sql, new { AccountSID = chargerow.AccountSID });
+                Accountrow.Balance = Accountrow.Balance + gurantorDiff + insuranceDiff + adjustamnetsDiff;
+                #endregion
             }
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
             this.db.BulkUpdate(Payments);
             this.db.BulkUpdate(Accountrow);
+
+            #region Insert_Statments
             var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
-           "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
-           ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +
-           ",@DNPracticeID,@Pro2SrcPDB,@pro2created,@pro2modified)";
+            "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
+            ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +
+            ",@DNPracticeID,@Pro2SrcPDB,@pro2created,@pro2modified)";
             var ChargeActivity = this.db.Execute(ChargeActivitySQL, ChargeActivities);
             var PaymentAssignmentSQL = "INSERT INTO [dbo].[PaymentAssignment] VALUES " +
            "(@prrowid,@PaymentSID,@ChargeSID,@ActivityCount,@AccountSID,@JournalSID,@PostDate,@Amount,@PatientBilled" +
@@ -287,6 +304,7 @@ namespace PracticeCompass.Data.Repositories
            "(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@LineItem,@ChargeSID,@BilledAmount,@TimeStamp,@LastUser" +
            ",@CreateStamp,@CreateUser,@PatReceipts,@InsReceipts,@Pro2SrcPDB,@pro2created,@pro2modified)";
             var PlanClaimCharge = this.db.Execute(PlanClaimChargeSQL, PlanClaimCharges);
+            #endregion
             txScope.Complete();
             return true;
         }
