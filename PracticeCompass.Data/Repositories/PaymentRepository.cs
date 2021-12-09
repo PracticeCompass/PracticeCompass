@@ -279,7 +279,7 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 #region Update_Account
-                sql = "select * from account where AccountSID= @AccountSID)";
+                sql = "select * from account where AccountSID= @AccountSID";
                 Accountrow = this.db.QueryFirst<Account>(sql, new { AccountSID = chargerow.AccountSID });
                 Accountrow.Balance = Accountrow.Balance + gurantorDiff + insuranceDiff + adjustamnetsDiff;
                 #endregion
