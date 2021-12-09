@@ -46,9 +46,8 @@ const idGetterDetailsPaymentID = getter(DATA_ITEM_KEY_DETAILS_PAYMENT);
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 const filters = [
-  { label: "Charge", value: "Charge" },
-  { label: "Detail", value: "Detail" },
-  { label: "All", value: "All" },
+  { label: "Summary", value: "Charge" },
+  { label: "Detail", value: "All" },
 ];
 
 function mapStateToProps(state) {
@@ -483,17 +482,25 @@ class EraPayments extends Component {
   applyFilter = async (e) => {
     this.setState({applyFilterChecked:e.value});
     if(e.value=="Charge"){
+      let filtereRADetailsPayments=[...(this.state.eRADetailsPayments.filter(x=>x.type=="Charge"))];
+      let filterItems=[];
+      for(let i=0;i<filtereRADetailsPayments.length;i++){
+        let eraDetails=[...(this.state.eRADetailsPayments.filter(item=>item.ersChargeSID==filtereRADetailsPayments[i].ersChargeSID))];
+        let filterItem={...filtereRADetailsPayments[i]};
+        for(let x=0;x<eraDetails.length;x++){
+          if(eraDetails[x].chargeClaimAdjustmentReason !="" && eraDetails[x].chargeClaimAdjustmentReason !=null){
+             filterItem.chargeClaimAdjustmentReason = filterItem.chargeClaimAdjustmentReason+eraDetails[x].chargeClaimAdjustmentReason+', ';
+          }
+        }
+        filterItem.chargeClaimAdjustmentReason= filterItem.chargeClaimAdjustmentReason.replace(/,\s*$/, "");
+        filterItems.push(filterItem);
+      }
       this.setState({
-        filtereRADetailsPayments:this.state.eRADetailsPayments.filter(x=>x.type=="Charge")
-      });
-    }
-    else if(e.value=="Detail"){
-      this.setState({
-        filtereRADetailsPayments:this.state.eRADetailsPayments.filter(x=>x.type=="Detail")
+        filtereRADetailsPayments:filterItems
       });
     }else{
       this.setState({
-        filtereRADetailsPayments:this.state.eRADetailsPayments
+        filtereRADetailsPayments:[...this.state.eRADetailsPayments]
       });
     }
   }

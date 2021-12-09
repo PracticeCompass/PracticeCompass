@@ -125,6 +125,7 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 //Add Payment Record
+
                 // Update ERS_PaymentHeader add Payment SID
 
                 //Update PLanClaim 
