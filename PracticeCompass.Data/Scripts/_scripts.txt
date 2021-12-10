@@ -70,3 +70,5 @@ uspERSTableDelete.sql
 FuncGetClaimOutStandingBalance.sql
 FuncGetChargeStatus.sql
 uspPlanGroupGet.sql
+CreateERAFileManagertable.sql
+uspFilesGet.sql

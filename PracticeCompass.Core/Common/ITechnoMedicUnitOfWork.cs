@@ -20,5 +20,6 @@ namespace PracticeCompass.Core.Common
         IPhysicianRepository PhysicianRepository { get; }
         IPlanRepository PlanRepository { get; }
         IERAPosting ERAPostingRepository { get; }
+        IFileManagerRepository ERAFileManagerRepository { get; }
     }
 }

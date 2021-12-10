@@ -29,6 +29,7 @@ namespace PracticeCompass.Data.Common
         public PhysicianRepository _PhysicianRepository;
         public PlanRepository _PlanRepository;
         public ERAPostingRepository _ERAPostingRepository;
+        public FileManagerRepository _FileManagerRepository;
         public IPatientDetailsRepository PatientDetailsRepository => _PatientDetailsRepository = _PatientDetailsRepository ??
            new PatientDetailsRepository(configuration.GetConnectionString("PracticeCompass"));
         public IPatientRepository PatientRepository => _PatientRepository = _PatientRepository ??
@@ -65,6 +66,9 @@ namespace PracticeCompass.Data.Common
            new PlanRepository(configuration.GetConnectionString("PracticeCompass"));
         public IERAPosting ERAPostingRepository => _ERAPostingRepository = _ERAPostingRepository ??
         new ERAPostingRepository(configuration.GetConnectionString("PracticeCompass"));
+        public IFileManagerRepository ERAFileManagerRepository => _FileManagerRepository = _FileManagerRepository ??
+       new FileManagerRepository(configuration.GetConnectionString("PracticeCompass"));
+        
 
     }
 }
