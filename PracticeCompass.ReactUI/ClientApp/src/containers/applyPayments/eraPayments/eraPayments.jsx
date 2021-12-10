@@ -125,7 +125,8 @@ class EraPayments extends Component {
     masterColumns: masterColumns,
     detailsColumns: detailsColumns,
     gridWidth: 0,
-    applyFilterChecked:"All"
+    applyFilterChecked:"All",
+    detailRows:[]
   };
   componentDidMount = () => {
     this.getGridColumns();
@@ -361,6 +362,7 @@ class EraPayments extends Component {
       ERAPaymentDetails.ersPaymentSID
     );
     this.setState({
+      applyFilterChecked:'All',
       eRADetailsPayments,
       filtereRADetailsPayments:eRADetailsPayments
     });
@@ -379,7 +381,11 @@ class EraPayments extends Component {
     this.setState({
       ShowEditERARow: true,
       ERAItemDetails: event.dataItem,
+      detailsColumns: this.state.detailsColumns,
+      detailRows: this.state.eRADetailsPayments.filter(x=>x.ersChargeSID==event.dataItem.ersChargeSID),
+      showDetailsGrid: this.state.applyFilterChecked=='Charge'
     });
+
   };
   toggleShowColumnsDialog = () => {
     this.setState({
@@ -527,6 +533,9 @@ class EraPayments extends Component {
               ERAItemDetails={this.state.ERAItemDetails}
               toggleERAPaymentDialog={this.toggleERAPaymentDialog}
               savePaymentTransaction={this.savePaymentTransaction}
+              detailRows={this.state.detailRows}
+              detailsColumns={this.state.detailsColumns}
+              showDetailsGrid={this.state.showDetailsGrid}
             ></EraPaymentsDialogComponent>
           )}
           {this.state.Show_HideERADialogVisible && (
