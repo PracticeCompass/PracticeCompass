@@ -341,7 +341,7 @@ class GridComponent extends React.Component {
             skip={this.state.skip}
             take={this.state.take}
             total={this.props.data ? this.props.data.length : 0}
-            pageable={true}
+            pageable={!this.props.noPageable}
             onPageChange={this.pageChange}
           >
             {this.state.hasCheckBox && (

@@ -158,6 +158,17 @@ class ApplyPaymentDialogComponent extends Component {
           <DialogActionsBar>
             <div className="row">
               <div className="col-6">
+                {!this.props.hideCancel && (
+                  <button
+                    type="button"
+                    className="k-button"
+                    onClick={this.props.togglePaymentDialog}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+              <div className="col-6">
                 <button
                   type="button"
                   className="k-button k-primary"
@@ -172,17 +183,6 @@ class ApplyPaymentDialogComponent extends Component {
                 >
                   Ok
                 </button>
-              </div>
-              <div className="col-6">
-                {!this.props.hideCancel && (
-                  <button
-                    type="button"
-                    className="k-button"
-                    onClick={this.props.togglePaymentDialog}
-                  >
-                    Cancel
-                  </button>
-                )}
               </div>
             </div>
           </DialogActionsBar>

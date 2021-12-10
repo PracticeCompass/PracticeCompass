@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import TextBox from "../../../components/TextBox";
-import EditableGrid from "../../../components/Grid";
+import EditableGrid from "../../../components/editableGrid";
 import { getter } from "@progress/kendo-react-common";
 
 const DATA_ITEM_KEY_DETAILS_PAYMENT = "gridID";
@@ -45,6 +45,43 @@ class EraPaymentsDialogComponent extends Component {
   }
   onSortChange=()=>{
 
+  }
+  onRowRender = (trElement, props) => {
+    const type = props.dataItem.type;
+    const bold = {
+      borderTopWidth: "3px",
+      borderTopColor: "black",
+      fontWeight: "bold"
+    };
+    const normal = {
+      fontWeight: "normal"
+    };
+    let trProps = {
+      style: normal,
+    };
+    switch (type) {
+      case "Charge":
+        trProps = { style: bold };
+        break;
+      default:
+        trProps = { style: normal };
+        break;
+    }
+    for (let i = 0; i < trElement.props.children.length; i++) {
+      let childElement = { ... this.renderCell(trElement.props.children[i], trProps) };
+      trElement.props.children[i] = childElement;
+    }
+    return React.cloneElement(
+      trElement,
+      { ...trProps },
+      trElement.props.children
+    );
+  }
+  renderCell = (trElement, trProps) => {
+    return React.cloneElement(
+      trElement,
+      { ...trProps }
+    );
   }
   render() {
     return (
@@ -275,6 +312,8 @@ class EraPaymentsDialogComponent extends Component {
                     >
                       <EditableGrid
                         id="ERADetailsPayment"
+                        activeRowRender={true}
+                        onRowRender={this.onRowRender}
                         columns={this.props.detailsColumns}
                         skip={0}
                         take={21}
