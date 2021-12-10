@@ -989,7 +989,7 @@ class EraPayments extends Component {
                           itemChange={this.applyItemChanged}
                           onSortChange={this.onSortChange}
                           // pageChange={this.pageChange}
-                          height={window.innerHeight - 100}
+                          height="640px"
                           noPageable={true}
                           isEditable={true}
                         // totalCount={
