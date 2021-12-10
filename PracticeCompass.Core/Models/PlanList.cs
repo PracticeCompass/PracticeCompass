@@ -22,6 +22,7 @@ namespace PracticeCompass.Core.Models
         public string State { get; set; }
         public string Zip { get; set; }
         public string Email { get; set; }
+        public string GroupNumber { get; set; }
         #endregion
 
     }

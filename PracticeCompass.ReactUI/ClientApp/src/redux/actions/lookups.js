@@ -11,6 +11,7 @@ import {
   GET_MODIFIER_LIST,
   GET_MODIFIER_LIST_FAILED,
   SET_COMPANIES_LIST,
+  GET_PLANS_GROUP
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
@@ -50,6 +51,7 @@ export const GetLookupsByEnityName =
       else if (EntityName == "CPT") dispatch(saveCpts(resp.data));
       else if (EntityName == "ICD10") dispatch(saveICD10(resp.data));
       else if (EntityName == "Company") dispatch(setCompanies(resp.data));
+      else if (EntityName == "PlanGroup") dispatch(setPlanGroupList(resp.data));
     } catch (error) {
     } finally {
       // dispatch(uiStopLoading());
@@ -128,6 +130,11 @@ export const GetLookups = () => async (dispatch, getState) => {
     });
     dispatch(setCompanies(companies.data));
 
+    const PlanGroups = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=PlanGroup`,
+    });
+    dispatch(setPlanGroupList(PlanGroups.data));
     // dispatch(uiStopLoading());
   } catch (error) {
   } finally {
@@ -195,6 +202,12 @@ export const setModifierList = (data) => {
 export const setCompaniesList = (data) => {
   return {
     type: SET_COMPANIES_LIST,
+    payload: data,
+  };
+};
+export const setPlanGroupList = (data) => {
+  return {
+    type: GET_PLANS_GROUP,
     payload: data,
   };
 };

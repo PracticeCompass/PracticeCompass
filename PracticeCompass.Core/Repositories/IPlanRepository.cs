@@ -7,8 +7,8 @@ namespace PracticeCompass.Core.Repositories
     public interface IPlanRepository : IRepository<PlanList>
     {
 
-        public List<PlanList> PlansGridGet(int planID, string Zip, int skip, string SortColumn, string SortDirection);
-        public PlanDetails PlanDetailsGet(int providerId);
+        public List<PlanList> PlansGridGet(int planID, string Zip, int skip, string SortColumn, string SortDirection,string PlanGroup);
+        public PlanDetails PlanDetailsGet(int providerId, string groupNumber);
         public List<PlanGroup> PlanGroupGet(string search);
 
     }

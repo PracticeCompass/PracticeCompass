@@ -32,6 +32,7 @@ namespace PracticeCompass.Core.Models
         public string Email { get; set; }
         public string WebURL { get; set; }
         public string EDIOptions { get; set; }
+        public string GroupNumber { get; set; }
 
         #endregion
 

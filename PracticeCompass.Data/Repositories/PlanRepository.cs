@@ -19,11 +19,12 @@ namespace PracticeCompass.Data.Repositories
 
         { this.db = new SqlConnection(connString); }
 
-        public PlanDetails PlanDetailsGet(int providerId)
+        public PlanDetails PlanDetailsGet(int providerId,string groupNumber)
         {
             var data = this.db.QueryMultiple("uspPlanDetailsGet", new
             {
                 @PlanID = providerId,
+                @GroupName = groupNumber
             }, commandType: CommandType.StoredProcedure);
             return data.Read<PlanDetails>().FirstOrDefault();
         }
@@ -35,7 +36,7 @@ namespace PracticeCompass.Data.Repositories
             }, commandType: CommandType.StoredProcedure);
             return data.Read<PlanGroup>().ToList();
         }
-        public List<PlanList> PlansGridGet(int planID,  string Zip, int skip, string SortColumn, string SortDirection)
+        public List<PlanList> PlansGridGet(int planID,  string Zip, int skip, string SortColumn, string SortDirection,string PlanGroup)
         {
             var data = this.db.QueryMultiple("uspPlanGridGet", new
             {
@@ -43,7 +44,8 @@ namespace PracticeCompass.Data.Repositories
                 @Zip= Zip,
                 @Skip = skip,
                 @SortColumn = SortColumn,
-                @SortDirection = SortDirection
+                @SortDirection = SortDirection,
+                @PlanGroup=PlanGroup
             },
                 commandType: CommandType.StoredProcedure);
             return data.Read<PlanList>().ToList();

@@ -29,7 +29,10 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.SortDirection = "";
                 if (searchCriteria.ZIP == null)
                     searchCriteria.ZIP = "";
-                List<PlanList> Result = unitOfWork.PlanRepository.PlansGridGet(searchCriteria.PlanID, searchCriteria.ZIP, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
+                if(searchCriteria.PlanGroup ==null)
+                    searchCriteria.PlanGroup = "";
+
+                List<PlanList> Result = unitOfWork.PlanRepository.PlansGridGet(searchCriteria.PlanID, searchCriteria.ZIP, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection, searchCriteria.PlanGroup);
                 return Result;
             }
             catch (Exception ex)
@@ -40,11 +43,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/plan/PlanDetailsGet")]
-        public PlanDetails PlanDetailsGet(int planId)
+        public PlanDetails PlanDetailsGet(int planId, string groupNumber)
         {
             try
             {
-                PlanDetails Result = unitOfWork.PlanRepository.PlanDetailsGet(planId);
+                PlanDetails Result = unitOfWork.PlanRepository.PlanDetailsGet(planId, groupNumber);
                 return Result;
             }
             catch (Exception ex)

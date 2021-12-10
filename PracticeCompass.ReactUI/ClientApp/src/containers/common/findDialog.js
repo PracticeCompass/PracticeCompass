@@ -32,6 +32,8 @@ class FindDialogComponent extends Component {
     await this.props.clickOnSearch(false,this.props.data.length);
     this.setState({isVisibleNextData:false})
    }
+   componentDidMount(){
+   }
    componentDidUpdate(){
    }
    onSelectionChange=()=>{};

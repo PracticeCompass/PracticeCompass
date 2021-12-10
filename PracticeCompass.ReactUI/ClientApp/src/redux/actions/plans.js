@@ -17,7 +17,7 @@ export const getPlans =
       if (searchCriteria == null) return;
       const resp = await axios({
         method: "GET",
-        url: `${config.baseUrl}/plan/PlansGridGet?PlanID=${searchCriteria.PlanID}&ZIP=${searchCriteria.ZIP}&skip=${searchCriteria.skip}&SortColumn=${searchCriteria.SortColumn ? searchCriteria.SortColumn : ""}&SortDirection=${searchCriteria.SortDirection ? searchCriteria.SortDirection : ""}`,
+        url: `${config.baseUrl}/plan/PlansGridGet?PlanID=${searchCriteria.PlanID}&ZIP=${searchCriteria.ZIP}&skip=${searchCriteria.skip}&SortColumn=${searchCriteria.SortColumn ? searchCriteria.SortColumn : ""}&SortDirection=${searchCriteria.SortDirection ? searchCriteria.SortDirection : ""}&PlanGroup=${searchCriteria.PlanGroup ? searchCriteria.PlanGroup : ""}`,
       });
       await dispatch(setPlans(resp.data || []));
     } catch (error) {
@@ -33,13 +33,13 @@ export const getPlans =
   };
 
   export const getPlanDetails=
-  (PlanID) =>
+  (PlanID,groupNumber) =>
   async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
       const resp = await axios({
         method: "GET",
-        url: `${config.baseUrl}/plan/PlanDetailsGet?planId=${PlanID}`,
+        url: `${config.baseUrl}/plan/PlanDetailsGet?planId=${PlanID}&groupNumber=${groupNumber}`,
       });
       return resp.data ;
     } catch (error) {
@@ -52,11 +52,12 @@ export const getPlans =
       dispatch(uiStopLoading());
     }
   };
-  export const getPositions =
+  export const getPlanGroup=
   (search) =>
   async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
+      await dispatch(setPlanGroup([]));
       const resp = await axios({
         method: "GET",
         url: `${config.baseUrl}/plan/PlanGroupGet?search=${search}`,
@@ -64,6 +65,20 @@ export const getPlans =
       await dispatch(setPlanGroup(resp.data || []));
     } catch (error) {
       await dispatch(setPlanGroup([]));
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_PLANS_GROUP_FAILS,
+        payload: error,
+      });
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
+  export const resetPlanGroupList = () => async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      await dispatch(setPlanGroup([]));
+    } catch (error) {
       console.log("error ==> ", error);
       dispatch({
         type: GET_PLANS_GROUP_FAILS,

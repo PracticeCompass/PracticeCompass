@@ -53,6 +53,10 @@ ELSE IF @EntityName='ICD10'
 ELSE if  @EntityName='Company'
         SELECT distinct   Trends.EntityValueID as EntityId,Carrier.Name as EntityName,searchcount from Trends inner join Carrier on Carrier.CarrierID=EntityValueID
 		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
+
+ELSE if @EntityName='PlanGroup'
+        SELECT distinct   Trends.EntityValueID as EntityId,PlanGroup.GroupNumber as EntityName,searchcount from Trends inner join PlanGroup on PlanGroup.GroupNumber=EntityValueID
+		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
 END
 GO
 

@@ -11,6 +11,7 @@ import config from "../../../../src/config";
 import SaveFilterComponent from "../../common/saveFilter";
 import NotificationComponent from "../../common/notification";
 import Show_HideDialogComponent from "../../common/show_hideDialog";
+import FindDialogComponent from "../../common/findDialog";
 import {
   getFilters,
   FilterDelete,
@@ -19,15 +20,23 @@ import {
 } from "../../../redux/actions/filter";
 import {
   GetGridColumns,
-  SaveGridColumns,
+  SaveGridColumns
 } from "../../../redux/actions/GridColumns";
-import { getPlans } from "../../../redux/actions/plans";
-const DATA_ITEM_KEY_PLAN = "planId";
+import { getPlans,getPlanGroup,resetPlanGroupList } from "../../../redux/actions/plans";
+import { SaveLookups } from "../../../redux/actions/lookups";
+import {planGroupColumns} from "./InsurancesData"
+const DATA_ITEM_KEY_PLAN = "gridId";
 const idGetterInsuranceList = getter(DATA_ITEM_KEY_PLAN);
+
+const DATA_ITEM_KEY_GROUP_NUMBER = "groupNumber";
+const idGetterGroupNumber = getter(DATA_ITEM_KEY_GROUP_NUMBER);
+
 function mapStateToProps(state) {
   return {
     plans: state.plans.plans,
     UiExpand: state.ui.UiExpand,
+    planGroups:state.plans.planGroups,
+    dropDownPlanGroups: state.lookups.planGroups,
   };
 }
 
@@ -45,6 +54,10 @@ function mapDispatchToProps(dispatch) {
     SaveGridColumns: (name, columns) =>
       dispatch(SaveGridColumns(name, columns)),
     GetGridColumns: (name) => dispatch(GetGridColumns(name)),
+    getPlanGroup:(search)=>dispatch(getPlanGroup(search)),
+    SaveLookups: (EntityValueID, EntityName) =>
+    dispatch(SaveLookups(EntityValueID, EntityName)),
+    resetPlanGroupList:() =>dispatch(resetPlanGroupList())
   };
 }
 class Insurance extends Component {
@@ -65,7 +78,8 @@ class Insurance extends Component {
     name: null,
     listName: null,
     take: 28,
-    insuranceColumns: insuranceColumns
+    insuranceColumns: insuranceColumns,
+    planGroupVisible:false
   }
   onSortChange = () => {
 
@@ -113,6 +127,7 @@ class Insurance extends Component {
         ? this.state.selectedSortColumn
         : "",
       SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
+      PlanGroup:this.state.selectedPlanGroup?this.state.selectedPlanGroup.entityId:""
     };
     await this.props.getPlans(planGrid);
   };
@@ -285,6 +300,49 @@ class Insurance extends Component {
     }
     this.setState({ refreshGrid: true });
   };
+  
+  togglePlanGroupDialog = () => {
+    if (this.state.planGroupVisible) {
+      this.setState({
+        planGroupSearchText: null,
+      });
+      this.props.resetPlanGroupList();
+    }
+    this.setState({
+      planGroupVisible: !this.state.planGroupVisible,
+    });
+  };
+  planGroupSearch = () => {
+    this.props.getPlanGroup(this.state.planGroupSearchText??'');
+  };
+  onPlanGroupKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      selectedPlanGroup: selectedDataItems[0]
+        ? {
+            entityName: selectedDataItems[0].groupNumber,
+            entityId: selectedDataItems[0].groupNumber,
+          }
+        : null,
+    });
+  };
+  onPlanGroupSelectionChange=()=>{
+
+  }
+  onPlanGroupDoubleClick=(event)=>{
+    this.setState({
+      selectedPlanGroup: {
+        entityId: event.dataItem.groupNumber,
+        entityName: event.dataItem.groupNumber,
+      },
+    });
+    this.props.SaveLookups(event.dataItem.groupNumber, "PlanGroup");
+    //this.selectPatient();
+    this.togglePlanGroupDialog();
+  }
   render() {
     return (
       <Fragment>
@@ -297,6 +355,29 @@ class Insurance extends Component {
           info={this.state.info}
           none={this.state.none}
         ></NotificationComponent>
+        {this.state.planGroupVisible && (
+          <FindDialogComponent
+            title="Group Search"
+            placeholder="Enter Group Number"
+            searcTextBoxValue={this.state.planGroupSearchText}
+            onTextSearchChange={(e) => {
+              this.setState({
+                planGroupSearchText: e.value,
+              });
+            }}
+            clickOnSearch={this.planGroupSearch}
+            dataItemKey="groupNumber"
+            data={this.props.planGroups}
+            columns={planGroupColumns}
+            onSelectionChange={this.onPlanGroupSelectionChange}
+            onRowDoubleClick={this.onPlanGroupDoubleClick}
+            onKeyDown={this.onPlanGroupKeyDown}
+            idGetterLookup={idGetterGroupNumber}
+            toggleDialog={this.togglePlanGroupDialog}
+            cancelDialog={this.togglePlanGroupDialog}
+            skipNextData={true}
+          ></FindDialogComponent>
+        )}
         {this.state.Show_HidePlanDialogVisible && (
           <Show_HideDialogComponent
             columns={this.state.insuranceColumns}
@@ -424,20 +505,37 @@ class Insurance extends Component {
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
-              <div style={{ width: "270px" }}>
+              <div style={{ width: "370px" }}>
                 <div style={{ float: "left", marginLeft: "25px" }}>
                   <label className="userInfoLabel">Group</label>
                 </div>
                 <div style={{ width: "200px", float: "left" }}>
-                  <DropDown
+                   <DropDown
                     className="unifyHeight"
-                    value={this.state.group}
+                    data={this.props.dropDownPlanGroups}
+                    textField="entityName"
+                    dataItemKey="entityId"
+                    defaultValue={this.state.selectedPlanGroup}
+                    value={this.state.selectedPlanGroup}
                     onChange={(e) =>
                       this.setState({
-                        group: e.value,
+                        selectedPlanGroup: {
+                          entityId: e.value?.entityId,
+                          entityName: e.value?.entityName,
+                        },
                       })
                     }
                   ></DropDown>
+                </div>
+                <div style={{ float: "left" }}>
+                  <ButtonComponent
+                    icon="search"
+                    type="search"
+                    classButton="infraBtn-primary find-button"
+                    onClick={this.togglePlanGroupDialog}
+                  >
+                    Find
+                  </ButtonComponent>
                 </div>
               </div>
             </div>
@@ -578,7 +676,7 @@ class Insurance extends Component {
                   onSortChange={this.onSortChange}
                   idGetter={idGetterInsuranceList}
                   take={this.state.take}
-                  DATA_ITEM_KEY="planId"
+                  DATA_ITEM_KEY="gridId"
                 ></GridComponent>
               </div>
             </div>
