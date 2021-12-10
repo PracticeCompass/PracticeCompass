@@ -1,6 +1,6 @@
 USE [medman]
 GO
-
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AuditLog]') AND type in (N'U'))
 ALTER TABLE [dbo].[AuditLog] DROP CONSTRAINT [DF_Audit_Log_Audit_Date]
 GO
 

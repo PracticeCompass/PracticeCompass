@@ -11,7 +11,7 @@ GO
 -- Description:	Get ERAPaymentDetails Grid Data on Payment Header Grid select
 -- exec uspERAPaymentDetailsGet 1971933
 -- =============================================
-ALTER     PROCEDURE [dbo].[uspERAPaymentDetailsGet] 
+Create or Alter   PROCEDURE [dbo].[uspERAPaymentDetailsGet] 
 	-- Add the parameters for the stored procedure here
     @ERSPaymentSID int 
 AS
