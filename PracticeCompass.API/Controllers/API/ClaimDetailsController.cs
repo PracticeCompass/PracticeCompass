@@ -58,47 +58,47 @@ namespace PracticeCompass.API.Controllers.API
                         {
                             case 1:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "Billed";
+                                    charge.Prim = "BILLED";
                                 break;
                             case 2:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
-                                    charge.SeC = "Paid";
+                                    charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "Billed"; 
+                                    charge.SeC = "BILLED"; 
                                 break;
                             case 99:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
-                                    charge.SeC = "Paid";
+                                    charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "No Paid";
+                                    charge.SeC = "DENIED";
                                 if (charge.PatientPaid != null && charge.PatientPaid != 0)
-                                    charge.Patient = "Paid";
+                                    charge.Patient = "PAID";
                                 else if (charge.PatientPaid == null || charge.PatientPaid == 0)
-                                    charge.Patient = "No Paid";
+                                    charge.Patient = "BILLED";
                                 break;
                             default:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
-                                    charge.SeC = "Paid";
+                                    charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "No Paid";
+                                    charge.SeC = "DENIED";
                                 if (charge.PatientPaid != null && charge.PatientPaid != 0)
-                                    charge.Patient = "Paid";
+                                    charge.Patient = "PAID";
                                 else if (charge.PatientPaid == null || charge.PatientPaid == 0)
-                                    charge.Patient = "No Paid";
+                                    charge.Patient = "";
                                 break;
                         }
                     }
@@ -108,49 +108,48 @@ namespace PracticeCompass.API.Controllers.API
                         {
                             case 1:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 break;
                             case 2:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
-                                    charge.SeC = "Paid";
+                                    charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "No Paid";
+                                    charge.SeC = "DENIED";
                                 break;
                             case 99:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
-                                    charge.SeC = "Paid";
+                                    charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "No Paid";
+                                    charge.SeC = "DENIED";
                                 if (charge.PatientPaid != null && charge.PatientPaid != 0)
-                                    charge.Patient = "Paid";
+                                    charge.Patient = "PAID";
                                 else if (charge.PatientPaid == null || charge.PatientPaid == 0)
-                                    charge.Patient = "No Paid";
-
+                                    charge.Patient = "";
                                 break;
 
                             default:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)
-                                    charge.Prim = "Paid";
+                                    charge.Prim = "PAID";
                                 else if (charge.Plan1 == null || charge.Plan1 == 0)
-                                    charge.Prim = "No Paid";
+                                    charge.Prim = "DENIED";
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
-                                    charge.SeC = "Paid";
+                                    charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "No Paid";
+                                    charge.SeC = "DENIED";
                                 if (charge.PatientPaid != null && charge.PatientPaid != 0)
-                                    charge.Patient = "Paid";
+                                    charge.Patient = "PAID";
                                 else if (charge.PatientPaid == null || charge.PatientPaid == 0)
-                                    charge.Patient = "No Paid";
+                                    charge.Patient = "";
                                 break;
                         }
                     }

@@ -20,6 +20,7 @@
         public int GuarantorID { get; set; }
         public bool IncludeCompletedClaims { get; set; }
         public bool IncludeCashClaims { get; set; }
+        public bool IncludeVoidedClaims { get; set; }
         public int Skip { get; set; }
         public string SortColumn { get; set; }
         public string SortDirection { get; set; }

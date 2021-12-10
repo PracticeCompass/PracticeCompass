@@ -199,6 +199,7 @@ class ClaimList extends Component {
         PhysicianSearchText: null,
         completedClaims: false,
         cashClaims: false,
+        voidedClaims: false,
         refreshGrid: true,
         Show_HideDialogVisible: false,
         selectedClaimSID: 0,
@@ -489,7 +490,8 @@ class ClaimList extends Component {
                 insuranceNameSelected: body.InsuranceName,
                 insuranceID: body.InsuranceID,
                 completedClaims: body.completedClaims,
-                cashClaims:body.CashClaims,
+                cashClaims: body.CashClaims,
+                voidedClaims: body.VoidedClaims,
             });
         } else {
             this.reset();
@@ -592,7 +594,8 @@ class ClaimList extends Component {
             insuranceSelectedState: "",
             insuranceIDSelectedState: null,
             completedClaims: false,
-            cashClaims:false,
+            cashClaims: false,
+            voidedClaims: false,
             selectedSortColumn: null,
             sortDirection: null,
         });
@@ -681,6 +684,7 @@ class ClaimList extends Component {
                 insuranceOrder: body.InsuranceOrder,
                 completedClaims: body.completedClaims,
                 cashClaims: body.CashClaims,
+                voidedClaims: body.VoidedClaims,
             });
         } else {
             this.reset();
@@ -720,6 +724,7 @@ class ClaimList extends Component {
             CashClaims: this.state.cashClaims
                 ? this.state.cashClaims
                 : 0,
+            VoidedClaims: this.state.voidedClaims ? this.state.voidedClaims : 0,
             Skip: refreshData ? 0 : this.props.Claims.length,
             SortColumn: this.state.selectedSortColumn
                 ? this.state.selectedSortColumn
@@ -770,6 +775,7 @@ class ClaimList extends Component {
             CashClaims: this.state.cashClaims
                 ? this.state.cashClaims
                 : 0,
+            VoidedClaims: this.state.voidedClaims ? this.state.voidedClaims : 0,
         });
         if (this.state.currentFilter && this.state.currentFilter.filterID) {
             let updateFilter = await this.props.FilterUpdate(
@@ -1545,6 +1551,13 @@ class ClaimList extends Component {
                                 label="Include Cash Claims"
                                 value={this.state.cashClaims}
                                 onChange={(e) => this.setState({ cashClaims: e.value })}
+                            />
+                        </div>
+                        <div>
+                            <CheckboxComponent
+                                label="Include Voided Claims"
+                                value={this.state.voidedClaims}
+                                onChange={(e) => this.setState({ voidedClaims: e.value })}
                             />
                         </div>
                     </div>
