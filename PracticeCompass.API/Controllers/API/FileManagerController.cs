@@ -58,6 +58,21 @@ namespace PracticeCompass.API.Controllers.API
                 return false;
             }
         }
+        [HttpGet]
+        [Route("api/FileManager/GetFileContent")]
+        public string GetFileContent(string path)
+        {
+            try
+            {
+                var fileName = unitOfWork.ERAFileManagerRepository.GetFileContent(path);
+                return fileName;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return "";
+            }
+        }
 
     }
 }

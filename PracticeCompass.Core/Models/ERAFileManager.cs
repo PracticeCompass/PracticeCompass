@@ -9,5 +9,6 @@ namespace PracticeCompass.Core.Models
         public DateTime FileDate { get; set; }
         public bool? IsProcessed { get; set; }
         public string Notes { get; set; }
+        public string Path { get; set; }
     }
 }

@@ -15,7 +15,7 @@ import {
   MyPager,
   CurrencyCell,
   CustomCell,
-  cellWithIcon,
+  CellWithIcon,
   MyCommandCell,
 } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
@@ -74,6 +74,9 @@ class EditableGrid extends React.Component {
   MyCurrencyCell = (props) => {
     return <CurrencyGridCell {...props} myProp={this.props} />;
   };
+  MyCellWithIcon =(props)=>{
+    return <CellWithIcon {...props} myProp={this.props} />;
+  }
   minGridWidth = 0;
   state = {
     selectedState: {},
@@ -233,7 +236,6 @@ class EditableGrid extends React.Component {
     if (width > COLUMN_MIN) width -= ADJUST_PADDING;
     return width;
   };
-
   render() {
     let Columns = this.props.columns.sort((a, b) =>
       a.orderIndex > b.orderIndex ? 1 : -1
@@ -353,7 +355,7 @@ class EditableGrid extends React.Component {
                         : column.type == "currency"
                         ? this.MyCurrencyCell
                         : column.iscellWithIcon
-                        ? cellWithIcon
+                        ? this.MyCellWithIcon
                         : column.isCustomCell
                         ? this.MyCustomCell
                         : column.showToolTip && ColumnNameCell

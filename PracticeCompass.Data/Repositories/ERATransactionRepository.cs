@@ -1013,9 +1013,6 @@ namespace PracticeCompass.Data.Repositories
             }
             return filesModels;
         }
-        public string GetFileContent(string path)
-        {
-            return  @File.ReadAllText(path);
-        }
+
     }
 }

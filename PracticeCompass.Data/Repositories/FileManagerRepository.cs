@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using PracticeCompass.Core.Common;
 using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Repositories;
+using System.IO;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -67,6 +68,10 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspFilesGet", new { @Notes = Notes, @isprocessed = isprocessed,
                 @fileName= fileName, @fileDate= fileDate }, commandType: CommandType.StoredProcedure);
             return data.Read<ERAFileManager>().ToList();
+        }
+        public string GetFileContent(string path)
+        {
+            return @File.ReadAllText(path);
         }
         public bool ProcessFile(string fileName, bool isprocessed)
         {

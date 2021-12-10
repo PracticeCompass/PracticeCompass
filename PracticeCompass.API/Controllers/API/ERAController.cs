@@ -30,20 +30,6 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<FileModel>();
             }
         }
-        [HttpGet]
-        [Route("api/ERA/GetFileContent")]
-        public string GetFileContent(string path)
-        {
-            try
-            {
-                var fileName = unitOfWork.ERATransactionRepository.GetFileContent(path);
-                return fileName;
-            }
-            catch (Exception ex)
-            {
-                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return "";
-            }
-        }
+
     }
 }

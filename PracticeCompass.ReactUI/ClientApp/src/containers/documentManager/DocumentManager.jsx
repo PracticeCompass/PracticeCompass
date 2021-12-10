@@ -3,49 +3,56 @@ import { connect } from "react-redux";
 import "../../assets/style/global.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ParseERAMessages } from "../../redux/actions/claimList";
-import {GetFiles,GetFileContent} from "../../redux/actions/ERA";
+import {GetFiles,GetFileContent} from "../../redux/actions/fileManager";
 import { getter } from "@progress/kendo-react-common";
-import GridComponent from "../../components/Grid";
+import EditableGrid from "../../components/editableGrid";
 import TextEditor from "../../components/TextEditor";
-import {documentColumns} from "./DocumentManagerData"
+import {documentColumns} from "./DocumentManagerData";
+import DocumentManagerDialog from "./documentManagerDialog"
 
 const DATA_ITEM_KEY_FILE_ID = "fileID";
 const idGetterFileID = getter(DATA_ITEM_KEY_FILE_ID);
 
 function mapStateToProps(state) {
   return {
-       files : state.era.files
+       files : state.fileManager.files
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return { 
-    ParseERAMessages: () => dispatch(ParseERAMessages()),
     GetFiles:()=>dispatch(GetFiles()),
     GetFileContent:(path)=>dispatch(GetFileContent(path))
    };
 }
 class DocumentManager extends Component {
-  componentDidMount() {
-    this.props.ParseERAMessages();
-  }
+
   state={
     documentColumns:documentColumns,
     content:"",
     refresh:true
   }
-  componentDidMount(){
-   this.props.GetFiles();
+  async componentDidMount(){
+   let files=await this.props.GetFiles();
+   this.setState({files});
   }
   onFileGridSelectionChange = async (event) => {
-
-  }
-  onFileDoubleGridSelectionChange = async (event) => {
     if(event.dataItem !=null){
       this.setState({refresh:false});
-      let content= await this.props.GetFileContent(event.dataItem.filePath);
+      let content= await this.props.GetFileContent(event.dataItem.path);
       this.setState({content,refresh:true});
     }
+  }
+  onFileDoubleGridSelectionChange = async (event) => {
+      this.setState({showNote:true,fileRow:event.dataItem});
+  }
+  toggledocumentManagerDialog=( isProcessed,documentNote)=>{
+    let fileIndex= this.state.files.findIndex(x=>x.fileName == this.state.fileRow.fileName);
+    if(fileIndex>-1){
+      this.state.files[fileIndex].isProcessed=isProcessed;
+      this.state.files[fileIndex].notes=documentNote
+    }
+    this.setState({showNote:false,fileRow:null});
   }
   render() {
     return (
@@ -57,8 +64,15 @@ class DocumentManager extends Component {
             width: "100%",
           }}
         >
+          {this.state.showNote &&(
+            <DocumentManagerDialog
+              row={this.state.fileRow}
+              toggledocumentManagerDialog={this.toggledocumentManagerDialog}
+            >
+            </DocumentManagerDialog>
+          )}
           <div style={{ float: "left", marginRight:"10px" }}>
-            <GridComponent
+            <EditableGrid
               id="eraFiles"
               columns={this.state.documentColumns}
               skip={0}
@@ -73,14 +87,15 @@ class DocumentManager extends Component {
               // selectionMode="multiple"
               DATA_ITEM_KEY="fileID"
               idGetter={idGetterFileID}
-              data={this.props.files || []}
+              data={this.state.files || []}
               height="570px"
               width="470px"
               //hasCheckBox={true}
               sortColumns={[]}
               onSortChange={this.onSortChange}
+              displayNoteDialog={this.displayNoteDialog}
             // pageChange={this.pageChange}
-            ></GridComponent>
+            ></EditableGrid>
           </div>
           <div style={{ float: "left", width: "100%" }}>
             { this.state.refresh &&(

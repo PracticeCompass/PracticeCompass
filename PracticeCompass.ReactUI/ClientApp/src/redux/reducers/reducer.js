@@ -19,6 +19,7 @@ import{eraReducer} from "./era"
 import {plansReducer} from"./Plans";
 import { users } from "./users.reducer";
 import { alert } from "./alert.reducer";
+import{fileManagerReducer} from "./fileManager";
 const rootReducer = (history) =>
   combineReducers({
     router: connectRouter(history),
@@ -37,6 +38,7 @@ const rootReducer = (history) =>
     physicians:physiciansReducer,
     plans:plansReducer,
     era:eraReducer,
+    fileManager: fileManagerReducer,
     authentication,
     registration,
     users,

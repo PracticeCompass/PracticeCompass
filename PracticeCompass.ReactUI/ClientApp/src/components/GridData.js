@@ -82,10 +82,16 @@ export const CurrencyCell = (props) => {
     </td>
   );
 };
-export const cellWithIcon = (props) => {
+export const CellWithIcon = (props) => {
   return (
-    <td style={{ color: "red" }}>
+    <td style={{ color: "red" }} >
+      {props.field =="notes" &&
+      (
+        <span class="k-icon k-i-copy" ></span>
+      )}
+      {props.field !="notes" &&(
       <span className="k-icon k-i-file-pdf k-i-pdf"></span>
+      )}
     </td>
   );
 };

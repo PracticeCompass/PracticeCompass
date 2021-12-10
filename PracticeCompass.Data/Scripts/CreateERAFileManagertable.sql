@@ -7,10 +7,10 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[ERAFileManager](
 	[FileID] [int] IDENTITY(1,1) NOT NULL,
 	[FileName] [nvarchar](250) NOT NULL,
+	[Path] [nvarchar](250) NOT NULL,
 	[FileDate] [datetime] NOT NULL,
 	[IsProcessed] [bit] NULL,
 	[Notes] [nvarchar](250) NULL,

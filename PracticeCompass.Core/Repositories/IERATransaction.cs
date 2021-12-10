@@ -10,6 +10,5 @@ namespace PracticeCompass.Core.Repositories
     {
         bool SaveTransactions(List<ElectronicRemittanceAdvice> transactions);
         List<FileModel> GetFiles();
-        string GetFileContent(string path);
     }
 }
