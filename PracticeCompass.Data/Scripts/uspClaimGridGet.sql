@@ -26,6 +26,7 @@ CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet]
 @GuarantorID int,
 @IncludeCompletedClaims int,
 @IncludeCashClaims int,
+@IncludeVoidedClaims int,
 @Skip int=0,
 @SortColumn varchar(50)='',
 @SortDirection varchar(50)=''

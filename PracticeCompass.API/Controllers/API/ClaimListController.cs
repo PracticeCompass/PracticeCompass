@@ -91,7 +91,7 @@ namespace PracticeCompass.API.Controllers.API
                 List<ClaimDTO> Result = unitOfWork.ClaimListRepository.ClaimGridGet(searchCriteria.PatientID, searchCriteria.PracticeID,
                     searchCriteria.PhysicianID, searchCriteria.DOSType, searchCriteria.DOSvalue, searchCriteria.PatientClass, searchCriteria.InsuranceType, searchCriteria.InsuranceID,
                     searchCriteria.BillNumber, searchCriteria.ClaimIcnNumber, searchCriteria.Age, searchCriteria.ClaimValue, searchCriteria.CoverageOrder, searchCriteria.InsuranceStatus,
-                    searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims,searchCriteria.IncludeCashClaims, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
+                    searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims,searchCriteria.IncludeCashClaims,searchCriteria.IncludeVoidedClaims, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
                 return Result;
             }
             catch (Exception ex)
