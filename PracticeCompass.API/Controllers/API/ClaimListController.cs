@@ -134,6 +134,7 @@ namespace PracticeCompass.API.Controllers.API
         {
             try
             {
+                unitOfWork.ERAFileManagerRepository.AddFiles();
                 var ERAParser = new ERAParser(unitOfWork, this._configuration);
                 if (!Directory.Exists(@"C:\PracticeCompas\ParsedERA"))
                 {

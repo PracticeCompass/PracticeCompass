@@ -11,5 +11,6 @@ namespace PracticeCompass.Core.Repositories
         public bool ProcessFile(string fileName, bool isprocessed);
         public bool AddFileNotes(string fileName, string notes);
         public string GetFileContent(string path);
+        public bool AddFiles();
     }
 }

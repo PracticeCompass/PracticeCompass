@@ -88,6 +88,41 @@ namespace PracticeCompass.Data.Repositories
             this.db.Execute(sql);
             return true;
         }
+        public bool AddFiles()
+        {
+            var practiceCompassHelper = new Data.Utilities.PracticeCompassHelper(this.db);
+            string[] reports =
+            Directory.GetFiles(@"C:\PracticeCompas\Inbound\Reports", "*", SearchOption.AllDirectories);
+            if (!Directory.Exists(@"C:\PracticeCompas\Inbound\ParsedReports"))
+            {
+                Directory.CreateDirectory(@"C:\PracticeCompas\Inbound\ParsedReports");
+            }
+            var ERAfiles = new List<ERAFileManager>();
+            var fileId = 0;
+            for (var r = 0; r < reports.Length; r++)
+            {
+                var reportname = Path.GetFileName(reports[r]);
+                var filedate=File.GetLastWriteTime(reports[r]);
+                var newreportpath = Path.Combine(@"C:\PracticeCompas\Inbound\ParsedReports", reportname);
+                File.Move(reports[r], newreportpath);
+                var maxfileId = 0;
+                if (r != 0) maxfileId = fileId;
+                fileId=practiceCompassHelper.GetMAXColumnid("ERAFileManager", "FileID", maxfileId);
+                ERAfiles.Add(new ERAFileManager
+                {
+                    FileID = fileId,
+                    FileDate= filedate,
+                    FileName= reportname,
+                    IsProcessed=false,
+                    Notes="",
+                    Path= newreportpath
+                });
+
+            }
+            var sql = "INSERT INTO [dbo].[ERAFileManager]VALUES (@FileName,@Path,@FileDate,@IsProcessed,@Notes)";
+            var ERAFileMngr = this.db.Execute(sql, ERAfiles);
+            return true;
+        }
         Task<IEnumerable<ERAFileManager>> IRepository<ERAFileManager>.GetAllAsync(bool trackChanges)
         {
             throw new NotImplementedException();

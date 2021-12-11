@@ -367,3 +367,5 @@ PracticeCompass.Data/Scripts/__tmp_uspERSTableDelete.sql.txt
 PracticeCompass.Data/Scripts/__tmp_FuncGetChargeStatus.sql.txt
 PracticeCompass.Data/Scripts/__tmp_FuncGetClaimOutStandingBalance.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspPlanGroupGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_CreateERAFileManagertable.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspFilesGet.sql.txt
