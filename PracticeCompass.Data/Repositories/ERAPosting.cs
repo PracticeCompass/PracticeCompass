@@ -59,6 +59,7 @@ namespace PracticeCompass.Data.Repositories
             {
                 var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
                 var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+                var Payments = new List<Payment>();
                 //Get Payment Header 1 record
                 #region Get_ERSPaymentHeader
                 var ERSPaymentHeader = new ERSPaymentHeader();
@@ -121,13 +122,40 @@ namespace PracticeCompass.Data.Repositories
                 and PlanClaim.ClaimSID = PlanClaimCharge.ClaimSID and PlanClaim.PolicyNumber = PlanClaimCharge.PolicyNumber
                 where PlanICN in (select PayerClaimControlNumber from ERSClaimData where ERSPaymentSID = @PaymentSID )";
                 var PlanClaimCharges = this.db.QueryMultiple(sql, new { ERSPaymentSID = ERSPaymentHeader.PaymentSID });
-                PlanClaimCharge = PlanClaimCharges.Read<PlanClaimCharge>().ToList(); 
+                PlanClaimCharge = PlanClaimCharges.Read<PlanClaimCharge>().ToList();
                 #endregion
 
                 //Add Payment Record
+                string PaymentMAXRowID = practiceCompassHelper.GetMAXprrowid("Payment", Payments.Count() != 0 ? Payments[Payments.Count() - 1].prrowid : "0");
+                int PaymentSID = practiceCompassHelper.GetMAXColumnid("Payment", "PaymentSID");
+                    Payments.Add(new Payment
+                    {
+                        CreateUser = 88,
+                        LastUser = 88,
+                        pro2created = DateTime.Now,
+                        pro2modified = DateTime.Now,
+                        Pro2SrcPDB = "medman",
+                        PaymentSID= PaymentSID,
+                        Amount= ERSPaymentHeader.TotalActualProviderPaymentAmt,
+                        prrowid = PaymentMAXRowID,
+                        //AuthorizationCode
+                        PracticeID= ERSPaymentHeader.PracticeID,
+                        PayorID=PLanID,
+                        ReportStorageParams=ERSPaymentHeader.ReportStorageParams,
+                        Method= ERSPaymentHeader.PaymentMethodCode,
+                        Source=ERSPaymentHeader.TransHandlingCode,
+                       // Voucher=ERSPaymentHeader.vou
+                        ReportStorageSID=ERSPaymentHeader.ReportStorageSID,
+                        CBOPaymentSID=ERSPaymentHeader.CBOERAPaymentSID,
+                        PostDate=Convert.ToDateTime(ERSPaymentHeader.TimeStamp),
+                        //Class= ERSPaymentHeader.class
+                        CreateMethod= ERSPaymentHeader.PaymentMethodCode,
+                        
+
+                    });
 
                 // Update ERS_PaymentHeader add Payment SID
-
+                   ERSPaymentHeader.PaymentSID = PaymentSID;
                 //Update PLanClaim 
                 //Insert Plan Claim Data 
                 foreach (var ERSCharge in ERSChargeReferences)
@@ -138,6 +166,7 @@ namespace PracticeCompass.Data.Repositories
                     Charge = this.db.QueryFirst<Charge>(sql, new { ChargeSID = ERSCharge.ReferenceID });
 
                     //update Charge update insurance reciept  ,approved amount 
+                     // Charge.InsuranceReceipts=ERSCharge.
                     //Charge.ApprovedAmount=
                     //Charge.InsuranceReceipts=
 
