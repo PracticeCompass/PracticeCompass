@@ -10,6 +10,7 @@ import ProcessPatients from "../containers/processPatients/ProcessPatients";
 import Patients from "../containers/processPatients/patients/Patients";
 import Physicians from "../containers/lists/physicians/Physicians";
 import Transactions from "../containers/lists/transactions/Transactions";
+import LookUps from "../containers/lists/lookUps/LookUps";
 import PatientMore from "../containers/processPatients/more/PatientsMore";
 import Insurance from "../containers/lists/insurance/Insurance";
 import ApplyPayments from "../containers/applyPayments/ApplyPayments";
@@ -84,6 +85,11 @@ class Main extends Component {
                 exact={true}
                 path="/lists/transactions"
                 component={Transactions}
+              />
+              <Route
+                exact={true}
+                path="/lists/lookUps"
+                component={LookUps}
               />
               <Route
                 exact={true}

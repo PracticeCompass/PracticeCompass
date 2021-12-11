@@ -141,7 +141,7 @@ export const itemsList = [
     icon: "k-i-inbox",
     id: 19,
     parentId: 16,
-    route: "/lists/transactions",
+    route: "/lists/lookUps",
   },
   {
     text: "Transactions",
