@@ -80,6 +80,6 @@ left outer join dbo.ERSPaymentHeader on ERSPaymentHeader.ERSPaymentSID = ERSClai
 left outer join [dbo].[ERADenialAlert] on [dbo].[ERADenialAlert].[GroupCode] = ERSChargeClaimAdjustment.ClaimAdjustmentGroupCode 
 and [dbo].[ERADenialAlert].[CodeNumber]= [ERSChargeClaimAdjustment].AdjustmentReasonCode
 where ERSClaimData.ERSPaymentSID=@ERSPaymentSID)m
-Order by m.ERSClaimSID , m.ERSChargeSID , m.type
+Order by m.ERSClaimSID , m.ERSChargeSID , m.type , ChargeClaimAdjustmentAmt desc
 
 END
