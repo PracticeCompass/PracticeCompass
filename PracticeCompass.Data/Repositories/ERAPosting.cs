@@ -18,10 +18,13 @@ namespace PracticeCompass.Data.Repositories
     public class ERAPostingRepository : IERAPosting
     {
         private IDbConnection db;
+        private string connectionstrting;
         public ERAPostingRepository(string connString)
 
         {
             this.db = new SqlConnection(connString);
+            connectionstrting = connString;
+
         }
         public Task AddAsync(ERSClaimAdjustment entity)
         {
@@ -69,8 +72,9 @@ namespace PracticeCompass.Data.Repositories
 
                 // Get Plan ID
                 #region Get_PlanID
-                sql = "select PlanID from [Plan] where PayerID in(select payerID from payer where EnvoyPayerID = @ESRTracePayerIdent)";
-                int PLanID = this.db.QueryFirst<int>(sql, new { ESRTracePayerIdent = ERSPaymentHeader.CheckTraceNbr }); 
+                var plan = new Plan();
+                sql = "select * from [Plan] where PayerID in(select payerID from payer where EnvoyPayerID = @ESRTracePayerIdent)";
+                 plan = this.db.QueryFirst<Plan>(sql, new { ESRTracePayerIdent = ERSPaymentHeader.CheckTraceNbr }); 
                 #endregion
                 //Get Charges 
                 #region Get_Charges
@@ -126,56 +130,101 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 //Add Payment Record
+                #region Payment_Insert
                 string PaymentMAXRowID = practiceCompassHelper.GetMAXprrowid("Payment", Payments.Count() != 0 ? Payments[Payments.Count() - 1].prrowid : "0");
                 int PaymentSID = practiceCompassHelper.GetMAXColumnid("Payment", "PaymentSID");
-                    Payments.Add(new Payment
-                    {
-                        CreateUser = 88,
-                        LastUser = 88,
-                        pro2created = DateTime.Now,
-                        pro2modified = DateTime.Now,
-                        Pro2SrcPDB = "medman",
-                        PaymentSID= PaymentSID,
-                        Amount= ERSPaymentHeader.TotalActualProviderPaymentAmt,
-                        prrowid = PaymentMAXRowID,
-                        //AuthorizationCode
-                        PracticeID= ERSPaymentHeader.PracticeID,
-                        PayorID=PLanID,
-                        ReportStorageParams=ERSPaymentHeader.ReportStorageParams,
-                        Method= ERSPaymentHeader.PaymentMethodCode,
-                        Source=ERSPaymentHeader.TransHandlingCode,
-                       // Voucher=ERSPaymentHeader.vou
-                        ReportStorageSID=ERSPaymentHeader.ReportStorageSID,
-                        CBOPaymentSID=ERSPaymentHeader.CBOERAPaymentSID,
-                        PostDate=Convert.ToDateTime(ERSPaymentHeader.TimeStamp),
-                        //Class= ERSPaymentHeader.class
-                        CreateMethod= ERSPaymentHeader.PaymentMethodCode,
-                        
+                Payments.Add(new Payment
+                {
+                    CreateUser = 88,
+                    LastUser = 88,
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    Pro2SrcPDB = "medman",
+                    PaymentSID = PaymentSID,
+                    Amount = ERSPaymentHeader.TotalActualProviderPaymentAmt,
+                    prrowid = PaymentMAXRowID,
+                    PracticeID = ERSPaymentHeader.PracticeID,
+                    PayorID = plan.PlanID,
+                    ReportStorageParams = ERSPaymentHeader.ReportStorageParams,
+                    Method = ERSPaymentHeader.PaymentMethodCode,
+                    Source = ERSPaymentHeader.TransHandlingCode,
+                    ReportStorageSID = ERSPaymentHeader.ReportStorageSID,
+                    CBOPaymentSID = ERSPaymentHeader.CBOERAPaymentSID,
+                    PostDate = Convert.ToDateTime(ERSPaymentHeader.TimeStamp),
+                    CreateMethod = ERSPaymentHeader.PaymentMethodCode,
+                    AuthorizationCode = "",
+                    CreditCard = "",
+                    CCReceiptInfo = "",
+                    Class = "",
+                    CreateStamp = timestamp,
+                    FullyApplied = "N",
+                    PatientBilled = false,
+                    PreCollected = "N",
+                    RecordStatus = "O",
+                    ReferenceDate = ERSPaymentHeader.CheckIssueDate,
+                    RestrictUser = "Y",
+                    SPSReferenceID = "",
+                    TimeStamp = timestamp,
+                    Voucher = ERSPaymentHeader.CheckTraceNbr,
+                    TraceNumber = ""
+                    //,JournalSID
 
-                    });
+                });
+                #endregion
 
                 // Update ERS_PaymentHeader add Payment SID
-                   ERSPaymentHeader.PaymentSID = PaymentSID;
+                #region update_paymentHeader
+                ERSPaymentHeader.PaymentSID = PaymentSID; 
+                #endregion
                 //Update PLanClaim 
                 //Insert Plan Claim Data 
+                List<ApplyPaymentModel> applyPaymentModels = new List<ApplyPaymentModel>();
                 foreach (var ERSCharge in ERSChargeReferences)
                 {
-                    //Get Charge
-                    var Charge = new Charge();
-                    sql = "select * from charge where ChargeSID= = @ChargeSID";
-                    Charge = this.db.QueryFirst<Charge>(sql, new { ChargeSID = ERSCharge.ReferenceID });
 
                     //update Charge update insurance reciept  ,approved amount 
-                     // Charge.InsuranceReceipts=ERSCharge.
-                    //Charge.ApprovedAmount=
+                    // Charge.InsuranceReceipts=ERSCharge.
+
                     //Charge.InsuranceReceipts=
 
                     //update charge table field adjustment
                     //Add Charge Activity 
 
+                    //add in payment assigment
+
+                    applyPaymentModels.Add(new ApplyPaymentModel
+                    {
+                       ChargeSID = Convert.ToInt32(ERSCharge.ReferenceID),
+                       PaymentSID = PaymentSID,
+                       PlanID = plan.PlanID,
+                       PayorID= plan.PlanID,
+                       PaymentType="I",
+                       Adjustment = ERSChargeClaimAdjustment.FirstOrDefault(x=>x.ERSChargeSID== ERSCharge.ERSChargeSID).AdjustmentAmt,
+                       AmountPaid = ERSChargeServiceInfo.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID).LineItemProviderPaymentAmt,
+                       ApprovedAmount= ERSChargeServiceInfo.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID).LineItemProviderPaymentAmt +
+                        ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR").AdjustmentAmt
+
+                    });
+
                     // add PlanClaimChargeRemit
                     // add PlanClaimChargeRemitAdj
                 }
+                var ChargeActivities = new List<ChargeActivity>();
+                var Charges = new List<Charge>();
+                var Accounts = new List<Account>();
+                var PaymentAssignments = new List<PaymentAssignment>();
+                #region Get_Charges
+                var chargeIDs = applyPaymentModels.Select(x => x.ChargeSID);
+                sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
+                var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
+                Charges = Chargesresults.Read<Charge>().ToList();
+                #endregion
+                PaymentRepository paymentRepository = new PaymentRepository(connectionstrting);
+                Charges = paymentRepository.ChargesUpdate(applyPaymentModels, Charges);
+                ChargeActivities = paymentRepository.ChargeActivityAdd(applyPaymentModels, ChargeActivities, Charges);
+                PaymentAssignments = paymentRepository.PaymentAssignmentAdd(applyPaymentModels, Charges, PaymentAssignments);
+                Accounts = paymentRepository.AccountUpdate(applyPaymentModels, Accounts, Charges);
+
 
                 var PlanClaimChargeMonetaryAmt = new List<PlanClaimChargeMonetaryAmt>();
                 foreach (var ERSChargemontAmt in ERSChargeMonetaryAmt)
