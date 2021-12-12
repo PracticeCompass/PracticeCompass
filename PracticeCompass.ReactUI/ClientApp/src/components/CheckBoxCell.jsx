@@ -29,12 +29,13 @@ export class CheckBoxCell extends React.Component {
     } = this.props;
     const field = this.props.field || '';
     const dataValue = dataItem[field] === null ? '' : dataItem[field];
+    const column=  this.props.myProp.columns.filter(item=>item.field==field);
     return <td>
       <CheckboxComponent
         style={{ marginRight: "5px" }}
         label=""
         value={dataValue}
-        disabled={!dataItem.inEdit}
+        // disabled={!dataItem.inEdit}
         onChange={this.handleChange}
       />
     </td>;

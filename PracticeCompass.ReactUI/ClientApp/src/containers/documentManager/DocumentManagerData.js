@@ -5,18 +5,21 @@ export const documentColumns = [
       title: "ID",
       minWidth: 50,
       orderIndex: 1,
+      editable: false
     },
     {
       field: "fileName",
       title: "Name",
       minWidth: 100,
       orderIndex: 2,
+      editable: false
     },
     {
         field: "fileDate",
         title: "File Date",
         minWidth: 100,
         orderIndex: 3,
+        editable: false
     },
     {
       field: "path",
@@ -24,13 +27,15 @@ export const documentColumns = [
       minWidth: 200,
       hide:true,
       orderIndex: 4,
+      editable: false
     },
     {
       field: "isProcessed",
       title: "Processed",
       minWidth: 70,
       orderIndex: 5,
-      cell:"checkBox"
+      cell:"checkBox",
+      editable: true
     },
     {
       field: "notes",
@@ -38,6 +43,7 @@ export const documentColumns = [
       minWidth: 370,
       orderIndex: 6,
       showToolTip: true,
+      editable: false
       //iscellWithIcon:true
 
     },

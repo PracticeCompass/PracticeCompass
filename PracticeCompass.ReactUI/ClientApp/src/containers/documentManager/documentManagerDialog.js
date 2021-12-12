@@ -41,14 +41,13 @@ class DocumentManagerDialog extends Component {
   }
   saveNote = async () => {
     let result = await this.props.AddFileNotes(this.props.row.fileName, this.state.documentNote);
-    let  ProcessFile =await this.props.ProcessFile(this.props.row.fileName, this.state.processed);
-    if (result && ProcessFile) {
+    if (result) {
       this.setState({ success: true, message: "Save File Data succefully " });
       setTimeout(() => {
         this.setState({
           success: false,
         });
-        this.props.toggledocumentManagerDialog(this.state.processed,this.state.documentNote);
+        this.props.toggledocumentManagerDialog(this.state.documentNote);
       }, this.state.timer);
     } else {
       this.setState({ error: true, message: "Save File Data failed " });
@@ -64,7 +63,7 @@ class DocumentManagerDialog extends Component {
       <Fragment>
         <Dialog
           title={this.props.title || ("Edit Note (" + this.props.row.fileName + ")")}
-          onClose={()=>this.props.toggledocumentManagerDialog(this.state.processed,this.state.documentNote)}
+          onClose={()=>this.props.toggledocumentManagerDialog(this.state.documentNote)}
           width={800}
         >
           <NotificationComponent
@@ -76,7 +75,7 @@ class DocumentManagerDialog extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
-          <div style={{ display: "flex", flexFlow: "row" }}>
+          {/* <div style={{ display: "flex", flexFlow: "row" }}>
             <div style={{ float: "left" }}>
               <CheckboxComponent
                 id="processed"
@@ -85,7 +84,7 @@ class DocumentManagerDialog extends Component {
                 onChange={(e) => this.setState({ processed: e.value })}
               />
             </div>
-          </div>
+          </div> */}
           <div
             className="rowHeight"
             style={{
@@ -131,7 +130,7 @@ class DocumentManagerDialog extends Component {
                   <button
                     type="button"
                     className="k-button"
-                    onClick={()=>this.props.toggledocumentManagerDialog(this.state.processed,this.state.documentNote)}
+                    onClick={()=>this.props.toggledocumentManagerDialog(this.state.documentNote)}
                   >
                     Cancel
                   </button>

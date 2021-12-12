@@ -18,6 +18,7 @@ import DropDown from "../../components/DropDown";
 import DatePickerComponent from "../../components/DatePicker"
 import CheckboxComponent from "../../components/Checkbox";
 import ButtonComponent from "../../components/Button";
+import { ProcessFile } from "../../redux/actions/fileManager";
 import {
   getFilters,
   FilterDelete,
@@ -53,6 +54,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
+      ProcessFile:(fileName, processed) => dispatch(ProcessFile(fileName, processed))
   };
 }
 class DocumentManager extends Component {
@@ -83,10 +85,9 @@ class DocumentManager extends Component {
   onFileDoubleGridSelectionChange = async (event) => {
     this.setState({ showNote: true, fileRow: event.dataItem });
   }
-  toggledocumentManagerDialog = (isProcessed, documentNote) => {
+  toggledocumentManagerDialog = (documentNote) => {
     let fileIndex = this.state.files.findIndex(x => x.fileName == this.state.fileRow.fileName);
     if (fileIndex > -1) {
-      this.state.files[fileIndex].isProcessed = isProcessed;
       this.state.files[fileIndex].notes = documentNote
     }
     this.setState({ showNote: false, fileRow: null });
@@ -291,6 +292,40 @@ class DocumentManager extends Component {
       }, this.state.timer);
       //this.setState({ confirmMessage: true });
     }
+  };
+  applyItemChanged =async (event) => {
+    debugger;
+    const field = event.field || "";
+    const inEditID = event.dataItem["fileID"];
+    let files = this.state.files.map((item) =>
+      item["fileID"] === inEditID
+        ? {
+          ...item,
+          [field]: event.value,
+          isEdit: true,
+        }
+        : item
+    );
+    let  ProcessFile =await this.props.ProcessFile(event.dataItem.fileName, event.value);
+    if (ProcessFile) {
+      this.setState({ success: true, message: "Save File Data succefully " });
+      setTimeout(() => {
+        this.setState({
+          success: false,
+        });
+        this.props.toggledocumentManagerDialog(this.state.documentNote);
+      }, this.state.timer);
+    } else {
+      this.setState({ error: true, message: "Save File Data failed " });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+    }
+    this.setState({
+      files
+    });
   };
   render() {
     return (
@@ -543,10 +578,11 @@ class DocumentManager extends Component {
                   data-parent="#accordionExample"
                 >
                   <EditableGrid
-                    id="eraFiles"
+                    id="documentManager"
                     columns={this.state.documentColumns}
                     skip={0}
                     take={24}
+                    editColumn={"fileID"}
                     onSelectionChange={
                       this.onFileGridSelectionChange
                     }
@@ -564,6 +600,8 @@ class DocumentManager extends Component {
                     sortColumns={[]}
                     onSortChange={this.onSortChange}
                     displayNoteDialog={this.displayNoteDialog}
+                    itemChange={this.applyItemChanged}
+                    isEditable={true}
                   // pageChange={this.pageChange}
                   ></EditableGrid>
                 </div></div>
