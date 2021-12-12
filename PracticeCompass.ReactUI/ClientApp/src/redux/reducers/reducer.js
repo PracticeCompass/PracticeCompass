@@ -14,12 +14,13 @@ import { insuranceReducer } from "./Insurance";
 import { gridColumnsReducer } from "./GridColumns";
 import { authentication } from "./authentication.reducer";
 import { registration } from "./registration.reducer";
-import {physiciansReducer} from "./Physicians";
-import{eraReducer} from "./era"
-import {plansReducer} from"./Plans";
+import { physiciansReducer } from "./Physicians";
+import { eraReducer } from "./era"
+import { plansReducer } from "./Plans";
+import { lookupCodesReducer } from "./LookupCode";
 import { users } from "./users.reducer";
 import { alert } from "./alert.reducer";
-import{fileManagerReducer} from "./fileManager";
+import { fileManagerReducer } from "./fileManager";
 const rootReducer = (history) =>
   combineReducers({
     router: connectRouter(history),
@@ -35,10 +36,11 @@ const rootReducer = (history) =>
     insurances: insuranceReducer,
     gridColumns: gridColumnsReducer,
     lookups: lookupsReducer,
-    physicians:physiciansReducer,
-    plans:plansReducer,
-    era:eraReducer,
+    physicians: physiciansReducer,
+    plans: plansReducer,
+    era: eraReducer,
     fileManager: fileManagerReducer,
+    lookups: lookupCodesReducer,
     authentication,
     registration,
     users,

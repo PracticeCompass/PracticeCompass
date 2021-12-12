@@ -125,6 +125,18 @@ class LookUpsList extends Component {
       currentFilter: null
     });
   };
+    
+  toggleLookupDialog = () => {
+    if (this.state.lookupVisible) {
+      this.setState({
+        lookupSearchText: null,
+      });
+      this.props.resetPlanGroupList();
+    }
+    this.setState({
+      lookupVisible: !this.state.lookupVisible,
+    });
+  };
   render() {
     return (
       <Fragment>
@@ -137,26 +149,26 @@ class LookUpsList extends Component {
           info={this.state.info}
           none={this.state.none}
         ></NotificationComponent>
-        {this.state.planGroupVisible && (
+        {this.state.lookupVisible && (
           <FindDialogComponent
-            title="Group Search"
-            placeholder="Enter Group Number"
-            searcTextBoxValue={this.state.planGroupSearchText}
+            title="Lookup Type Search"
+            placeholder="Enter lookup Type or description"
+            searcTextBoxValue={this.state.lookupSearchText}
             onTextSearchChange={(e) => {
               this.setState({
-                planGroupSearchText: e.value,
+                lookupSearchText: e.value,
               });
             }}
             clickOnSearch={this.planGroupSearch}
-            dataItemKey="lookupCode"
+            dataItemKey="LookupType"
             data={this.props.planGroups}
             columns={[]}
             onSelectionChange={this.onPlanGroupSelectionChange}
             onRowDoubleClick={this.onPlanGroupDoubleClick}
             onKeyDown={this.onPlanGroupKeyDown}
             idGetterLookup={idGetterLookupType}
-            toggleDialog={this.togglePlanGroupDialog}
-            cancelDialog={this.togglePlanGroupDialog}
+            toggleDialog={this.toggleLookupDialog}
+            cancelDialog={this.toggleLookupDialog}
             skipNextData={true}
           ></FindDialogComponent>
         )}
@@ -293,7 +305,7 @@ class LookUpsList extends Component {
                     icon="search"
                     type="search"
                     classButton="infraBtn-primary find-button"
-                    onClick={this.togglePlanGroupDialog}
+                    onClick={this.toggleLookupDialog}
                   >
                     Find
                   </ButtonComponent>
