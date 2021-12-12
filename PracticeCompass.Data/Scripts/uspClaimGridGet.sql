@@ -35,7 +35,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300), @cashclaimsfilter varchar(300)
+	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300), @cashclaimsfilter varchar(300),@voidedclaimsfilter varchar(300)
 
 	 	set @DOSfilter=Case @DOSType 
 		when 1 then ' and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
@@ -51,16 +51,25 @@ BEGIN
 		when 3 then ' and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 3))'
 		else ''
 		end
+
 		set @completedclaimsfilter=Case @IncludeCompletedClaims
-		when 0 then ' and dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) > 0  and Claim.LowestRespCoverageOrder != 99'
+		when 0 then ' and dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID,@IncludeVoidedClaims) > 0  and Claim.LowestRespCoverageOrder != 99'
 		when 1 then ''
 		else ''
 		end
+
 		set @cashclaimsfilter=Case @IncludeCashClaims
 		when 0 then ' and Claim.LowestRespCoverageOrder != 0'
 		when 1 then ''
 		else ''
 		end
+
+		set @voidedclaimsfilter=Case @IncludeVoidedClaims
+		when 0 then ' and Min(Charge.RecordStatus) != ''V'''
+		when 1 then ''
+		else ''
+		end
+
 		set  @sortClaimsfilter= Case @SortColumn
 		when 'dos' then 'order by convert(Date,Max(ProcedureEvent.FromServiceDate),101) '+@SortDirection+''
 		when 'patientName' then 'order by Person.SortName '+@SortDirection+''
@@ -77,10 +86,12 @@ BEGIN
 		else ''
 		end
 	
-set @SQL= 'select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
+set @SQL= 'Declare @IncludeVoidedClaims int
+set @IncludeVoidedClaims = '+Convert(varchar,@IncludeVoidedClaims)+'
+select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
    convert(varchar,Claim.ClaimSID,10) as GridID,
    Claim.ClaimSID,Claim.ClaimNumber,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmount, 
-  dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID) AS OutStandingBalanace
+  dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID,@IncludeVoidedClaims) AS OutStandingBalanace
 ,Practice.SortName as practiceName,Practice.PracticeID as PracticeID,Person.SortName as patientName , dbo.FuncClaimDestGet(Claim.ClaimSID) as Destination 
 ,Provider.SortName as ProviderName , convert(varchar,Max(ProcedureEvent.FromServiceDate),101) as DOS , convert(Date,Max(ProcedureEvent.FromServiceDate),101) as DOSDate ,
 PlanClaimPrimary.CurrentStatus as PrimaryStatus ,
