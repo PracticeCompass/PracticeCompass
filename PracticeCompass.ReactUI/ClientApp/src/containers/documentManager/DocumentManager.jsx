@@ -168,7 +168,7 @@ class DocumentManager extends Component {
         ? new Date(this.state.fileDate).toLocaleDateString() : "",
       Processed: this.state.Processed
         ? this.state.Processed
-        : null
+        : false
     });
     if (this.state.currentFilter && this.state.currentFilter.filterID) {
       let updateFilter = await this.props.FilterUpdate(
@@ -265,7 +265,7 @@ class DocumentManager extends Component {
         ? new Date(this.state.fileDate).toLocaleDateString() : "",
       Processed: this.state.Processed
         ? this.state.Processed
-        : null
+        : false
     };
 
     let files = await this.props.GetFiles(documentGrid);
