@@ -35,7 +35,7 @@ export const documentColumns = [
     {
       field: "notes",
       title: "Notes",
-      minWidth: 140,
+      minWidth: 370,
       orderIndex: 6,
       showToolTip: true,
       //iscellWithIcon:true
