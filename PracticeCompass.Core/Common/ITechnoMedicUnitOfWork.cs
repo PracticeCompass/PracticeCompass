@@ -21,5 +21,7 @@ namespace PracticeCompass.Core.Common
         IPlanRepository PlanRepository { get; }
         IERAPosting ERAPostingRepository { get; }
         IFileManagerRepository ERAFileManagerRepository { get; }
+
+        ILookupRepository lookupRepository { get; }
     }
 }

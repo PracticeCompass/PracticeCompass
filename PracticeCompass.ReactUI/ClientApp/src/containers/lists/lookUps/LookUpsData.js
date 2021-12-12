@@ -24,7 +24,7 @@ export const lookupColumns = [
     },
     {
         field: "recordStatus",
-        title: "Status",
+        title: "Active",
         orderIndex: 5,
         minWidth: 150
     }

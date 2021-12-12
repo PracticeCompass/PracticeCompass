@@ -360,10 +360,10 @@ class LookUpsList extends Component {
                   icon="edit"
                   classButton="infraBtn-primary details-button  "
                   onClick={() => {
-                    this.openPlanRow();
+                    this.openLookupRow();
                   }}
                 >
-                  Plan Details
+                  Lookup Details
                 </ButtonComponent>
               </div>
               <div
