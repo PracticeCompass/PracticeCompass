@@ -20,6 +20,8 @@ namespace PracticeCompass.API.Controllers.API
         {
             try
             {
+                if (fileName == null) fileName = "";
+                if (Notes == null) Notes = "";
                 return unitOfWork.ERAFileManagerRepository.filesGet(fileName, Notes, isprocessed, fileDate);
             }
             catch (Exception ex)

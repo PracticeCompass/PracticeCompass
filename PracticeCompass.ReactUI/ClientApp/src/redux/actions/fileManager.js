@@ -6,12 +6,12 @@ import {
   GET_FILES_FAILED,
 } from "../actionTypes/actionTypes";
 
-export const GetFiles = () => async (dispatch, getState) => {
+export const GetFiles = (seacrh) => async (dispatch, getState) => {
   try {
     dispatch(uiStartLoading());
     const resp = await axios({
       method: "GET",
-      url: `${config.baseUrl}/FileManager/filesGet`,
+      url: `${config.baseUrl}/FileManager/filesGet?fileName=${seacrh.fileName??''}&Notes=${seacrh.notes??''}&isprocessed=${seacrh.Processed}&fileDate=${seacrh.fileDate}`,
     });
    dispatch(setFiles(resp.data)) ;
    return resp.data;

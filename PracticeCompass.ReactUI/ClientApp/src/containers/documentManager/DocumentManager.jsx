@@ -7,7 +7,8 @@ import { getter } from "@progress/kendo-react-common";
 import EditableGrid from "../../components/editableGrid";
 import TextEditor from "../../components/TextEditor";
 import { documentColumns } from "./DocumentManagerData";
-import DocumentManagerDialog from "./documentManagerDialog"
+import DocumentManagerDialog from "./documentManagerDialog";
+import DeleteDialogComponent from "../common/deleteDialog"
 import SaveFilterComponent from "../common/saveFilter";
 import NotificationComponent from "../common/notification";
 import Show_HideDialogComponent from "../common/show_hideDialog";
@@ -17,6 +18,12 @@ import DropDown from "../../components/DropDown";
 import DatePickerComponent from "../../components/DatePicker"
 import CheckboxComponent from "../../components/Checkbox";
 import ButtonComponent from "../../components/Button";
+import {
+  getFilters,
+  FilterDelete,
+  FilterInsert,
+  FilterUpdate,
+} from "../../redux/actions/filter";
 import {
   GetGridColumns,
   SaveGridColumns,
@@ -33,11 +40,19 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    GetFiles: () => dispatch(GetFiles()),
+    GetFiles: (documentGrid) => dispatch(GetFiles(documentGrid)),
     GetFileContent: (path) => dispatch(GetFileContent(path)),
     SaveGridColumns: (name, columns) =>
-    dispatch(SaveGridColumns(name, columns)),
-     GetGridColumns: (name) => dispatch(GetGridColumns(name)),
+      dispatch(SaveGridColumns(name, columns)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
+    getFilters: (entity) => dispatch(getFilters(entity)),
+    FilterDelete: (filterId) => dispatch(FilterDelete(filterId)),
+    FilterInsert: (displayName, body, entity, order, userId) =>
+      dispatch(FilterInsert(displayName, body, entity, order, userId)),
+    FilterUpdate: (filterId, displayName, body, entity, order, userId) =>
+      dispatch(
+        FilterUpdate(filterId, displayName, body, entity, order, userId)
+      ),
   };
 }
 class DocumentManager extends Component {
@@ -57,8 +72,6 @@ class DocumentManager extends Component {
   }
   async componentDidMount() {
     this.getGridColumns();
-    let files = await this.props.GetFiles();
-    this.setState({ files });
   }
   onFileGridSelectionChange = async (event) => {
     if (event.dataItem != null) {
@@ -86,6 +99,30 @@ class DocumentManager extends Component {
     this.setState({
       Show_HidePlanDialogVisible: false,
     });
+  };
+  deleteFilter = async (filterID) => {
+    let deleteFilter = await this.props.FilterDelete(this.state.currentFilter?.filterID);
+    if (deleteFilter) {
+      this.setState({ success: true, message: "delete filter succefully " });
+      setTimeout(() => {
+        this.setState({
+          success: false,
+
+        });
+      }, this.state.timer);
+      this.reset();
+    } else {
+      this.setState({ error: true, message: "Error wit delete filter" });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+    }
+    this.toggleDeleteDialog();
+    this.setState({ refreshFilter: false });
+    //await this.props.getclaimListFilters("");
+    this.setState({ refreshFilter: true });
   };
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
@@ -118,6 +155,143 @@ class DocumentManager extends Component {
       });
     }
   };
+  toggleSaveDialog = () => {
+    this.setState({ visibleSaveFilter: false, editFilter: false });
+  };
+  saveFilter = async (event) => {
+    this.toggleSaveDialog();
+    var documentGrid = JSON.stringify({
+      fileName: this.state.fileName
+        ? this.state.fileName
+        : null,
+      fileDate: this.state.fileDate != null
+        ? new Date(this.state.fileDate).toLocaleDateString() : "",
+      Processed: this.state.Processed
+        ? this.state.Processed
+        : null
+    });
+    if (this.state.currentFilter && this.state.currentFilter.filterID) {
+      let updateFilter = await this.props.FilterUpdate(
+        this.state.currentFilter.filterID,
+        event,
+        documentGrid,
+        "documentManager",
+        0,
+        0
+      );
+      if (updateFilter) {
+        this.setState({ success: true, message: "Edit filter succefully " });
+        setTimeout(() => {
+          this.setState({
+            success: false,
+          });
+        }, this.state.timer);
+      } else {
+        this.setState({ error: true, message: "Error with Edit filter" });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, this.state.timer);
+      }
+    } else {
+      let insertFilter = await this.props.FilterInsert(
+        event,
+        documentGrid,
+        "documentManager",
+        0,
+        0
+      );
+      if (insertFilter.saved) {
+        this.setState({ success: true, message: "Save filter succefully " });
+        setTimeout(() => {
+          this.setState({
+            success: false,
+          });
+        }, this.state.timer);
+      } else if (insertFilter.isExist) {
+        this.setState({
+          error: true,
+          message: "Filter Name is Used, Please Select Another Name",
+        });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, this.state.timer);
+      } else {
+        this.setState({ error: true, message: "Error with Save filter" });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, this.state.timer);
+      }
+    }
+    this.setState({ refreshFilter: false });
+    // await this.props.getFilters("patient");
+    this.reset();
+    this.setState({ refreshFilter: true });
+  };
+  reset = () => {
+    this.setState({
+      fileName: null,
+      fileDate: null,
+      Processed: false,
+      currentFilter: null
+    });
+  };
+  filterChange = async (event) => {
+    if (event && event.value) {
+      await this.setState({
+        currentFilter: event.value,
+      });
+      let body = JSON.parse(event.value.body);
+      await this.setState({
+        fileName: body?.fileName,
+        fileDate: new Date(body?.fileDate),
+        Processed: body?.Processed ?? false
+      });
+    } else {
+      this.reset();
+    }
+  };
+  documentManagerSearch = async (refreshData = true) => {
+    var documentGrid = {
+      fileName: this.state.fileName
+        ? this.state.fileName
+        : null,
+      fileDate: this.state.fileDate != null
+        ? new Date(this.state.fileDate).toLocaleDateString() : "",
+      Processed: this.state.Processed
+        ? this.state.Processed
+        : null
+    };
+
+    let files = await this.props.GetFiles(documentGrid);
+    this.setState({ files });
+  };
+  toggleDeleteDialog = () => {
+    this.setState({
+      visibleDeleteDialog: !this.state.visibleDeleteDialog,
+    });
+  };
+  delete = async () => {
+    if (this.state.currentFilter && this.state.currentFilter.displayName) {
+      this.toggleDeleteDialog();
+    } else {
+      this.setState({
+        warning: true,
+        message: "Please Select filter to Delete.",
+      });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      //this.setState({ confirmMessage: true });
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -128,6 +302,18 @@ class DocumentManager extends Component {
             width: "100%",
           }}
         >
+          {this.state.visibleDeleteDialog && (
+            <DeleteDialogComponent
+              title="Delete Document Filter"
+              toggleDeleteDialog={this.toggleDeleteDialog}
+              deleteMessage={`Are you sure you wish to delete document Filter : ${this.state.currentFilter && this.state.currentFilter.displayName
+                ? this.state.currentFilter.displayName
+                : ""
+                }?`}
+              currentFilterID={this.state.currentFilter?.filterID}
+              deleteFilter={this.deleteFilter}
+            ></DeleteDialogComponent>
+          )}
           {this.state.showNote && (
             <DocumentManagerDialog
               row={this.state.fileRow}
@@ -267,8 +453,8 @@ class DocumentManager extends Component {
                   style={{ marginRight: "5px" }}
                   id="processed"
                   label="Processed"
-                  value={this.state.processed}
-                  onChange={(e) => this.setState({ processed: e.value })}
+                  value={this.state.Processed}
+                  onChange={(e) => this.setState({ Processed: e.value })}
                 />
               </div>
             </div>
@@ -281,7 +467,7 @@ class DocumentManager extends Component {
                   icon="search"
                   type="search"
                   classButton="infraBtn-primary action-button"
-                  onClick={this.planGridSearch}
+                  onClick={this.documentManagerSearch}
                 >
                   Search
                 </ButtonComponent>
@@ -310,7 +496,7 @@ class DocumentManager extends Component {
                   Documents
                 </ButtonComponent>
               </div> */}
-              <div style={{ float: "left", width: "200px !important" }}>
+              {/* <div style={{ float: "left", width: "200px !important" }}>
                 <ButtonComponent
                   type="edit"
                   icon="edit"
@@ -321,11 +507,11 @@ class DocumentManager extends Component {
                 >
                   Lookup Details
                 </ButtonComponent>
-              </div>
+              </div> */}
               <div
                 style={{
                   float: "left",
-                  marginLeft: "443px",
+                  marginLeft: "80%",
                 }}
               >
                 <ButtonComponent
