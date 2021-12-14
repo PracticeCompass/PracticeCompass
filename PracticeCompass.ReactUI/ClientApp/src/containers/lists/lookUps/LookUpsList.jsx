@@ -11,9 +11,10 @@ import DropDown from "../../../components/DropDown";
 import CheckboxComponent from "../../../components/Checkbox";
 import GridComponent from "../../../components/Grid";
 import ButtonComponent from "../../../components/Button";
-import { lookupColumns } from "./LookUpsData";
+import { lookupColumns,lookupTypeColumns } from "./LookUpsData";
 import config from "../../../../src/config";
-
+import {getLookupCodes,resetlookupTypeList,getLookupTypes} from "../../../redux/actions/lookupCode"
+import { SaveLookups } from "../../../redux/actions/lookups";
 const DATA_ITEM_KEY_LOOKUP_TYPE = "lookupType";
 const idGetterLookupType = getter(DATA_ITEM_KEY_LOOKUP_TYPE);
 
@@ -22,11 +23,22 @@ const idGetterLookupCode = getter(DATA_ITEM_KEY_LOOKUP_CODE);
 
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    lookups:state.lookups.lookups,
+    UiExpand: state.ui.UiExpand,
+    lookupTypes:state.lookups.lookupTypes,
+    dropDownlookupTypes: state.lookups.lookupTypes,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    getLookupCodes: (entity) => dispatch(getLookupCodes(entity)),
+    resetlookupTypeList:()=>dispatch(resetlookupTypeList()),
+    getLookupTypes:(search)=>dispatch(getLookupTypes(search)),
+    SaveLookups: (EntityValueID, EntityName) =>
+    dispatch(SaveLookups(EntityValueID, EntityName)),
+  };
 }
 class LookUpsList extends Component {
   state = {
@@ -131,12 +143,69 @@ class LookUpsList extends Component {
       this.setState({
         lookupSearchText: null,
       });
-      this.props.resetPlanGroupList();
+      this.props.resetlookupTypeList();
     }
     this.setState({
       lookupVisible: !this.state.lookupVisible,
     });
   };
+  lookupsGridSearch = async (refreshData = true) => {
+    var lookupGrid = {
+      lookupCode: this.state.lookupCode
+        ? this.state.lookupCode
+        : '',
+        LookupType: this.state.selectedLookUpType?this.state.selectedLookUpType.entityId:'',
+      // skip: refreshData ? 0 : this.props.Patients.length,
+      IsActive: this.state.active ==null || this.state.active==false? 'I':'A'
+    };
+    await this.props.getLookupCodes(lookupGrid);
+  };
+  componentDidMount = () => {
+   // this.getGridColumns();
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  };
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
+      this.updateDimensions();
+    }
+  };
+  updateDimensions() {
+    this.setState({
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 290),
+    });
+  }
+  lookupCodesSearch = () => {
+    this.props.getLookupTypes(this.state.lookupSearchText??'');
+  };
+  onLookupTypesKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      selectedLookUpType: selectedDataItems[0]
+        ? {
+            entityName: selectedDataItems[0].lookupType,
+            entityId: selectedDataItems[0].lookupType,
+          }
+        : null,
+    });
+  };
+  onLookupTypesDoubleClick=(event)=>{
+    this.setState({
+      selectedLookUpType: {
+        entityId: event.dataItem.lookupType,
+        entityName: event.dataItem.lookupType,
+      },
+    });
+    this.props.SaveLookups(event.dataItem.lookupType, "lookupTypes");
+    //this.selectPatient();
+    this.toggleLookupDialog();
+  }
+  onLookupTypesClick=(event)=>{
+
+  }
   render() {
     return (
       <Fragment>
@@ -159,13 +228,13 @@ class LookUpsList extends Component {
                 lookupSearchText: e.value,
               });
             }}
-            clickOnSearch={this.planGroupSearch}
-            dataItemKey="LookupType"
-            data={this.props.planGroups}
-            columns={[]}
-            onSelectionChange={this.onPlanGroupSelectionChange}
-            onRowDoubleClick={this.onPlanGroupDoubleClick}
-            onKeyDown={this.onPlanGroupKeyDown}
+            clickOnSearch={this.lookupCodesSearch}
+            dataItemKey="lookupType"
+            data={this.props.lookupTypes}
+            columns={lookupTypeColumns}
+            onSelectionChange={this.onLookupTypesClick}
+            onRowDoubleClick={this.onLookupTypesDoubleClick}
+            onKeyDown={this.onLookupTypesKeyDown}
             idGetterLookup={idGetterLookupType}
             toggleDialog={this.toggleLookupDialog}
             cancelDialog={this.toggleLookupDialog}
@@ -285,7 +354,7 @@ class LookUpsList extends Component {
                 <div style={{ width: "200px", float: "left" }}>
                   <DropDown
                     className="unifyHeight"
-                    data={this.props.dropDownLookUpType}
+                    data={this.props.dropDownlookupTypes}
                     textField="entityName"
                     dataItemKey="entityId"
                     defaultValue={this.state.selectedLookUpType}
@@ -337,7 +406,7 @@ class LookUpsList extends Component {
                   icon="search"
                   type="search"
                   classButton="infraBtn-primary action-button"
-                  onClick={this.planGridSearch}
+                  onClick={this.lookupsGridSearch}
                 >
                   Search
                 </ButtonComponent>
@@ -424,7 +493,9 @@ class LookUpsList extends Component {
               >
                 <GridComponent
                   id="LookupGrid"
-                  data={[]}
+                  skip={0}
+                  take={27}
+                  data={this.props.lookups}
                   columns={
                     lookupColumns
                   }
@@ -436,7 +507,6 @@ class LookUpsList extends Component {
                   sortColumns={[]}
                   onSortChange={this.onSortChange}
                   idGetter={idGetterLookupCode}
-                  take={this.state.take}
                   DATA_ITEM_KEY="gridId"
                 ></GridComponent>
               </div>

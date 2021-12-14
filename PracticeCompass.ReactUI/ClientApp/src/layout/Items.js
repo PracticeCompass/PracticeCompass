@@ -137,11 +137,11 @@ export const itemsList = [
     route: "/lists/physicians",
   },
   {
-    text: "LookUps",
+    text: "Lookups",
     icon: "k-i-inbox",
     id: 19,
     parentId: 16,
-    route: "/lists/lookUps",
+    route: "/lists/lookups",
   },
   {
     text: "Transactions",

@@ -363,7 +363,7 @@ class EditableGrid extends React.Component {
                         ? this.MyCustomCell
                         : column.showToolTip && ColumnNameCell
                     }
-                    editable={column.editable}
+                    editable={false}
                     editor={column.editor}
                   />
                 );
