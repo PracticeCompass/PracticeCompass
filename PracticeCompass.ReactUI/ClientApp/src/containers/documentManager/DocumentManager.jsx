@@ -19,6 +19,7 @@ import DatePickerComponent from "../../components/DatePicker"
 import CheckboxComponent from "../../components/Checkbox";
 import ButtonComponent from "../../components/Button";
 import { ProcessFile } from "../../redux/actions/fileManager";
+import { TextArea } from "@progress/kendo-react-inputs";
 import {
   getFilters,
   FilterDelete,
@@ -169,7 +170,10 @@ class DocumentManager extends Component {
         ? new Date(this.state.fileDate).toLocaleDateString() : "",
       Processed: this.state.Processed
         ? this.state.Processed
-        : false
+        : false,
+      notes:this.state.notes
+      ?this.state.notes
+      :''
     });
     if (this.state.currentFilter && this.state.currentFilter.filterID) {
       let updateFilter = await this.props.FilterUpdate(
@@ -251,7 +255,8 @@ class DocumentManager extends Component {
       await this.setState({
         fileName: body?.fileName,
         fileDate: new Date(body?.fileDate),
-        Processed: body?.Processed ?? false
+        Processed: body?.Processed ?? false,
+        notes:body?.notes
       });
     } else {
       this.reset();
@@ -266,9 +271,12 @@ class DocumentManager extends Component {
         ? new Date(this.state.fileDate).toLocaleDateString() : "",
       Processed: this.state.Processed
         ? this.state.Processed
-        : false
+        : false,
+        notes:this.state.notes
+        ?this.state.notes
+        :''
+      
     };
-
     let files = await this.props.GetFiles(documentGrid);
     this.setState({ files });
   };
@@ -442,7 +450,7 @@ class DocumentManager extends Component {
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
-              <div style={{ width: "370px" }}>
+              <div style={{ width: "310px" }}>
                 <div style={{ float: "left", marginLeft: "46px" }}>
                   <label className="userInfoLabel">File Name</label>
                 </div>
@@ -458,12 +466,7 @@ class DocumentManager extends Component {
                   ></TextBox>
                 </div>
               </div>
-            </div>
-            <div
-              className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap" }}
-            >
-              <div style={{ float: "left", marginLeft: "71px" }}>
+              <div style={{ float: "left" }}>
                 <label className="userInfoLabel">Date</label>
               </div>
               <div className="dateStyle" style={{ float: "left", marginLeft: "5px" }}>
@@ -475,14 +478,7 @@ class DocumentManager extends Component {
                   onChange={(e) => this.setState({ fileDate: e.value })}
                 ></DatePickerComponent>
               </div>
-            </div>
-
-
-            <div
-              className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap" }}
-            >
-              <div style={{ float: "left", marginLeft: "44px" }}>
+              <div style={{ float: "left"}}>
                 <CheckboxComponent
                   style={{ marginRight: "5px" }}
                   id="processed"
@@ -492,6 +488,34 @@ class DocumentManager extends Component {
                 />
               </div>
             </div>
+            <div
+              className="rowHeight"
+              style={{ display: "flex", flexFlow: "row nowrap",marginTop:"5px",marginBottom:"15px" }}
+            >
+              <div style={{ float: "left",marginLeft: "63px" }}>
+                <label className="userInfoLabel">Notes</label>
+              </div>
+                  <div style={{ float: "left", marginLeft: "5px", width: "400px" }}>
+                    <TextArea
+                      rows={5}
+                      style={{ width: "100%", height: "1.5cm" }}
+                      value={this.state.notes ?? ""}
+                      onChange={(e) =>
+                        this.setState({
+                          notes: e.value,
+                        })
+                      }
+                    ></TextArea>
+                  </div>
+            </div>
+
+
+            {/* <div
+              className="rowHeight"
+              style={{ display: "flex", flexFlow: "row nowrap" }}
+            >
+
+            </div> */}
             <div
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -580,7 +604,7 @@ class DocumentManager extends Component {
                     id="documentManager"
                     columns={this.state.documentColumns}
                     skip={0}
-                    take={24}
+                    take={32}
                     editColumn={"fileID"}
                     onSelectionChange={
                       this.onFileGridSelectionChange
@@ -593,7 +617,7 @@ class DocumentManager extends Component {
                     DATA_ITEM_KEY="fileID"
                     idGetter={idGetterFileID}
                     data={this.state.files || []}
-                    height="570px"
+                    height="700px"
                     width="100%"
                     //hasCheckBox={true}
                     sortColumns={[]}
