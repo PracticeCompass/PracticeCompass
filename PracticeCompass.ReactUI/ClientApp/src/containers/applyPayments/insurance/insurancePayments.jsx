@@ -874,7 +874,8 @@ class insurancePayments extends Component {
                         amountPaid: item.insurancePaid,
                         adjustment: item.adjustments,
                         PaymentType: "I",
-                        paymentRemaining: this.state.InsurancePaymentDetails?.remaining
+                        paymentRemaining: this.state.InsurancePaymentDetails?.remaining,
+                        approvedAmount: 0,
                     }
                     : null
             );
