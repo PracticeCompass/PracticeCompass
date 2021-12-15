@@ -2,10 +2,6 @@ import config from "../../config";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import axios from "axios";
 import {
-  GET_PLANS_FAILS,
-  GET_PLANS,
-  GET_PLANS_GROUP,
-  GET_PLANS_GROUP_FAILS,
   GET_LOOKUPS,
   GET_LOOKUPS_TYPE,
   GET_LOOKUPS_TYPE_FAILS,

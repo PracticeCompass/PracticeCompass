@@ -88,7 +88,7 @@ class Main extends Component {
               />
               <Route
                 exact={true}
-                path="/lists/lookUps"
+                path="/lists/lookups"
                 component={LookUps}
               />
               <Route

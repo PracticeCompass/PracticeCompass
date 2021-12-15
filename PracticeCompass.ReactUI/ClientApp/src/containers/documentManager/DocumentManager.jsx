@@ -294,7 +294,6 @@ class DocumentManager extends Component {
     }
   };
   applyItemChanged =async (event) => {
-    debugger;
     const field = event.field || "";
     const inEditID = event.dataItem["fileID"];
     let files = this.state.files.map((item) =>
@@ -313,7 +312,7 @@ class DocumentManager extends Component {
         this.setState({
           success: false,
         });
-        this.props.toggledocumentManagerDialog(this.state.documentNote);
+       // this.toggledocumentManagerDialog(this.state.documentNote);
       }, this.state.timer);
     } else {
       this.setState({ error: true, message: "Save File Data failed " });

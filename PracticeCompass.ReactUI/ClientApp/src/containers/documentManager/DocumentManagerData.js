@@ -5,7 +5,7 @@ export const documentColumns = [
       title: "ID",
       minWidth: 50,
       orderIndex: 1,
-      editable: false
+      editable: false,
     },
     {
       field: "fileName",

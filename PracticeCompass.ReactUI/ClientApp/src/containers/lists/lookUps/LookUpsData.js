@@ -1,4 +1,16 @@
+export const lookupTypeColumns=[
 
+    {
+        field: "lookupType",
+        title: "Lookup Type",
+        orderIndex: 1,
+    },
+    {
+        field: "description",
+        title: "Description",
+        orderIndex: 2,
+    }
+]
 export const lookupColumns = [
     {
         field: "order",
