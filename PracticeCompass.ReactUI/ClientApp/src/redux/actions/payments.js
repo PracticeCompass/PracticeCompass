@@ -294,7 +294,7 @@ export const PostEraPayment = (checkTraceNbr) => async (dispatch, getState) => {
         // if (PracticeID == null && PatientID == null) return;
         const resp = await axios({
             method: "GET",
-            url: `${config.baseUrl}/payment/ApplyPatientPaymentGet?CheckTraceNbr=${checkTraceNbr}`,
+            url: `${config.baseUrl}/payment/ERAPost?CheckTraceNbr=${checkTraceNbr}`,
         });
         return resp.data;
     } catch (error) {

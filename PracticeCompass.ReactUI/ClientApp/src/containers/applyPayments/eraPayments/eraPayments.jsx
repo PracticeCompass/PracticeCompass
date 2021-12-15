@@ -94,7 +94,7 @@ function mapDispatchToProps(dispatch) {
                     Days
                 )
             ),
-        PostEraPayment: (checkTraceNbr) => dispatch(PostEraPayment(checkTraceNbr)),
+        PostingEraPayment: (checkTraceNbr) => dispatch(PostEraPayment(checkTraceNbr)),
     };
 }
 
@@ -126,7 +126,8 @@ class EraPayments extends Component {
         detailsColumns: detailsColumns,
         gridWidth: 0,
         applyFilterChecked: "All",
-        detailRows: []
+        detailRows: [],
+        selectedVoucher : null,
     };
     componentDidMount = () => {
         this.getGridColumns();
@@ -316,6 +317,7 @@ class EraPayments extends Component {
 
         this.setState({
             ERAPaymentDetails,
+            selectedVoucher: event.dataItem.checkTraceNbr,
         });
     };
     onERAPaymentGridDoubleSelectionChange = async (event) => {
@@ -356,6 +358,7 @@ class EraPayments extends Component {
         await this.setState({
             ERAPaymentDetails,
             transactionHeader: header,
+            selectedVoucher: event.dataItem.checkTraceNbr,
         });
         //let eRAPayments = await this.props.GetERAPaymentDetails(1971933);
         let eRADetailsPayments = await this.props.GetERAPaymentDetails(
@@ -444,6 +447,7 @@ class EraPayments extends Component {
         });
     };
     postingEra = () => {
+        this.props.PostingEraPayment(this.state.selectedVoucher);
     }
     savePaymentTransaction = (item) => {
         this.setState({
@@ -849,7 +853,6 @@ class EraPayments extends Component {
                                 </div>
                             </div>
                         </PanelBarItem>
-
                         <PanelBarItem
                             id="ERADetailsPaymentSearch"
                             expanded={this.state.insurancePaymentExpanded}
