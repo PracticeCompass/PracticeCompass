@@ -13,7 +13,7 @@ import {
     GET_APPLY_PLAN_PAYMENTS,
     GET_APPLY_PLAN_PAYMENTS_FAILS,
     GET_ERA_PAYMENTS,
-    GET_ERA_PAYMENTS_FAILS,
+    GET_ERA_PAYMENTS_FAILS, POST_ERA_PAYMENTS_FAILS
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../config";
@@ -288,7 +288,25 @@ export const ApplyPayments = (list) => async (dispatch, getState) => {
         dispatch(uiStopLoading());
     }
 };
-
+export const PostEraPayment = (checkTraceNbr) => async (dispatch, getState) => {
+    try {
+        dispatch(uiStartLoading());
+        // if (PracticeID == null && PatientID == null) return;
+        const resp = await axios({
+            method: "GET",
+            url: `${config.baseUrl}/payment/ApplyPatientPaymentGet?CheckTraceNbr=${checkTraceNbr}`,
+        });
+        return resp.data;
+    } catch (error) {
+        console.log("Post Era Payment Error ==> ", error);
+        dispatch({
+            type: POST_ERA_PAYMENTS_FAILS,
+            payload: error,
+        });
+    } finally {
+        dispatch(uiStopLoading());
+    }
+};
 export const setApplyPlanPayments = (applyPayments) => {
     return {
         type: GET_APPLY_PLAN_PAYMENTS,

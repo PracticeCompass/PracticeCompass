@@ -65,18 +65,10 @@ export const columns = [
         orderIndex: 8
     },
     {
-        field: "amount",
-        title: "Balance",
-        minWidth: 100,
-        orderIndex: 9,
-        type: "currency",
-        isCustomCell: true
-    },
-    {
         field: "outStandingBalance",
         title: "OutStanding Balance",
         minWidth: 150,
-        orderIndex: 10,
+        orderIndex: 9,
         type: "currency",
         isCustomCell: true
     },
@@ -84,25 +76,25 @@ export const columns = [
         field: "prim",
         title: "Plan 1",
         minWidth: 70,
-        orderIndex: 11
+        orderIndex: 10
     },
     {
         field: "seC",
         title: "Plan 2",
         minWidth: 70,
-        orderIndex: 12
+        orderIndex: 11
     },
     {
         field: "patient",
         title: "Patient",
         minWidth: 100,
-        orderIndex: 13
+        orderIndex: 12
     },
     {
         field: "recordStatus",
         title: "Record Status",
         minWidth: 100,
-        orderIndex: 14,
+        orderIndex: 13,
         showToolTip: true
 
     },
@@ -110,7 +102,7 @@ export const columns = [
         field: "currentStatus",
         title: "Current Status",
         minWidth: 100,
-        orderIndex: 15,
+        orderIndex: 14,
         showToolTip: true
 
     },
@@ -118,20 +110,20 @@ export const columns = [
         field: "providerName",
         title: "Rendering",
         minWidth: 150,
-        orderIndex: 16
+        orderIndex: 15
         // minWidth: 65,
     },
     {
         field: "respCoverageOrder",
         title: "Resp Coverage Order",
         minWidth: 150,
-        orderIndex: 17
+        orderIndex: 16
         // minWidth: 65,
     },
     {
         field: "chargeSID",
         title: "ID",
-        minWidth: 80,
+        minWidth: 19,
         orderIndex: 0,
         hide: true
     }

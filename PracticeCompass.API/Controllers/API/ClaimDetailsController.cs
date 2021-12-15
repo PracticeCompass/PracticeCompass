@@ -70,7 +70,7 @@ namespace PracticeCompass.API.Controllers.API
                                 if (charge.Plan2 != null && charge.Plan2 != 0)
                                     charge.SeC = "PAID";
                                 else if (charge.Plan2 == null || charge.Plan2 == 0)
-                                    charge.SeC = "BILLED"; 
+                                    charge.SeC = "BILLED";
                                 break;
                             case 99:
                                 if (charge.Plan1 != null && charge.Plan1 != 0)

@@ -17,11 +17,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/InsurancePaymentGet")]
-        public List<PaymentDTO> InsurancePaymentGet(int PracticeID, int InsuranceID,int DateType ,string Datevalue , bool Fullyapplied = false)
+        public List<PaymentDTO> InsurancePaymentGet(int PracticeID, int InsuranceID, int DateType, string Datevalue, bool Fullyapplied = false)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetInsurancePayment(PracticeID, InsuranceID, DateType,Datevalue , Fullyapplied);
+                return unitOfWork.PaymentRepository.GetInsurancePayment(PracticeID, InsuranceID, DateType, Datevalue, Fullyapplied);
 
             }
             catch (Exception ex)
@@ -32,7 +32,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/PatientPaymentGet")]
-        public List<PaymentDTO> PatientPaymentGet(int PracticeID, int PatientID, int DateType , string Datevalue, bool Fullyapplied = false)
+        public List<PaymentDTO> PatientPaymentGet(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied = false)
         {
             try
             {
@@ -92,11 +92,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/ApplyInsurancePaymentGet")]
-        public List<InsurancePayment> ApplyInsurancePaymentGet(int GuarantorID,int DOSType,string DOSvalue, int InsuranceID, string ClaimIcnNumber)
+        public List<InsurancePayment> ApplyInsurancePaymentGet(int GuarantorID, int DOSType, string DOSvalue, int InsuranceID, string ClaimIcnNumber)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetInsurancePaymentforApply(GuarantorID,DOSType,DOSvalue,InsuranceID,ClaimIcnNumber);
+                return unitOfWork.PaymentRepository.GetInsurancePaymentforApply(GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber);
 
             }
             catch (Exception ex)
@@ -107,15 +107,15 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/PaymentSave")]
-        public bool PaymentSave(int PaymentSID,int PracticeID ,string PostDate, string Source,int PayorID , string Class,float Amount ,string Method,
-            string CreditCard,string AuthorizationCode ,string Voucher, string CreateMethod,int CurrentUser)
+        public bool PaymentSave(int PaymentSID, int PracticeID, string PostDate, string Source, int PayorID, string Class, float Amount, string Method,
+            string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod, int CurrentUser)
         {
             try
             {
                 if (Class == "null") Class = "";
                 string prrowid = "";
-                unitOfWork.PaymentRepository.InsertUpdatePayment( prrowid,PaymentSID,  PracticeID,  PostDate,  Source,  PayorID,  Class,  Amount,  Method,
-             CreditCard,  AuthorizationCode,  Voucher,  CreateMethod, CurrentUser, CurrentUser);
+                unitOfWork.PaymentRepository.InsertUpdatePayment(prrowid, PaymentSID, PracticeID, PostDate, Source, PayorID, Class, Amount, Method,
+             CreditCard, AuthorizationCode, Voucher, CreateMethod, CurrentUser, CurrentUser);
                 return true;
 
             }
@@ -142,7 +142,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpPost]
         [Route("api/payment/ApplyPayment")]
-        public bool ApplyPayment( [FromBody] List<ApplyPaymentModel> applyPaymentModel )
+        public bool ApplyPayment([FromBody] List<ApplyPaymentModel> applyPaymentModel)
         {
             try
             {
@@ -159,11 +159,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/ERAPaymentHeaderGet")]
-        public List<ERAPaymentHeader> ERAPaymentHeaderGet(int PracticeID ,string IsPosted, float Amount,string CheckNumber,string AmountType, string SenderAccount ,string ReceiverAccount, string PostDate , int Days )
+        public List<ERAPaymentHeader> ERAPaymentHeaderGet(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, string SenderAccount, string ReceiverAccount, string PostDate, int Days)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetERAPaymentHeader(PracticeID,IsPosted,Amount,CheckNumber != null?CheckNumber:"", AmountType, SenderAccount != null ? SenderAccount : "", ReceiverAccount != null ? ReceiverAccount : "", PostDate != null ? PostDate : "", Days);
+                return unitOfWork.PaymentRepository.GetERAPaymentHeader(PracticeID, IsPosted, Amount, CheckNumber != null ? CheckNumber : "", AmountType, SenderAccount != null ? SenderAccount : "", ReceiverAccount != null ? ReceiverAccount : "", PostDate != null ? PostDate : "", Days);
 
             }
             catch (Exception ex)
