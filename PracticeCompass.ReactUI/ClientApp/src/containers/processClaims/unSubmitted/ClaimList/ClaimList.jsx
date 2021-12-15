@@ -386,6 +386,8 @@ class ClaimList extends Component {
                 ? event.dataItem
                 : event.dataItems[event.endRowIndex]
         );
+        this.props.SaveLookups(event.dataItem.patientID, "Patient");
+        this.props.SaveLookups(event.dataItem.practiceID, "Practice");
         this.setState({
             selectedClaimSID:
                 event.dataItems == null || event.dataItems.length == 0
@@ -410,6 +412,8 @@ class ClaimList extends Component {
                     ? event.dataItem.claimSID
                     : event.dataItems[event.endRowIndex].claimSID,
         });
+        this.props.SaveLookups(event.dataItem.patientID, "Patient");
+        this.props.SaveLookups(event.dataItem.practiceID, "Practice");
         this.props.setClaimDetailExpanded();
     };
     onPatientSelectionChange = (event) => {
@@ -1390,10 +1394,6 @@ class ClaimList extends Component {
                                 data={this.props.dropDownPatients}
                                 textField="entityName"
                                 dataItemKey="entityId"
-                                defaultValue={{
-                                    entityId: this.state.patientID,
-                                    entityName: this.state.patientNameSelected,
-                                }}
                                 value={{
                                     entityId: this.state.patientID,
                                     entityName: this.state.patientNameSelected,

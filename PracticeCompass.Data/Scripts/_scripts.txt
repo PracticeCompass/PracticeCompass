@@ -72,3 +72,5 @@ FuncGetChargeStatus.sql
 uspPlanGroupGet.sql
 CreateERAFileManagertable.sql
 uspFilesGet.sql
+uspLookupType.sql
+uspLookupCodeGet.sql

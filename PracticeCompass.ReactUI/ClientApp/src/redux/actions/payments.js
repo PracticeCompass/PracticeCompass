@@ -274,10 +274,8 @@ export const ApplyPayments = (list) => async (dispatch, getState) => {
     try {
         dispatch(uiStartLoading());
         // if (PracticeID == null && PatientID == null) return;
-        let applyPaymentModel = [];
         let applyPaymentList = list;
         let url = `${config.baseUrl}/payment/ApplyPayment?applyPaymentModel`;
-        applyPaymentModel.push({ ChargeSID: "5", PaymentSID: "7" });
         const resp = await axios.post(url, applyPaymentList);
         return resp.data;
     } catch (error) {

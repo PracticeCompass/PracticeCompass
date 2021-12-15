@@ -369,3 +369,5 @@ PracticeCompass.Data/Scripts/__tmp_FuncGetClaimOutStandingBalance.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspPlanGroupGet.sql.txt
 PracticeCompass.Data/Scripts/__tmp_CreateERAFileManagertable.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspFilesGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspLookupCodeGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspLookupType.sql.txt
