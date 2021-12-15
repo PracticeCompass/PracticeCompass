@@ -11,6 +11,10 @@ namespace PracticeCompass.Data.Utilities
         public PracticeCompassHelper(IDbConnection _db)
 
         { this.db = _db; }
+        public int CurrentUser()
+        {
+            return 88;
+        }
         public string GetMAXprrowid(string tableName, string lastprrowid)
         {
             try

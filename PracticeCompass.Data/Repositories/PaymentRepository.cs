@@ -246,9 +246,9 @@ namespace PracticeCompass.Data.Repositories
                     SourceID = paymentmodel.PayorID,
                     CreateMethod = "M",
                     TimeStamp = timestamp,
-                    LastUser = 88,
+                    LastUser = practiceCompassHelper.CurrentUser(),
                     CreateStamp = timestamp,
-                    CreateUser = 88,
+                    CreateUser = practiceCompassHelper.CurrentUser(),
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
                     pro2modified = DateTime.Now,
@@ -279,9 +279,9 @@ namespace PracticeCompass.Data.Repositories
                     SourceID = paymentmodel.PayorID,
                     CreateMethod = "M",
                     TimeStamp = timestamp,
-                    LastUser = 88,
+                    LastUser = practiceCompassHelper.CurrentUser(),
                     CreateStamp = timestamp,
-                    CreateUser = 88,
+                    CreateUser = practiceCompassHelper.CurrentUser(),
                     Pro2SrcPDB = "medman",
                     pro2created = DateTime.Now,
                     pro2modified = DateTime.Now,
@@ -321,9 +321,9 @@ namespace PracticeCompass.Data.Repositories
                         ActivityCount = PAmaxactivitycount,
                         Amount = insuranceDiff != 0 ? insuranceDiff : gurantorDiff,
                         TimeStamp = timestamp,
-                        LastUser = 88,
+                        LastUser = practiceCompassHelper.CurrentUser(),
                         CreateStamp = timestamp,
-                        CreateUser = 88,
+                        CreateUser = practiceCompassHelper.CurrentUser(),
                         Pro2SrcPDB = "medman",
                         pro2created = DateTime.Now,
                         pro2modified = DateTime.Now,
@@ -356,10 +356,18 @@ namespace PracticeCompass.Data.Repositories
                 var adjustamnetsDiff = paymentmodel.Adjustment - chargerow.Adjustments;
 
                 #region Update_Account
+
                 var Accountrow = accounts.FirstOrDefault(x => x.AccountSID == chargerow.AccountSID);
                 Accountrow.Balance = Accountrow.Balance + gurantorDiff + insuranceDiff + adjustamnetsDiff;
+                if (accounts.Find(x => x.AccountSID == Accountrow.AccountSID) != null)
+                {
+                    accounts.Find(x => x.AccountSID == Accountrow.AccountSID).Balance = Accountrow.Balance;
+                }
+                else
+                {
+                    accounts.Add(Accountrow);
+                }
 
-                accounts.Add(Accountrow);
                 #endregion
             }
             return accounts;
