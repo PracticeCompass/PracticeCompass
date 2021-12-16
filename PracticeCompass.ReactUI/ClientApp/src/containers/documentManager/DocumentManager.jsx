@@ -61,7 +61,6 @@ function mapDispatchToProps(dispatch) {
 class DocumentManager extends Component {
 
   state = {
-    documentColumns: documentColumns,
     content: "",
     refresh: true,
     refreshFilter: true,
@@ -262,6 +261,9 @@ class DocumentManager extends Component {
       this.reset();
     }
   };
+  onSortChange=()=>{
+    
+  }
   documentManagerSearch = async (refreshData = true) => {
     var documentGrid = {
       fileName: this.state.fileName

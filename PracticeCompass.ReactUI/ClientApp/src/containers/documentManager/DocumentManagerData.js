@@ -5,8 +5,8 @@ export const documentColumns = [
       title: "ID",
       minWidth: 50,
       orderIndex: 1,
-      editable: false,
-      hide:true
+      hide:true,
+      editable: false
     },
     {
       field: "fileName",
@@ -20,7 +20,8 @@ export const documentColumns = [
         title: "File Date",
         minWidth: 100,
         orderIndex: 3,
-        editable: false
+        editable: false,
+        format: "MM/DD/YYYY",
     },
     {
       field: "path",
