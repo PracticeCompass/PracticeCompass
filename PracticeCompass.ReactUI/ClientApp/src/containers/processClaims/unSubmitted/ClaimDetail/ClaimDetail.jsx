@@ -154,7 +154,7 @@ class ClaimDetail extends Component {
         this.getGridColumns();
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-        let patientDetailsData = { patientID: this.props.claimDetails.patientID, personID: this.props.claimDetails.patientID, practiceID: this.props.claimDetails.practiceID }
+        let patientDetailsData = { patientID: this.props.claimDetails?.patientID, personID: this.props.claimDetails?.patientID, practiceID: this.props.claimDetails?.practiceID }
         this.setState({
             patientDetails: patientDetailsData
         })

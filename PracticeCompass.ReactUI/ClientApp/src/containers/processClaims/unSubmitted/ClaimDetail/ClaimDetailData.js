@@ -9,7 +9,7 @@ export const columnsclaimNote = [
     {
         field: "body",
         title: "Note",
-        minWidth: 1500,
+        minWidth: 640,
         orderIndex: 2
     }
 ];

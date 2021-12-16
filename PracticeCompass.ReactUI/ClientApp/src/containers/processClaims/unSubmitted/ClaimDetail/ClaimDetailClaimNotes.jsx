@@ -59,30 +59,11 @@ class ClaimDetailClaimNotes extends Component {
         >
           <div className="row">
             <div className="col-12">
-              <label className="userInfoLabel">Statement Note</label>
+              <label className="userInfoLabel">Claim Notes</label>
             </div>
           </div>
           <div className="row">
-            <div className="col-12">
-              <TextArea
-                rows={5}
-                style={{ width: "100%", height: "4cm" }}
-                value={this.state.statementNotes ?? ""}
-                onChange={(e) =>
-                  this.setState({
-                    statementNotes: e.value,
-                  })
-                }
-              ></TextArea>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <label className="userInfoLabel">Bill Notes</label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
+            <div className="col-6">
               <TextArea
                 rows={5}
                 style={{ width: "100%", height: "4cm" }}
@@ -94,7 +75,7 @@ class ClaimDetailClaimNotes extends Component {
                 }
               ></TextArea>
             </div>
-            <div className="col-12" style={{ marginTop: "3px" }}>
+            <div className="col-6" style={{ marginTop: "3px" }}>
               <GridComponent
                 id="claimDetailClaimGridId"
                 data={this.props.claimNotes}
