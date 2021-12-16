@@ -362,3 +362,27 @@ legend {
   word-wrap: break-word;
   max-width: 250px;
 }
+/* .textEditor{
+  color: #000000;
+  width: 100% !important;
+  height: 100% !important;
+  font-family: monospace !important;
+  font-size:20px !important;
+  font-weight: bold;
+} */
+.k-textarea > .k-input {
+  padding: 0.375rem 0.75rem;
+  height: auto;
+  min-height: calc(1.5em + 0.75rem + 2px);
+  overflow-y: auto;
+  resize: vertical;
+  font-size: 20px !important;
+}
+textarea:disabled  {
+  color: #000000;
+  width: 100% !important;
+  height: 100% !important;
+  font-family: monospace !important;
+  font-size:20px !important;
+  font-weight: bold;
+}

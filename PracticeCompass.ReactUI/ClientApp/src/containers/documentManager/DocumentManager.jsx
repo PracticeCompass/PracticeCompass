@@ -55,7 +55,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         FilterUpdate(filterId, displayName, body, entity, order, userId)
       ),
-      ProcessFile:(fileName, processed) => dispatch(ProcessFile(fileName, processed))
+    ProcessFile: (fileName, processed) => dispatch(ProcessFile(fileName, processed))
   };
 }
 class DocumentManager extends Component {
@@ -171,9 +171,9 @@ class DocumentManager extends Component {
       Processed: this.state.Processed
         ? this.state.Processed
         : false,
-      notes:this.state.notes
-      ?this.state.notes
-      :''
+      notes: this.state.notes
+        ? this.state.notes
+        : ''
     });
     if (this.state.currentFilter && this.state.currentFilter.filterID) {
       let updateFilter = await this.props.FilterUpdate(
@@ -256,7 +256,7 @@ class DocumentManager extends Component {
         fileName: body?.fileName,
         fileDate: new Date(body?.fileDate),
         Processed: body?.Processed ?? false,
-        notes:body?.notes
+        notes: body?.notes
       });
     } else {
       this.reset();
@@ -272,10 +272,10 @@ class DocumentManager extends Component {
       Processed: this.state.Processed
         ? this.state.Processed
         : false,
-        notes:this.state.notes
-        ?this.state.notes
-        :''
-      
+      notes: this.state.notes
+        ? this.state.notes
+        : ''
+
     };
     let files = await this.props.GetFiles(documentGrid);
     this.setState({ files });
@@ -301,7 +301,7 @@ class DocumentManager extends Component {
       //this.setState({ confirmMessage: true });
     }
   };
-  applyItemChanged =async (event) => {
+  applyItemChanged = async (event) => {
     const field = event.field || "";
     const inEditID = event.dataItem["fileID"];
     let files = this.state.files.map((item) =>
@@ -313,14 +313,14 @@ class DocumentManager extends Component {
         }
         : item
     );
-    let  ProcessFile =await this.props.ProcessFile(event.dataItem.fileName, event.value);
+    let ProcessFile = await this.props.ProcessFile(event.dataItem.fileName, event.value);
     if (ProcessFile) {
       this.setState({ success: true, message: "Save File Data succefully " });
       setTimeout(() => {
         this.setState({
           success: false,
         });
-       // this.toggledocumentManagerDialog(this.state.documentNote);
+        // this.toggledocumentManagerDialog(this.state.documentNote);
       }, this.state.timer);
     } else {
       this.setState({ error: true, message: "Save File Data failed " });
@@ -393,7 +393,7 @@ class DocumentManager extends Component {
             ></SaveFilterComponent>
           )}
           <div style={{ width: "100%" }}>
-            <div
+            {/* <div
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
@@ -445,7 +445,7 @@ class DocumentManager extends Component {
                   Reset
                 </ButtonComponent>
               </div>
-            </div>
+            </div> */}
             <div
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -478,7 +478,7 @@ class DocumentManager extends Component {
                   onChange={(e) => this.setState({ fileDate: e.value })}
                 ></DatePickerComponent>
               </div>
-              <div style={{ float: "left"}}>
+              <div style={{ float: "left" }}>
                 <CheckboxComponent
                   style={{ marginRight: "5px" }}
                   id="processed"
@@ -490,36 +490,24 @@ class DocumentManager extends Component {
             </div>
             <div
               className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap",marginTop:"5px",marginBottom:"15px" }}
+              style={{ display: "flex", flexFlow: "row nowrap", marginTop: "5px", marginBottom: "15px" }}
             >
-              <div style={{ float: "left",marginLeft: "63px" }}>
+              <div style={{ float: "left", marginLeft: "63px" }}>
                 <label className="userInfoLabel">Notes</label>
               </div>
-                  <div style={{ float: "left", marginLeft: "5px", width: "400px" }}>
-                    <TextArea
-                      rows={5}
-                      style={{ width: "100%", height: "1.5cm" }}
-                      value={this.state.notes ?? ""}
-                      onChange={(e) =>
-                        this.setState({
-                          notes: e.value,
-                        })
-                      }
-                    ></TextArea>
-                  </div>
-            </div>
+              <div style={{ float: "left", marginLeft: "5px", width: "400px" }}>
 
-
-            {/* <div
-              className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap" }}
-            >
-
-            </div> */}
-            <div
-              className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap" }}
-            >
+                <TextBox
+                  className="unifyHeight"
+                  value={this.state.notes}
+                  onChange={(e) =>
+                    this.setState({
+                      notes: e.value,
+                    })
+                  }
+                ></TextBox>
+                
+              </div>
               <div style={{ float: "left", marginLeft: "10px" }}>
                 <ButtonComponent
                   icon="search"
@@ -528,58 +516,6 @@ class DocumentManager extends Component {
                   onClick={this.documentManagerSearch}
                 >
                   Search
-                </ButtonComponent>
-              </div>
-              {/* <div style={{ float: "left", width: "200px !important" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary insurance-button "
-                  onClick={() => {
-                    this.setState({ visibleSaveFilter: true });
-                  }}
-                >
-                  Save
-                </ButtonComponent>
-              </div> */}
-              {/* <div style={{ float: "left" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary insurance-button "
-                  onClick={() => {
-                    this.setState({ providerVisible: true });
-                  }}
-                >
-                  Documents
-                </ButtonComponent>
-              </div> */}
-              {/* <div style={{ float: "left", width: "200px !important" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary details-button  "
-                  onClick={() => {
-                    this.openLookupRow();
-                  }}
-                >
-                  Lookup Details
-                </ButtonComponent>
-              </div> */}
-              <div
-                style={{
-                  float: "left",
-                  marginLeft: "80%",
-                }}
-              >
-                <ButtonComponent
-                  type="add"
-                  classButton="infraBtn-primary action-button"
-                  onClick={() => {
-                    this.setState({ Show_HidePlanDialogVisible: true });
-                  }}
-                >
-                  Edit Grid
                 </ButtonComponent>
               </div>
             </div>
@@ -617,7 +553,7 @@ class DocumentManager extends Component {
                     DATA_ITEM_KEY="fileID"
                     idGetter={idGetterFileID}
                     data={this.state.files || []}
-                    height="700px"
+                    height="710px"
                     width="100%"
                     //hasCheckBox={true}
                     sortColumns={[]}
@@ -632,7 +568,17 @@ class DocumentManager extends Component {
           </div>
           <div style={{ float: "left", width: "100%" }}>
             {this.state.refresh && (
-              <TextEditor content={this.state.content}></TextEditor>
+             // <TextEditor content={this.state.content}></TextEditor>
+              <TextArea
+              rows={5}
+              //disabled={true}
+              style={{width:"100%",height:"100%"}}
+              className="textEditor"
+              value={this.state.content ?? ""}
+              // onChange={(e) => {
+              //   this.setState({ content: e.value });
+              // }}
+            ></TextArea>
             )}
           </div>
         </div>

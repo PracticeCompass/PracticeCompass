@@ -6,6 +6,7 @@ export const documentColumns = [
       minWidth: 50,
       orderIndex: 1,
       editable: false,
+      hide:true
     },
     {
       field: "fileName",
