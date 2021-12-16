@@ -13,6 +13,7 @@ using PracticeCompass.Core.Repositories;
 using System.Linq;
 using System.IO;
 using Z.Dapper.Plus;
+using PracticeCompass.Logger;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -186,7 +187,10 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
 
                 #region update_paymentHeader
-                ERSPaymentHeader.PaymentSID = PaymentSID; 
+                ERSPaymentHeader.PaymentSID = PaymentSID;
+                ERSPaymentHeader.RecordStatus = "P";
+                ERSPaymentHeader.pro2modified = DateTime.Now;
+                ERSPaymentHeader.LastUser = practiceCompassHelper.CurrentUser();
                 #endregion
                 //Insert Plan Claim Data 
                 List<ApplyPaymentModel> applyPaymentModels = new List<ApplyPaymentModel>();
@@ -220,9 +224,9 @@ namespace PracticeCompass.Data.Repositories
                 Charges = Chargesresults.Read<Charge>().ToList();
                 #endregion
                 PaymentRepository paymentRepository = new PaymentRepository(connectionstrting);
-                Charges = paymentRepository.ChargesUpdate(applyPaymentModels, Charges);
                 ChargeActivities = paymentRepository.ChargeActivityAdd(applyPaymentModels, ChargeActivities, Charges);
                 PaymentAssignments = paymentRepository.PaymentAssignmentAdd(applyPaymentModels, Charges, PaymentAssignments);
+                Charges = paymentRepository.ChargesUpdate(applyPaymentModels, Charges);
                 Accounts = paymentRepository.AccountUpdate(applyPaymentModels, Accounts, Charges);
 
 
@@ -230,7 +234,7 @@ namespace PracticeCompass.Data.Repositories
                 foreach (var ERSChargemontAmt in ERSChargeMonetaryAmt)
                 {
                     string PlanClaimChargeMonetaryAmtMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeMonetaryAmt", PlanClaimChargeMonetaryAmt.Count() != 0 ? PlanClaimChargeMonetaryAmt[PlanClaimChargeMonetaryAmt.Count() - 1].prrowid : "0");
-
+                    int chargesid = Convert.ToInt32(ERSChargeReferences.FirstOrDefault(x => x.ERSChargeSID == ERSChargemontAmt.ERSChargeSID).ReferenceID);
                     PlanClaimChargeMonetaryAmt.Add(new PlanClaimChargeMonetaryAmt
                     {
                         CreateUser = practiceCompassHelper.CurrentUser(),
@@ -240,15 +244,15 @@ namespace PracticeCompass.Data.Repositories
                         Pro2SrcPDB = "medman",
                         prrowid = PlanClaimChargeMonetaryAmtMAXRowID,
                         Amount = ERSChargemontAmt.ServiceSupplementalAmt,
-                        ChargeSID = Convert.ToInt32(ERSChargeReferences.FirstOrDefault(x => x.ERSChargeSID == ERSChargemontAmt.ERSChargeSID).ReferenceID),
+                        ChargeSID = chargesid,
                         CreateMethod = "R",
                         CreateStamp = timestamp,
                         TimeStamp = timestamp,
                         QualifierCode = ERSChargemontAmt.AmtQualifierCode,
-                        ClaimSID = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).ClaimSID,
-                        PlanID = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).PlanID,
-                        PolicyNumber = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).PolicyNumber,
-                        LineItem = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == ERSChargemontAmt.ERSChargeSID).LineItem,
+                        ClaimSID = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == chargesid).ClaimSID,
+                        PlanID = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == chargesid).PlanID,
+                        PolicyNumber = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == chargesid).PolicyNumber,
+                        LineItem = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == chargesid).LineItem,
                         RemitCount = 1
                     });
                 }
@@ -282,7 +286,7 @@ namespace PracticeCompass.Data.Repositories
             }
             catch (Exception ex )
             {
-
+                Log.LogErrorStack(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
                 return false;
             }
         }
