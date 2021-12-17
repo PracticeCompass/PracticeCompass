@@ -435,7 +435,7 @@ class Details extends Component {
               )[0]
             : null,
         authorizationNumber: chargeDetailsData.authorizationNumber,
-        units: chargeDetailsData.chargeDetailsData
+        units: chargeDetailsData.units
       });
     }
   }
@@ -772,10 +772,10 @@ class Details extends Component {
                         type="numeric"
                         className="unifyHeight"
                         format="c2"
-                        value={this.state.charge}
+                        value={this.state.chargeAmount}
                         onChange={e =>
                           this.setState({
-                            charge: e.value
+                            chargeAmount: e.value
                           })
                         }
                       />
@@ -1617,7 +1617,7 @@ class Details extends Component {
                       style={{ display: "flex", flexFlow: "row" }}
                     >
                       <div style={{ float: "left" }}>
-                        <div style={{ float: "left", marginLeft: "75px" }}>
+                        <div style={{ float: "left", marginLeft: "77px" }}>
                           <label className="userInfoLabel">Allowed</label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>
@@ -1641,7 +1641,7 @@ class Details extends Component {
                       style={{ display: "flex", flexFlow: "row" }}
                     >
                       <div style={{ float: "left" }}>
-                        <div style={{ float: "left", marginLeft: "35px" }}>
+                        <div style={{ float: "left", marginLeft: "36px" }}>
                           <label className="userInfoLabel">
                             Patient Portion
                           </label>
@@ -1667,7 +1667,7 @@ class Details extends Component {
                       style={{ display: "flex", flexFlow: "row" }}
                     >
                       <div style={{ float: "left" }}>
-                        <div style={{ float: "left", marginLeft: "49px" }}>
+                        <div style={{ float: "left", marginLeft: "51px" }}>
                           <label className="userInfoLabel">Plan Portion</label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>
@@ -1691,7 +1691,7 @@ class Details extends Component {
                       style={{ display: "flex", flexFlow: "row" }}
                     >
                       <div style={{ float: "left" }}>
-                        <div style={{ float: "left", marginLeft: "47px" }}>
+                        <div style={{ float: "left", marginLeft: "48px" }}>
                           <label className="userInfoLabel">Paid Amount</label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>
