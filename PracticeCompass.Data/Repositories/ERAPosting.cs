@@ -209,14 +209,13 @@ namespace PracticeCompass.Data.Repositories
                         (ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR")==null?0: ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR").AdjustmentAmt)
 
                     });
-
-                    // add PlanClaimChargeRemit
-                    // add PlanClaimChargeRemitAdj
                 }
                 var ChargeActivities = new List<ChargeActivity>();
                 var Charges = new List<Charge>();
                 var Accounts = new List<Account>();
                 var PaymentAssignments = new List<PaymentAssignment>();
+                var PlanClaimChargeRemits = new List<PlanClaimChargeRemit>();
+                var PlanClaimChargeRemitAdjments = new List<PlanClaimChargeRemitAdj>();
                 #region Get_Charges
                 var chargeIDs = applyPaymentModels.Select(x => x.ChargeSID);
                 sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
@@ -228,8 +227,8 @@ namespace PracticeCompass.Data.Repositories
                 PaymentAssignments = paymentRepository.PaymentAssignmentAdd(applyPaymentModels, Charges, PaymentAssignments);
                 Charges = paymentRepository.ChargesUpdate(applyPaymentModels, Charges);
                 Accounts = paymentRepository.AccountUpdate(applyPaymentModels, Accounts, Charges);
-
-
+                PlanClaimChargeRemits = paymentRepository.PlanClaimChargeRemitAdd(applyPaymentModels, PlanClaimCharge, ChargeActivities,ERSPaymentHeader, ERSChargeReferences,ERSChargeServiceInfo);
+                PlanClaimChargeRemitAdjments = paymentRepository.PlanClaimChargeRemitAdjAdd(ERSChargeClaimAdjustment, PlanClaimCharge, ERSChargeReferences);
                 var PlanClaimChargeMonetaryAmt = new List<PlanClaimChargeMonetaryAmt>();
                 foreach (var ERSChargemontAmt in ERSChargeMonetaryAmt)
                 {
@@ -280,6 +279,15 @@ namespace PracticeCompass.Data.Repositories
                 ",@RemitCount,@QualifierCode,@Amount,@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@CreateMethod,@LineItem"+
                 ",@Pro2SrcPDB,@pro2created,@pro2modified)";
                 var PlanClaimChargeMonetary = this.db.Execute(PlanClaimChargeMonetaryAmtSql, PlanClaimChargeMonetaryAmt);
+                var PlanClaimChargeRemitSQL = "INSERT INTO [dbo].[PlanClaimChargeRemit]VALUES(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@ChargeSID" +
+                 ",@RemitCount,@PaymentChargeSID,@PaymentSID,@ActivityCount,@PaidAmount,@RemitProcedureCode,@RemitProcedureDesc" +
+                 ",@PaidUnits,@AdjudicationDate,@RemitCodesChanged,@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@ProductServiceIDQualifier" +
+                 ",@NUBCRevenueCode,@LineItem,@BundledChargeSID,@Pro2SrcPDB,@pro2created,@pro2modified)";
+                var PlanClaimChargermt = this.db.Execute(PlanClaimChargeRemitSQL, PlanClaimChargeRemits);
+                var PlanClaimChargeRemitAdjSql = "INSERT INTO [dbo].[PlanClaimChargeRemitAdj] VALUES(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@ChargeSID,@RemitCount" +
+                " ,@ClaimAdjustmentGroupCode,@AdjustmentReasonCode,@AdjustmentAmount,@AdjustmentQuantity,@TimeStamp" +
+                " ,@LastUser,@CreateStamp,@CreateUser,@LineItem,@Pro2SrcPDB,@pro2created,@pro2modified)";
+                var PlanClaimChargeRemitAd = this.db.Execute(PlanClaimChargeRemitAdjSql, PlanClaimChargeRemitAdjments);
                 txScope.Complete();
 
                 return true;

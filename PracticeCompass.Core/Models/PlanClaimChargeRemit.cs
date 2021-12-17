@@ -17,7 +17,7 @@ namespace PracticeCompass.Core.Models
         public string RemitProcedureCode { get; set; }
         public string RemitProcedureDesc { get; set; }
         public decimal? PaidUnits { get; set; }
-        public decimal? AdjudicationDate { get; set; }
+        public DateTime? AdjudicationDate { get; set; }
         public string RemitCodesChanged { get; set; }
         public string TimeStamp { get; set; }
         public int? LastUser { get; set; }
