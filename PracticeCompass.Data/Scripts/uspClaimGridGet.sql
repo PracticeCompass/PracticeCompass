@@ -6,7 +6,7 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
---exec uspClaimGridGet @PatientID=0,@PracticeID=0,@PhysicianID=0,@DOSType=0,@DOSvalue=N'',@PatientClass=N'',@InsuranceType=0,@InsuranceID=0,@BillNumber=N'',@ClaimIcnNumber=N'0',@Age=0,@InsuranceStatus=N'',@CoverageOrder=N'',@TotalClaimAmount=0,@Batch=N'',@GuarantorID=0,@IncludeCompletedClaims=0,@IncludeCashClaims=0,@Skip=0,@SortColumn=N'dos',@SortDirection=N'desc'-- =============================================
+--exec uspClaimGridGet @PatientID=0,@PracticeID=0,@PhysicianID=0,@DOSType=0,@DOSvalue=N'',@PatientClass=N'',@InsuranceType=0,@InsuranceID=0,@BillNumber=N'',@ClaimIcnNumber=N'0',@Age=0,@InsuranceStatus=N'',@CoverageOrder=N'',@TotalClaimAmount=0,@Batch=N'',@GuarantorID=0,@IncludeCompletedClaims=0,@IncludeCashClaims=0,@Skip=0,@SortColumn=N'dos',@SortDirection=N'desc',@IncludeVoidedClaims=0-- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet] 
 @PatientID int, 
 @PracticeID int, 
@@ -46,9 +46,9 @@ BEGIN
 
 
 		set @insurancefilter=Case @InsuranceType 
-		when 1 then ' and ((PlanClaim.PlanID= '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 1))'
-		when 2 then ' and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 2))'
-		when 3 then ' and ((PlanClaim.PlanID = '+convert(varchar, @InsuranceID,10)+'  ) and (PlanClaim.CoverageOrder = 3))'
+		when 1 then ' and ((PlanClaim.PlanID in (select top 1 PlanID from [Plan] where CarrierCode in ( select top 1 CarrierCode from Carrier where Carrierid=  '+convert(varchar, @InsuranceID,10)+') ) ) and (PlanClaim.CoverageOrder = 1))'
+		when 2 then ' and ((PlanClaim.PlanID in (select top 1 PlanID from [Plan] where CarrierCode in ( select top 1 CarrierCode from Carrier where Carrierid=  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 2))'
+		when 3 then ' and ((PlanClaim.PlanID in (select top 1 PlanID from [Plan] where CarrierCode in ( select top 1 CarrierCode from Carrier where Carrierid=  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 3))'
 		else ''
 		end
 
