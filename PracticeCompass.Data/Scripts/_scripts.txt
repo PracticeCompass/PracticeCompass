@@ -75,3 +75,4 @@ uspFilesGet.sql
 uspLookupType.sql
 uspLookupCodeGet.sql
 uspLookupCodeSave.sql
+uspLookupTypeSave.sql

@@ -5,6 +5,7 @@ import NotificationComponent from "../../common/notification";
 import TextBox from "../../../components/TextBox";
 import DropDown from "../../../components/DropDown";
 import CheckboxComponent from "../../../components/Checkbox";
+import LookupTypeDialogComponent from "./LookupTypeDialog";
 import ButtonComponent from "../../../components/Button";
 import { TextArea } from "@progress/kendo-react-inputs";
 import { getter } from "@progress/kendo-react-common";
@@ -49,12 +50,12 @@ class LookUpsDetails extends Component {
         active: row.recordStatus == "true",
         lookupCode: row.lookupCode,
         description: row.description,
-        isAdd:false,
+        isAdd: false,
         gridId: row.gridId
       })
-    }else{
+    } else {
       this.setState({
-        isAdd:true
+        isAdd: true
       })
     }
   }
@@ -98,7 +99,7 @@ class LookUpsDetails extends Component {
     this.props.getLookupTypes(this.state.lookupSearchText ?? '');
   };
   saveLookUpDetails = async () => {
-    if(this.state.lookupCode ==null || this.state.description==null || this.state.selectedLookUpType==null){
+    if (this.state.lookupCode == null || this.state.description == null || this.state.selectedLookUpType == null) {
       this.setState({ warning: true, message: "Please fill lookup Code,description and lookup Type" });
       setTimeout(() => {
         this.setState({
@@ -114,25 +115,25 @@ class LookUpsDetails extends Component {
       LookupType: this.state.selectedLookUpType ? this.state.selectedLookUpType.entityId : '',
       description: this.state.description,
       RecordStatus: this.state.active == null || this.state.active == false ? 'I' : 'A',
-      IsAdd:this.state.isAdd,
-      gridId:this.state.gridId
+      IsAdd: this.state.isAdd,
+      gridId: this.state.gridId
     };
     let result = await this.props.addLookupCodes(lookupGrid);
     if (result) {
-      this.setState({ success: true, message: "lookup ("+ this.state.lookupCode +") save succefully" });
+      this.setState({ success: true, message: "lookup (" + this.state.lookupCode + ") save succefully" });
       setTimeout(() => {
         this.setState({
           success: false,
         });
       }, this.state.timer);
       this.props.setLookupType({
-          entityId:this.state.selectedLookUpType.entityId,
-          entityName:this.state.selectedLookUpType.entityId,
-        });
-        this.props.setLookupsExpanded();
+        entityId: this.state.selectedLookUpType.entityId,
+        entityName: this.state.selectedLookUpType.entityId,
+      });
+      this.props.setLookupsExpanded();
       return;
     } else {
-      this.setState({ error: true, message: "lookup ("+ this.state.lookupCode +")save failed" });
+      this.setState({ error: true, message: "lookup (" + this.state.lookupCode + ")save failed" });
       setTimeout(() => {
         this.setState({
           error: false,
@@ -142,6 +143,11 @@ class LookUpsDetails extends Component {
     }
     //this.props.setLookupsExpanded();
   }
+  toggleLookupTypeDialog = () => {
+    this.setState({
+        lookupTypeAddVisible: !this.state.lookupTypeAddVisible,
+    });
+};
   render() {
     return (
       <Fragment>
@@ -153,6 +159,12 @@ class LookUpsDetails extends Component {
             height: "190px"
           }}
         >
+         {this.state.lookupTypeAddVisible && (
+                <LookupTypeDialogComponent
+                 toggleLookupTypeDialog={this.toggleLookupTypeDialog}
+                >
+
+                </LookupTypeDialogComponent>)}
           <NotificationComponent
             message={this.state.message}
             onClose={this.closeNotification}
@@ -190,7 +202,7 @@ class LookUpsDetails extends Component {
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
-              <div style={{ width: "375px" }}>
+              <div style={{ width: "510px" }}>
                 <div style={{ float: "left", marginLeft: "31px" }}>
                   <label className="userInfoLabel">Lookup Type</label>
                 </div>
@@ -222,6 +234,16 @@ class LookUpsDetails extends Component {
                     onClick={this.toggleLookupDialog}
                   >
                     Find
+                  </ButtonComponent>
+                </div>
+                <div style={{ float: "left" }}>
+                  <ButtonComponent
+                    type="edit"
+                    icon="edit"
+                    classButton="infraBtn-primary"
+                    onClick={this.toggleLookupTypeDialog}
+                  >
+                    Add Lookup Type
                   </ButtonComponent>
                 </div>
               </div>
