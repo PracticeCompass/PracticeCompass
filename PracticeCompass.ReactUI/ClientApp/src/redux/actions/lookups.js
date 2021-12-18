@@ -19,7 +19,7 @@ import {
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
 import { setCompanies } from "./patient";
-import { setLookupTypes } from "./lookupCode";
+
 
 export const SaveLookups =
   (EntityValueID, EntityName) => async (dispatch, getState) => {
@@ -56,7 +56,7 @@ export const GetLookupsByEnityName =
       else if (EntityName == "ICD10") dispatch(saveICD10(resp.data));
       else if (EntityName == "Company") dispatch(setCompanies(resp.data));
       else if (EntityName == "PlanGroup") dispatch(setPlanGroupList(resp.data));
-      else if (EntityName == "lookupTypes") dispatch(setLookupTypes(resp.data));
+      else if (EntityName == "lookupTypes") dispatch(setLookupTypesList(resp.data));
     } catch (error) {
     } finally {
       // dispatch(uiStopLoading());
