@@ -31,7 +31,7 @@ import {
   SaveGridColumns,
 } from "../../redux/actions/GridColumns";
 
-const DATA_ITEM_KEY_FILE_ID = "fileID";
+const DATA_ITEM_KEY_FILE_ID = "fileName";
 const idGetterFileID = getter(DATA_ITEM_KEY_FILE_ID);
 
 function mapStateToProps(state) {
@@ -305,9 +305,9 @@ class DocumentManager extends Component {
   };
   applyItemChanged = async (event) => {
     const field = event.field || "";
-    const inEditID = event.dataItem["fileID"];
+    const inEditID = event.dataItem["fileName"];
     let files = this.state.files.map((item) =>
-      item["fileID"] === inEditID
+      item["fileName"] === inEditID
         ? {
           ...item,
           [field]: event.value,
@@ -543,7 +543,7 @@ class DocumentManager extends Component {
                     columns={this.state.documentColumns}
                     skip={0}
                     take={32}
-                    editColumn={"fileID"}
+                    editColumn={"fileName"}
                     onSelectionChange={
                       this.onFileGridSelectionChange
                     }
@@ -552,7 +552,7 @@ class DocumentManager extends Component {
                     }
                     // getSelectedItems={this.getSelectedClaims}
                     // selectionMode="multiple"
-                    DATA_ITEM_KEY="fileID"
+                    DATA_ITEM_KEY="fileName"
                     idGetter={idGetterFileID}
                     data={this.state.files || []}
                     height="710px"

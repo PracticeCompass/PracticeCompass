@@ -1,22 +1,41 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
+import NotificationComponent from "../../common/notification";
 import TextBox from "../../../components/TextBox";
 import DropDown from "../../../components/DropDown";
 import CheckboxComponent from "../../../components/Checkbox";
 import ButtonComponent from "../../../components/Button";
 import { TextArea } from "@progress/kendo-react-inputs";
+import { getter } from "@progress/kendo-react-common";
+import FindDialogComponent from "../../common/findDialog";
+import { lookupColumns, lookupTypeColumns } from "./LookUpsData";
+import { resetlookupTypeList, getLookupTypes, addLookupCodes } from "../../../redux/actions/lookupCode"
+import { SaveLookups } from "../../../redux/actions/lookups";
 
+const DATA_ITEM_KEY_LOOKUP_TYPE = "lookupType";
+const idGetterLookupType = getter(DATA_ITEM_KEY_LOOKUP_TYPE);
 function mapStateToProps(state) {
-  return {};
+  return {
+    lookupTypes: state.lookupCodes.lookupTypes,
+    dropDownlookupTypes: state.lookups.lookupTypes,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    resetlookupTypeList: () => dispatch(resetlookupTypeList()),
+    getLookupTypes: (search) => dispatch(getLookupTypes(search)),
+    SaveLookups: (EntityValueID, EntityName) =>
+      dispatch(SaveLookups(EntityValueID, EntityName)),
+    addLookupCodes: (data) =>
+      dispatch(addLookupCodes(data))
+  };
 }
 class LookUpsDetails extends Component {
   state = {
-    lookupDetais: {}
+    lookupDetais: {},
+    timer: 5000,
   }
   componentDidMount() {
     this.setState({ lookupDetais: this.props.LookupsDetails })
@@ -34,6 +53,88 @@ class LookUpsDetails extends Component {
 
     }
   }
+  toggleLookupDialog = () => {
+    if (this.state.lookupVisible) {
+      this.setState({
+        lookupSearchText: null,
+      });
+      this.props.resetlookupTypeList();
+    }
+    this.setState({
+      lookupVisible: !this.state.lookupVisible,
+    });
+  };
+  onLookupTypesKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      selectedLookUpType: selectedDataItems[0]
+        ? {
+          entityName: selectedDataItems[0].lookupType,
+          entityId: selectedDataItems[0].lookupType,
+        }
+        : null,
+    });
+  };
+  onLookupTypesDoubleClick = (event) => {
+    this.setState({
+      selectedLookUpType: {
+        entityId: event.dataItem.lookupType,
+        entityName: event.dataItem.lookupType,
+      },
+    });
+    this.props.SaveLookups(event.dataItem.lookupType, "lookupTypes");
+    //this.selectPatient();
+    this.toggleLookupDialog();
+  }
+  lookupCodesSearch = () => {
+    this.props.getLookupTypes(this.state.lookupSearchText ?? '');
+  };
+  saveLookUpDetails = async () => {
+    if(this.state.lookupCode ==null || this.state.description==null || this.state.selectedLookUpType==null){
+      this.setState({ warning: true, message: "Please fill lookup Code,description and lookup Type" });
+      setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    var lookupGrid = {
+      LookupCode: this.state.lookupCode
+        ? this.state.lookupCode
+        : '',
+      LookupType: this.state.selectedLookUpType ? this.state.selectedLookUpType.entityId : '',
+      description: this.state.description,
+      RecordStatus: this.state.active == null || this.state.active == false ? 'I' : 'A'
+    };
+    let result = await this.props.addLookupCodes(lookupGrid);
+    if (result) {
+      this.setState({ success: true, message: "lookup ("+ this.state.lookupCode +") save succefully" });
+      setTimeout(() => {
+        this.setState({
+          success: false,
+        });
+      }, this.state.timer);
+      this.props.setLookupType({
+          entityId:this.state.selectedLookUpType.entityId,
+          entityName:this.state.selectedLookUpType.entityId,
+        });
+        this.props.setLookupsExpanded();
+      return;
+    } else {
+      this.setState({ error: true, message: "lookup ("+ this.state.lookupCode +")save failed" });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    //this.props.setLookupsExpanded();
+  }
   render() {
     return (
       <Fragment>
@@ -42,15 +143,47 @@ class LookUpsDetails extends Component {
             marginLeft: "20px",
             backgroundColor: "white",
             padding: "5px",
-            height:"160px"
+            height: "190px"
           }}
         >
+          <NotificationComponent
+            message={this.state.message}
+            onClose={this.closeNotification}
+            success={this.state.success}
+            error={this.state.error}
+            warning={this.state.warning}
+            info={this.state.info}
+            none={this.state.none}
+          ></NotificationComponent>
+          {this.state.lookupVisible && (
+            <FindDialogComponent
+              title="Lookup Type Search"
+              placeholder="Enter lookup Type or description"
+              searcTextBoxValue={this.state.lookupSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  lookupSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.lookupCodesSearch}
+              dataItemKey="lookupType"
+              data={this.props.lookupTypes}
+              columns={lookupTypeColumns}
+              onSelectionChange={this.onLookupTypesClick}
+              onRowDoubleClick={this.onLookupTypesDoubleClick}
+              onKeyDown={this.onLookupTypesKeyDown}
+              idGetterLookup={idGetterLookupType}
+              toggleDialog={this.toggleLookupDialog}
+              cancelDialog={this.toggleLookupDialog}
+              skipNextData={true}
+            ></FindDialogComponent>
+          )}
           <div style={{ width: "100%" }}>
             <div
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
-              <div style={{ width: "315px" }}>
+              <div style={{ width: "375px" }}>
                 <div style={{ float: "left", marginLeft: "31px" }}>
                   <label className="userInfoLabel">Lookup Type</label>
                 </div>
@@ -60,7 +193,7 @@ class LookUpsDetails extends Component {
                     data={this.props.dropDownlookupTypes}
                     textField="entityName"
                     dataItemKey="entityId"
-                    disabled={true}
+                    disabled={this.state.lookupDetais != null}
                     defaultValue={this.state.selectedLookUpType}
                     value={this.state.selectedLookUpType}
                     onChange={(e) =>
@@ -72,6 +205,17 @@ class LookUpsDetails extends Component {
                       })
                     }
                   ></DropDown>
+                </div>
+                <div style={{ float: "left" }}>
+                  <ButtonComponent
+                    icon="search"
+                    type="search"
+                    disabled={this.state.lookupDetais != null}
+                    classButton="infraBtn-primary find-button"
+                    onClick={this.toggleLookupDialog}
+                  >
+                    Find
+                  </ButtonComponent>
                 </div>
               </div>
               <div style={{ width: "280px" }}>
@@ -102,7 +246,7 @@ class LookUpsDetails extends Component {
             </div>
             <div
               className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap",marginTop:"10px" }}
+              style={{ display: "flex", flexFlow: "row nowrap", marginTop: "10px" }}
             >
               <div style={{ width: "515px" }}>
                 <div style={{ float: "left", marginLeft: "38px" }}>
@@ -122,6 +266,35 @@ class LookUpsDetails extends Component {
                     }
                   ></TextArea>
                 </div>
+              </div>
+            </div>
+            <div
+              className="rowHeight"
+              style={{ display: "flex", flexFlow: "row nowrap", marginTop: "90px" }}
+            >
+              <div style={{ float: "right" }}>
+                <ButtonComponent
+                  type="edit"
+                  icon="edit"
+                  classButton="infraBtn-primary insurance-button "
+                  onClick={() => {
+                    this.saveLookUpDetails();
+                  }}
+                >
+                  Save
+                </ButtonComponent>
+              </div>
+              <div style={{ float: "right", width: "200px !important" }}>
+                <ButtonComponent
+                  type="edit"
+                  icon="cancel"
+                  classButton="infraBtn-primary insurance-button "
+                  onClick={() => {
+                    this.props.setLookupsExpanded();
+                  }}
+                >
+                  Cancel
+                </ButtonComponent>
               </div>
             </div>
           </div>

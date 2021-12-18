@@ -34,6 +34,11 @@ class LookUps extends Component {
       LookupsListExpanded: false,
     });
   };
+  setLookupType=(lookupType)=>{
+    this.setState({
+      selectedLookUpType:lookupType
+    })
+  }
   render() {
     return (
       <Fragment>
@@ -46,6 +51,7 @@ class LookUps extends Component {
             <LookUpsList
               setLookupsDetailExpanded={this.setLookupsDetailExpanded}
               setLookupsDetails={this.setLookupsDetails}
+              selectedLookUpType={this.state.selectedLookUpType}
             ></LookUpsList>
           </PanelBarItem>
           <PanelBarItem
@@ -56,6 +62,7 @@ class LookUps extends Component {
             <LookUpsDetails
               setLookupsExpanded={this.setLookupsExpanded}
               LookupsDetails={this.state.LookupDetails}
+              setLookupType={this.setLookupType}
             ></LookUpsDetails>
           </PanelBarItem>
         </PanelBar>

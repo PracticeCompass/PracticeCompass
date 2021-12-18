@@ -9,6 +9,7 @@ namespace PracticeCompass.Core.Repositories
         public LookupList LookupDetailsGet(int lookupId);
         public List<LookupType> LookupTypeGet(string search);
         public List<LookupList> LookupCodeGet(string LookupType, string isActive, string lookupCode);
+        public bool AddLookupCode(LookupList lookup);
 
     }
 }

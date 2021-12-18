@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import TextBox from "../../../components/TextBox";
-import EditableGrid from "../../../components/editableGrid";
+import GridComponent from "../../../components/Grid";
 import { getter } from "@progress/kendo-react-common";
 
 const DATA_ITEM_KEY_DETAILS_PAYMENT = "gridID";
@@ -237,7 +237,7 @@ class EraPaymentsDialogComponent extends Component {
             </div>)}
             {!this.props.showDetailsGrid &&(
             <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
-            <div style={{ width: "221px", marginLeft: "36px" }}>
+            <div style={{ width: "221px", marginLeft: "39px" }}>
                 <label className="userInfoLabel" style={{ float:"right"}}>Provider Adjustment Amount</label>
               </div>
               <div className="dateStyle" style={{ marginLeft: "5px" }}>
@@ -310,7 +310,7 @@ class EraPaymentsDialogComponent extends Component {
                       data-parent="#accordionExample"
                       style={{ width: this.state.gridWidth }}
                     >
-                      <EditableGrid
+                      <GridComponent
                         id="ERADetailsPayment"
                         activeRowRender={true}
                         onRowRender={this.onRowRender}
@@ -333,7 +333,7 @@ class EraPaymentsDialogComponent extends Component {
                         sortColumns={[]}
                         onSortChange={this.onSortChange}
                       // pageChange={this.pageChange}
-                      ></EditableGrid>
+                      ></GridComponent>
                     </div>
                   </div>
                 </div>

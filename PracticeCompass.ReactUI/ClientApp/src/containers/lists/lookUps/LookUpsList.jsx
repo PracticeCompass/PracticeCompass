@@ -150,8 +150,8 @@ class LookUpsList extends Component {
             lookupVisible: !this.state.lookupVisible,
         });
     };
-    lookupsGridSearch = async (refreshData = true) => {
-        if (this.state.selectedLookUpType == null ) {
+    lookupsGridSearch = async (lookupType,showNotification = false) => {
+        if (this.state.selectedLookUpType == null && (lookupType == undefined && lookupType?.entityId ==undefined) && showNotification ) {
             this.setState({ warning: true, message: "Please select lookup type." });
             setTimeout(() => {
                 this.setState({
@@ -164,7 +164,7 @@ class LookUpsList extends Component {
                 lookupCode: this.state.lookupCode
                     ? this.state.lookupCode
                     : '',
-                LookupType: this.state.selectedLookUpType ? this.state.selectedLookUpType.entityId : '',
+                LookupType: lookupType ? lookupType.entityId : '',
                 // skip: refreshData ? 0 : this.props.Patients.length,
                 IsActive: this.state.active == null || this.state.active == false ? 'I' : 'A'
             };
@@ -173,7 +173,10 @@ class LookUpsList extends Component {
 
     };
     componentDidMount = () => {
-        // this.getGridColumns();
+        this.setState({
+            selectedLookUpType:this.props.selectedLookUpType
+        })
+        this.lookupsGridSearch(this.props.selectedLookUpType);
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
     };
@@ -219,15 +222,32 @@ class LookUpsList extends Component {
 
     }
     onLookupGridSelectionChange = (event) => {
-      this.setState({selectedLookup:event.dataItem});
+        this.setState({ selectedLookup: event.dataItem });
     }
     onLookupGridDoubleSelectionChange = (event) => {
         this.props.setLookupsDetailExpanded();
         this.props.setLookupsDetails(event.dataItem);
     }
-    openLookupRow=()=>{
+    openLookupRow = () => {
+        if (this.state.selectedLookup == null) {
+            this.setState({ warning: true, message: "Please select lookup to edit." });
+            setTimeout(() => {
+                this.setState({
+                    warning: false,
+                });
+            }, this.state.timer);
+            return;
+        } else {
+            this.props.setLookupsDetailExpanded();
+            this.props.setLookupsDetails(this.state.selectedLookup);
+        }
+    }
+    addLookupRow = () => {
         this.props.setLookupsDetailExpanded();
-        this.props.setLookupsDetails(this.state.selectedLookup);
+        this.props.setLookupsDetails(null);
+    }
+    onSortChange = () => {
+
     }
     render() {
         return (
@@ -360,7 +380,9 @@ class LookUpsList extends Component {
                                     icon="search"
                                     type="search"
                                     classButton="infraBtn-primary action-button"
-                                    onClick={this.lookupsGridSearch}
+                                    onClick={() => {
+                                        this.lookupsGridSearch(this.state.selectedLookUpType, true);
+                                    }}
                                 >
                                     Search
                                 </ButtonComponent>
@@ -369,12 +391,24 @@ class LookUpsList extends Component {
                                 <ButtonComponent
                                     type="edit"
                                     icon="edit"
-                                    classButton="infraBtn-primary details-button  "
+                                    classButton="infraBtn-primary action-button"
                                     onClick={() => {
                                         this.openLookupRow();
                                     }}
                                 >
-                                    Lookup Details
+                                    Edit
+                                </ButtonComponent>
+                            </div>
+                            <div style={{ float: "left", width: "200px !important" }}>
+                                <ButtonComponent
+                                    type="edit"
+                                    icon="edit"
+                                    classButton="infraBtn-primary action-button"
+                                    onClick={() => {
+                                        this.addLookupRow();
+                                    }}
+                                >
+                                    Add
                                 </ButtonComponent>
                             </div>
                         </div>

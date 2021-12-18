@@ -353,7 +353,7 @@ class PhysiciansList extends Component {
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
               <div style={{ width: "313px" }}>
-                <div style={{ float: "left", marginLeft: "39px" }}>
+                <div style={{ float: "left", marginLeft: "38px" }}>
                   <label className="userInfoLabel">Filter</label>
                 </div>
                 {this.state.refreshFilter && (

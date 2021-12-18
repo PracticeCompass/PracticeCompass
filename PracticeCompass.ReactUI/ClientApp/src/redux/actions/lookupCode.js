@@ -31,6 +31,30 @@ export const getLookupCodes =
       dispatch(uiStopLoading());
     }
   };
+  export const addLookupCodes =
+  (data) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      await dispatch(setLookupCodes([]));
+      if (data == null) return;
+      const resp = await axios({
+        method: "GET",
+        url:`${config.baseUrl}/Lookup/AddLookupCode?LookupType=${data.LookupType}&LookupCode=${data.LookupCode}&description=${data.description}&RecordStatus=${data.RecordStatus}`
+      });
+      return resp.data;
+    } catch (error) {
+      await dispatch(setLookupCodes([]));
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_LOOKUPS_FAILS,
+        payload: error,
+      });
+      return false;
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 
   export const getLookupTypes=
   (search) =>

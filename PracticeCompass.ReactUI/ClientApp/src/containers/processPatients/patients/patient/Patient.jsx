@@ -1129,7 +1129,7 @@ class Patient extends Component {
                             style={{ display: "flex", flexFlow: "row nowrap" }}
                         >
                             <div style={{ float: "left" }}>
-                                <div style={{ float: "left", marginLeft: "44px" }}>
+                                <div style={{ float: "left", marginLeft: "45px" }}>
                                     <label className="userInfoLabel">Plan</label>
                                 </div>
                                 <div

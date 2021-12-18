@@ -331,7 +331,7 @@ class GridComponent extends React.Component {
             onKeyDown={(event) => this.props.onKeyDown(event)}
             onRowDoubleClick={(event) => this.props.onRowDoubleClick(event)}
             data={
-              this.props.data
+              (this.props.data != null && Array.isArray(this.props.data)) 
                 ? this.props.data
                     .slice(this.state.skip, this.state.take + this.state.skip)
                     .map((item) => ({
