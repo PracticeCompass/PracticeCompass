@@ -376,7 +376,8 @@ legend {
   min-height: calc(1.5em + 0.75rem + 2px);
   overflow-y: auto;
   resize: vertical;
-  font-size: 20px !important;
+  font-family: monospace !important;
+  font-size: 12px !important;
 }
 textarea:disabled  {
   color: #000000;
@@ -385,4 +386,8 @@ textarea:disabled  {
   font-family: monospace !important;
   font-size:20px !important;
   font-weight: bold;
+}
+.textEditor{
+  font-family: monospace !important;
+  font-size: 12px !important;
 }

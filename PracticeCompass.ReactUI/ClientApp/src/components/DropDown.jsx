@@ -118,6 +118,7 @@ const GetItemHtml = (items) => {
         defaultValue={props.defaultValue}
         onChange={props.onChange}
         filterable={true}
+        disabled={props.disabled}
         width="300px"
         style={{ fontSize: "11px", width:"300px" }}
       />

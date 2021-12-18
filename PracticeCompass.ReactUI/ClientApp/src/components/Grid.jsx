@@ -14,7 +14,7 @@ import { filterBy, orderBy } from "@progress/kendo-data-query";
 import { MyPager, CurrencyCell, CustomCell, CellWithIcon } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
-
+import CheckBoxCell from "./CheckBoxCell";
 import $ from "jquery";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
@@ -53,6 +53,9 @@ class GridComponent extends React.Component {
   MyCustomCell = (props) => {
     return <CustomCell {...props} myProp={this.props} />;
   };
+  MyCheckBoxCell =(props)=>{
+    return <CheckBoxCell {...props} myProp={this.props} />;
+  }
   MyCurrencyCell = (props) => {
     return <CurrencyCell {...props} myProp={this.props} />;
   };
@@ -367,6 +370,8 @@ class GridComponent extends React.Component {
                         ? CellWithIcon
                         : column.isCustomCell
                         ? this.MyCustomCell
+                        : column.cell == "checkBox"
+                        ? this.MyCheckBoxCell
                         : column.showToolTip && ColumnNameCell
                     }
                   />

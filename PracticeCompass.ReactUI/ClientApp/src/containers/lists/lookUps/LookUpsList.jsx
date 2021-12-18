@@ -18,7 +18,7 @@ import { SaveLookups } from "../../../redux/actions/lookups";
 
 const DATA_ITEM_KEY_LOOKUP_TYPE = "lookupType";
 const idGetterLookupType = getter(DATA_ITEM_KEY_LOOKUP_TYPE);
-const DATA_ITEM_KEY_LOOKUP_CODE = "lookupCode";
+const DATA_ITEM_KEY_LOOKUP_CODE = "gridId";
 const idGetterLookupCode = getter(DATA_ITEM_KEY_LOOKUP_CODE);
 
 
@@ -27,7 +27,7 @@ function mapStateToProps(state) {
         lookups: state.lookupCodes.lookups,
         UiExpand: state.ui.UiExpand,
         lookupTypes: state.lookupCodes.lookupTypes,
-        dropDownlookupTypes: state.lookupCodes.lookupTypes,
+        dropDownlookupTypes: state.lookups.lookupTypes,
     };
 }
 
@@ -42,7 +42,8 @@ function mapDispatchToProps(dispatch) {
 }
 class LookUpsList extends Component {
     state = {
-        refreshFilter: true
+        refreshFilter: true,
+        timer: 5000,
     }
     getFilters(filter) {
         if (filter !== undefined) filter = "";
@@ -150,15 +151,26 @@ class LookUpsList extends Component {
         });
     };
     lookupsGridSearch = async (refreshData = true) => {
-        var lookupGrid = {
-            lookupCode: this.state.lookupCode
-                ? this.state.lookupCode
-                : '',
-            LookupType: this.state.selectedLookUpType ? this.state.selectedLookUpType.entityId : '',
-            // skip: refreshData ? 0 : this.props.Patients.length,
-            IsActive: this.state.active == null || this.state.active == false ? 'I' : 'A'
-        };
-        await this.props.getLookupCodes(lookupGrid);
+        if (this.state.selectedLookUpType == null ) {
+            this.setState({ warning: true, message: "Please select lookup type." });
+            setTimeout(() => {
+                this.setState({
+                    warning: false,
+                });
+            }, this.state.timer);
+            return;
+        } else {
+            var lookupGrid = {
+                lookupCode: this.state.lookupCode
+                    ? this.state.lookupCode
+                    : '',
+                LookupType: this.state.selectedLookUpType ? this.state.selectedLookUpType.entityId : '',
+                // skip: refreshData ? 0 : this.props.Patients.length,
+                IsActive: this.state.active == null || this.state.active == false ? 'I' : 'A'
+            };
+            await this.props.getLookupCodes(lookupGrid);
+        }
+
     };
     componentDidMount = () => {
         // this.getGridColumns();
@@ -205,6 +217,17 @@ class LookUpsList extends Component {
     }
     onLookupTypesClick = (event) => {
 
+    }
+    onLookupGridSelectionChange = (event) => {
+      this.setState({selectedLookup:event.dataItem});
+    }
+    onLookupGridDoubleSelectionChange = (event) => {
+        this.props.setLookupsDetailExpanded();
+        this.props.setLookupsDetails(event.dataItem);
+    }
+    openLookupRow=()=>{
+        this.props.setLookupsDetailExpanded();
+        this.props.setLookupsDetails(this.state.selectedLookup);
     }
     render() {
         return (
@@ -269,80 +292,7 @@ class LookUpsList extends Component {
                     }}
                 >
                     <div style={{ width: "100%" }}>
-                        <div
-                            className="rowHeight"
-                            style={{ display: "flex", flexFlow: "row nowrap" }}
-                        >
-                            <div style={{ width: "348px" }}>
-                                <div style={{ float: "left", marginLeft: "75px" }}>
-                                    <label className="userInfoLabel">Filter</label>
-                                </div>
-                                {this.state.refreshFilter && (
-                                    <div className="filterStyle" style={{ float: "left" }}>
-                                        <DropDown
-                                            className="unifyHeight"
-                                            id="patientFilter"
-                                            name="patientFilter"
-                                            type="remoteDropDown"
-                                            textField="displayName"
-                                            dataItemKey="filterID"
-                                            value={this.state.currentFilter}
-                                            getBaseUrl={() => this.getFilters("")}
-                                            onChange={(event) => this.filterChange(event)}
-                                        ></DropDown>
-                                    </div>
-                                )}
-                            </div>
-                            <div style={{ float: "left", width: "210px" }}>
-                                <ButtonComponent
-                                    type="edit"
-                                    icon="edit"
-                                    classButton="infraBtn-primary action-button"
-                                    onClick={() => {
-                                        this.setState({ visibleSaveFilter: true });
-                                    }}
-                                >
-                                    Save
-                                </ButtonComponent>
-                                <ButtonComponent
-                                    type="delete"
-                                    icon="delete"
-                                    classButton="infraBtn-primary action-button"
-                                    onClick={this.delete}
-                                >
-                                    Delete
-                                </ButtonComponent>
-                                <ButtonComponent
-                                    type="edit"
-                                    icon="reset"
-                                    classButton="infraBtn-primary action-button"
-                                    onClick={this.reset}
-                                >
-                                    Reset
-                                </ButtonComponent>
-                            </div>
-                        </div>
-                        <div
-                            className="rowHeight"
-                            style={{ display: "flex", flexFlow: "row nowrap" }}
-                        >
-                            <div style={{ width: "370px" }}>
-                                <div style={{ float: "left", marginLeft: "29px" }}>
-                                    <label className="userInfoLabel">Lookup Code</label>
-                                </div>
-                                <div style={{ width: "200px", float: "left" }}>
-                                    <TextBox
-                                        className="unifyHeight"
-                                        value={this.state.lookupCode}
-                                        onChange={(e) =>
-                                            this.setState({
-                                                lookupCode: e.value,
-                                            })
-                                        }
-                                    ></TextBox>
-                                </div>
-                            </div>
-                        </div>
+
                         <div
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -380,14 +330,23 @@ class LookUpsList extends Component {
                                     </ButtonComponent>
                                 </div>
                             </div>
-                        </div>
-
-
-                        <div
-                            className="rowHeight"
-                            style={{ display: "flex", flexFlow: "row nowrap" }}
-                        >
-                            <div style={{ float: "left", marginLeft: "44px" }}>
+                            <div style={{ width: "280px" }}>
+                                <div style={{ float: "left" }}>
+                                    <label className="userInfoLabel">Lookup Code</label>
+                                </div>
+                                <div style={{ width: "200px", float: "left" }}>
+                                    <TextBox
+                                        className="unifyHeight"
+                                        value={this.state.lookupCode}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                lookupCode: e.value,
+                                            })
+                                        }
+                                    ></TextBox>
+                                </div>
+                            </div>
+                            <div style={{ float: "left" }}>
                                 <CheckboxComponent
                                     style={{ marginRight: "5px" }}
                                     id="active"
@@ -396,11 +355,6 @@ class LookUpsList extends Component {
                                     onChange={(e) => this.setState({ active: e.value })}
                                 />
                             </div>
-                        </div>
-                        <div
-                            className="rowHeight"
-                            style={{ display: "flex", flexFlow: "row nowrap" }}
-                        >
                             <div style={{ float: "left" }}>
                                 <ButtonComponent
                                     icon="search"
@@ -411,30 +365,6 @@ class LookUpsList extends Component {
                                     Search
                                 </ButtonComponent>
                             </div>
-                            {/* <div style={{ float: "left", width: "200px !important" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary insurance-button "
-                  onClick={() => {
-                    this.setState({ visibleSaveFilter: true });
-                  }}
-                >
-                  Save
-                </ButtonComponent>
-              </div> */}
-                            {/* <div style={{ float: "left" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary insurance-button "
-                  onClick={() => {
-                    this.setState({ providerVisible: true });
-                  }}
-                >
-                  Documents
-                </ButtonComponent>
-              </div> */}
                             <div style={{ float: "left", width: "200px !important" }}>
                                 <ButtonComponent
                                     type="edit"
@@ -447,6 +377,39 @@ class LookUpsList extends Component {
                                     Lookup Details
                                 </ButtonComponent>
                             </div>
+                        </div>
+
+
+                        {/* <div
+                            className="rowHeight"
+                            style={{ display: "flex", flexFlow: "row nowrap" }}
+                        >
+
+                            <div style={{ float: "left", width: "200px !important" }}>
+                <ButtonComponent
+                  type="edit"
+                  icon="edit"
+                  classButton="infraBtn-primary insurance-button "
+                  onClick={() => {
+                    this.setState({ visibleSaveFilter: true });
+                  }}
+                >
+                  Save
+                </ButtonComponent>
+              </div>
+                            <div style={{ float: "left" }}>
+                <ButtonComponent
+                  type="edit"
+                  icon="edit"
+                  classButton="infraBtn-primary insurance-button "
+                  onClick={() => {
+                    this.setState({ providerVisible: true });
+                  }}
+                >
+                  Documents
+                </ButtonComponent>
+              </div>
+
                             <div
                                 style={{
                                     float: "right",
@@ -465,7 +428,7 @@ class LookUpsList extends Component {
                                     Edit Grid
                                 </ButtonComponent>
                             </div>
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>
@@ -501,8 +464,8 @@ class LookUpsList extends Component {
                                     }
                                     height="640px"
                                     width="100%"
-                                    onSelectionChange={this.onPlanGridSelectionChange}
-                                    onRowDoubleClick={this.onPlanGridDoubleSelectionChange}
+                                    onSelectionChange={this.onLookupGridSelectionChange}
+                                    onRowDoubleClick={this.onLookupGridDoubleSelectionChange}
                                     selectionMode="single"
                                     sortColumns={[]}
                                     onSortChange={this.onSortChange}

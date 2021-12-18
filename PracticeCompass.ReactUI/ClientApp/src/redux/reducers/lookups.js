@@ -26,7 +26,8 @@ const INITIAL_STATE = {
   iCD10s:[],
   companies:[],
   companiesFailed:false,
-  planGroups:[]
+  planGroups:[],
+  lookupTypes:[]
 };
 
 export function lookupsReducer(state = INITIAL_STATE, action) {

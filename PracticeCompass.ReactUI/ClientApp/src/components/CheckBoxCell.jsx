@@ -28,7 +28,11 @@ export class CheckBoxCell extends React.Component {
       dataItem
     } = this.props;
     const field = this.props.field || '';
-    const dataValue = dataItem[field] === null ? '' : dataItem[field];
+
+    let dataValue = dataItem[field] === null ? '' : dataItem[field];
+    if (typeof dataValue != "boolean") {
+      dataValue = (dataValue =="true")
+    }
     const column=  this.props.myProp.columns.filter(item=>item.field==field);
     return <td>
       <CheckboxComponent

@@ -45,7 +45,7 @@ class LookUps extends Component {
           >
             <LookUpsList
               setLookupsDetailExpanded={this.setLookupsDetailExpanded}
-              setLookupsExpanded={this.setLookupsExpanded}
+              setLookupsDetails={this.setLookupsDetails}
             ></LookUpsList>
           </PanelBarItem>
           <PanelBarItem
@@ -55,7 +55,7 @@ class LookUps extends Component {
           >
             <LookUpsDetails
               setLookupsExpanded={this.setLookupsExpanded}
-              LookupsDetails={this.state.LookupsDetails}
+              LookupsDetails={this.state.LookupDetails}
             ></LookUpsDetails>
           </PanelBarItem>
         </PanelBar>

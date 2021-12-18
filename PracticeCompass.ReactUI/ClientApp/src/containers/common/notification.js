@@ -21,6 +21,15 @@ class NotificationComponent extends Component {
     info: false,
     none: false,
   };
+  onClose =()=>{
+    this.setState({
+      success: false,
+      error: false,
+      warning: false,
+      info: false,
+      none: false,
+    });
+  }
   render() {
     return (
       <Fragment>
@@ -38,7 +47,7 @@ class NotificationComponent extends Component {
               <Notification
                 type={{ style: "success", icon: true }}
                 closable={true}
-                onClose={() => this.props.onClose()}
+                onClose={() => this.onClose()}
               >
                 <span>{this.props.message}</span>
               </Notification>
@@ -49,7 +58,7 @@ class NotificationComponent extends Component {
               <Notification
                 type={{ style: "error", icon: true }}
                 closable={true}
-                onClose={() => this.props.onClose()}
+                onClose={() => this.onClose()}
               >
                 <span>{this.props.message}</span>
               </Notification>
@@ -60,7 +69,7 @@ class NotificationComponent extends Component {
               <Notification
                 type={{ style: "warning", icon: true }}
                 closable={true}
-                onClose={() => this.props.onClose()}
+                onClose={() => this.onClose()}
               >
                 <span>{this.props.message}</span>
               </Notification>
@@ -71,7 +80,7 @@ class NotificationComponent extends Component {
               <Notification
                 type={{ style: "info", icon: true }}
                 closable={true}
-                onClose={() => this.props.onClose()}
+                onClose={() => this.onClose()}
               >
                 <span>{this.props.message}</span>
               </Notification>
@@ -82,7 +91,7 @@ class NotificationComponent extends Component {
               <Notification
                 type={{ style: "none", icon: false }}
                 closable={true}
-                onClose={() => this.props.onClose()}
+                onClose={() => this.onClose()}
                 style={{ overflow: "visible" }}
               >
                 <span>{this.props.message}</span>

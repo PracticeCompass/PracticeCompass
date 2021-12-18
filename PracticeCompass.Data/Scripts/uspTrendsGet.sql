@@ -57,6 +57,9 @@ ELSE if  @EntityName='Company'
 ELSE if @EntityName='PlanGroup'
         SELECT distinct   Trends.EntityValueID as EntityId,PlanGroup.GroupNumber as EntityName,searchcount from Trends inner join PlanGroup on PlanGroup.GroupNumber=EntityValueID
 		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
+ElSE if @EntityName ='lookupTypes'
+               SELECT distinct   Trends.EntityValueID as EntityId,LookupType.LookupType as EntityName,searchcount from Trends inner join LookupType on LookupType.LookupType=EntityValueID
+		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
 END
 GO
 

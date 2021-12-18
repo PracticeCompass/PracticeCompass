@@ -13,14 +13,16 @@ export const lookupTypeColumns=[
 ]
 export const lookupColumns = [
     {
-        field: "order",
+        field: "gridId",
         title: "ID",
+        hide:true,
         orderIndex: 1,
     },
     {
         field: "lookupType",
         title: "Lookup Type",
         orderIndex: 2,
+        minWidth: 200
     },
     {
         field: "lookupCode",
@@ -38,7 +40,9 @@ export const lookupColumns = [
         field: "recordStatus",
         title: "Active",
         orderIndex: 5,
-        minWidth: 150
+        type: "checkBox",
+        cell: "checkBox",
+        minWidth: 5
     }
 
 ];

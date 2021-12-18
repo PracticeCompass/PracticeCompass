@@ -17,7 +17,8 @@ class CheckboxComponent extends Component {
           style={{
             fontWeight: "bold",
             fontSize: "12px",
-            marginLeft: "10px",
+            marginRight: "10px",
+            paddingTop: "4px"
           }}
         >
           <Checkbox
