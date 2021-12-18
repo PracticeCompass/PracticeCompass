@@ -82,6 +82,40 @@ namespace PracticeCompass.Data.Repositories
                 return false;
             }
         }
+
+        public bool AddLookupType(LookupType lookup)
+        {
+            var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
+            var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+            string LookupCodeMAXRowID = GetMAXRowID("LookupType", "0", "prrowid");
+            try
+            {
+                var data = this.db.QueryMultiple("uspLookupTypeSave", new
+                {
+                    @CreateStamp = timestamp,
+                    @CreateUser = practiceCompassHelper.CurrentUser(),
+                    @Length = lookup.Length,
+                    @Description = lookup.description,
+                    @DescriptionLabel=lookup.descriptionLabel,
+                    @Class = lookup.Class,
+                    @LookupType = lookup.lookupType,
+                    @LastUser = practiceCompassHelper.CurrentUser(),
+                    @pro2created = DateTime.Now,
+                    @pro2modified = DateTime.Now,
+                    @Pro2SrcPDB = "medman",
+                    @prrowid = LookupCodeMAXRowID,
+                    @TimeStamp = timestamp,
+
+                },
+                  commandType: CommandType.StoredProcedure);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
         private string GetMAXRowID(string tableName, string lastprrowid,string columnName)
         {
             try

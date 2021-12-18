@@ -46,3 +46,11 @@ export const lookupColumns = [
     }
 
 ];
+
+export const LookupTypeClass=
+
+[
+    {id:"S",text:"S"},
+    {id:"U",text:"U"},
+
+]

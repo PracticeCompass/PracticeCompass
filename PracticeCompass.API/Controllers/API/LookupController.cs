@@ -70,6 +70,23 @@ namespace PracticeCompass.API.Controllers.API
                 return false;
             }
         }
+        [HttpGet]
+        [Route("api/Lookup/AddLookupType")]
+        public bool AddLookupType(LookupType lookup)
+        {
+            try
+            {
+                if (lookup.lookupType == null || lookup.Class == null || lookup.description == null) return false;
+                bool Result = unitOfWork.lookupRepository.AddLookupType(lookup);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+        
 
     }
 }

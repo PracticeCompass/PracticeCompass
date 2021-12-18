@@ -55,6 +55,28 @@ export const getLookupCodes =
       dispatch(uiStopLoading());
     }
   };
+  export const AddLookupType =
+  (data) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+      if (data == null) return;
+      const resp = await axios({
+        method: "GET",
+        url:`${config.baseUrl}/Lookup/AddLookupType?lookupType=${data.lookupType}&description=${data.description}&descriptionLabel=${data.descriptionLabel}&Class=${data.Class}&Length=${data.Length}`
+      });
+      return resp.data;
+    } catch (error) {
+      console.log("error ==> ", error);
+      dispatch({
+        type: GET_LOOKUPS_FAILS,
+        payload: error,
+      });
+      return false;
+    } finally {
+      dispatch(uiStopLoading());
+    }
+  };
 
   export const getLookupTypes=
   (search) =>

@@ -4,6 +4,7 @@ import { push } from "connected-react-router";
 import SaveFilterComponent from "../../common/saveFilter";
 import NotificationComponent from "../../common/notification";
 import Show_HideDialogComponent from "../../common/show_hideDialog";
+import LookupTypeDialogComponent from "./LookupTypeDialog";
 import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import TextBox from "../../../components/TextBox";
@@ -15,6 +16,7 @@ import { lookupColumns, lookupTypeColumns } from "./LookUpsData";
 import config from "../../../../src/config";
 import { getLookupCodes, resetlookupTypeList, getLookupTypes } from "../../../redux/actions/lookupCode"
 import { SaveLookups } from "../../../redux/actions/lookups";
+
 
 const DATA_ITEM_KEY_LOOKUP_TYPE = "lookupType";
 const idGetterLookupType = getter(DATA_ITEM_KEY_LOOKUP_TYPE);
@@ -150,8 +152,8 @@ class LookUpsList extends Component {
             lookupVisible: !this.state.lookupVisible,
         });
     };
-    lookupsGridSearch = async (lookupType,showNotification = false) => {
-        if (this.state.selectedLookUpType == null && (lookupType == undefined && lookupType?.entityId ==undefined) && showNotification ) {
+    lookupsGridSearch = async (lookupType, showNotification = false) => {
+        if (this.state.selectedLookUpType == null && (lookupType == undefined && lookupType?.entityId == undefined) && showNotification) {
             this.setState({ warning: true, message: "Please select lookup type." });
             setTimeout(() => {
                 this.setState({
@@ -174,7 +176,7 @@ class LookUpsList extends Component {
     };
     componentDidMount = () => {
         this.setState({
-            selectedLookUpType:this.props.selectedLookUpType
+            selectedLookUpType: this.props.selectedLookUpType
         })
         this.lookupsGridSearch(this.props.selectedLookUpType);
         this.updateDimensions();
@@ -249,6 +251,11 @@ class LookUpsList extends Component {
     onSortChange = () => {
 
     }
+    toggleLookupTypeDialog = () => {
+        this.setState({
+            lookupTypeAddVisible: !this.state.lookupTypeAddVisible,
+        });
+    };
     render() {
         return (
             <Fragment>
@@ -261,6 +268,12 @@ class LookUpsList extends Component {
                     info={this.state.info}
                     none={this.state.none}
                 ></NotificationComponent>
+                {this.state.lookupTypeAddVisible && (
+                <LookupTypeDialogComponent
+                 toggleLookupTypeDialog={this.toggleLookupTypeDialog}
+                >
+
+                </LookupTypeDialogComponent>)}
                 {this.state.lookupVisible && (
                     <FindDialogComponent
                         title="Lookup Type Search"
@@ -317,7 +330,7 @@ class LookUpsList extends Component {
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
                         >
-                            <div style={{ width: "375px" }}>
+                            <div style={{ width: "515px" }}>
                                 <div style={{ float: "left", marginLeft: "31px" }}>
                                     <label className="userInfoLabel">Lookup Type</label>
                                 </div>
@@ -347,6 +360,16 @@ class LookUpsList extends Component {
                                         onClick={this.toggleLookupDialog}
                                     >
                                         Find
+                                    </ButtonComponent>
+                                </div>
+                                <div style={{ float: "left" }}>
+                                    <ButtonComponent
+                                        type="edit"
+                                        icon="edit"
+                                        classButton="infraBtn-primary"
+                                        onClick={this.toggleLookupTypeDialog}
+                                    >
+                                        Add Lookup Type
                                     </ButtonComponent>
                                 </div>
                             </div>

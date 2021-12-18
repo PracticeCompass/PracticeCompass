@@ -12,5 +12,8 @@ namespace PracticeCompass.Core.Models
         public string lookupType { get; set; }
         public string description { get; set; }
         public string descriptionLabel { get; set; }
+        public string Class { get; set; }
+        public int Length { get; set; }
+
     }
 }
