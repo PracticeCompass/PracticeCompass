@@ -11,7 +11,7 @@ import {
   GET_MODIFIER_LIST,
   GET_MODIFIER_LIST_FAILED,
   SET_COMPANIES_LIST,
-  GET_PLANS_GROUP,
+  GET_PLANS_GROUP_filter,
   GET_LOOKUP_TYPES_Filter,
   GET_LOOKUP_TYPES_Filter_FAILS
 
@@ -219,7 +219,7 @@ export const setCompaniesList = (data) => {
 };
 export const setPlanGroupList = (data) => {
   return {
-    type: GET_PLANS_GROUP,
+    type: GET_PLANS_GROUP_filter,
     payload: data,
   };
 };

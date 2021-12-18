@@ -9,7 +9,7 @@ import {
   FILTERS_ICD10,
   SET_COMPANIES,
   GET_COMPANIES_FAILED,
-  GET_PLANS_GROUP,
+  GET_PLANS_GROUP_filter,
   GET_PLANS_GROUP_FAILS,
   GET_LOOKUP_TYPES_Filter_FAILS,
   GET_LOOKUP_TYPES_Filter
@@ -52,7 +52,7 @@ export function lookupsReducer(state = INITIAL_STATE, action) {
         return { ...state, companies: action.payload };
       case GET_COMPANIES_FAILED:
       return {...state,companiesFailed:action.payload}
-      case GET_PLANS_GROUP:
+      case GET_PLANS_GROUP_filter:
         return {...state,planGroups:action.payload}
       case GET_LOOKUP_TYPES_Filter:
         return {...state,lookupTypes:action.payload}
