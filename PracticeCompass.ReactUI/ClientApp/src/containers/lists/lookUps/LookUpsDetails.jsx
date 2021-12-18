@@ -48,9 +48,14 @@ class LookUpsDetails extends Component {
         },
         active: row.recordStatus == "true",
         lookupCode: row.lookupCode,
-        description: row.description
+        description: row.description,
+        isAdd:false,
+        gridId: row.gridId
       })
-
+    }else{
+      this.setState({
+        isAdd:true
+      })
     }
   }
   toggleLookupDialog = () => {
@@ -108,7 +113,9 @@ class LookUpsDetails extends Component {
         : '',
       LookupType: this.state.selectedLookUpType ? this.state.selectedLookUpType.entityId : '',
       description: this.state.description,
-      RecordStatus: this.state.active == null || this.state.active == false ? 'I' : 'A'
+      RecordStatus: this.state.active == null || this.state.active == false ? 'I' : 'A',
+      IsAdd:this.state.isAdd,
+      gridId:this.state.gridId
     };
     let result = await this.props.addLookupCodes(lookupGrid);
     if (result) {

@@ -15,6 +15,7 @@ namespace PracticeCompass.Core.Models
         public int order { get; set; }
         public string description { get; set; }
         public string RecordStatus { get; set; }
+        public bool IsAdd { get; set; }
         public string gridId { get; set; }
 
         #endregion

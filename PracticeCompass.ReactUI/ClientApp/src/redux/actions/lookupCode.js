@@ -40,7 +40,7 @@ export const getLookupCodes =
       if (data == null) return;
       const resp = await axios({
         method: "GET",
-        url:`${config.baseUrl}/Lookup/AddLookupCode?LookupType=${data.LookupType}&LookupCode=${data.LookupCode}&description=${data.description}&RecordStatus=${data.RecordStatus}`
+        url:`${config.baseUrl}/Lookup/AddLookupCode?LookupType=${data.LookupType}&LookupCode=${data.LookupCode}&description=${data.description}&RecordStatus=${data.RecordStatus}&IsAdd=${data.IsAdd}&gridId=${data.gridId}`
       });
       return resp.data;
     } catch (error) {

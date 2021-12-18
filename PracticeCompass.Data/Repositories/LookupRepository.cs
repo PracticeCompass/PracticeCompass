@@ -69,7 +69,10 @@ namespace PracticeCompass.Data.Repositories
                     @pro2modified = DateTime.Now,
                     @Pro2SrcPDB = "medman",
                     @prrowid = LookupCodeMAXRowID,
-                    @TimeStamp = timestamp
+                    @TimeStamp = timestamp,
+                    @IsAdd=lookup.IsAdd,
+                    @gridId=lookup.gridId
+
                 },
                   commandType: CommandType.StoredProcedure);
                 return true;
