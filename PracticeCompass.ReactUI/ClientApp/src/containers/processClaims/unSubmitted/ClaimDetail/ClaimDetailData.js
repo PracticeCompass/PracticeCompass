@@ -133,45 +133,52 @@ export const submissionHistoryColumns = [
     {
         field: "statusCount",
         title: "Status Count",
-        minWidth: 50,
+        minWidth: 100,
         orderIndex: 1
+    },
+    {
+        field: "planName",
+        title: "Plan",
+        minWidth: 200,
+        orderIndex: 2,
+        showToolTip: true
     },
     {
         field: "reportType",
         title: "Report Type",
-        minWidth: 50,
-        orderIndex: 2
+        minWidth: 100,
+        orderIndex: 3
     },
     {
         field: "statusSource",
         title: "Status Source",
-        minWidth: 50,
-        orderIndex: 3
+        minWidth: 100,
+        orderIndex: 4
     },
     {
         field: "statusDate",
         title: "Status Date",
-        minWidth: 70,
-        orderIndex: 4
+        minWidth: 100,
+        orderIndex: 5
     },
     {
         field: "statusCategory",
         title: "Status Category",
         minWidth: 100,
-        orderIndex: 5,
+        orderIndex: 6,
         showToolTip: true
     },
     {
         field: "claimStatus",
         title: "Claim Status",
         minWidth: 100,
-        orderIndex: 6
+        orderIndex: 7
     },
     {
         field: "amountPaid",
         title: "Amount Paid",
         minWidth: 100,
-        orderIndex: 7,
+        orderIndex: 8,
         type: "currency",
         isCustomCell: true
     },
@@ -179,13 +186,13 @@ export const submissionHistoryColumns = [
         field: "payerClaimID",
         title: "Payer Claim ID",
         minWidth: 100,
-        orderIndex: 8
+        orderIndex: 9
     },
     {
         field: "errorMessage",
         title: "Error Message",
-        minWidth: 650,
-        orderIndex: 9,
+        minWidth: 600,
+        orderIndex: 10,
         showToolTip: true
     },
     {

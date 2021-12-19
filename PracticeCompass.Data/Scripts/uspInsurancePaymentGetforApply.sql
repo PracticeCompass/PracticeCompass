@@ -36,7 +36,7 @@ set @SQL= 'select distinct Charge.ChargeSID ,CONVERT(varchar,ProcedureEvent.From
  Mod1.[Modifier] as Modifier1 ,  Diag1.DiagnosisCode as Diag1,
 (Charge.Amount - Charge.Adjustments - Charge.GuarantorReceipts - Charge.InsuranceReceipts) as ChargeBalance,
 (Charge.Amount) as Amount   ,
-(charge.InsuranceReceipts) as InsurancePaid, 
+(charge.InsuranceReceipts) as InsurancePaid, PlanClaim1.PlanID as Plan1,PlanClaim2.PlanID as Plan2,PlanClaim3.PlanID as Plan3,PlanClaim4.PlanID as Plan4,Claim.PracticeID  as PracticeID,
 (Charge.Adjustments ) as Adjustments, ClaimCharge.ClaimSID 
  from ProcedureEvent
 inner join [Procedure] on [Procedure].ProcedureCode = ProcedureEvent.ProcedureCode
@@ -44,11 +44,12 @@ inner join Charge on ProcedureEvent.ChargeSID = charge.ChargeSID
 left outer join ProcedureEventModifier as Mod1 on Mod1.ProcedureEventSID = ProcedureEvent.ProcedureEventSID and Mod1.[Order]=1
 left outer join ProcedureEventDiag as Diag1 on Diag1.ProcedureEventSID = ProcedureEvent.ProcedureEventSID and Diag1.[Order]=1
 inner join ClaimCharge on ClaimCharge.ChargeSID = Charge.ChargeSID
-inner join PlanClaim on 
-PlanClaim.ClaimSID = 
-ClaimCharge.ClaimSID
-inner join Claim on 
-Claim.ClaimSID = ClaimCharge.ClaimSID
+inner join PlanClaim on PlanClaim.ClaimSID = ClaimCharge.ClaimSID
+left outer join PlanClaim as PlanClaim1 on PlanClaim1.ClaimSID = ClaimCharge.ClaimSID and PlanClaim1.CoverageOrder = 1 
+left outer join PlanClaim as PlanClaim2 on PlanClaim2.ClaimSID = ClaimCharge.ClaimSID and PlanClaim2.CoverageOrder = 2
+left outer join PlanClaim as PlanClaim3 on PlanClaim3.ClaimSID = ClaimCharge.ClaimSID and PlanClaim3.CoverageOrder = 3
+left outer join PlanClaim as PlanClaim4 on PlanClaim4.ClaimSID = ClaimCharge.ClaimSID and PlanClaim4.CoverageOrder = 4
+inner join Claim on Claim.ClaimSID = ClaimCharge.ClaimSID
 where  
 ('''+ @ClaimIcnNumber +'''=''0'' or  Claim.ClaimNumber = '''+ @ClaimIcnNumber+''' )
 and

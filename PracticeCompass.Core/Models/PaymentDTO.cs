@@ -20,6 +20,7 @@ namespace PracticeCompass.Core.Models
         public string FullyApplied { get; set; }
         public string Voucher { get; set; }
         public string CreateMethod { get; set; }
+        public int PracticeID { get; set; }
 
     }
 }

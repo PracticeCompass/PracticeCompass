@@ -9,12 +9,14 @@ namespace PracticeCompass.Core.Models
     {
         public string GridId { get; set; }
         public int PlanID { get; set; }
+        public string PlanName { get; set; }
         public int ClaimSID { get; set; }
         public string ReportType { get; set; }
         public string StatusCategory { get; set; }
         public string StatusCategory_ { get; set; }
         public int StatusCount { get; set; }
         public string StatusSource { get; set; }
+        public string StatusSource_ { get; set; }
         public string StatusDate { get; set; }
         public string ClaimStatus { get; set; }
         public string AmountPaid { get; set; }

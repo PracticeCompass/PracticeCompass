@@ -22,5 +22,11 @@ namespace PracticeCompass.Core.Models
         public float Adjustments { get; set; }
         public int PatientID { get; set; }
         public int ClaimSID { get; set; }
+        public int Plan1 { get; set; }
+        public int Plan2 { get; set; }
+        public int Plan3 { get; set; }
+        public int Plan4 { get; set; }
+        public int PracticeID { get; set; }
+
     }
 }

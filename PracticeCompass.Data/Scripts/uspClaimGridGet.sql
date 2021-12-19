@@ -94,9 +94,9 @@ select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
   dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID,@IncludeVoidedClaims) AS OutStandingBalanace
 ,Practice.SortName as practiceName,Practice.PracticeID as PracticeID,Person.SortName as patientName , dbo.FuncClaimDestGet(Claim.ClaimSID) as Destination 
 ,Provider.SortName as ProviderName , convert(varchar,Max(ProcedureEvent.FromServiceDate),101) as DOS , convert(Date,Max(ProcedureEvent.FromServiceDate),101) as DOSDate ,
-PlanClaimPrimary.CurrentStatus as PrimaryStatus ,
-PlanClaimSeconadry.CurrentStatus as SeconadryStatus ,
-PlanClaimTertiary.CurrentStatus as TertiaryStatus 
+PlanClaimPrimary.CurrentStatus as PrimaryStatus ,PlanClaimPrimary.PlanID as Plan1,
+PlanClaimSeconadry.CurrentStatus as SeconadryStatus ,PlanClaimSeconadry.PlanID as Plan2,
+PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as Plan3
 from 
 Claim inner join PatientAccount on 
 Claim.PracticeID = 
@@ -147,7 +147,7 @@ and
 and
 ('+ convert(varchar, @PhysicianID,10) +'=0 or PlanClaim.PerformingProviderID= '+ convert(varchar, @PhysicianID,10) +')'
 
-set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + @cashclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus,Patient.PatientID '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
+set @SQL = @SQL + @DOsfilter  + @insurancefilter + @completedclaimsfilter + @cashclaimsfilter + ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus,PlanClaimPrimary.PlanID ,PlanClaimSeconadry.PlanID,PlanClaimTertiary.PlanID,Patient.PatientID '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
 print @SQL
  exec(@SQL)
 

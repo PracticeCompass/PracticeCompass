@@ -18,5 +18,8 @@
         public string SeconadryStatus { get; set; }
         public string TertiaryStatus { get; set; }
         public int totalCount { get; set; }
+        public int Plan1 { get; set; }
+        public int Plan2 { get; set; }
+        public int Plan3 { get; set; }
     }
 }
