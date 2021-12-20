@@ -218,7 +218,7 @@ namespace PracticeCompass.Data.Repositories
             return Charges;
         }
 
-        public List<PlanClaimChargeRemit> PlanClaimChargeRemitAdd(List<ApplyPaymentModel> applyPaymentModel, List<PlanClaimCharge> PlanClaimCharges,List<ChargeActivity> ChargeActivities, ERSPaymentHeader paymentHeader,List<ERSChargeReference> ERSChargeReferences,List<ERSChargeServiceInfo> ERSChargeServiceInfos)
+        public List<PlanClaimChargeRemit> PlanClaimChargeRemitAdd(List<ApplyPaymentModel> applyPaymentModel, List<PlanClaimCharge> PlanClaimCharges, List<ChargeActivity> ChargeActivities, ERSPaymentHeader paymentHeader, List<ERSChargeReference> ERSChargeReferences, List<ERSChargeServiceInfo> ERSChargeServiceInfos)
         {
             var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
             var PlanClaimChargeRemits = new List<PlanClaimChargeRemit>();
@@ -227,78 +227,78 @@ namespace PracticeCompass.Data.Repositories
                 string PlanClaimChargeRemitMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeRemit", PlanClaimChargeRemits.Count() != 0 ? PlanClaimChargeRemits[PlanClaimChargeRemits.Count() - 1].prrowid : "0");
                 var chargeactivity = ChargeActivities.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
                 var planclaim = PlanClaimCharges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
-                var ERSChargeServiceInfo = ERSChargeServiceInfos.FirstOrDefault(c=>c.ERSChargeSID==(ERSChargeReferences.FirstOrDefault(x => x.ReferenceID ==paymentmodel.ChargeSID.ToString()).ERSChargeSID));
+                var ERSChargeServiceInfo = ERSChargeServiceInfos.FirstOrDefault(c => c.ERSChargeSID == (ERSChargeReferences.FirstOrDefault(x => x.ReferenceID == paymentmodel.ChargeSID.ToString()).ERSChargeSID));
                 var chargeexistsql = "select * from PlanClaimChargeRemit where ChargeSID = @ChargeSID ";
-                var PlanClaimChargermt= this.db.QueryFirst<PlanClaimChargeRemit>(chargeexistsql, new { ChargeSID = paymentmodel.ChargeSID });
+                var PlanClaimChargermt = this.db.QueryFirst<PlanClaimChargeRemit>(chargeexistsql, new { ChargeSID = paymentmodel.ChargeSID });
                 PlanClaimChargeRemits.Add(new PlanClaimChargeRemit
                 {
-                   TimeStamp= timestamp,
-                   LastUser= practiceCompassHelper.CurrentUser(),
-                   CreateUser= practiceCompassHelper.CurrentUser(),
-                   CreateStamp= timestamp,
-                   pro2created=DateTime.Now,
-                   pro2modified= DateTime.Now,
-                   Pro2SrcPDB="medman",
-                   prrowid= PlanClaimChargeRemitMAXRowID,
-                   ActivityCount= chargeactivity.ActivityCount,
-                   ChargeSID= paymentmodel.ChargeSID,
-                   AdjudicationDate= paymentHeader.CheckIssueDate,
-                   BundledChargeSID=null,
-                   ClaimSID= planclaim.ClaimSID,
-                   PlanID= planclaim.PlanID,
-                   PolicyNumber= planclaim.PolicyNumber,
-                   LineItem= planclaim.LineItem,
-                   NUBCRevenueCode="",
-                   PaidAmount= paymentmodel.AmountPaid,
-                   PaidUnits=1,
-                   PaymentChargeSID= paymentmodel.ChargeSID,
-                   PaymentSID= paymentHeader.PaymentSID,
-                   ProductServiceIDQualifier= ERSChargeServiceInfo.ProductServiceIDQualifier,
-                   RemitProcedureCode= ERSChargeServiceInfo.ProductServiceID+ (string.IsNullOrEmpty(ERSChargeServiceInfo.OrigProcedureModifier01)?"":"-" + ERSChargeServiceInfo.OrigProcedureModifier01),
-                   RemitCodesChanged="N",
-                   RemitCount= PlanClaimChargermt != null? (PlanClaimChargermt.RemitCount+1):1,
-                   RemitProcedureDesc="",
+                    TimeStamp = timestamp,
+                    LastUser = practiceCompassHelper.CurrentUser(),
+                    CreateUser = practiceCompassHelper.CurrentUser(),
+                    CreateStamp = timestamp,
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    Pro2SrcPDB = "medman",
+                    prrowid = PlanClaimChargeRemitMAXRowID,
+                    ActivityCount = chargeactivity.ActivityCount,
+                    ChargeSID = paymentmodel.ChargeSID,
+                    AdjudicationDate = paymentHeader.CheckIssueDate,
+                    BundledChargeSID = null,
+                    ClaimSID = planclaim.ClaimSID,
+                    PlanID = planclaim.PlanID,
+                    PolicyNumber = planclaim.PolicyNumber,
+                    LineItem = planclaim.LineItem,
+                    NUBCRevenueCode = "",
+                    PaidAmount = paymentmodel.AmountPaid,
+                    PaidUnits = 1,
+                    PaymentChargeSID = paymentmodel.ChargeSID,
+                    PaymentSID = paymentHeader.PaymentSID,
+                    ProductServiceIDQualifier = ERSChargeServiceInfo.ProductServiceIDQualifier,
+                    RemitProcedureCode = ERSChargeServiceInfo.ProductServiceID + (string.IsNullOrEmpty(ERSChargeServiceInfo.OrigProcedureModifier01) ? "" : "-" + ERSChargeServiceInfo.OrigProcedureModifier01),
+                    RemitCodesChanged = "N",
+                    RemitCount = PlanClaimChargermt != null ? (PlanClaimChargermt.RemitCount + 1) : 1,
+                    RemitProcedureDesc = "",
                 });
             }
             return PlanClaimChargeRemits;
 
         }
-        public List<PlanClaimChargeRemitAdj> PlanClaimChargeRemitAdjAdd(List<ERSChargeClaimAdjustment> ERSChargeClaimAdjustments, List<PlanClaimCharge> PlanClaimCharges,List<ERSChargeReference> ERSChargeReferences)
+        public List<PlanClaimChargeRemitAdj> PlanClaimChargeRemitAdjAdd(List<ERSChargeClaimAdjustment> ERSChargeClaimAdjustments, List<PlanClaimCharge> PlanClaimCharges, List<ERSChargeReference> ERSChargeReferences)
         {
             var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
             var PlanClaimChargeRemitadjs = new List<PlanClaimChargeRemitAdj>();
             foreach (var chargeclaimadjus in ERSChargeClaimAdjustments)
             {
                 string PlanClaimChargeRemitadjMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeRemitAdj", PlanClaimChargeRemitadjs.Count() != 0 ? PlanClaimChargeRemitadjs[PlanClaimChargeRemitadjs.Count() - 1].prrowid : "0");
-                var planclaim = PlanClaimCharges.FirstOrDefault(c => c.ChargeSID ==int.Parse((ERSChargeReferences.FirstOrDefault(x => x.ERSChargeSID == chargeclaimadjus.ERSChargeSID)).ReferenceID));
+                var planclaim = PlanClaimCharges.FirstOrDefault(c => c.ChargeSID == int.Parse((ERSChargeReferences.FirstOrDefault(x => x.ERSChargeSID == chargeclaimadjus.ERSChargeSID)).ReferenceID));
                 var adjexistsql = "select * from PlanClaimChargeRemitAdj where ChargeSID = @ChargeSID ";
                 var PlanClaimChargermtadj = this.db.QueryFirst<PlanClaimChargeRemitAdj>(adjexistsql, new { ChargeSID = planclaim.ChargeSID });
 
                 PlanClaimChargeRemitadjs.Add(new PlanClaimChargeRemitAdj
                 {
-                    TimeStamp= timestamp,
-                    CreateStamp= timestamp,
-                    pro2created=DateTime.Now,
-                    pro2modified= DateTime.Now,
-                    Pro2SrcPDB="medman",
-                    LastUser= practiceCompassHelper.CurrentUser(),
+                    TimeStamp = timestamp,
+                    CreateStamp = timestamp,
+                    pro2created = DateTime.Now,
+                    pro2modified = DateTime.Now,
+                    Pro2SrcPDB = "medman",
+                    LastUser = practiceCompassHelper.CurrentUser(),
                     CreateUser = practiceCompassHelper.CurrentUser(),
-                    PlanID= planclaim.PlanID,
-                    ClaimSID= planclaim.ClaimSID,
-                    ChargeSID= planclaim.ChargeSID,
-                    PolicyNumber= planclaim.PolicyNumber,
-                    prrowid= PlanClaimChargeRemitadjMAXRowID,
+                    PlanID = planclaim.PlanID,
+                    ClaimSID = planclaim.ClaimSID,
+                    ChargeSID = planclaim.ChargeSID,
+                    PolicyNumber = planclaim.PolicyNumber,
+                    prrowid = PlanClaimChargeRemitadjMAXRowID,
                     RemitCount = PlanClaimChargermtadj != null ? (PlanClaimChargermtadj.RemitCount + 1) : 1,
-                    AdjustmentAmount= chargeclaimadjus.AdjustmentAmt,
-                    AdjustmentQuantity= chargeclaimadjus.AdjustmentQuantity,
-                    AdjustmentReasonCode= chargeclaimadjus.AdjustmentReasonCode,
-                    ClaimAdjustmentGroupCode= chargeclaimadjus.ClaimAdjustmentGroupCode,
-                    LineItem= planclaim.LineItem
+                    AdjustmentAmount = chargeclaimadjus.AdjustmentAmt,
+                    AdjustmentQuantity = chargeclaimadjus.AdjustmentQuantity,
+                    AdjustmentReasonCode = chargeclaimadjus.AdjustmentReasonCode,
+                    ClaimAdjustmentGroupCode = chargeclaimadjus.ClaimAdjustmentGroupCode,
+                    LineItem = planclaim.LineItem
                 });
             }
             return PlanClaimChargeRemitadjs;
         }
-        public List<ChargeActivity> ChargeActivityAdd(List<ApplyPaymentModel> applyPaymentModel, List<ChargeActivity> ChargeActivities , List<Charge> Charges)
+        public List<ChargeActivity> ChargeActivityAdd(List<ApplyPaymentModel> applyPaymentModel, List<ChargeActivity> ChargeActivities, List<Charge> Charges)
         {
             var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
             foreach (var paymentmodel in applyPaymentModel)
@@ -311,74 +311,74 @@ namespace PracticeCompass.Data.Repositories
                 string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
                 int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount", ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ?
                     ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0, string.Format("Where ChargeSID = {0}", paymentmodel.ChargeSID.ToString()));
-            if (gurantorDiff != 0 || insuranceDiff != 0)
-            {
-                #region ChargeActivity_PMT
-                // ChargeActivity
-
-                ChargeActivities.Add(new Core.Models.ChargeActivity
+                if (gurantorDiff != 0 || insuranceDiff != 0)
                 {
-                    prrowid = ChargeActivityMAXRowID,
-                    ChargeSID = paymentmodel.ChargeSID,
-                    ActivityCount = maxactivitycount,
-                    Amount = insuranceDiff != 0 ? -1 * insuranceDiff : -1 * gurantorDiff,
-                    ActivityType = "PMT",
-                    SourceType = paymentmodel.PaymentType,
-                    SourceID = paymentmodel.PayorID,
-                    CreateMethod = "M",
-                    TimeStamp = timestamp,
-                    LastUser = practiceCompassHelper.CurrentUser(),
-                    CreateStamp = timestamp,
-                    CreateUser = practiceCompassHelper.CurrentUser(),
-                    Pro2SrcPDB = "medman",
-                    pro2created = DateTime.Now,
-                    pro2modified = DateTime.Now,
-                    PostDate = DateTime.Now.Date,
-                    AccountSID = chargerow.AccountSID,
-                    DNPracticeID = chargerow.PracticeID,
-                    PatientStatement = "",
-                    DisplayText = ""
+                    #region ChargeActivity_PMT
+                    // ChargeActivity
 
-                });
-                #endregion
-            }
-            if (adjustamnetsDiff != 0)
-            {
-                #region ChargeActivity_Adj
-                ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
-                maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
-                    ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0
-                    , string.Format("Where ChargeSID = {0}", paymentmodel.ChargeSID.ToString()));
-                ChargeActivities.Add(new Core.Models.ChargeActivity
+                    ChargeActivities.Add(new Core.Models.ChargeActivity
+                    {
+                        prrowid = ChargeActivityMAXRowID,
+                        ChargeSID = paymentmodel.ChargeSID,
+                        ActivityCount = maxactivitycount,
+                        Amount = insuranceDiff != 0 ? -1 * insuranceDiff : -1 * gurantorDiff,
+                        ActivityType = "PMT",
+                        SourceType = paymentmodel.PaymentType,
+                        SourceID = paymentmodel.PayorID,
+                        CreateMethod = "M",
+                        TimeStamp = timestamp,
+                        LastUser = practiceCompassHelper.CurrentUser(),
+                        CreateStamp = timestamp,
+                        CreateUser = practiceCompassHelper.CurrentUser(),
+                        Pro2SrcPDB = "medman",
+                        pro2created = DateTime.Now,
+                        pro2modified = DateTime.Now,
+                        PostDate = DateTime.Now.Date,
+                        AccountSID = chargerow.AccountSID,
+                        DNPracticeID = chargerow.PracticeID,
+                        PatientStatement = "",
+                        DisplayText = ""
+
+                    });
+                    #endregion
+                }
+                if (adjustamnetsDiff != 0)
                 {
-                    prrowid = ChargeActivityMAXRowID,
-                    ChargeSID = paymentmodel.ChargeSID,
-                    ActivityCount = maxactivitycount,
-                    Amount = -1 * adjustamnetsDiff,
-                    ActivityType = "ADJ",
-                    SourceType = paymentmodel.PaymentType,
-                    SourceID = paymentmodel.PayorID,
-                    CreateMethod = "M",
-                    TimeStamp = timestamp,
-                    LastUser = practiceCompassHelper.CurrentUser(),
-                    CreateStamp = timestamp,
-                    CreateUser = practiceCompassHelper.CurrentUser(),
-                    Pro2SrcPDB = "medman",
-                    pro2created = DateTime.Now,
-                    pro2modified = DateTime.Now,
-                    PostDate = DateTime.Now.Date,
-                    AccountSID = chargerow.AccountSID,
-                    DNPracticeID = chargerow.PracticeID,
-                    PatientStatement = "",
-                    DisplayText = ""
-                });
-                #endregion
-            }
+                    #region ChargeActivity_Adj
+                    ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
+                    maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
+                        ChargeActivities.Count(x => x.ChargeSID == paymentmodel.ChargeSID) != 0 ? ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0
+                        , string.Format("Where ChargeSID = {0}", paymentmodel.ChargeSID.ToString()));
+                    ChargeActivities.Add(new Core.Models.ChargeActivity
+                    {
+                        prrowid = ChargeActivityMAXRowID,
+                        ChargeSID = paymentmodel.ChargeSID,
+                        ActivityCount = maxactivitycount,
+                        Amount = -1 * adjustamnetsDiff,
+                        ActivityType = "ADJ",
+                        SourceType = paymentmodel.PaymentType,
+                        SourceID = paymentmodel.PayorID,
+                        CreateMethod = "M",
+                        TimeStamp = timestamp,
+                        LastUser = practiceCompassHelper.CurrentUser(),
+                        CreateStamp = timestamp,
+                        CreateUser = practiceCompassHelper.CurrentUser(),
+                        Pro2SrcPDB = "medman",
+                        pro2created = DateTime.Now,
+                        pro2modified = DateTime.Now,
+                        PostDate = DateTime.Now.Date,
+                        AccountSID = chargerow.AccountSID,
+                        DNPracticeID = chargerow.PracticeID,
+                        PatientStatement = "",
+                        DisplayText = ""
+                    });
+                    #endregion
+                }
             }
             return ChargeActivities;
         }
 
-        public List<PaymentAssignment> PaymentAssignmentAdd (List<ApplyPaymentModel> applyPaymentModel, List<Charge> Charges, List<PaymentAssignment> PaymentAssignments)
+        public List<PaymentAssignment> PaymentAssignmentAdd(List<ApplyPaymentModel> applyPaymentModel, List<Charge> Charges, List<PaymentAssignment> PaymentAssignments)
         {
             var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
             foreach (var paymentmodel in applyPaymentModel)
@@ -421,7 +421,7 @@ namespace PracticeCompass.Data.Repositories
             return PaymentAssignments;
         }
 
-        public List<Account> AccountUpdate (List<ApplyPaymentModel> applyPaymentModel , List<Account> accounts, List<Charge> Charges)
+        public List<Account> AccountUpdate(List<ApplyPaymentModel> applyPaymentModel, List<Account> accounts, List<Charge> Charges)
         {
             var chargeIDs = applyPaymentModel.Select(x => x.ChargeSID);
             string sql = "select * from account where AccountSID in (select AccountSID from Charge where ChargeSID in @ChargeSID)";
@@ -506,6 +506,97 @@ namespace PracticeCompass.Data.Repositories
         public Task<PaymentDTO> SingleOrDefaultAsync(Expression<Func<PaymentDTO, bool>> predicate, bool trackChanges = false)
         {
             throw new NotImplementedException();
+        }
+
+        public void MovetoNextPlan(Charge ChargeRecord, int PlanID)
+        {
+            var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+            #region Get_Charges_Coverage
+            string sql = "select  * from ChargeCoverage where ChargeSID= @ChargeSID";
+            var ChargeCoverage = this.db.QueryFirst<ChargeCoverage>(sql, new { ChargeSID = ChargeRecord.ChargeSID });
+            #endregion
+
+            #region Updte_Charge_Record
+            ChargeRecord.RespCoverageOrder = 0;
+            #endregion
+
+            #region Update_Claim
+
+            #endregion
+
+            #region Inset_Chargeactivity
+            var ChargeActivities = new List<ChargeActivity>();
+            string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
+            int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount", ChargeActivities.Count(x => x.ChargeSID == ChargeRecord.ChargeSID) != 0 ?
+                ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0, string.Format("Where ChargeSID = {0}", ChargeRecord.ChargeSID.ToString()));
+
+            #region ChargeActivity_XFR
+            // ChargeActivity
+
+            ChargeActivities.Add(new Core.Models.ChargeActivity
+            {
+                prrowid = ChargeActivityMAXRowID,
+                ChargeSID = ChargeRecord.ChargeSID,
+                ActivityCount = maxactivitycount,
+                Amount = 0,
+                ActivityType = "XFR",
+                //SourceType = paymentmodel.PaymentType,
+                //SourceID = paymentmodel.PayorID,
+                CreateMethod = "M",
+                TimeStamp = timestamp,
+                LastUser = practiceCompassHelper.CurrentUser(),
+                CreateStamp = timestamp,
+                CreateUser = practiceCompassHelper.CurrentUser(),
+                Pro2SrcPDB = "medman",
+                pro2created = DateTime.Now,
+                pro2modified = DateTime.Now,
+                PostDate = DateTime.Now.Date,
+                AccountSID = ChargeRecord.AccountSID,
+                DNPracticeID = ChargeRecord.PracticeID,
+                PatientStatement = "",
+                DisplayText = ""
+
+            });
+            #endregion
+
+            #region ChargeActivity_IBL
+            ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
+            maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount",
+                ChargeActivities.Count(x => x.ChargeSID == ChargeRecord.ChargeSID) != 0 ? ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0
+                , string.Format("Where ChargeSID = {0}", ChargeRecord.ChargeSID.ToString()));
+            ChargeActivities.Add(new Core.Models.ChargeActivity
+            {
+                prrowid = ChargeActivityMAXRowID,
+                ChargeSID = ChargeRecord.ChargeSID,
+                ActivityCount = maxactivitycount,
+                Amount = 0,
+                ActivityType = "ADJ",
+                //SourceType = paymentmodel.PaymentType,
+                //SourceID = paymentmodel.PayorID,
+                CreateMethod = "M",
+                TimeStamp = timestamp,
+                LastUser = practiceCompassHelper.CurrentUser(),
+                CreateStamp = timestamp,
+                CreateUser = practiceCompassHelper.CurrentUser(),
+                Pro2SrcPDB = "medman",
+                pro2created = DateTime.Now,
+                pro2modified = DateTime.Now,
+                PostDate = DateTime.Now.Date,
+                AccountSID = ChargeRecord.AccountSID,
+                DNPracticeID = ChargeRecord.PracticeID,
+                PatientStatement = "",
+                DisplayText = ""
+            });
+            #endregion
+            #endregion
+
+            #region Insert_Statments
+            var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
+        "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
+        ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +
+        ",@DNPracticeID,@Pro2SrcPDB,@pro2created,@pro2modified)";
+            #endregion
+
         }
     }
 }
