@@ -77,6 +77,8 @@ export const insuranceColumns = [
         title: "Applied",
         minWidth: 70,
         orderIndex: 5,
+        type: "checkBox",
+        cell: "checkBox",
     },
     {
         field: "practiceName",
