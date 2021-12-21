@@ -17,6 +17,7 @@ import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 import DropdownFilterCell from "./DropdownFilterCell";
 import { RadioGroup } from "@progress/kendo-react-inputs";
 import $ from "jquery";
+import { ExcelExport } from "@progress/kendo-react-excel-export";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
 const COLUMN_MIN = 4;
@@ -373,6 +374,7 @@ class FilterableGridComponent extends React.Component {
 
     return (
       <div id={this.props.id} style={{ width: "100%" }}>
+       <ExcelExport fileName={this.props.fileName} ref={this.props.setExporter} />
         <div className="row" style={{ margin: "5px" }}>
           <RadioGroup
             data={filters}

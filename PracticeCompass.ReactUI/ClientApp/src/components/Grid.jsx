@@ -15,7 +15,7 @@ import { MyPager, CurrencyCell, CustomCell, CellWithIcon } from "./GridData.js";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { GetGridColumns, SaveGridColumns } from "../redux/actions/GridColumns";
 import CheckBoxCell from "./CheckBoxCell";
-import $ from "jquery";
+import { ExcelExport } from "@progress/kendo-react-excel-export";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
 const COLUMN_MIN = 4;
@@ -294,6 +294,7 @@ class GridComponent extends React.Component {
 
     return (
       <div id={this.props.id} style={{ width: "100%" }}>
+        <ExcelExport fileName={this.props.fileName} ref={this.props.setExporter} />
         <Tooltip openDelay={100}>
           <Grid
             rowRender={this.rowRender}

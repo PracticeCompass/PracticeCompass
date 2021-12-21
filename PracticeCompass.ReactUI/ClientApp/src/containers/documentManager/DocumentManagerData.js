@@ -42,7 +42,7 @@ export const documentColumns = [
     {
       field: "notes",
       title: "Notes",
-      minWidth: 370,
+      minWidth: 270,
       orderIndex: 6,
       showToolTip: true,
       editable: false

@@ -378,6 +378,7 @@ legend {
   resize: vertical;
   font-family: monospace !important;
   font-size: 12px !important;
+  overflow:auto
 }
 textarea:disabled  {
   color: #000000;
@@ -390,4 +391,5 @@ textarea:disabled  {
 .textEditor{
   font-family: monospace !important;
   font-size: 12px !important;
+  overflow:"auto" ;
 }

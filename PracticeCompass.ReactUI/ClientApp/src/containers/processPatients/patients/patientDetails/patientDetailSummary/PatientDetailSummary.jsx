@@ -11,6 +11,8 @@ import GridComponent from "components/Grid";
 import "./PatientDetailSummary.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
+import { exportExcelFile } from "../../../../common/export";
+import moment from 'moment';
 import {
   getParacticesUrl,
   getMaritalStatus,
@@ -93,6 +95,7 @@ class PatientDetailSummary extends Component {
   constructor() {
     super();
     this.updateDimensions = this.updateDimensions.bind(this);
+    //this.setExporter = this.setExporter.bind(this);
   }
   state = {
     selected: 0,
@@ -165,7 +168,7 @@ class PatientDetailSummary extends Component {
     gridWidth: 0,
   };
   handleSelect = (e) => {
-    if(this.state.Insured == "S" || this.state.Insured == "Self"){
+    if (this.state.Insured == "S" || this.state.Insured == "Self") {
       return;
     }
     this.setState({ selected: e.selected });
@@ -185,8 +188,8 @@ class PatientDetailSummary extends Component {
   getBaseGridUrl(filter) {
     return getCompanyNameUrl(filter);
   }
-  onPatientDetailClick = (event) => {};
-  onPatientDetailKeyDown = (event) => {};
+  onPatientDetailClick = (event) => { };
+  onPatientDetailKeyDown = (event) => { };
   async componentDidMount() {
     this.updateDimensions();
     await this.props.resetInsuranceGridGet();
@@ -195,7 +198,7 @@ class PatientDetailSummary extends Component {
       this.state.patientId != this.props.patientDetails.patientID
     ) {
       let patientDetails = await this.props.GetPatientDetails(
-          this.props.patientDetails.patientID,
+        this.props.patientDetails.patientID,
         this.props.patientDetails.practiceID
       );
       if (patientDetails == null) return;
@@ -319,12 +322,12 @@ class PatientDetailSummary extends Component {
       GroupNumber: this.state.currentInsurance?.groupNumber,
       PlanEndDate:
         this.state.currentInsurance != null &&
-        this.state.currentInsurance.endDate
+          this.state.currentInsurance.endDate
           ? new Date(this.state.currentInsurance.endDate)
           : null,
       PlanEffectiveDate:
         this.state.currentInsurance != null &&
-        this.state.currentInsurance.startDate
+          this.state.currentInsurance.startDate
           ? new Date(this.state.currentInsurance.startDate)
           : null,
       Insured: this.state.currentInsurance?.relationToSub,
@@ -332,18 +335,18 @@ class PatientDetailSummary extends Component {
       OtherName: this.state.currentInsurance?.subscriberName,
       OtherRelationShip: this.state.currentInsurance
         ? {
-            lookupCode: this.state.currentInsurance.relationToSub,
-            description: this.state.currentInsurance.releationDescription,
-          }
+          lookupCode: this.state.currentInsurance.relationToSub,
+          description: this.state.currentInsurance.releationDescription,
+        }
         : null,
       OtherAddress1: this.state.currentInsurance?.address1,
       OtherAddress2: this.state.currentInsurance?.address2,
       OtherCity: this.state.currentInsurance?.city,
       OtherStatevalue: this.state.currentInsurance
         ? {
-            stateCode: this.state.currentInsurance.stateCode,
-            state: this.state.currentInsurance.state,
-          }
+          stateCode: this.state.currentInsurance.stateCode,
+          state: this.state.currentInsurance.state,
+        }
         : null,
       OtherZip: this.state.currentInsurance?.zip,
       OtherSSN: this.state.currentInsurance?.insuredID,
@@ -451,9 +454,9 @@ class PatientDetailSummary extends Component {
     this.setState({
       patientType: selectedDataItems[0]
         ? {
-            entityName: selectedDataItems[0].description,
-            entityId: selectedDataItems[0].lookupCode,
-          }
+          entityName: selectedDataItems[0].description,
+          entityId: selectedDataItems[0].lookupCode,
+        }
         : null,
     });
   };
@@ -488,9 +491,9 @@ class PatientDetailSummary extends Component {
     this.setState({
       CompanyName: selectedDataItems[0]
         ? {
-            entityName: selectedDataItems[0].sortName,
-            entityId: selectedDataItems[0].entitySID,
-          }
+          entityName: selectedDataItems[0].sortName,
+          entityId: selectedDataItems[0].entitySID,
+        }
         : null,
     });
   };
@@ -555,6 +558,9 @@ class PatientDetailSummary extends Component {
       none: false,
     });
   };
+  setExporter = (exporter) => {
+     this.setState({ _export: exporter });
+  }
   revertOtherCompany = (e) => {
     this.setState({ Insured: e.value });
     if (e.value != null && (e.value == "S" || e.value == "Self")) {
@@ -565,7 +571,8 @@ class PatientDetailSummary extends Component {
       });
     }
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
+
   render() {
     return (
       <Fragment>
@@ -1073,6 +1080,16 @@ class PatientDetailSummary extends Component {
                 >
                   <ButtonComponent
                     type="add"
+                    icon="export"
+                    classButton="infraBtn-primary"
+                    onClick={() => {
+                      exportExcelFile(this.state._export, this.props.insurances, this.state.patientListColumns);
+                    }}
+                  >
+                    Export to Excel
+                  </ButtonComponent>
+                  <ButtonComponent
+                    type="add"
                     classButton="infraBtn-primary action-button"
                     onClick={() => {
                       this.setState({ Show_HideDialogVisible: true });
@@ -1249,6 +1266,9 @@ class PatientDetailSummary extends Component {
                       idGetter={idGetterInsurance}
                       sortColumns={[]}
                       onSortChange={this.onSortChange}
+                      allowExporter={true}
+                      setExporter={this.setExporter}
+                      fileName={"Patient Plans " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                     ></GridComponent>
                   )}
                 </div>
@@ -1308,7 +1328,7 @@ class PatientDetailSummary extends Component {
                       selectedValue={
                         this.state.Insured &&
                         (this.state.Insured == "S" ||
-                        this.state.Insured == "Self"
+                          this.state.Insured == "Self"
                           ? "Self"
                           : "Other")
                       }

@@ -47,6 +47,8 @@ import { SaveLookups } from "../../../../redux/actions/lookups";
 import SaveFilterComponent from "../../../common/saveFilter";
 import DeleteDialogComponent from "../../../common/deleteDialog";
 import NotificationComponent from "../../../common/notification";
+import {exportExcelFile} from "../../../common/export";
+import moment from 'moment';
 import FindDialogComponent from "../../../common/findDialog";
 import PatientFindDialogComponent from "../../../common/patientFindDialog";
 import Show_HideDialogComponent from "../../../common/show_hideDialog";
@@ -165,8 +167,12 @@ class Patient extends Component {
         selectedSortColumn: null,
         sortDirection: null,
         patientListColumns: columns,
-        gridWidth: 0
+        gridWidth: 0,
+        _export:null
     };
+    setExporter=(exporter)=>{
+        this.setState({_export:exporter});
+    }
     // getPatientTypeUrl(filter) {
     //   return `${config.baseUrl}/patient/PatientTypesGet?description=${filter}`;
     // }
@@ -1220,6 +1226,7 @@ class Patient extends Component {
                                     New
                                 </ButtonComponent>
                             </div>
+
                             <div
                                 style={{
                                     float: "right",
@@ -1228,6 +1235,16 @@ class Patient extends Component {
                                     right: "0",
                                 }}
                             >
+                                <ButtonComponent
+                                    type="add"
+                                    icon="export"
+                                    classButton="infraBtn-primary"
+                                    onClick={() => {
+                                        exportExcelFile(this.state._export,this.props.Patients,this.state.patientListColumns);
+                                    }}
+                                >
+                                    Export to Excel
+                                </ButtonComponent>
                                 <ButtonComponent
                                     type="add"
                                     classButton="infraBtn-primary action-button"
@@ -1286,6 +1303,8 @@ class Patient extends Component {
                                         sortColumns={sortColumns}
                                         onSortChange={this.onSortChange}
                                         pageChange={this.pageChange}
+                                        setExporter={this.setExporter}
+                                        fileName={"Patient "+moment().format('DD/MM/YYYY, h:mm:ss a')+".xlsx"}
                                     ></GridComponent>
                                 )}
                             </div>

@@ -26,6 +26,7 @@ import DropDownCell from "./DropDownCell";
 import CheckBoxCell from "./CheckBoxCell";
 import CurrencyGridCell from "./CurrencyCell";
 import MergeCell from "./mergeCell";
+import { ExcelExport } from "@progress/kendo-react-excel-export";
 const SELECTED_FIELD = "selected";
 const ADJUST_PADDING = 4;
 const COLUMN_MIN = 4;
@@ -249,6 +250,7 @@ class EditableGrid extends React.Component {
         style={{ width: "100%" }}
         onClick={this.closeEdit}
       >
+        <ExcelExport fileName={this.props.fileName} ref={this.props.setExporter} />
         <Tooltip openDelay={100}>
           <Grid
             rowRender={this.rowRender}

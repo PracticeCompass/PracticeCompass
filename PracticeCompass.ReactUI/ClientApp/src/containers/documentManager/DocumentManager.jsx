@@ -19,6 +19,8 @@ import DatePickerComponent from "../../components/DatePicker"
 import CheckboxComponent from "../../components/Checkbox";
 import ButtonComponent from "../../components/Button";
 import { ProcessFile } from "../../redux/actions/fileManager";
+import { exportExcelFile } from "../common/export";
+import moment from 'moment';
 import { TextArea } from "@progress/kendo-react-inputs";
 import {
   getFilters,
@@ -261,8 +263,8 @@ class DocumentManager extends Component {
       this.reset();
     }
   };
-  onSortChange=()=>{
-    
+  onSortChange = () => {
+
   }
   documentManagerSearch = async (refreshData = true) => {
     var documentGrid = {
@@ -336,6 +338,9 @@ class DocumentManager extends Component {
       files
     });
   };
+  setExporter = (exporter) => {
+    this.setState({ _export: exporter });
+  }
   render() {
     return (
       <Fragment>
@@ -452,8 +457,8 @@ class DocumentManager extends Component {
               className="rowHeight"
               style={{ display: "flex", flexFlow: "row nowrap" }}
             >
-              <div style={{ width: "310px" }}>
-                <div style={{ float: "left", marginLeft: "46px" }}>
+              <div style={{ width: "280px" }}>
+                <div style={{ float: "left", marginLeft: "10px" }}>
                   <label className="userInfoLabel">File Name</label>
                 </div>
                 <div style={{ width: "200px", float: "left" }}>
@@ -492,9 +497,9 @@ class DocumentManager extends Component {
             </div>
             <div
               className="rowHeight"
-              style={{ display: "flex", flexFlow: "row nowrap", marginTop: "5px", marginBottom: "15px" }}
+              style={{ display: "flex", flexFlow: "row nowrap"}}
             >
-              <div style={{ float: "left", marginLeft: "63px" }}>
+              <div style={{ float: "left", marginLeft: "27px" }}>
                 <label className="userInfoLabel">Notes</label>
               </div>
               <div style={{ float: "left", marginLeft: "5px", width: "400px" }}>
@@ -508,9 +513,15 @@ class DocumentManager extends Component {
                     })
                   }
                 ></TextBox>
-                
+
               </div>
-              <div style={{ float: "left", marginLeft: "10px" }}>
+
+            </div>
+            <div
+              className="rowHeight"
+              style={{ display: "flex", flexFlow: "row nowrap" }}
+            >
+              <div style={{ float: "left" ,marginLeft:"10px"}}>
                 <ButtonComponent
                   icon="search"
                   type="search"
@@ -520,9 +531,20 @@ class DocumentManager extends Component {
                   Search
                 </ButtonComponent>
               </div>
+              <div style={{ float: "left" }}>
+
+                <ButtonComponent
+                  type="add"
+                  icon="export"
+                  classButton="infraBtn-primary"
+                  onClick={() => {
+                    exportExcelFile(this.state._export, this.state.files, this.state.documentColumns);
+                  }}
+                >
+                  Export to Excel
+                </ButtonComponent>
+              </div>
             </div>
-
-
             <div className="accordion" id="accordionExample">
               <div
                 className="card bg-light mb-3"
@@ -555,7 +577,7 @@ class DocumentManager extends Component {
                     DATA_ITEM_KEY="fileName"
                     idGetter={idGetterFileID}
                     data={this.state.files || []}
-                    height="710px"
+                    height="500px"
                     width="100%"
                     //hasCheckBox={true}
                     sortColumns={[]}
@@ -563,6 +585,8 @@ class DocumentManager extends Component {
                     displayNoteDialog={this.displayNoteDialog}
                     itemChange={this.applyItemChanged}
                     isEditable={true}
+                    setExporter={this.setExporter}
+                    fileName={"Files " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                   // pageChange={this.pageChange}
                   ></EditableGrid>
                 </div></div>
@@ -570,17 +594,18 @@ class DocumentManager extends Component {
           </div>
           <div style={{ float: "left", width: "100%" }}>
             {this.state.refresh && (
-             // <TextEditor content={this.state.content}></TextEditor>
+              // <TextEditor content={this.state.content}></TextEditor>
               <TextArea
-              rows={5}
-              //disabled={true}
-              style={{width:"100%",height:"100%"}}
-              className="textEditor"
-              value={this.state.content ?? ""}
+                wrap = "off"
+                rows={5}
+                // disabled={true}
+                style={{ width: "100%", height: "100%"}}
+                className="textEditor"
+                value={this.state.content ?? ""}
               // onChange={(e) => {
               //   this.setState({ content: e.value });
               // }}
-            ></TextArea>
+              ></TextArea>
             )}
           </div>
         </div>
