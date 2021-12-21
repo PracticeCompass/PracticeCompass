@@ -10,6 +10,8 @@ import ClaimDetailClaimNotes from "./ClaimDetailClaimNotes";
 import { columns } from "./ClaimDetailData";
 import Show_HideDialogComponent from "../../../common/show_hideDialog";
 import NotificationComponent from "../../../common/notification";
+import {exportExcelFile} from "../../../common/export";
+import moment from 'moment';
 import {
     GetClaimDetails,
     ChargeGridGet,
@@ -64,6 +66,9 @@ class ClaimDetail extends Component {
         Show_PatientDetailsDialog: false,
         PatientDetails: {},
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+    }
     handleSelect = (e) => {
         this.setState({ selected: e.selected });
     };
@@ -331,6 +336,16 @@ class ClaimDetail extends Component {
                         >
                             <ButtonComponent
                                 type="add"
+                                icon="export"
+                                classButton="infraBtn-primary"
+                                onClick={() => {
+                                    exportExcelFile(this.state._export, this.props.charges, this.state.claimListColumns);
+                                }}
+                            >
+                                Export to Excel
+                            </ButtonComponent>
+                            <ButtonComponent
+                                type="add"
                                 classButton="infraBtn-primary action-button"
                                 onClick={() => {
                                     this.setState({ Show_HideDialogVisible: true });
@@ -378,6 +393,8 @@ class ClaimDetail extends Component {
                                     width="100%"
                                     sortColumns={[]}
                                     onSortChange={this.onSortChange}
+                                    setExporter={this.setExporter}
+                                    fileName={"Claim summary" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                 ></GridComponent>
                             </div>
                         </div>

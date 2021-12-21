@@ -5,6 +5,9 @@ import { submissionHistoryColumns } from "./ClaimDetailData";
 import { ClaimSubmissionHistoryGet } from "../../../../redux/actions/claimDetails";
 import { SaveLookups } from "../../../../redux/actions/lookups";
 import { getter } from "@progress/kendo-react-common";
+import ButtonComponent from "../../../../components/Button";
+import { exportExcelFile } from "../../../common/export";
+import moment from 'moment';
 
 const DATA_ITEM_KEY_Submission = "gridId";
 const idGetterGridID = getter(DATA_ITEM_KEY_Submission);
@@ -26,6 +29,9 @@ class ClaimDetailSubmissionHistory extends Component {
         claimSubmissionHistory: null,
         claimId: 0,
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+    }
     async componentDidMount() {
         if (
             this.props.claimDetails != null &&
@@ -48,6 +54,27 @@ class ClaimDetailSubmissionHistory extends Component {
     render() {
         return (
             <Fragment>
+                <div className="row nowrap rowHeight" style={{ marginTop: "10px" }}>
+                    <div
+                        style={{
+                            float: "right",
+                            position: "absolute",
+                            marginRight: "10px",
+                            right: "0",
+                        }}
+                    >
+                        <ButtonComponent
+                            type="add"
+                            icon="export"
+                            classButton="infraBtn-primary"
+                            onClick={() => {
+                                exportExcelFile(this.state._export, this.state.claimSubmissionHistory, submissionHistoryColumns);
+                            }}
+                        >
+                            Export to Excel
+                        </ButtonComponent>
+                    </div>
+                </div>
                 <div className="accordion" id="accordionExample">
                     <div
                         className="card bg-light mb-3"
@@ -78,6 +105,8 @@ class ClaimDetailSubmissionHistory extends Component {
                                 columns={submissionHistoryColumns}
                                 sortColumns={[]}
                                 onSortChange={this.onSortChange}
+                                setExporter={this.setExporter}
+                                fileName={"Claim Detail Submission History" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                             ></GridComponent>
                         </div>
                     </div>

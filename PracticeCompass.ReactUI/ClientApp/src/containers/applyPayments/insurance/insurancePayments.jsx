@@ -31,6 +31,8 @@ import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
+import { exportExcelFile } from "../../common/export";
+import moment from 'moment';
 import {
     GetGridColumns,
     SaveGridColumns,
@@ -1037,6 +1039,18 @@ class insurancePayments extends Component {
         this.filterApplyListChanged();
         this.togglePaymentDialog();
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+    }
+    setExporterPayment = (exporter) => {
+        this.setState({ _exportPayment: exporter });
+    }
+    setExporterApply = (exporter) => {
+        this.setState({ _exportApply: exporter });
+    }
+    setExporterApplyPaymentAssignment = (exporter) => {
+        this.setState({ _PaymentAssignment: exporter });
+    }
     render() {
         return (
             <Fragment>
@@ -1374,6 +1388,16 @@ class insurancePayments extends Component {
                                 >
                                     <ButtonComponent
                                         type="add"
+                                        icon="export"
+                                        classButton="infraBtn-primary"
+                                        onClick={() => {
+                                            exportExcelFile(this.state._export, this.props.insurancePayments, this.state.insuranceColumns);
+                                        }}
+                                    >
+                                        Export to Excel
+                                    </ButtonComponent>
+                                    <ButtonComponent
+                                        type="add"
                                         classButton="infraBtn-primary action-button"
                                         onClick={() => {
                                             this.setState({ Show_HidePlanDialogVisible: true });
@@ -1435,6 +1459,8 @@ class insurancePayments extends Component {
                                                 sortColumns={[]}
                                                 onSortChange={this.onSortChange}
                                                 pageChange={this.pageChange}
+                                                setExporter={this.setExporter}
+                                                fileName={"Plan Payment " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                             ></GridComponent>
                                         </div>
                                     </div>
@@ -1766,6 +1792,16 @@ class insurancePayments extends Component {
                                         >
                                             <ButtonComponent
                                                 type="add"
+                                                icon="export"
+                                                classButton="infraBtn-primary"
+                                                onClick={() => {
+                                                    exportExcelFile(this.state._exportPayment, this.props.paymentAssignments, this.state.insuranceAssignmentColumns);
+                                                }}
+                                            >
+                                                Export to Excel
+                                            </ButtonComponent>
+                                            <ButtonComponent
+                                                type="add"
                                                 classButton="infraBtn-primary action-button"
                                                 onClick={() => {
                                                     this.setState({ Show_HideChargeDialogVisible: true });
@@ -1825,6 +1861,8 @@ class insurancePayments extends Component {
                                                         sortColumns={[]}
                                                         onSortChange={this.onSortChange}
                                                         pageChange={this.pageChange}
+                                                        setExporter={this.setExporterPayment}
+                                                        fileName={"Plan Payment Details" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                     ></GridComponent>
                                                 </div>
                                             </div>
@@ -2066,6 +2104,16 @@ class insurancePayments extends Component {
                                                         right: "0",
                                                     }}
                                                 >
+                                                    <ButtonComponent  
+                                                        type="add"
+                                                        icon="export"
+                                                        classButton="infraBtn-primary"
+                                                        onClick={() => {
+                                                            exportExcelFile(this.state._exportApply, this.props.applyPlanPayments, this.state.applyPlanPaymentColumns);
+                                                        }}
+                                                    >
+                                                        Export to Excel
+                                                    </ButtonComponent>
                                                     <ButtonComponent
                                                         type="add"
                                                         classButton="infraBtn-primary action-button"
@@ -2143,6 +2191,8 @@ class insurancePayments extends Component {
                                                                 //     ? this.props.patientApplys[0].totalCount
                                                                 //     : this.props.patientApplys.length
                                                                 // }
+                                                                setExporter={this.setExporterApply}
+                                                                 fileName={"Payment Applyed "+moment().format('DD/MM/YYYY, h:mm:ss a')+".xlsx"}
                                                                 ></GridComponent>
                                                             </div>
                                                         </div>
@@ -2292,6 +2342,16 @@ class insurancePayments extends Component {
                                                     >
                                                         <ButtonComponent
                                                             type="add"
+                                                            icon="export"
+                                                            classButton="infraBtn-primary"
+                                                            onClick={() => {
+                                                                exportExcelFile(this.state._PaymentAssignment, this.props.paymentAssignments, this.state.insuranceAssignmentColumns);
+                                                            }}
+                                                        >
+                                                            Export to Excel
+                                                        </ButtonComponent>
+                                                        <ButtonComponent
+                                                            type="add"
                                                             classButton="infraBtn-primary action-button"
                                                             onClick={() => {
                                                                 this.setState({
@@ -2348,6 +2408,8 @@ class insurancePayments extends Component {
                                                                 sortColumns={[]}
                                                                 onSortChange={this.onSortChange}
                                                                 pageChange={this.pageChange}
+                                                                setExporter={this.setExporterApplyPaymentAssignment}
+                                                                fileName={"Payment Assignment" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                             ></GridComponent>
                                                         </div>
                                                     </div>
