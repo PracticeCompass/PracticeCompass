@@ -202,16 +202,16 @@ class FilterableGridComponent extends React.Component {
       this.props.getSelectedItems(_selectedItems);
     }
   };
-  onKeyDown = (event) => {
-    const selectedState = getSelectedStateFromKeyDown({
-      event,
-      selectedState: this.state.selectedState,
-      dataItemKey: this.state.patientDataItemKey,
-    });
-    this.setState({
-      selectedState,
-    });
-  };
+  //onKeyDown = (event) => {
+  //  const selectedState = getSelectedStateFromKeyDown({
+  //    event,
+  //    selectedState: this.state.selectedState,
+  //    dataItemKey: this.state.patientDataItemKey,
+  //  });
+  //  this.setState({
+  //    selectedState,
+  //  });
+  //};
   onHeaderSelectionChange = (event) => {
     const checkboxElement = event.syntheticEvent.target;
     const checked = checkboxElement.checked;

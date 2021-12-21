@@ -95,7 +95,7 @@ class FindDialogComponent extends Component {
                   take={24}
                   onSelectionChange={this.onSelectionChange}
                   onRowDoubleClick={this.props.onRowDoubleClick}
-                  onKeyDown={this.props.onKeyDown}
+                  //onKeyDown={this.props.onKeyDown}
                   columns={this.props.columns}
                   data={this.props.data}
                   //sort={this.props.sort}

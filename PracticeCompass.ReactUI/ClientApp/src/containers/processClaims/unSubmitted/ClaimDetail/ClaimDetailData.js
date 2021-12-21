@@ -172,7 +172,8 @@ export const submissionHistoryColumns = [
         field: "claimStatus",
         title: "Claim Status",
         minWidth: 100,
-        orderIndex: 7
+        orderIndex: 7,
+        showToolTip: true
     },
     {
         field: "amountPaid",

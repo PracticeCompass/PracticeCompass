@@ -888,7 +888,8 @@ class insurancePayments extends Component {
                         adjustment: item.adjustments,
                         PaymentType: "I",
                         paymentRemaining: this.state.InsurancePaymentDetails?.remaining,
-                        approvedAmount: 0,
+                        approvedAmount: null,
+                        goToNext: item.moveToNextPlan,
                     }
                     : null
             );

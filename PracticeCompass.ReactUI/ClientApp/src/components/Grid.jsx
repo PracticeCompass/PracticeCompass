@@ -187,16 +187,16 @@ class GridComponent extends React.Component {
     }
   };
 
-  onKeyDown = (event) => {
-    const selectedState = getSelectedStateFromKeyDown({
-      event,
-      selectedState: this.state.selectedState,
-      dataItemKey: this.state.patientDataItemKey,
-    });
-    this.setState({
-      selectedState,
-    });
-  };
+  //onKeyDown = (event) => {
+  //  const selectedState = getSelectedStateFromKeyDown({
+  //    event,
+  //    selectedState: this.state.selectedState,
+  //    dataItemKey: this.state.patientDataItemKey,
+  //  });
+  //  this.setState({
+  //    selectedState,
+  //  });
+  //};
 
   onHeaderSelectionChange = (event) => {
     const checkboxElement = event.syntheticEvent.target;
@@ -329,7 +329,7 @@ class GridComponent extends React.Component {
             onSortChange={this.sortChange}
             //onColumnReorder={this.onColumnReorder}
             onSelectionChange={(event) => this.onSelectionChange(event)}
-            onKeyDown={(event) => this.props.onKeyDown(event)}
+            //onKeyDown={(event) => this.props.onKeyDown(event)}
             onRowDoubleClick={(event) => this.props.onRowDoubleClick(event)}
             data={
               (this.props.data != null && Array.isArray(this.props.data)) 

@@ -15,6 +15,6 @@ namespace PracticeCompass.Core.Models
         public int? PlanID { get; set; }
         public decimal PaymentRemaining { get; set; }
         public decimal? ApprovedAmount { get; set; }
-
+        public bool? GoToNext { get; set; }
     }
 }

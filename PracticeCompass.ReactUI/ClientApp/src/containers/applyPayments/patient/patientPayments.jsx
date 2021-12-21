@@ -928,7 +928,7 @@ class PatientPayments extends Component {
                         amountPaid: item.patientPaid,
                         adjustment: item.adjustments,
                         PaymentType: "G",
-                        approvedAmount: 0,
+                        approvedAmount: null,
 
                     }
                     : null
