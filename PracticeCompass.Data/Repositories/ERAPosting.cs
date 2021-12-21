@@ -206,8 +206,9 @@ namespace PracticeCompass.Data.Repositories
                        Adjustment = ERSChargeClaimAdjustment.FirstOrDefault(x=>x.ERSChargeSID== ERSCharge.ERSChargeSID)?.AdjustmentAmt,
                        AmountPaid = ERSChargeServiceInfo.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID)?.LineItemProviderPaymentAmt,
                        ApprovedAmount= (ERSChargeServiceInfo.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID)==null?0: ERSChargeServiceInfo.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID).LineItemProviderPaymentAmt) +
-                        (ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR")==null?0: ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR").AdjustmentAmt)
-
+                        (ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR")==null?0: ERSChargeClaimAdjustment.FirstOrDefault(x => x.ERSChargeSID == ERSCharge.ERSChargeSID && x.ClaimAdjustmentGroupCode == "PR").AdjustmentAmt),
+                       GoToNext=true,
+                       PolicyNumber = PlanClaimCharge.FirstOrDefault(x=>x.ChargeSID == Convert.ToInt32(ERSCharge.ReferenceID) && x.PlanID == plan.PlanID).PolicyNumber
                     });
                 }
                 var ChargeActivities = new List<ChargeActivity>();
@@ -290,6 +291,7 @@ namespace PracticeCompass.Data.Repositories
                 var PlanClaimChargeRemitAd = this.db.Execute(PlanClaimChargeRemitAdjSql, PlanClaimChargeRemitAdjments);
                 txScope.Complete();
 
+                paymentRepository.MovetoNextPlan(applyPaymentModels);
                 return true;
             }
             catch (Exception ex )

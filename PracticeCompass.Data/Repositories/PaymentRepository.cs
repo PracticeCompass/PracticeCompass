@@ -190,7 +190,7 @@ namespace PracticeCompass.Data.Repositories
             txScope.Complete();
 
             #region move_to_next
-
+            MovetoNextPlan(applyPaymentModel);
             #endregion
             return true;
         }
@@ -516,6 +516,7 @@ namespace PracticeCompass.Data.Repositories
         {
             var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
             List<Charge> Charges = new List<Charge>();
+            List<Claim> Claims = new List<Claim>();
             List<PlanClaimCharge> PlanClaimCharge = new List<PlanClaimCharge>();
             List<ChargeActivity> ChargeActivities = new List<ChargeActivity>();
             #region Get_Charges
@@ -527,100 +528,107 @@ namespace PracticeCompass.Data.Repositories
 
             #region get_claims
             sql = "select  *  from PlanClaimCharge where ChargeSID IN @ids";
-            var Claimresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
-            PlanClaimCharge = Claimresults.Read<PlanClaimCharge>().ToList();
+            var PlanClaimChargeresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
+            PlanClaimCharge = PlanClaimChargeresults.Read<PlanClaimCharge>().ToList();
+            var ClaimIDs = PlanClaimCharge.Select(x=>x.ClaimSID);
+             sql = "SELECT * FROM Claim WHERE ClaimSID IN @ids";
+            var ClaimResults = this.db.QueryMultiple(sql, new { ids = ClaimIDs });
+            Claims = ClaimResults.Read<Claim>().ToList();
             #endregion
+
             foreach (var applyPayment in applyPaymentModel)
             {
 
-                var ChargeRecord = Charges.FirstOrDefault(x => x.ChargeSID == applyPayment.ChargeSID);
-                
-                var ClaimrecordID = PlanClaimCharge.FirstOrDefault(x=>x.ChargeSID==applyPayment.ChargeSID && x.PlanID==applyPayment.PlanID && x.PolicyNumber==applyPayment.PolicyNumber).ClaimSID;
-                sql = "select * from Claim where  ClaimSID=@ClaimSID";
-                var Claimrecord = this.db.QueryFirst<Claim>(sql, new { ClaimSID = ClaimrecordID });
-
-                #region Get_Charges_Coverage
-                sql = "select  * from ChargeCoverage where ChargeSID= @ChargeSID";
-                var ChargeCoverageresults = this.db.QueryMultiple(sql, new { ChargeSID = ChargeRecord.ChargeSID }); // change to query multiple
-                var ChargeCoverage = ChargeCoverageresults.Read<ChargeCoverage>().ToList();
-                #endregion
-                //select from ChargeCoverage  by planid and PolicyNumber
-                //get next index if last one change to patient
-                var cuurent_coverage = ChargeCoverage.FirstOrDefault(x => x.PlanID == applyPayment.PlanID && x.PolicyNumber == applyPayment.PolicyNumber).CoverageOrder;
-                var Next_ChargeCoverage = ChargeCoverage.FirstOrDefault(x => x.PlanID == applyPayment.PlanID && x.PolicyNumber == applyPayment.PolicyNumber && x.CoverageOrder == cuurent_coverage + 1);
-                int? Next_Payor;
-                int Next_CoverageOrder;
-                if (Next_ChargeCoverage == null)
+                if (applyPayment.GoToNext.Value)
                 {
-                    Next_CoverageOrder = 99;
-                    Next_Payor = ChargeRecord.PatientID;
+                    var ChargeRecord = Charges.FirstOrDefault(x => x.ChargeSID == applyPayment.ChargeSID);
 
+                    var ClaimrecordID = PlanClaimCharge.FirstOrDefault(x => x.ChargeSID == applyPayment.ChargeSID && x.PlanID == applyPayment.PlanID && x.PolicyNumber == applyPayment.PolicyNumber).ClaimSID;
+                    var Claimrecord = Claims.FirstOrDefault(x => x.ClaimSID == ClaimrecordID);
+
+                    #region Get_Charges_Coverage
+                    sql = "select  * from ChargeCoverage where ChargeSID= @ChargeSID";
+                    var ChargeCoverageresults = this.db.QueryMultiple(sql, new { ChargeSID = ChargeRecord.ChargeSID }); // change to query multiple
+                    var ChargeCoverage = ChargeCoverageresults.Read<ChargeCoverage>().ToList();
+                    #endregion
+                    //select from ChargeCoverage  by planid and PolicyNumber
+                    //get next index if last one change to patient
+                    var cuurent_coverage = ChargeCoverage.FirstOrDefault(x => x.PlanID == applyPayment.PlanID && x.PolicyNumber == applyPayment.PolicyNumber).CoverageOrder;
+                    var Next_ChargeCoverage = ChargeCoverage.FirstOrDefault(x => x.PlanID == applyPayment.PlanID && x.PolicyNumber == applyPayment.PolicyNumber && x.CoverageOrder == cuurent_coverage + 1);
+                    int? Next_Payor;
+                    int Next_CoverageOrder;
+                    if (Next_ChargeCoverage == null)
+                    {
+                        Next_CoverageOrder = 99;
+                        Next_Payor = ChargeRecord.PatientID;
+
+                    }
+                    else
+                    {
+                        Next_CoverageOrder = cuurent_coverage + 1;
+                        Next_Payor = Next_ChargeCoverage.PlanID;
+                    }
+                    #region Update_Charge_Record
+                    ChargeRecord.RespCoverageOrder = Next_CoverageOrder;
+                    ChargeRecord.TimeStamp = timestamp;
+                    ChargeRecord.LastUser = practiceCompassHelper.CurrentUser();
+                    ChargeRecord.pro2modified = DateTime.Now;
+                    #endregion
+
+                    #region Update_Claim
+                    // update coverage order
+
+                    if (Claimrecord != null && Next_CoverageOrder > Claimrecord.LowestRespCoverageOrder)
+                    {
+                        Claimrecord.LowestRespCoverageOrder = Next_CoverageOrder;
+                        Claimrecord.TimeStamp = timestamp;
+                        Claimrecord.LastUser = practiceCompassHelper.CurrentUser();
+                        Claimrecord.pro2modified = DateTime.Now;
+                    }
+                    #endregion
+
+                    #region Inset_Chargeactivity
+
+                    string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
+                    int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount", ChargeActivities.Count(x => x.ChargeSID == ChargeRecord.ChargeSID) != 0 ?
+                    ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0, string.Format("Where ChargeSID = {0}", ChargeRecord.ChargeSID.ToString()));
+
+                    #region ChargeActivity_XFR
+                    // ChargeActivity
+
+                    ChargeActivities.Add(new Core.Models.ChargeActivity
+                    {
+                        prrowid = ChargeActivityMAXRowID,
+                        ChargeSID = ChargeRecord.ChargeSID,
+                        ActivityCount = maxactivitycount,
+                        Amount = 0,
+                        ActivityType = "XFR",
+                        SourceType = Next_CoverageOrder == 99 ? "G" : "I",
+                        SourceID = Next_Payor,
+                        CreateMethod = "M",
+                        TimeStamp = timestamp,
+                        LastUser = practiceCompassHelper.CurrentUser(),
+                        CreateStamp = timestamp,
+                        CreateUser = practiceCompassHelper.CurrentUser(),
+                        Pro2SrcPDB = "medman",
+                        pro2created = DateTime.Now,
+                        pro2modified = DateTime.Now,
+                        PostDate = DateTime.Now.Date,
+                        AccountSID = ChargeRecord.AccountSID,
+                        DNPracticeID = ChargeRecord.PracticeID,
+                        PatientStatement = "",
+                        DisplayText = ""
+
+                    });
+                    #endregion
+
+                    #endregion 
                 }
-                else
-                {
-                    Next_CoverageOrder = cuurent_coverage + 1;
-                    Next_Payor = Next_ChargeCoverage.PlanID;
-                }
-                #region Update_Charge_Record
-                ChargeRecord.RespCoverageOrder = Next_CoverageOrder;
-                ChargeRecord.TimeStamp = timestamp;
-                ChargeRecord.LastUser = practiceCompassHelper.CurrentUser();
-                ChargeRecord.pro2modified = DateTime.Now;
-                #endregion
-
-                #region Update_Claim
-                // update coverage order
-            
-                if (Claimrecord != null && Next_CoverageOrder > Claimrecord.LowestRespCoverageOrder)
-                {
-                    Claimrecord.LowestRespCoverageOrder = Next_CoverageOrder;
-                    Claimrecord.TimeStamp = timestamp;
-                    Claimrecord.LastUser = practiceCompassHelper.CurrentUser();
-                    Claimrecord.pro2modified = DateTime.Now;
-                }
-                #endregion
-
-                #region Inset_Chargeactivity
-             
-                string ChargeActivityMAXRowID = practiceCompassHelper.GetMAXprrowid("ChargeActivity", ChargeActivities.Count() != 0 ? ChargeActivities[ChargeActivities.Count() - 1].prrowid : "0");
-                int maxactivitycount = practiceCompassHelper.GetMAXColumnid("ChargeActivity", "ActivityCount", ChargeActivities.Count(x => x.ChargeSID == ChargeRecord.ChargeSID) != 0 ?
-                ChargeActivities[ChargeActivities.Count() - 1].ActivityCount.Value : 0, string.Format("Where ChargeSID = {0}", ChargeRecord.ChargeSID.ToString()));
-
-                #region ChargeActivity_XFR
-                // ChargeActivity
-
-                ChargeActivities.Add(new Core.Models.ChargeActivity
-                {
-                    prrowid = ChargeActivityMAXRowID,
-                    ChargeSID = ChargeRecord.ChargeSID,
-                    ActivityCount = maxactivitycount,
-                    Amount = 0,
-                    ActivityType = "XFR",
-                    SourceType = Next_CoverageOrder == 99 ? "G" : "I",
-                    SourceID = Next_Payor,
-                    CreateMethod = "M",
-                    TimeStamp = timestamp,
-                    LastUser = practiceCompassHelper.CurrentUser(),
-                    CreateStamp = timestamp,
-                    CreateUser = practiceCompassHelper.CurrentUser(),
-                    Pro2SrcPDB = "medman",
-                    pro2created = DateTime.Now,
-                    pro2modified = DateTime.Now,
-                    PostDate = DateTime.Now.Date,
-                    AccountSID = ChargeRecord.AccountSID,
-                    DNPracticeID = ChargeRecord.PracticeID,
-                    PatientStatement = "",
-                    DisplayText = ""
-
-                });
-                #endregion
-
-                #endregion
             }
 
             using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
-            //this.db.BulkUpdate(claim);
+            this.db.BulkUpdate(Claims);
 
             #region Insert_Statments
             var ChargeActivitySQL = "INSERT INTO [dbo].[ChargeActivity] VALUES " +
@@ -628,6 +636,8 @@ namespace PracticeCompass.Data.Repositories
             ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +
             ",@DNPracticeID,@Pro2SrcPDB,@pro2created,@pro2modified)";
             #endregion
+
+            txScope.Complete();
 
 
 
