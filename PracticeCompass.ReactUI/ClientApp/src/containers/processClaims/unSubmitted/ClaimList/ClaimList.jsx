@@ -9,6 +9,8 @@ import "./ClaimList.css";
 import config from "../../../../../src/config";
 import { getter } from "@progress/kendo-react-common";
 import CheckboxComponent from "../../../../components/Checkbox";
+import {exportExcelFile} from "../../../common/export";
+import moment from 'moment';
 import {
     guarantorColumns,
     insuranceColumns,
@@ -209,6 +211,9 @@ class ClaimList extends Component {
         claimListColumns: columns,
         gridWidth: 0
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+    }
     getPhysiciansUrl(filter) {
         return `${config.baseUrl}/ClaimList/PhysicianGet?sortname=${filter}`;
     }
@@ -1714,6 +1719,16 @@ class ClaimList extends Component {
                             >
                                 <ButtonComponent
                                     type="add"
+                                    icon="export"
+                                    classButton="infraBtn-primary"
+                                    onClick={() => {
+                                        exportExcelFile(this.state._export, this.props.Claims, this.state.claimListColumns);
+                                    }}
+                                >
+                                    Export to Excel
+                                </ButtonComponent>
+                                <ButtonComponent
+                                    type="add"
                                     classButton="infraBtn-primary action-button"
                                     onClick={() => {
                                         this.setState({ Show_HideDialogVisible: true });
@@ -1774,6 +1789,8 @@ class ClaimList extends Component {
                                         sortColumns={sortColumns}
                                         onSortChange={this.onSortChange}
                                         pageChange={this.pageChange}
+                                        setExporter={this.setExporter}
+                                        fileName={"Claim " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                     ></GridComponent>
                                 )}
                             </div>

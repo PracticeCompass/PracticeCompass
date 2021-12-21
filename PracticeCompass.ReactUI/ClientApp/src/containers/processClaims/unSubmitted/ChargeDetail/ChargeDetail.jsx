@@ -10,6 +10,8 @@ import Show_HideDialogComponent from "../../../common/show_hideDialog";
 import NotificationComponent from "../../../common/notification";
 import { getter } from "@progress/kendo-react-common";
 import { GetCharageActivity } from "../../../../redux/actions/chargeDetail";
+import {exportExcelFile} from "../../../common/export";
+import moment from 'moment';
 import {
   GetGridColumns,
   SaveGridColumns
@@ -74,7 +76,7 @@ class ChargeDetail extends Component {
   toggleShowColumnsDialog = () => {
     this.setState({ Show_HideDialogVisible: false });
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   SaveColumnsShow = async columns => {
     if (!columns.find(x => x.hide != true)) {
       this.setState({ Show_HideDialogVisible: false });
@@ -101,7 +103,7 @@ class ChargeDetail extends Component {
       }, 10);
     }
   };
-  onChargeActivitySelection = () => {};
+  onChargeActivitySelection = () => { };
   closeNotification = () => {
     this.setState({
       success: false,
@@ -111,6 +113,9 @@ class ChargeDetail extends Component {
       none: false
     });
   };
+  setExporter = (exporter) => {
+    this.setState({ _export: exporter });
+}
   render() {
     return (
       <Fragment>
@@ -181,6 +186,16 @@ class ChargeDetail extends Component {
         >
           <ButtonComponent
             type="add"
+            icon="export"
+            classButton="infraBtn-primary"
+            onClick={() => {
+              exportExcelFile(this.state._export, this.state.chargeActivity, this.state.chargeListColumns);
+            }}
+          >
+            Export to Excel
+          </ButtonComponent>
+          <ButtonComponent
+            type="add"
             style={{ marginLeft: "11px" }}
             classButton="infraBtn-primary action-button"
             onClick={() => {
@@ -225,6 +240,8 @@ class ChargeDetail extends Component {
                   width="100%"
                   sortColumns={[]}
                   onSortChange={this.onSortChange}
+                  setExporter={this.setExporter}
+                  fileName={"Charge Detail " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                 />
               )}
             </div>
