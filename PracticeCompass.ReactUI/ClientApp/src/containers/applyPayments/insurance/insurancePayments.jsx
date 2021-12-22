@@ -1681,6 +1681,18 @@ class insurancePayments extends Component {
                                                         Save
                                                     </ButtonComponent>
                                                 </div>
+                                                <div style={{ float: "left", marginLeft: "10px" }}>
+                                                    <ButtonComponent
+                                                        type="edit"
+                                                        icon="edit"
+                                                        classButton="infraBtn-primary action-button"
+                                                        onClick={() => {
+                                                            this.ApplyInsurancePayment();
+                                                        }}
+                                                    >
+                                                        Apply
+                                                    </ButtonComponent>
+                                                </div>
                                             </div>
                                         </div>
                                         <div style={{ float: "left" }}>
@@ -1807,18 +1819,7 @@ class insurancePayments extends Component {
                                             height: "20px",
                                         }}
                                     >
-                                        <div style={{ float: "left", marginLeft: "10px" }}>
-                                            <ButtonComponent
-                                                type="edit"
-                                                icon="edit"
-                                                classButton="infraBtn-primary action-button"
-                                                onClick={() => {
-                                                    this.ApplyInsurancePayment();
-                                                }}
-                                            >
-                                                Apply
-                                            </ButtonComponent>
-                                        </div>
+
                                         <div
                                             style={{
                                                 float: "right",

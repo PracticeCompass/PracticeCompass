@@ -577,7 +577,7 @@ class DocumentManager extends Component {
                     DATA_ITEM_KEY="fileName"
                     idGetter={idGetterFileID}
                     data={this.state.files || []}
-                    height="500px"
+                    height="700px"
                     width="100%"
                     //hasCheckBox={true}
                     sortColumns={[]}

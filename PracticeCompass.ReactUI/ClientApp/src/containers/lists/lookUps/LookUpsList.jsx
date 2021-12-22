@@ -338,7 +338,7 @@ class LookUpsList extends Component {
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
                         >
-                            <div style={{ width: "515px" }}>
+                            <div style={{ width: "380px" }}>
                                 <div style={{ float: "left", marginLeft: "31px" }}>
                                     <label className="userInfoLabel">Lookup Type</label>
                                 </div>
@@ -368,16 +368,6 @@ class LookUpsList extends Component {
                                         onClick={this.toggleLookupDialog}
                                     >
                                         Find
-                                    </ButtonComponent>
-                                </div>
-                                <div style={{ float: "left" }}>
-                                    <ButtonComponent
-                                        type="edit"
-                                        icon="edit"
-                                        classButton="infraBtn-primary"
-                                        onClick={this.toggleLookupTypeDialog}
-                                    >
-                                        Add Lookup Type
                                     </ButtonComponent>
                                 </div>
                             </div>
