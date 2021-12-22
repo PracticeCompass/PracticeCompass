@@ -1782,6 +1782,18 @@ class insurancePayments extends Component {
                                             height: "20px",
                                         }}
                                     >
+                                        <div style={{ float: "left", marginLeft: "10px" }}>
+                                            <ButtonComponent
+                                                type="edit"
+                                                icon="edit"
+                                                classButton="infraBtn-primary action-button"
+                                                onClick={() => {
+                                                    this.ApplyInsurancePayment();
+                                                }}
+                                            >
+                                                Apply
+                                            </ButtonComponent>
+                                        </div>
                                         <div
                                             style={{
                                                 float: "right",
@@ -2104,7 +2116,7 @@ class insurancePayments extends Component {
                                                         right: "0",
                                                     }}
                                                 >
-                                                    <ButtonComponent  
+                                                    <ButtonComponent
                                                         type="add"
                                                         icon="export"
                                                         classButton="infraBtn-primary"
@@ -2186,13 +2198,13 @@ class insurancePayments extends Component {
                                                                     onSortChange={this.onSortChange}
                                                                     // pageChange={this.pageChange}
                                                                     isEditable={true}
-                                                                // totalCount={
-                                                                //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                                                                //     ? this.props.patientApplys[0].totalCount
-                                                                //     : this.props.patientApplys.length
-                                                                // }
-                                                                setExporter={this.setExporterApply}
-                                                                 fileName={"Payment Applyed "+moment().format('DD/MM/YYYY, h:mm:ss a')+".xlsx"}
+                                                                    // totalCount={
+                                                                    //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                                                    //     ? this.props.patientApplys[0].totalCount
+                                                                    //     : this.props.patientApplys.length
+                                                                    // }
+                                                                    setExporter={this.setExporterApply}
+                                                                    fileName={"Payment Applyed " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                                 ></GridComponent>
                                                             </div>
                                                         </div>
