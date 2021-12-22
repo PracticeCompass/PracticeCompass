@@ -43,6 +43,10 @@ function mapDispatchToProps(dispatch) {
     };
 }
 class LookUpsList extends Component {
+    constructor() {
+        super();
+        this.updateDimensions = this.updateDimensions.bind(this);
+    }
     state = {
         refreshFilter: true,
         timer: 5000,

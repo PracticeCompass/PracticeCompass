@@ -12,6 +12,8 @@ import SaveFilterComponent from "../../common/saveFilter";
 import NotificationComponent from "../../common/notification";
 import Show_HideDialogComponent from "../../common/show_hideDialog";
 import FindDialogComponent from "../../common/findDialog";
+import {exportExcelFile} from "../../common/export";
+import moment from 'moment';
 import {
   getFilters,
   FilterDelete,
@@ -22,9 +24,9 @@ import {
   GetGridColumns,
   SaveGridColumns
 } from "../../../redux/actions/GridColumns";
-import { getPlans,getPlanGroup,resetPlanGroupList } from "../../../redux/actions/plans";
+import { getPlans, getPlanGroup, resetPlanGroupList } from "../../../redux/actions/plans";
 import { SaveLookups } from "../../../redux/actions/lookups";
-import {planGroupColumns} from "./InsurancesData"
+import { planGroupColumns } from "./InsurancesData"
 const DATA_ITEM_KEY_PLAN = "gridId";
 const idGetterInsuranceList = getter(DATA_ITEM_KEY_PLAN);
 
@@ -35,7 +37,7 @@ function mapStateToProps(state) {
   return {
     plans: state.plans.plans,
     UiExpand: state.ui.UiExpand,
-    planGroups:state.plans.planGroups,
+    planGroups: state.plans.planGroups,
     dropDownPlanGroups: state.lookups.planGroups,
   };
 }
@@ -54,10 +56,10 @@ function mapDispatchToProps(dispatch) {
     SaveGridColumns: (name, columns) =>
       dispatch(SaveGridColumns(name, columns)),
     GetGridColumns: (name) => dispatch(GetGridColumns(name)),
-    getPlanGroup:(search)=>dispatch(getPlanGroup(search)),
+    getPlanGroup: (search) => dispatch(getPlanGroup(search)),
     SaveLookups: (EntityValueID, EntityName) =>
-    dispatch(SaveLookups(EntityValueID, EntityName)),
-    resetPlanGroupList:() =>dispatch(resetPlanGroupList())
+      dispatch(SaveLookups(EntityValueID, EntityName)),
+    resetPlanGroupList: () => dispatch(resetPlanGroupList())
   };
 }
 class Insurance extends Component {
@@ -79,7 +81,7 @@ class Insurance extends Component {
     listName: null,
     take: 28,
     insuranceColumns: insuranceColumns,
-    planGroupVisible:false
+    planGroupVisible: false
   }
   onSortChange = () => {
 
@@ -109,9 +111,9 @@ class Insurance extends Component {
     this.setState({ refreshGrid: true });
   };
   planGridSearch = async (refreshData = true) => {
-    let zipValue =this.state.Zip;
-    if (this.state.Zip && zipValue.replaceAll(' ','').length < 7) {
-       zipValue =zipValue.replaceAll(' ','').match(/\d+/)[0];
+    let zipValue = this.state.Zip;
+    if (this.state.Zip && zipValue.replaceAll(' ', '').length < 7) {
+      zipValue = zipValue.replaceAll(' ', '').match(/\d+/)[0];
       this.setState({
         Zip: zipValue
       })
@@ -127,13 +129,16 @@ class Insurance extends Component {
         ? this.state.selectedSortColumn
         : "",
       SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
-      PlanGroup:this.state.selectedPlanGroup?this.state.selectedPlanGroup.entityId:""
+      PlanGroup: this.state.selectedPlanGroup ? this.state.selectedPlanGroup.entityId : ""
     };
     await this.props.getPlans(planGrid);
   };
   getFilters(filter) {
     if (filter !== undefined) filter = "";
     return `${config.baseUrl}/Filters/FiltersGet?Entity=insurance&DisplayName=${filter}`;
+  }
+  setExporter = (exporter) => {
+    this.setState({ _export: exporter });
   }
   filterChange = async (event) => {
     if (event && event.value) {
@@ -300,7 +305,7 @@ class Insurance extends Component {
     }
     this.setState({ refreshGrid: true });
   };
-  
+
   togglePlanGroupDialog = () => {
     if (this.state.planGroupVisible) {
       this.setState({
@@ -313,7 +318,7 @@ class Insurance extends Component {
     });
   };
   planGroupSearch = () => {
-    this.props.getPlanGroup(this.state.planGroupSearchText??'');
+    this.props.getPlanGroup(this.state.planGroupSearchText ?? '');
   };
   onPlanGroupKeyDown = (event) => {
     var selectedDataItems = event.dataItems.slice(
@@ -323,16 +328,16 @@ class Insurance extends Component {
     this.setState({
       selectedPlanGroup: selectedDataItems[0]
         ? {
-            entityName: selectedDataItems[0].groupNumber,
-            entityId: selectedDataItems[0].groupNumber,
-          }
+          entityName: selectedDataItems[0].groupNumber,
+          entityId: selectedDataItems[0].groupNumber,
+        }
         : null,
     });
   };
-  onPlanGroupSelectionChange=()=>{
+  onPlanGroupSelectionChange = () => {
 
   }
-  onPlanGroupDoubleClick=(event)=>{
+  onPlanGroupDoubleClick = (event) => {
     this.setState({
       selectedPlanGroup: {
         entityId: event.dataItem.groupNumber,
@@ -510,7 +515,7 @@ class Insurance extends Component {
                   <label className="userInfoLabel">Group</label>
                 </div>
                 <div style={{ width: "200px", float: "left" }}>
-                   <DropDown
+                  <DropDown
                     className="unifyHeight"
                     data={this.props.dropDownPlanGroups}
                     textField="entityName"
@@ -627,6 +632,16 @@ class Insurance extends Component {
               >
                 <ButtonComponent
                   type="add"
+                  icon="export"
+                  classButton="infraBtn-primary"
+                  onClick={() => {
+                    exportExcelFile(this.state._export, this.props.plans, this.state.insuranceColumns);
+                  }}
+                >
+                  Export to Excel
+                </ButtonComponent>
+                <ButtonComponent
+                  type="add"
                   classButton="infraBtn-primary action-button"
                   onClick={() => {
                     this.setState({ Show_HidePlanDialogVisible: true });
@@ -677,6 +692,8 @@ class Insurance extends Component {
                   idGetter={idGetterInsuranceList}
                   take={this.state.take}
                   DATA_ITEM_KEY="gridId"
+                  setExporter={this.setExporter}
+                  fileName={"Plans " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                 ></GridComponent>
               </div>
             </div>
