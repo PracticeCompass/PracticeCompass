@@ -547,7 +547,7 @@ class insurancePayments extends Component {
         await this.props.getPaymentAssignments(
             InsurancePaymentDetails.paymentSID
         );
-        
+
         await this.setApplyInsurancePaymentExpanded();
     };
     onInsurancePaymentGridSelectionChange = async (event) => {
@@ -768,9 +768,10 @@ class insurancePayments extends Component {
             }, this.state.timer);
             return;
         }
-        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID &&
-            (event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
-                || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)) {
+        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
+            //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
+            //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
+        ) {
             this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
         }
         else {
