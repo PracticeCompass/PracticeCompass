@@ -138,7 +138,7 @@ class LookUpsList extends Component {
     };
     setExporter = (exporter) => {
         this.setState({ _export: exporter });
-      }
+    }
     reset = () => {
         this.setState({
             Zip: null,
@@ -406,6 +406,14 @@ class LookUpsList extends Component {
                                     onChange={(e) => this.setState({ active: e.value })}
                                 />
                             </div>
+
+
+
+                        </div>
+                        <div
+                            className="rowHeight"
+                            style={{ display: "flex", flexFlow: "row nowrap" }}
+                        >
                             <div style={{ float: "left" }}>
                                 <ButtonComponent
                                     icon="search"
