@@ -16,7 +16,8 @@ import { lookupColumns, lookupTypeColumns } from "./LookUpsData";
 import config from "../../../../src/config";
 import { getLookupCodes, resetlookupTypeList, getLookupTypes } from "../../../redux/actions/lookupCode"
 import { SaveLookups } from "../../../redux/actions/lookups";
-
+import { exportExcelFile } from "../../common/export";
+import moment from 'moment';
 
 const DATA_ITEM_KEY_LOOKUP_TYPE = "lookupType";
 const idGetterLookupType = getter(DATA_ITEM_KEY_LOOKUP_TYPE);
@@ -135,6 +136,9 @@ class LookUpsList extends Component {
         this.reset();
         this.setState({ refreshFilter: true });
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+      }
     reset = () => {
         this.setState({
             Zip: null,
@@ -273,11 +277,11 @@ class LookUpsList extends Component {
                     none={this.state.none}
                 ></NotificationComponent>
                 {this.state.lookupTypeAddVisible && (
-                <LookupTypeDialogComponent
-                 toggleLookupTypeDialog={this.toggleLookupTypeDialog}
-                >
+                    <LookupTypeDialogComponent
+                        toggleLookupTypeDialog={this.toggleLookupTypeDialog}
+                    >
 
-                </LookupTypeDialogComponent>)}
+                    </LookupTypeDialogComponent>)}
                 {this.state.lookupVisible && (
                     <FindDialogComponent
                         title="Lookup Type Search"
@@ -438,58 +442,26 @@ class LookUpsList extends Component {
                                     Add
                                 </ButtonComponent>
                             </div>
-                        </div>
-
-
-                        {/* <div
-                            className="rowHeight"
-                            style={{ display: "flex", flexFlow: "row nowrap" }}
-                        >
-
-                            <div style={{ float: "left", width: "200px !important" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary insurance-button "
-                  onClick={() => {
-                    this.setState({ visibleSaveFilter: true });
-                  }}
-                >
-                  Save
-                </ButtonComponent>
-              </div>
-                            <div style={{ float: "left" }}>
-                <ButtonComponent
-                  type="edit"
-                  icon="edit"
-                  classButton="infraBtn-primary insurance-button "
-                  onClick={() => {
-                    this.setState({ providerVisible: true });
-                  }}
-                >
-                  Documents
-                </ButtonComponent>
-              </div>
-
                             <div
                                 style={{
                                     float: "right",
                                     position: "absolute",
-                                    marginRight: "10px",
+                                    //marginRight: "10px",
                                     right: "0",
                                 }}
                             >
                                 <ButtonComponent
                                     type="add"
-                                    classButton="infraBtn-primary action-button"
+                                    icon="export"
+                                    classButton="infraBtn-primary"
                                     onClick={() => {
-                                        this.setState({ Show_HidePlanDialogVisible: true });
+                                        exportExcelFile(this.state._export, this.props.lookups, lookupColumns);
                                     }}
                                 >
-                                    Edit Grid
+                                    Export to Excel
                                 </ButtonComponent>
                             </div>
-                        </div> */}
+                        </div>
 
                     </div>
                 </div>
@@ -532,6 +504,8 @@ class LookUpsList extends Component {
                                     onSortChange={this.onSortChange}
                                     idGetter={idGetterLookupCode}
                                     DATA_ITEM_KEY="gridId"
+                                    setExporter={this.setExporter}
+                                    fileName={"Lookups " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                 ></GridComponent>
                             </div>
                         </div>
