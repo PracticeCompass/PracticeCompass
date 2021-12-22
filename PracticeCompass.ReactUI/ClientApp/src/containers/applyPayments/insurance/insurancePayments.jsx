@@ -548,7 +548,7 @@ class insurancePayments extends Component {
             InsurancePaymentDetails.paymentSID
         );
 
-        await this.setApplyInsurancePaymentExpanded();
+        this.setApplyInsurancePaymentExpanded();
     };
     onInsurancePaymentGridSelectionChange = async (event) => {
         let InsurancePaymentDetails =
