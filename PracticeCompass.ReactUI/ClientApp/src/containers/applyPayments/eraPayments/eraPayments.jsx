@@ -19,6 +19,8 @@ import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
 import EraPaymentsDialogComponent from "./eraPaymentsDialog";
 import { RadioGroup } from "@progress/kendo-react-inputs";
+import { exportExcelFile } from "../../common/export";
+import moment from 'moment';
 import {
     GetGridColumns,
     SaveGridColumns,
@@ -127,7 +129,7 @@ class EraPayments extends Component {
         gridWidth: 0,
         applyFilterChecked: "All",
         detailRows: [],
-        selectedVoucher : null,
+        selectedVoucher: null,
     };
     componentDidMount = () => {
         this.getGridColumns();
@@ -194,6 +196,12 @@ class EraPayments extends Component {
     practiceSearch = () => {
         this.props.getPracticeList(this.state.practiceSearchText);
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+    }
+    setExporterDetails = (exporter) => {
+        this.setState({ _exportDetails: exporter });
+    }
     setSelectedPractice = (entitySID, sortName) => {
         if (this.state.practiceVisiblePatient) {
             this.setState({
@@ -795,6 +803,16 @@ class EraPayments extends Component {
                                     >
                                         <ButtonComponent
                                             type="add"
+                                            icon="export"
+                                            classButton="infraBtn-primary"
+                                            onClick={() => {
+                                                exportExcelFile(this.state._export, this.props.eRApayments, this.state.masterColumns);
+                                            }}
+                                        >
+                                            Export to Excel
+                                        </ButtonComponent>
+                                        <ButtonComponent
+                                            type="add"
                                             classButton="infraBtn-primary action-button"
                                             onClick={() => {
                                                 this.setState({ Show_HideERADialogVisible: true });
@@ -846,6 +864,8 @@ class EraPayments extends Component {
                                                 //hasCheckBox={true}
                                                 sortColumns={[]}
                                                 onSortChange={this.onSortChange}
+                                                setExporter={this.setExporter}
+                                                fileName={"ERA Payments " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                             // pageChange={this.pageChange}
                                             ></GridComponent>
                                         </div>
@@ -937,6 +957,16 @@ class EraPayments extends Component {
                                     >
                                         <ButtonComponent
                                             type="add"
+                                            icon="export"
+                                            classButton="infraBtn-primary"
+                                            onClick={() => {
+                                                exportExcelFile(this.state._exportDetails, this.state.filtereRADetailsPayments, this.state.detailsColumns);
+                                            }}
+                                        >
+                                            Export to Excel
+                                        </ButtonComponent>
+                                        <ButtonComponent
+                                            type="add"
                                             classButton="infraBtn-primary action-button"
                                             onClick={() => {
                                                 this.setState({
@@ -997,6 +1027,8 @@ class EraPayments extends Component {
                                                     height="640px"
                                                     noPageable={true}
                                                     isEditable={true}
+                                                    setExporter={this.setExporterDetails}
+                                                    fileName={"Payment Transactions" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                 // totalCount={
                                                 //   this.props.patientApplys != null && this.props.patientApplys.length > 0
                                                 //     ? this.props.patientApplys[0].totalCount
