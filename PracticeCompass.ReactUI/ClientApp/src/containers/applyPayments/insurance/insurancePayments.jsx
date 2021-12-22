@@ -53,6 +53,7 @@ import {
 } from "../../../redux/actions/payments";
 import Show_HideDialogComponent from "../../common/show_hideDialog";
 import $ from "jquery";
+import { head } from "lodash";
 
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
 const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
@@ -223,6 +224,8 @@ class insurancePayments extends Component {
         gridWidth: 0,
         gridDetails: 0,
         gridcharged: 0,
+        transactionHeader: "Apply Plan Payment ",
+
     };
     componentDidMount = () => {
         this.getGridColumns();
@@ -527,7 +530,7 @@ class insurancePayments extends Component {
             this.state.amountFilter
         );
     };
-    onInsurancePaymentGridSelectionChange = (event) => {
+    onInsurancePaymentGridDoubleSelectionChange = async (event) => {
         let InsurancePaymentDetails =
             event.dataItems == null || event.dataItems.length == 0
                 ? event.dataItem
@@ -535,16 +538,30 @@ class insurancePayments extends Component {
         if (InsurancePaymentDetails.remaining == null) {
             InsurancePaymentDetails.remaining = InsurancePaymentDetails.amount;
         }
-        this.setState({
+        let header = "Apply Plan Payment " + "----Practice: " + InsurancePaymentDetails.practiceName + "----Payor: " + InsurancePaymentDetails.payorName
+            + "----Payment Method: " + InsurancePaymentDetails.payMethod + "----Deposit Date: " + new Date(InsurancePaymentDetails?.postDate).toLocaleDateString();
+        await this.setState({
             InsurancePaymentDetails,
+            transactionHeader: header,
         });
+        await this.props.getPaymentAssignments(
+            InsurancePaymentDetails.paymentSID
+        );
+
+        await this.setApplyInsurancePaymentExpanded();
     };
-    onInsurancePaymentGridDoubleSelectionChange = async (event) => {
+    onInsurancePaymentGridSelectionChange = async (event) => {
         let InsurancePaymentDetails =
             event.dataItems == null || event.dataItems.length == 0
                 ? event.dataItem
                 : event.dataItems[event.endRowIndex];
-        InsurancePaymentDetails = await this.EditInsurance(InsurancePaymentDetails);
+        await this.setState({
+            InsurancePaymentDetails,
+        });
+        await this.props.getPaymentAssignments(
+            InsurancePaymentDetails.paymentSID
+        );
+        //InsurancePaymentDetails = await this.EditInsurance(InsurancePaymentDetails);
     };
     onInsuranceDetailsGridSelectionChange = (event) => {
         //this.setApplyInsurancePaymentExpanded();
@@ -751,9 +768,10 @@ class insurancePayments extends Component {
             }, this.state.timer);
             return;
         }
-        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID &&
-            (event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
-                || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)) {
+        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
+            //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
+            //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
+        ) {
             this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
         }
         else {
@@ -858,6 +876,13 @@ class insurancePayments extends Component {
         this.props.getPaymentAssignments(
             this.state.InsurancePaymentDetails.paymentSID
         );
+        if (this.state.InsurancePaymentDetails != null || this.state.InsurancePaymentDetails != undefined) {
+            let header = "Apply Plan Payment " + "----Practice: " + this.state.InsurancePaymentDetails.practiceName + "----Payor: " + this.state.InsurancePaymentDetails.payorName
+                + "----Payment Method: " + this.state.InsurancePaymentDetails.payMethod + "----Deposit Date: " + new Date(this.state.InsurancePaymentDetails?.postDate).toLocaleDateString();
+            await this.setState({
+                transactionHeader: header,
+            });
+        }
         //let applyData= await this.props.getApplyPatientPayments(3260);
 
         this.setApplyInsurancePaymentExpanded();
@@ -1886,7 +1911,7 @@ class insurancePayments extends Component {
                         <PanelBarItem
                             id="ApplyInsurancePayment"
                             expanded={this.state.applyInsurancePaymentExpanded}
-                            title="Apply Plan Payment"
+                            title={this.state.transactionHeader}
                         >
                             <div
                                 style={{ display: "flex", flexFlow: "row", marginTop: "10px" }}
@@ -1910,6 +1935,50 @@ class insurancePayments extends Component {
                                                     display: "flex",
                                                     flexFlow: "row nowrap",
                                                     width: "100%",
+                                                }}
+                                            >
+                                                <div style={{ float: "left", marginLeft: "14px" }}>
+                                                    <label className="userInfoLabel">Amount </label>
+                                                </div>
+                                                <div style={{ float: "left", width: "100px" }}>
+                                                    <TextBox
+                                                        type="numeric"
+                                                        format="c2"
+                                                        className="unifyHeight"
+                                                        value={this.state.InsurancePaymentDetails?.amount}
+                                                        onChange={(e) =>
+                                                            this.setState({
+                                                                amountApply: e.value,
+                                                            })
+                                                        }
+                                                        disabled={true}
+                                                    ></TextBox>
+                                                </div>
+                                                <div style={{ float: "left", marginLeft: "10px" }}>
+                                                    <label className="userInfoLabel">Remaining </label>
+                                                </div>
+                                                <div style={{ float: "left", width: "132px" }}>
+                                                    <TextBox
+                                                        type="numeric"
+                                                        format="c2"
+                                                        className="unifyHeight"
+                                                        value={
+                                                            this.state.InsurancePaymentDetails?.remaining
+                                                        }
+                                                        onChange={(e) =>
+                                                            this.setState({
+                                                                remaining: e.value,
+                                                            })
+                                                        }
+                                                        disabled={true}
+                                                    ></TextBox>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexFlow: "row nowrap",
+                                                    width: "100%",
                                                     marginBottom: "10px",
                                                 }}
                                             >
@@ -1922,12 +1991,6 @@ class insurancePayments extends Component {
                                                         marginLeft: "10px",
                                                     }}
                                                 >
-                                                    {/* <legend
-                            className="legendStyle"
-                            style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                          >
-                            Payment Method
-                          </legend> */}
                                                     <div
                                                         className="row nowrap rowHeight"
                                                         style={{ marginTop: "10px" }}
@@ -2056,50 +2119,6 @@ class insurancePayments extends Component {
                                                         </div>
                                                     </div>
                                                 </fieldset>
-                                            </div>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    flexFlow: "row nowrap",
-                                                    width: "100%",
-                                                }}
-                                            >
-                                                <div style={{ float: "left", marginLeft: "14px" }}>
-                                                    <label className="userInfoLabel">Amount </label>
-                                                </div>
-                                                <div style={{ float: "left", width: "100px" }}>
-                                                    <TextBox
-                                                        type="numeric"
-                                                        format="c2"
-                                                        className="unifyHeight"
-                                                        value={this.state.InsurancePaymentDetails?.amount}
-                                                        onChange={(e) =>
-                                                            this.setState({
-                                                                amountApply: e.value,
-                                                            })
-                                                        }
-                                                        disabled={true}
-                                                    ></TextBox>
-                                                </div>
-                                                <div style={{ float: "left", marginLeft: "10px" }}>
-                                                    <label className="userInfoLabel">Remaining </label>
-                                                </div>
-                                                <div style={{ float: "left", width: "132px" }}>
-                                                    <TextBox
-                                                        type="numeric"
-                                                        format="c2"
-                                                        className="unifyHeight"
-                                                        value={
-                                                            this.state.InsurancePaymentDetails?.remaining
-                                                        }
-                                                        onChange={(e) =>
-                                                            this.setState({
-                                                                remaining: e.value,
-                                                            })
-                                                        }
-                                                        disabled={true}
-                                                    ></TextBox>
-                                                </div>
                                             </div>
                                             <div
                                                 style={{

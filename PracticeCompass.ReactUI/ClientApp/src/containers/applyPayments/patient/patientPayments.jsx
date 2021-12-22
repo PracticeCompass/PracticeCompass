@@ -240,6 +240,7 @@ class PatientPayments extends Component {
         gridWidth: 0,
         gridDetails: 0,
         gridcharged: 0,
+        transactionHeader: "Apply Patient Payments ",
     };
     componentDidMount = () => {
         this.getGridColumns();
@@ -534,7 +535,7 @@ class PatientPayments extends Component {
             this.state.amountFilter
         );
     };
-    onPatientPaymentGridSelectionChange = async (event) => {
+    onPatientPaymentGridDoubleSelectionChange = async (event) => {
         let patientPaymentDetails =
             event.dataItems == null || event.dataItems.length == 0
                 ? event.dataItem
@@ -542,18 +543,28 @@ class PatientPayments extends Component {
         if (patientPaymentDetails.remaining == null) {
             patientPaymentDetails.remaining = patientPaymentDetails.amount;
         }
-        this.setState({
+        await this.props.getPaymentAssignments(
+            this.state.patientPaymentDetails.paymentSID
+        );
+        let applyData = await this.props.getApplyPatientPayments(patientPaymentDetails.payorID);
+        let header = "Apply Patient Payments " + "----Practice: " + patientPaymentDetails.practiceName + "----Payor: " + patientPaymentDetails.payorName
+            + "----Payment Method: " + patientPaymentDetails.payMethod + "----Deposit Date: " + new Date(patientPaymentDetails?.postDate).toLocaleDateString();
+        await this.setState({
             patientPaymentDetails,
+            applyPatientPaymentsbackup: [...applyData],
+            transactionHeader: header,
         });
+        this.setApplyPatientPaymentExpanded();
     };
-    onPatientPaymentGridDoubleSelectionChange = async (event) => {
+    onPatientPaymentGridSelectionChange = async (event) => {
         let patientPaymentDetails =
             event.dataItems == null || event.dataItems.length == 0
                 ? event.dataItem
                 : event.dataItems[event.endRowIndex];
-        patientPaymentDetails = await this.EditPaymentPatient(
-            patientPaymentDetails
-        );
+        this.setState({
+            patientPaymentDetails,
+        });
+        //patientPaymentDetails = await this.EditPaymentPatient(patientPaymentDetails);
     };
     setPatientPaymentDetailExpanded = () => {
         //$("#patient").children("span").trigger("click");
@@ -904,13 +915,16 @@ class PatientPayments extends Component {
         this.props.getPaymentAssignments(
             this.state.patientPaymentDetails.paymentSID
         );
-        let applyData = await this.props.getApplyPatientPayments(3260);
+        let applyData = await this.props.getApplyPatientPayments(this.state.patientPaymentDetails.payorID);
         // let applyData = await this.props.getApplyPatientPayments(
         //   this.state.patientPaymentDetails.payorID
         // );
+        let header = "Apply Patient Payments " + "----Practice: " + this.state.patientPaymentDetails.practiceName + "----Payor: " + this.state.patientPaymentDetails.payorName
+            + "----Payment Method: " + this.state.patientPaymentDetails.payMethod + "----Deposit Date: " + new Date(this.state.patientPaymentDetails?.postDate).toLocaleDateString();
         this.setState({
             applyPatientPayments: applyData,
             applyPatientPaymentsbackup: [...applyData],
+            transactionHeader: header
         });
         if (isExpand) {
             this.setApplyPatientPaymentExpanded();
@@ -1838,7 +1852,7 @@ class PatientPayments extends Component {
                         <PanelBarItem
                             id="ApplyPatientPayment"
                             expanded={this.state.applypatientPaymentExpanded}
-                            title="Apply Patient Payments"
+                            title={this.state.transactionHeader}
                         >
                             <div
                                 style={{

@@ -669,33 +669,6 @@ class EraPayments extends Component {
                                             }
                                         ></TextBox>
                                     </div>
-                                    <div style={{ float: "left", marginLeft: "10px" }}>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary action-button"
-                                            onClick={this.ERAPaymentGridSearch}
-                                        >
-                                            Search
-                                        </ButtonComponent>
-                                    </div>
-                                    <div style={{ float: "left" }}>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary"
-                                            ref={(node) => {
-                                                if (node) {
-                                                    node.style.setProperty("height", "22px", "important");
-                                                }
-                                            }}
-                                        // onClick={(e) =>
-                                        //   this.setState({ practiceVisibleInsurance: true })
-                                        // }
-                                        >
-                                            Manual Match
-                                        </ButtonComponent>
-                                    </div>
                                 </div>
                                 <div
                                     className="rowHeight"
@@ -792,6 +765,41 @@ class EraPayments extends Component {
                                             value={this.state.posted}
                                             onChange={(e) => this.setState({ posted: e.value })}
                                         />
+                                    </div>
+                                </div>
+                                <div className="rowHeight"
+                                    style={{
+                                        display: "flex",
+                                        flexFlow: "row",
+                                        width: "100%",
+                                        marginBottom: "5px",
+                                    }} >
+                                    <div style={{ float: "left", marginLeft: "30px" }}>
+                                        <ButtonComponent
+                                            icon="search"
+                                            type="search"
+                                            classButton="infraBtn-primary action-button"
+                                            onClick={this.ERAPaymentGridSearch}
+                                        >
+                                            Search
+                                        </ButtonComponent>
+                                    </div>
+                                    <div style={{ float: "left" }}>
+                                        <ButtonComponent
+                                            icon="search"
+                                            type="search"
+                                            classButton="infraBtn-primary"
+                                            ref={(node) => {
+                                                if (node) {
+                                                    node.style.setProperty("height", "22px", "important");
+                                                }
+                                            }}
+                                        // onClick={(e) =>
+                                        //   this.setState({ practiceVisibleInsurance: true })
+                                        // }
+                                        >
+                                            Manual Match
+                                        </ButtonComponent>
                                     </div>
                                     <div
                                         style={{

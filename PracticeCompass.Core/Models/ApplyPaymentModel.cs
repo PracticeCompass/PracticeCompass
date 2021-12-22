@@ -16,5 +16,6 @@ namespace PracticeCompass.Core.Models
         public decimal PaymentRemaining { get; set; }
         public decimal? ApprovedAmount { get; set; }
         public bool? GoToNext { get; set; }
+        public string PolicyNumber { get; set; }
     }
 }
