@@ -22,7 +22,9 @@ import {
   GetGridColumns,
   SaveGridColumns,
 } from "../../../redux/actions/GridColumns";
-import { getPhysicians, getPositions } from "../../../redux/actions/Physician"
+import { getPhysicians, getPositions } from "../../../redux/actions/Physician";
+import { exportExcelFile } from "../../common/export";
+import moment from 'moment';
 
 const DATA_ITEM_KEY_PROVIDER = "providergridID";
 const idGetterProvider = getter(DATA_ITEM_KEY_PROVIDER);
@@ -48,8 +50,8 @@ function mapDispatchToProps(dispatch) {
     getPhysicians: (searchGrid) => dispatch(getPhysicians(searchGrid)),
     getPositions: () => dispatch(getPositions()),
     SaveGridColumns: (name, columns) =>
-    dispatch(SaveGridColumns(name, columns)),
-  GetGridColumns: (name) => dispatch(GetGridColumns(name)),
+      dispatch(SaveGridColumns(name, columns)),
+    GetGridColumns: (name) => dispatch(GetGridColumns(name)),
   };
 }
 
@@ -73,11 +75,14 @@ class PhysiciansList extends Component {
     refreshFilter: true,
     skip: 0,
     take: 28,
-    providerColumns:providerColumns,
-    gridWidth:0
+    providerColumns: providerColumns,
+    gridWidth: 0
   }
   onSortChange = () => {
 
+  }
+  setExporter = (exporter) => {
+    this.setState({ _export: exporter });
   }
   componentDidMount() {
     this.props.getPositions();
@@ -85,14 +90,14 @@ class PhysiciansList extends Component {
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions);
   }
-  componentDidUpdate=(event)=>{
-    if(event.UiExpand != this.props.UiExpand){
+  componentDidUpdate = (event) => {
+    if (event.UiExpand != this.props.UiExpand) {
       this.updateDimensions();
     }
   }
   updateDimensions() {
     this.setState({
-      gridWidth:   window.innerWidth - (!this.props.UiExpand ? 120 : 273)
+      gridWidth: window.innerWidth - (!this.props.UiExpand ? 120 : 273)
     })
   }
   getGridColumns = async () => {
@@ -223,9 +228,9 @@ class PhysiciansList extends Component {
     }
   };
   physicianGridSearch = async (refreshData = true) => {
-    let zipValue =this.state.Zip;
-    if (this.state.Zip && zipValue.replaceAll(' ','').length < 7) {
-       zipValue =zipValue.replaceAll(' ','').match(/\d+/)[0];
+    let zipValue = this.state.Zip;
+    if (this.state.Zip && zipValue.replaceAll(' ', '').length < 7) {
+      zipValue = zipValue.replaceAll(' ', '').match(/\d+/)[0];
       this.setState({
         Zip: zipValue
       })
@@ -305,7 +310,7 @@ class PhysiciansList extends Component {
         Show_HidePhysicianDialogVisible: false,
       });
     }
-    this.setState({refreshGrid:true});
+    this.setState({ refreshGrid: true });
   };
   render() {
     return (
@@ -549,6 +554,16 @@ class PhysiciansList extends Component {
               >
                 <ButtonComponent
                   type="add"
+                  icon="export"
+                  classButton="infraBtn-primary"
+                  onClick={() => {
+                    exportExcelFile(this.state._export, this.props.physicians, this.state.providerColumns);
+                  }}
+                >
+                  Export to Excel
+                </ButtonComponent>
+                <ButtonComponent
+                  type="add"
                   classButton="infraBtn-primary action-button"
                   onClick={() => {
                     this.setState({ Show_HidePhysicianDialogVisible: true });
@@ -585,24 +600,26 @@ class PhysiciansList extends Component {
                 data-parent="#accordionExample"
               >
                 {this.state.refreshGrid && (
-                <GridComponent
-                  id="physicianGrid"
-                  data={this.props.physicians || []}
-                  columns={
-                   this.state.providerColumns
-                  }
-                  onSelectionChange={this.onPhysiciansGridSelectionChange}
-                  onRowDoubleClick={this.onPhysiciansGridDoubleSelectionChange}
-                  selectionMode="single"
-                  idGetter={idGetterProvider}
-                  DATA_ITEM_KEY="providergridID"
-                  sortColumns={[]}
-                  onSortChange={this.onSortChange}
-                  height="640px"
-                  width="100%"
-                  skip={0}
-                  take={this.state.take}
-                ></GridComponent>
+                  <GridComponent
+                    id="physicianGrid"
+                    data={this.props.physicians || []}
+                    columns={
+                      this.state.providerColumns
+                    }
+                    onSelectionChange={this.onPhysiciansGridSelectionChange}
+                    onRowDoubleClick={this.onPhysiciansGridDoubleSelectionChange}
+                    selectionMode="single"
+                    idGetter={idGetterProvider}
+                    DATA_ITEM_KEY="providergridID"
+                    sortColumns={[]}
+                    onSortChange={this.onSortChange}
+                    height="640px"
+                    width="100%"
+                    skip={0}
+                    take={this.state.take}
+                    setExporter={this.setExporter}
+                    fileName={"Physicians " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
+                  ></GridComponent>
                 )}
               </div>
             </div>
