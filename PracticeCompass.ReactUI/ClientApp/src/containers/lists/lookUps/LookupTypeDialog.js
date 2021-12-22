@@ -60,7 +60,6 @@ class LookupTypeDialogComponent extends Component {
       Length:this.state.Length?this.state.length:0
     }
     let result = await this.props.AddLookupType(data);
-    debugger;
     if (result) {
       this.setState({ success: true, message: "Lookup Type ("+ this.state.lookupType +") save succefully" });
       setTimeout(() => {

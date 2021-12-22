@@ -56,6 +56,8 @@ import {
     getApplyPatientPayments,
     ApplyPayments,
 } from "../../../redux/actions/payments";
+import { exportExcelFile } from "../../common/export";
+import moment from 'moment';
 const DATA_ITEM_KEY_PATIENT = "patientListgridID";
 const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
@@ -249,6 +251,18 @@ class PatientPayments extends Component {
             this.updateDimensions();
         }
     };
+    setExporter = (exporter) => {
+        this.setState({ _export: exporter });
+    }
+    setExporterPayment = (exporter) => {
+        this.setState({ _exportPayment: exporter });
+    }
+    setExporterApply = (exporter) => {
+        this.setState({ _exportApply: exporter });
+    }
+    setExporterApplyPaymentAssignment = (exporter) => {
+        this.setState({ _PaymentAssignment: exporter });
+    }
     updateDimensions() {
         this.setState({
             gridWidth: window.innerWidth - (!this.props.UiExpand ? 80 : 260),
@@ -1362,6 +1376,16 @@ class PatientPayments extends Component {
                                 >
                                     <ButtonComponent
                                         type="add"
+                                        icon="export"
+                                        classButton="infraBtn-primary"
+                                        onClick={() => {
+                                            exportExcelFile(this.state._export, this.props.patientPayments, this.state.patientPaymentColumns);
+                                        }}
+                                    >
+                                        Export to Excel
+                                    </ButtonComponent>
+                                    <ButtonComponent
+                                        type="add"
                                         classButton="infraBtn-primary action-button"
                                         onClick={() => {
                                             this.setState({ Show_HidePatientDialogVisible: true });
@@ -1420,6 +1444,8 @@ class PatientPayments extends Component {
                                                 //hasCheckBox={true}
                                                 sortColumns={[]}
                                                 onSortChange={this.onSortChange}
+                                                setExporter={this.setExporter}
+                                                fileName={"Patient Payment " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                             // pageChange={this.pageChange}
                                             ></GridComponent>
                                         </div>
@@ -1707,6 +1733,18 @@ class PatientPayments extends Component {
                                             height: "20px",
                                         }}
                                     >
+                                        <div style={{ float: "left" ,marginLeft:"10px"}}>
+                                            <ButtonComponent
+                                                type="edit"
+                                                icon="edit"
+                                                classButton="infraBtn-primary action-button"
+                                                onClick={() => {
+                                                    this.ApplyPatientPayment();
+                                                }}
+                                            >
+                                                Apply
+                                            </ButtonComponent>
+                                        </div>
                                         <div
                                             style={{
                                                 float: "right",
@@ -1715,6 +1753,16 @@ class PatientPayments extends Component {
                                                 right: "0",
                                             }}
                                         >
+                                            <ButtonComponent
+                                                type="add"
+                                                icon="export"
+                                                classButton="infraBtn-primary"
+                                                onClick={() => {
+                                                    exportExcelFile(this.state._exportPayment, this.props.paymentAssignments, this.state.insuranceAssignmentColumns);
+                                                }}
+                                            >
+                                                Export to Excel
+                                            </ButtonComponent>
                                             <ButtonComponent
                                                 type="add"
                                                 classButton="infraBtn-primary action-button"
@@ -1777,6 +1825,8 @@ class PatientPayments extends Component {
                                                         sortColumns={[]}
                                                         onSortChange={this.onSortChange}
                                                         pageChange={this.pageChange}
+                                                        setExporter={this.setExporterPayment}
+                                                        fileName={"Patient Payment Details" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                     ></GridComponent>
                                                 </div>
                                             </div>
@@ -1876,6 +1926,16 @@ class PatientPayments extends Component {
                                                     >
                                                         <ButtonComponent
                                                             type="add"
+                                                            icon="export"
+                                                            classButton="infraBtn-primary"
+                                                            onClick={() => {
+                                                                exportExcelFile(this.state._exportApply, this.props.applyPatientPayments, this.state.applyPatientPaymentColumns);
+                                                            }}
+                                                        >
+                                                            Export to Excel
+                                                        </ButtonComponent>
+                                                        <ButtonComponent
+                                                            type="add"
                                                             classButton="infraBtn-primary action-button"
                                                             onClick={() => {
                                                                 this.setState({
@@ -1903,32 +1963,7 @@ class PatientPayments extends Component {
                                                     >
                                                         Assignement Payment
                                                     </legend>
-                                                    {/* <div
-                            style={{
-                              display: "flex",
-                              flexFlow: "row nowrap",
-                              width: "100%",
-                              marginBottom: "10px",
-                            }}
-                          >
-                            <ButtonComponent
-                              icon="edit"
-                              type="edit"
-                              classButton="infraBtn-primary"
-                              onClick={() => {
-                                this.filterApplyListChanged();
-                              }}
-                              style={{ marginTop: "0px" }}
-                              disabled={
-                                this.state.applyPatientPayments == null ||
-                                this.state.applyPatientPayments.filter(
-                                  (item) => item.isEdit
-                                ).length == 0
-                              }
-                            >
-                              Apply
-                            </ButtonComponent>
-                          </div> */}
+
                                                     <div
                                                         style={{
                                                             display: "flex",
@@ -1976,11 +2011,15 @@ class PatientPayments extends Component {
                                                                         // itemChange={this.applyItemChanged}
                                                                         // pageChange={this.pageChange}
                                                                         isEditable={true}
-                                                                    // totalCount={
-                                                                    //   this.props.patientApplys != null && this.props.patientApplys.length > 0
-                                                                    //     ? this.props.patientApplys[0].totalCount
-                                                                    //     : this.props.patientApplys.length
-                                                                    // }
+                                                                        setExporter={this.setExporterApply}
+                                                                        fileName={"Patient Payment Details" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
+                                                                        // totalCount={
+                                                                        //   this.props.patientApplys != null && this.props.patientApplys.length > 0
+                                                                        //     ? this.props.patientApplys[0].totalCount
+                                                                        //     : this.props.patientApplys.length
+                                                                        // }
+                                                                        setExporter={this.setExporterApply}
+                                                                        fileName={"Patient Payment Apply " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                                     ></GridComponent>
                                                                 </div>
                                                             </div>
@@ -2115,6 +2154,16 @@ class PatientPayments extends Component {
                                                 >
                                                     <ButtonComponent
                                                         type="add"
+                                                        icon="export"
+                                                        classButton="infraBtn-primary"
+                                                        onClick={() => {
+                                                            exportExcelFile(this.state._PaymentAssignment, this.props.paymentAssignments, this.state.insuranceAssignmentColumns);
+                                                        }}
+                                                    >
+                                                        Export to Excel
+                                                    </ButtonComponent>
+                                                    <ButtonComponent
+                                                        type="add"
                                                         classButton="infraBtn-primary action-button"
                                                         onClick={() => {
                                                             this.setState({
@@ -2196,6 +2245,8 @@ class PatientPayments extends Component {
                                                                     sortColumns={[]}
                                                                     onSortChange={this.onSortChange}
                                                                     pageChange={this.pageChange}
+                                                                    setExporter={this.setExporterApplyPaymentAssignment}
+                                                                    fileName={"Patient Payment Assignments" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
                                                                 ></GridComponent>
                                                             </div>
                                                         </div>
