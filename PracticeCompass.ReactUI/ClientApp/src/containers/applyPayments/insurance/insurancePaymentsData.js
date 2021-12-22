@@ -74,8 +74,8 @@ export const insuranceColumns = [
     },
     {
         field: "fullyApplied",
-        title: "Applied",
-        minWidth: 70,
+        title: "Fully Applied",
+        minWidth: 100,
         orderIndex: 5,
         type: "checkBox",
         cell: "checkBox",
@@ -102,7 +102,7 @@ export const insuranceColumns = [
         field: "createMethod",
         title: "Create Method",
         minWidth: 150,
-        orderIndex: 8,
+        orderIndex: 9,
         showToolTip: true,
     },
     // {
