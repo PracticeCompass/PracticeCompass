@@ -26,11 +26,12 @@ namespace PracticeCompass.Core.Models
         public int Plan2 { get; set; }
         public int Plan3 { get; set; }
         public int Plan4 { get; set; }
-        public int PolicyNumber1 { get; set; }
-        public int PolicyNumber2 { get; set; }
-        public int PolicyNumber3 { get; set; }
-        public int PolicyNumber4 { get; set; }    
+        public string PolicyNumber1 { get; set; }
+        public string PolicyNumber2 { get; set; }
+        public string PolicyNumber3 { get; set; }
+        public string PolicyNumber4 { get; set; }    
         public int PracticeID { get; set; }
+        public int RespCoverageOrder { get; set; }
 
     }
 }

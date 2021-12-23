@@ -910,13 +910,15 @@ class insurancePayments extends Component {
                     ? {
                         chargeSID: item.chargeSID,
                         paymentSID: this.state.InsurancePaymentDetails.paymentSID,
-                        payorID: item.claimSID,
+                        payorID: this.state.InsurancePaymentDetails.payorID,
                         amountPaid: item.insurancePaid,
                         adjustment: item.adjustments,
                         PaymentType: "I",
                         paymentRemaining: this.state.InsurancePaymentDetails?.remaining,
                         approvedAmount: null,
                         goToNext: item.moveToNextPlan,
+                        planID: item.respCoverageOrder == 1 ? item.plan1 : item.respCoverageOrder == 2 ? item.plan2 : item.respCoverageOrder == 3 ? item.plan3 : item.respCoverageOrder == 4 ? item.plan4 : null,
+                        policyNumber: item.respCoverageOrder == 1 ? item.policyNumber1 : item.respCoverageOrder == 2 ? item.policyNumber2 : item.respCoverageOrder == 3 ? item.policyNumber3 : item.respCoverageOrder == 4 ? item.policyNumber4 : "",
                     }
                     : null
             );
@@ -1681,18 +1683,6 @@ class insurancePayments extends Component {
                                                         Save
                                                     </ButtonComponent>
                                                 </div>
-                                                <div style={{ float: "left", marginLeft: "10px" }}>
-                                                    <ButtonComponent
-                                                        type="edit"
-                                                        icon="edit"
-                                                        classButton="infraBtn-primary action-button"
-                                                        onClick={() => {
-                                                            this.ApplyInsurancePayment();
-                                                        }}
-                                                    >
-                                                        Apply
-                                                    </ButtonComponent>
-                                                </div>
                                             </div>
                                         </div>
                                         <div style={{ float: "left" }}>
@@ -1819,7 +1809,18 @@ class insurancePayments extends Component {
                                             height: "20px",
                                         }}
                                     >
-
+                                        <div style={{ float: "left", marginLeft: "10px" }}>
+                                            <ButtonComponent
+                                                type="edit"
+                                                icon="edit"
+                                                classButton="infraBtn-primary action-button"
+                                                onClick={() => {
+                                                    this.ApplyInsurancePayment();
+                                                }}
+                                            >
+                                                Apply
+                                            </ButtonComponent>
+                                        </div>
                                         <div
                                             style={{
                                                 float: "right",

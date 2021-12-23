@@ -952,12 +952,14 @@ class PatientPayments extends Component {
                     ? {
                         chargeSID: item.chargeSID,
                         paymentSID: this.state.patientPaymentDetails.paymentSID,
-                        payorID: item.claimSID,
+                        payorID: this.state.patientPaymentDetails.payorID,
                         amountPaid: item.patientPaid,
                         adjustment: item.adjustments,
                         PaymentType: "G",
                         approvedAmount: null,
-
+                        goToNext: false,
+                        planID: null,
+                        policyNumber : null,
                     }
                     : null
             );

@@ -291,7 +291,9 @@ namespace PracticeCompass.Data.Repositories
                 var PlanClaimChargeRemitAd = this.db.Execute(PlanClaimChargeRemitAdjSql, PlanClaimChargeRemitAdjments);
                 txScope.Complete();
 
+                using var txScope1 = new TransactionScope();
                 paymentRepository.MovetoNextPlan(applyPaymentModels);
+                txScope1.Complete();
                 return true;
             }
             catch (Exception ex )

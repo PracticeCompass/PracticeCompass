@@ -454,8 +454,30 @@ class EraPayments extends Component {
             ShowEditERARow: false,
         });
     };
-    postingEra = () => {
-        this.props.PostingEraPayment(this.state.selectedVoucher);
+    postingEra = async () => {
+        let result = await this.props.PostingEraPayment(this.state.selectedVoucher);
+        if (result) {
+            //this.findClaim();
+            this.setState({
+                success: true,
+                message: "Posting Payment succefully.",
+            });
+            setTimeout(() => {
+                this.setState({
+                    success: false,
+                });
+            }, this.state.timer);
+        } else {
+            this.setState({
+                error: true,
+                message: "Error In Posting Payment.",
+            });
+            setTimeout(() => {
+                this.setState({
+                    error: false,
+                });
+            }, this.state.timer);
+        }
     }
     savePaymentTransaction = (item) => {
         this.setState({

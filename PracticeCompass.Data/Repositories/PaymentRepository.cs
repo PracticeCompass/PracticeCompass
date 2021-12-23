@@ -189,8 +189,10 @@ namespace PracticeCompass.Data.Repositories
             #endregion
             txScope.Complete();
 
+            using var txScope1 = new TransactionScope();
             #region move_to_next
             MovetoNextPlan(applyPaymentModel);
+            txScope1.Complete();
             #endregion
             return true;
         }
@@ -520,7 +522,7 @@ namespace PracticeCompass.Data.Repositories
             List<PlanClaimCharge> PlanClaimCharge = new List<PlanClaimCharge>();
             List<ChargeActivity> ChargeActivities = new List<ChargeActivity>();
             #region Get_Charges
-            var chargeIDs = applyPaymentModel.Select(x => x.ChargeSID);
+            var chargeIDs = applyPaymentModel.Select(x => x.ChargeSID).ToList();
             string sql = "SELECT * FROM Charge WHERE chargeSID IN @ids";
             var Chargesresults = this.db.QueryMultiple(sql, new { ids = chargeIDs });
             Charges = Chargesresults.Read<Charge>().ToList();
@@ -626,7 +628,7 @@ namespace PracticeCompass.Data.Repositories
                 }
             }
 
-            using var txScope = new TransactionScope();
+            //using var txScope = new TransactionScope();
             this.db.BulkUpdate(Charges);
             this.db.BulkUpdate(Claims);
 
@@ -635,9 +637,11 @@ namespace PracticeCompass.Data.Repositories
              "(@prrowid,@ChargeSID,@ActivityCount,@ActivityType,@SourceType,@SourceID,@JournalSID,@PostDate,@Amount" +
             ",@TimeStamp,@LastUser,@CreateStamp,@CreateUser,@AccountSID,@PatientStatement,@DisplayText,@CreateMethod" +
             ",@DNPracticeID,@Pro2SrcPDB,@pro2created,@pro2modified)";
+
+            this.db.Execute(ChargeActivitySQL, ChargeActivities);
             #endregion
 
-            txScope.Complete();
+            //txScope.Complete();
 
 
 
