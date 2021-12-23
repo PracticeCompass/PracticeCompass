@@ -35,7 +35,7 @@ BEGIN
 	Charge.Amount as ChargeAmount , PendingCharge.Units , CONVERT(varchar,ProcedureEvent.FromServiceDate,112) as  FromServiceDate,
 	StaffAltID.ID as NPI , Referring.LastName as RefLastName , Referring.FirstName as RefFirstName , Referring.MiddleName as RefMiddleName,
    [dbo].[RefDoctorAltID].ID as RefNPI,
-   Practice.SortName as PracticeName , PracticePhone.Number as PracticePhone , [Plan].FilingCode , ProviderTaxID.ID as ProviderTaxID ,
+   Practice.SortName as PracticeName , PracticePhone.Number as PracticePhone ,PracticePhone.Contact as PracticeContact, [Plan].FilingCode , ProviderTaxID.ID as ProviderTaxID ,
    ProcedureEvent.ProcedureEventSID,Charge.ChargeSID,Claim.ClaimNumber,
    practiceaddress.Line1 as PracticeLine1,
 	practiceaddress.Line2 as PracticeLine2 , practiceaddress.City as PracticeCity,
