@@ -511,8 +511,8 @@ class insurancePayments extends Component {
     setInsurancePaymentDetailsExpanded = () => {
         $("#InsurancePaymentDetails").children("span").trigger("click");
     };
-    setApplyInsurancePaymentExpanded = () => {
-        $("#ApplyInsurancePayment").children("span").trigger("click");
+    setApplyInsurancePaymentExpanded = async () => {
+        $("#ApplyInsurancePaymentPanel").children("span").trigger("click");
     };
     practiceSearch = () => {
         this.props.getPracticeList(this.state.practiceSearchText);
@@ -538,17 +538,16 @@ class insurancePayments extends Component {
         if (InsurancePaymentDetails.remaining == null) {
             InsurancePaymentDetails.remaining = InsurancePaymentDetails.amount;
         }
+        await this.props.getPaymentAssignments(
+            InsurancePaymentDetails.paymentSID
+        );
         let header = "Apply Plan Payment " + "----Practice: " + InsurancePaymentDetails.practiceName + "----Payor: " + InsurancePaymentDetails.payorName
             + "----Payment Method: " + InsurancePaymentDetails.payMethod + "----Deposit Date: " + new Date(InsurancePaymentDetails?.postDate).toLocaleDateString();
         await this.setState({
             InsurancePaymentDetails,
             transactionHeader: header,
         });
-        await this.props.getPaymentAssignments(
-            InsurancePaymentDetails.paymentSID
-        );
-
-        this.setApplyInsurancePaymentExpanded();
+        await this.setApplyInsurancePaymentExpanded();
     };
     onInsurancePaymentGridSelectionChange = async (event) => {
         let InsurancePaymentDetails =
@@ -1911,7 +1910,7 @@ class insurancePayments extends Component {
                             </div>
                         </PanelBarItem>
                         <PanelBarItem
-                            id="ApplyInsurancePayment"
+                            id="ApplyInsurancePaymentPanel"
                             expanded={this.state.applyInsurancePaymentExpanded}
                             title={this.state.transactionHeader}
                         >
