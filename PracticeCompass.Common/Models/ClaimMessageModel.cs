@@ -71,7 +71,24 @@ namespace PracticeCompass.Common.Models
         //Practice
         public string PracticeName { get; set; }
         public string PracticePhone { get; set; }
+        public string PracticeLine1 { get; set; }
+        public string PracticeLine2 { get; set; }
+        public string PracticeCity { get; set; }
+        public string PracticeState { get; set; }
+        public string PracticeZip { get; set; }
+        public string PracticeContact { get; set; }
+        /// financial
+        public string FinancialLine1 { get; set; }
+        public string FinancialLine2 { get; set; }
+        public string FinancialCity { get; set; }
+        public string FinancialState { get; set; }
+        public string FinancialZip { get; set; }
+        /// </summary>
+        public string ReceiverID { get; set; }
+        public string SenderID { get; set; }
 
+        public int? ChargeSID { get; set; }
+        public string ClaimNumber { get; set; }
 
 
     }

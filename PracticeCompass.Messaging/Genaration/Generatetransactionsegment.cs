@@ -19,7 +19,7 @@ namespace PracticeCompass.Messaging.Genaration
         {
             Segment st = new Segment { Name = "ST", FieldSeparator = FieldSeparator };
             st[1] = "837";
-            st[2] = _unknownplaceholder;
+            st[2] = "0001";
             st[3] = "005010X222A1";
             return st;
         }
@@ -28,7 +28,7 @@ namespace PracticeCompass.Messaging.Genaration
             Segment se = new Segment { Name = "SE", FieldSeparator = FieldSeparator };
             
             se[1] = _unknownplaceholder;
-            se[2] = _unknownplaceholder;//st[2];
+            se[2] = "0001";
             return se;
         } 
         public Segment GenerateBHTSegment()

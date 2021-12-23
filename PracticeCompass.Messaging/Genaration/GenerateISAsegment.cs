@@ -23,9 +23,9 @@ namespace PracticeCompass.Messaging.Genaration
             isa[3] = "00";
             isa[4] = "          ";
             isa[5] = "ZZ";
-            isa[6] = _unknownplaceholder;
+            isa[6] = _claimMessageModel.SenderID + "      ";
             isa[7] = "ZZ";
-            isa[8] = _unknownplaceholder;
+            isa[8] = _claimMessageModel.ReceiverID+"      ";
             isa[9] = DateTime.Now.ToString("yyMMdd");
             isa[10] = DateTime.Now.ToString("HHMM");
             isa[11] = "^";

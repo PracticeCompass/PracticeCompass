@@ -24,14 +24,14 @@ namespace PracticeCompass.Messaging.Genaration
             Nm1[4] = DateTime.Now.ToString("yyyyMMdd");
             Nm1[5] = DateTime.Now.ToString("HHmm");
             Nm1[8] = "46";  
-            Nm1[9] = "Practice Compass Billing Service"; //TO DO : its static for now 
+            Nm1[9] = _claimMessageModel.SenderID;
             return Nm1;
         }
         public Segment GenerateLoop1000A_PER_segment()
         {
             var Per = new Segment { Name = "PER", FieldSeparator = FieldSeparator };
             Per[1] = "IC";
-            Per[2] = _unknownplaceholder;
+            Per[2] = _claimMessageModel.PracticeContact;
             Per[3] = "TE";  
             Per[4] = _claimMessageModel.PracticePhone;
             //Per[5] = "EX";  

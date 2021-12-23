@@ -17,16 +17,16 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2300_CLM_segment()
         {
             var clm = new Segment { Name = "CLM", FieldSeparator = FieldSeparator };
-            clm[1] = _unknownplaceholder;
+            clm[1] = _claimMessageModel.ClaimNumber+ "TPHT";
             clm[2] = _claimMessageModel.ChargeAmount;
-            clm[5] = string.Format("{0}:B:{1}", _unknownplaceholder, _unknownplaceholder);
+            clm[5] = string.Format("{0}:B:{1}", 11, 1);
             clm[6] = "Y";
             clm[7] = "A";
             clm[8] = "Y";
             clm[9] = "Y";
-            clm[10] = "P";
-            clm[11] = _unknownplaceholder;
-            clm[20] = _unknownplaceholder;
+            //clm[10] = "P";
+            //clm[11] = _unknownplaceholder;
+            //clm[20] = _unknownplaceholder;
             return clm;
         }
         public Segment GenerateLoop2300_PWK_segment()

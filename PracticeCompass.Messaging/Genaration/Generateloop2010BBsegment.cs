@@ -36,7 +36,7 @@ namespace PracticeCompass.Messaging.Genaration
             var N4 = new Segment { Name = "N4", FieldSeparator = FieldSeparator };
             N4[1] = _claimMessageModel.PlanCity;
             N4[2] = _claimMessageModel.PlanState;
-            N4[3] = _claimMessageModel.PlanZip;
+            N4[3] = _claimMessageModel.PlanZip.Replace("-","");
             return N4;
         }
 

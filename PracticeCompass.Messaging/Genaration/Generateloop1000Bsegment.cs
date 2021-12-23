@@ -21,7 +21,7 @@ namespace PracticeCompass.Messaging.Genaration
             Nm1[2] = "2";  
             Nm1[3] = _unknownplaceholder;
             Nm1[8] = "46"; 
-            Nm1[9] = _unknownplaceholder;
+            Nm1[9] = _claimMessageModel.ReceiverID;
             return Nm1;
         }
         

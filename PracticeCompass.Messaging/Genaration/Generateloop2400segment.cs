@@ -56,7 +56,7 @@ namespace PracticeCompass.Messaging.Genaration
         {
             var REF = new Segment { Name = "REF", FieldSeparator = FieldSeparator };
             REF[1] = "6R";
-            REF[2] = _claimMessageModel.ProcedureEventSID; //send a unqiue number PK of ProcedureEvent 
+            REF[2] = _claimMessageModel.ChargeSID.ToString(); //send a unqiue number PK of ProcedureEvent 
             return REF;
         }
 

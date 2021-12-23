@@ -36,7 +36,13 @@ BEGIN
 	StaffAltID.ID as NPI , Referring.LastName as RefLastName , Referring.FirstName as RefFirstName , Referring.MiddleName as RefMiddleName,
    [dbo].[RefDoctorAltID].ID as RefNPI,
    Practice.SortName as PracticeName , PracticePhone.Number as PracticePhone , [Plan].FilingCode , ProviderTaxID.ID as ProviderTaxID ,
-   ProcedureEvent.ProcedureEventSID
+   ProcedureEvent.ProcedureEventSID,Charge.ChargeSID,Claim.ClaimNumber,
+   practiceaddress.Line1 as PracticeLine1,
+	practiceaddress.Line2 as PracticeLine2 , practiceaddress.City as PracticeCity,
+	practiceState.StateCode as PracticeState,practiceaddress.Zip as PracticeZip,
+	financialAddress.Line1 as FinancialLine1,
+	financialAddress.Line2 as FinancialLine2 , financialAddress.City as FinancialCity,
+	financialState.StateCode as FinancialState,financialAddress.Zip as FinancialZip,PracCommSetup.ReceiverID,PracCommSetup.SenderID
 	from claim
 inner join Person on Person.PersonID = Claim.PatientID
 left outer join Address on [dbo].[Address].[EntitySID] = PersonID
@@ -68,11 +74,16 @@ left outer join StaffAltID on StaffAltID.staffID = Provider.ProviderID and AidTa
 left outer join StaffAltID as ProviderTaxID on ProviderTaxID.staffID = Provider.ProviderID and ProviderTaxID.AidTag ='TAXID'
 left outer join 
 ProviderSpecialty on ProviderSpecialty.ProviderID = Provider.ProviderID
-inner join Specialty on ProviderSpecialty.SpecialtyCode = Specialty.SpecialtyCode and  Specialty.TaxonomyFlag = 1
+left outer join Specialty on ProviderSpecialty.SpecialtyCode = Specialty.SpecialtyCode and  Specialty.TaxonomyFlag = 1
 
 left outer join [dbo].[Provider] as Referring on Referring.[ProviderID] = PlanClaim.RefProviderID
 left outer join [dbo].[RefDoctorAltID] on [dbo].[RefDoctorAltID].[RefDoctorID] = Referring.[ProviderID] and RefDoctorAltID.AidTag ='NPI'
-
+left outer join Staff on Staff.StaffID=Provider.ProviderID
+left outer join Address as practiceaddress on practiceaddress.EntitySID=Staff.PracticeID
+left outer join CountryState as practiceState on practiceaddress.State=practiceState.StateCode
+left outer join Address as financialAddress on  financialAddress.EntitySID=Staff.FinanceCenterID
+left outer join CountryState as financialState on financialAddress.State=financialState.StateCode
+inner join PracCommSetup on PracCommSetup.PracticeID = Practice.PracticeID
 where Claim.ClaimSID=@ClaimSID and PolicyMember.CoverageOrder=1
 END
 
