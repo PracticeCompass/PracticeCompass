@@ -27,6 +27,9 @@ CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet]
 @IncludeCompletedClaims int,
 @IncludeCashClaims int,
 @IncludeVoidedClaims int,
+@Rejections int,
+@PastDue int,
+@Denials int,
 @Skip int=0,
 @SortColumn varchar(50)='',
 @SortDirection varchar(50)=''
@@ -98,30 +101,16 @@ PlanClaimPrimary.CurrentStatus as PrimaryStatus ,PlanClaimPrimary.PlanID as Plan
 PlanClaimSeconadry.CurrentStatus as SeconadryStatus ,PlanClaimSeconadry.PlanID as Plan2,
 PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as Plan3
 from 
-Claim inner join PatientAccount on 
-Claim.PracticeID = 
-PatientAccount.PracticeID and
-Claim.PatientID = 
-PatientAccount.PatientID and
-Claim.AccountSID = 
-PatientAccount.AccountSID
-inner join PlanClaim on 
-PlanClaim.ClaimSID = 
-Claim.ClaimSID
-inner join patient on 
-PatientAccount.PracticeID = 
-Patient.PracticeID and
-PatientAccount.PatientID = 
-Patient.PatientID
-left outer join Account on PatientAccount.AccountSID = 
-Account.AccountSID
+Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
+inner join PlanClaim on PlanClaim.ClaimSID = Claim.ClaimSID
+inner join patient on PatientAccount.PracticeID = Patient.PracticeID and PatientAccount.PatientID = Patient.PatientID
+left outer join Account on PatientAccount.AccountSID = Account.AccountSID
 inner join Practice on Practice.PracticeID=Patient.PracticeID
 inner join Person on Person.PersonID=Patient.PatientID
 inner join ClaimCharge on Claim.ClaimSID = ClaimCharge.ClaimSID
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID
 inner join ProcedureEvent on ProcedureEvent.ChargeSID = Charge.ChargeSID
-left outer join Provider on
-PlanClaim.PerformingProviderID = Provider.ProviderID
+left outer join Provider on PlanClaim.PerformingProviderID = Provider.ProviderID
 left outer join PlanClaim as PlanClaimPrimary on PlanClaimPrimary.ClaimSID = Claim.ClaimSID and PlanClaimPrimary.CoverageOrder=1
 left outer join PlanClaim as PlanClaimSeconadry on PlanClaimSeconadry.ClaimSID = Claim.ClaimSID and PlanClaimSeconadry.CoverageOrder=2
 left outer join PlanClaim as PlanClaimTertiary on PlanClaimTertiary.ClaimSID = Claim.ClaimSID and PlanClaimTertiary.CoverageOrder=3

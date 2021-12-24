@@ -40,7 +40,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/ClaimList/PhysicianGet")]
-        public List<Insurance> PhysicianGet(string sortName,int skip)
+        public List<Insurance> PhysicianGet(string sortName, int skip)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/ClaimList/GuarantorGet")]
-        public List<Entity> GuarantorGet(string entity,int skip)
+        public List<Entity> GuarantorGet(string entity, int skip)
         {
             try
             {
@@ -91,7 +91,8 @@ namespace PracticeCompass.API.Controllers.API
                 List<ClaimDTO> Result = unitOfWork.ClaimListRepository.ClaimGridGet(searchCriteria.PatientID, searchCriteria.PracticeID,
                     searchCriteria.PhysicianID, searchCriteria.DOSType, searchCriteria.DOSvalue, searchCriteria.PatientClass, searchCriteria.InsuranceType, searchCriteria.InsuranceID,
                     searchCriteria.BillNumber, searchCriteria.ClaimIcnNumber, searchCriteria.Age, searchCriteria.ClaimValue, searchCriteria.CoverageOrder, searchCriteria.InsuranceStatus,
-                    searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims,searchCriteria.IncludeCashClaims,searchCriteria.IncludeVoidedClaims, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
+                    searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims, searchCriteria.IncludeCashClaims, searchCriteria.IncludeVoidedClaims,
+                    searchCriteria.Rejections, searchCriteria.PastDue, searchCriteria.Denials, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
                 return Result;
             }
             catch (Exception ex)
@@ -151,7 +152,7 @@ namespace PracticeCompass.API.Controllers.API
                     var filename = Path.GetFileName(files[f]);
                     var fileText = System.IO.File.ReadAllText(files[f]);
                     var parseddata = ERAParser.Process835EraMessage(fileText, "~", "*", "<");
-                    var parseddatajson =JsonConvert.SerializeObject(parseddata, Formatting.Indented);
+                    var parseddatajson = JsonConvert.SerializeObject(parseddata, Formatting.Indented);
                     var debuggerpath = Path.Combine(@"C:\PracticeCompas\DebuggingERA", filename + ".debugging.txt");
                     if (System.IO.File.Exists(debuggerpath))
                     {
