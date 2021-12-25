@@ -62,8 +62,10 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2300_HI_segment()
         {
             var HI = new Segment { Name = "HI", FieldSeparator = FieldSeparator };
-            HI[1] = string.Format("BK:{0}", _unknownplaceholder);
-            HI[2] = string.Format("BF:{0}", _unknownplaceholder);
+            HI[1] = string.Format("ABK:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag1) ? "" : _claimMessageModel.Diag1.Replace(".",""));
+            HI[2] = string.Format("ABF:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag2) ? "" : _claimMessageModel.Diag2.Replace(".", ""));
+            HI[3] = string.Format("ABF:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag3) ? "" : _claimMessageModel.Diag3.Replace(".", ""));
+            HI[4] = string.Format("ABF:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag4) ? "" : _claimMessageModel.Diag4.Replace(".", ""));
             return HI;
         }
         public Segment GenerateLoop2300_HIProcedure_segment()

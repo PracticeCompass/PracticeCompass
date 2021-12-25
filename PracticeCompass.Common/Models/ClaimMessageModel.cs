@@ -53,11 +53,16 @@ namespace PracticeCompass.Common.Models
         public string Diag2 { get; set; }
         public string Diag3 { get; set; }
         public string Diag4 { get; set; }
+        public string Order1 { get; set; }
+        public string Order2 { get; set; }
+        public string Order3 { get; set; }
+        public string Order4 { get; set; }
         public string FromServiceDate { get; set; }
 
         //Provider Rendering
         public string ProviderLastName { get; set; }
         public string ProviderMiddleName { get; set; }
+        public string ProviderSuffix { get; set; }
         public string NPI { get; set; }
         public string TaxonomyCode { get; set; }
         public string ProviderTaxID { get; set; }
@@ -65,6 +70,7 @@ namespace PracticeCompass.Common.Models
         //Referring
         public string RefLastName { get; set; }
         public string RefFirstName { get; set; }
+        public string RefSuffix { get; set; }
         public string RefMiddleName { get; set; }
         public string RefNPI { get; set; }
 
@@ -89,6 +95,7 @@ namespace PracticeCompass.Common.Models
 
         public int? ChargeSID { get; set; }
         public string ClaimNumber { get; set; }
+        public string POSCode { get; set; }
 
 
     }

@@ -110,19 +110,19 @@ namespace PracticeCompass.Messaging.Genaration
             #region Loop: 2300
             var loop2300 = new Generateloop2300segment(ClaimMessageModel, FieldSeparator, unknownplaceholder);
             var Loop2300_CLM = loop2300.GenerateLoop2300_CLM_segment();
-            var Loop2300_PWK = loop2300.GenerateLoop2300_PWK_segment();
-            var Loop2300_AMT = loop2300.GenerateLoop2300_AMT_segment();
-            var Loop2300_REF = loop2300.GenerateLoop2300_REF_segment();
-            var Loop2300_NTE = loop2300.GenerateLoop2300_NTE_segment();
+            //var Loop2300_PWK = loop2300.GenerateLoop2300_PWK_segment();
+           // var Loop2300_AMT = loop2300.GenerateLoop2300_AMT_segment();
+           // var Loop2300_REF = loop2300.GenerateLoop2300_REF_segment();
+           // var Loop2300_NTE = loop2300.GenerateLoop2300_NTE_segment();
             var Loop2300_HI  = loop2300.GenerateLoop2300_HI_segment();
-            var Loop2300_HIProcedure = loop2300.GenerateLoop2300_HIProcedure_segment();
+           // var Loop2300_HIProcedure = loop2300.GenerateLoop2300_HIProcedure_segment();
             transactionEnvelope.Segments.Add(Loop2300_CLM);
-            transactionEnvelope.Segments.Add(Loop2300_PWK);
-            transactionEnvelope.Segments.Add(Loop2300_AMT);
-            transactionEnvelope.Segments.Add(Loop2300_REF);
-            transactionEnvelope.Segments.Add(Loop2300_NTE);
+            //transactionEnvelope.Segments.Add(Loop2300_PWK);
+            //transactionEnvelope.Segments.Add(Loop2300_AMT);
+            //transactionEnvelope.Segments.Add(Loop2300_REF);
+            //transactionEnvelope.Segments.Add(Loop2300_NTE);
             transactionEnvelope.Segments.Add(Loop2300_HI);
-            transactionEnvelope.Segments.Add(Loop2300_HIProcedure);
+            //transactionEnvelope.Segments.Add(Loop2300_HIProcedure);
             #endregion
             #region Loop: 2310A
             var loop2310A = new Generateloop2310Asegment(ClaimMessageModel, FieldSeparator, unknownplaceholder);
@@ -137,17 +137,17 @@ namespace PracticeCompass.Messaging.Genaration
             transactionEnvelope.Segments.Add(loop2310B_PRV);
             #endregion
             #region Loop: 2320
-            var loop2320     = new Generateloop2320segment(ClaimMessageModel, FieldSeparator, unknownplaceholder);
-            var loop2320_SBR = loop2320.GenerateLoop2320_SBR_segment();
-            var loop2320_CAS = loop2320.GenerateLoop2320_CAS_segment();
-            var loop2320_AMT = loop2320.GenerateLoop2320_AMT_segment();
-            var loop2320_OI  = loop2320.GenerateLoop2320_OI_segment();
-            var loop2320_MOA = loop2320.GenerateLoop2320_MOA_segment();
-            transactionEnvelope.Segments.Add(loop2320_SBR);
-            transactionEnvelope.Segments.Add(loop2320_CAS);
-            transactionEnvelope.Segments.Add(loop2320_AMT);
-            transactionEnvelope.Segments.Add(loop2320_OI);
-            transactionEnvelope.Segments.Add(loop2320_MOA);
+            //var loop2320     = new Generateloop2320segment(ClaimMessageModel, FieldSeparator, unknownplaceholder);
+            //var loop2320_SBR = loop2320.GenerateLoop2320_SBR_segment();
+            //var loop2320_CAS = loop2320.GenerateLoop2320_CAS_segment();
+            //var loop2320_AMT = loop2320.GenerateLoop2320_AMT_segment();
+            //var loop2320_OI  = loop2320.GenerateLoop2320_OI_segment();
+            //var loop2320_MOA = loop2320.GenerateLoop2320_MOA_segment();
+            //transactionEnvelope.Segments.Add(loop2320_SBR);
+            //transactionEnvelope.Segments.Add(loop2320_CAS);
+            //transactionEnvelope.Segments.Add(loop2320_AMT);
+            //transactionEnvelope.Segments.Add(loop2320_OI);
+            //transactionEnvelope.Segments.Add(loop2320_MOA);
             #endregion
             #region Loop: 2400 
             var loop2400     = new Generateloop2400segment(ClaimMessageModel, FieldSeparator, unknownplaceholder);

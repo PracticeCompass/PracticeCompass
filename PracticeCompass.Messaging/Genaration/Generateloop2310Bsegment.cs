@@ -23,6 +23,7 @@ namespace PracticeCompass.Messaging.Genaration
             Nm1[3] = _claimMessageModel.ProviderLastName;
             Nm1[4] = _claimMessageModel.ProviderFristName;
             Nm1[5] = _claimMessageModel.ProviderMiddleName;
+            Nm1[7] = _claimMessageModel.ProviderSuffix;
             Nm1[8] = "XX";  
             Nm1[9] = _claimMessageModel.NPI;
             return Nm1;

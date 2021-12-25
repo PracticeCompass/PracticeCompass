@@ -23,6 +23,7 @@ namespace PracticeCompass.Messaging.Genaration
             Nm1[3] = _claimMessageModel.RefLastName;
             Nm1[4] = _claimMessageModel.RefFirstName;
             Nm1[5] = _claimMessageModel.MiddleName;
+            Nm1[7] = _claimMessageModel.RefSuffix;
             Nm1[8] = "XX";  
             Nm1[9] = _claimMessageModel.RefNPI;
             return Nm1;

@@ -31,12 +31,12 @@ namespace PracticeCompass.Messaging.Genaration
             SV1[2] = _claimMessageModel.ChargeAmount;
             SV1[3] = "UN";
             SV1[4] = _claimMessageModel.Units;
-            SV1[5] = "";
+            SV1[5] = _claimMessageModel.POSCode;
             SV1[7] = string.Format("{0}{1}{2}{3}",
-                          string.IsNullOrEmpty(_claimMessageModel.Diag1) ? "" : ":" + _claimMessageModel.Diag1,
-                          string.IsNullOrEmpty(_claimMessageModel.Diag2) ? "" : ":" + _claimMessageModel.Diag2,
-                          string.IsNullOrEmpty(_claimMessageModel.Diag3) ? "" : ":" + _claimMessageModel.Diag3,
-                          string.IsNullOrEmpty(_claimMessageModel.Diag4) ? "" : ":" + _claimMessageModel.Diag4);
+                          string.IsNullOrEmpty(_claimMessageModel.Order1) ? "" : _claimMessageModel.Order1,
+                          string.IsNullOrEmpty(_claimMessageModel.Order2) ? "" : ":" + _claimMessageModel.Order2,
+                          string.IsNullOrEmpty(_claimMessageModel.Order3) ? "" : ":" + _claimMessageModel.Order3,
+                          string.IsNullOrEmpty(_claimMessageModel.Order4) ? "" : ":" + _claimMessageModel.Order4);
             //SV1[9] = _unknownplaceholder;
             //SV1[11] = _unknownplaceholder;
             //SV1[12] = _unknownplaceholder;
