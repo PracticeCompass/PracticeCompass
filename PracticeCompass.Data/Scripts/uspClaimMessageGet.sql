@@ -27,7 +27,7 @@ BEGIN
 	,Provideradress.Line1 as ProviderLine1,
 	Provideradress.Line2 as ProviderLine2 , Provideradress.City as ProviderCity,
 	ProviderState.StateCode as ProviderState,Provideradress.Zip as ProviderZip , Provider.ProviderID , PolicyMember.CoverageOrder
-	,PolicyMember.RelationToSub , [Plan].SortName as PlanName,
+	,PolicyMember.RelationToSub ,PolicyMember.ClaimMemberID, [Plan].SortName as PlanName,
 	PlanAddress.Line1 as PlanLine1 , PlanAddress.Line2 as PlanLine2 , 
 	PlanAddress.Zip as PlanZip , PlanAddress.City as PlanCity , PlanAddress.State as PlanState,
 	ProcedureEvent.ProcedureCode , Mod1.Modifier as Mod1 , Mod2.Modifier as Mod2, Mod3.Modifier as Mod3, Mod4.Modifier as Mod4 ,
@@ -78,14 +78,14 @@ left outer join StaffAltID as ProviderTaxID on ProviderTaxID.staffID = Provider.
 left outer join 
 ProviderSpecialty on ProviderSpecialty.ProviderID = Provider.ProviderID
 left outer join Specialty on ProviderSpecialty.SpecialtyCode = Specialty.SpecialtyCode and  Specialty.TaxonomyFlag = 1
-
-left outer join [dbo].[Provider] as Referring on Referring.[ProviderID] = PlanClaim.RefProviderID
-left outer join [dbo].[RefDoctorAltID] on [dbo].[RefDoctorAltID].[RefDoctorID] = Referring.[ProviderID] and RefDoctorAltID.AidTag ='NPI'
 left outer join Staff on Staff.StaffID=Provider.ProviderID
 left outer join Address as practiceaddress on practiceaddress.EntitySID=Staff.PracticeID
 left outer join CountryState as practiceState on practiceaddress.State=practiceState.StateCode
 left outer join Address as financialAddress on  financialAddress.EntitySID=Staff.FinanceCenterID
 left outer join CountryState as financialState on financialAddress.State=financialState.StateCode
+left outer join Ailment on Ailment.AilmentSID=ProcedureEvent.AilmentSID
+left outer join [dbo].[Provider] as Referring on Referring.[ProviderID] = Ailment.RefDoctorID
+left outer join [dbo].[RefDoctorAltID] on [dbo].[RefDoctorAltID].[RefDoctorID] = Referring.[ProviderID] and RefDoctorAltID.AidTag ='NPI'
 inner join PracCommSetup on PracCommSetup.PracticeID = Practice.PracticeID
 where Claim.ClaimSID=@ClaimSID and PolicyMember.CoverageOrder=1
 END

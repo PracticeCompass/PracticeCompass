@@ -25,7 +25,7 @@ namespace PracticeCompass.Messaging.Genaration
             NM1[5] = _claimMessageModel.MiddleName;
             NM1[7] = _claimMessageModel.NameSuffix;
             NM1[8] = "MI";
-            NM1[9] = _claimMessageModel.PersonID;
+            NM1[9] = _claimMessageModel.ClaimMemberID;
             return NM1;
         }
         public Segment GenerateLoop2010BA_N3_segment()
