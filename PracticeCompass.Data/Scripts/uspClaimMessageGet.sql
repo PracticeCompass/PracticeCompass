@@ -43,7 +43,8 @@ BEGIN
 	practiceState.StateCode as PracticeState,practiceaddress.Zip as PracticeZip,
 	financialAddress.Line1 as FinancialLine1,
 	financialAddress.Line2 as FinancialLine2 , financialAddress.City as FinancialCity,
-	financialState.StateCode as FinancialState,financialAddress.Zip as FinancialZip,PracCommSetup.ReceiverID,PracCommSetup.SenderID
+	financialState.StateCode as FinancialState,financialAddress.Zip as FinancialZip,PracCommSetup.ReceiverID,
+	PracCommSetup.SenderID,BatchRunClaim.RunNumber
 	from claim
 inner join Person on Person.PersonID = Claim.PatientID
 left outer join Address on [dbo].[Address].[EntitySID] = PersonID
@@ -57,8 +58,6 @@ left outer join CountryState as ProviderState on Provideradress.State = Provider
 inner join PolicyMember on PolicyMember.PlanID = PlanClaim.PlanID and PolicyMember.PolicyNumber = PlanClaim.PolicyNumber
 inner join [Plan] on [Plan].PlanID = PlanClaim.PlanID
 left outer join Address as PlanAddress on PlanAddress.EntitySID = PlanClaim.PlanID
-
-
 left outer join ServiceCenter on ProcedureEvent.ServiceCenterID=ServiceCenter.ServiceCenterID
 inner join Practice on ProcedureEvent.PracticeID = Practice.PracticeID
 inner join Entity as PracticeEntity on PracticeEntity.EntitySID = Practice.PracticeID
@@ -87,6 +86,7 @@ left outer join Ailment on Ailment.AilmentSID=ProcedureEvent.AilmentSID
 left outer join [dbo].[Provider] as Referring on Referring.[ProviderID] = Ailment.RefDoctorID
 left outer join [dbo].[RefDoctorAltID] on [dbo].[RefDoctorAltID].[RefDoctorID] = Referring.[ProviderID] and RefDoctorAltID.AidTag ='NPI'
 inner join PracCommSetup on PracCommSetup.PracticeID = Practice.PracticeID
+left outer join BatchRunClaim on BatchRunClaim.ClaimSID=Claim.ClaimSID and BatchRunClaim.PlanID=[plan].PlanID and BatchRunClaim.PolicyNumber=PolicyMember.PolicyNumber
 where Claim.ClaimSID=@ClaimSID and PolicyMember.CoverageOrder=1
 END
 

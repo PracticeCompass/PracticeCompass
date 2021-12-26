@@ -30,7 +30,7 @@ namespace PracticeCompass.Messaging.Genaration
             isa[10] = DateTime.Now.ToString("HHMM");
             isa[11] = "^";
             isa[12] = "00501";
-            isa[13] = _unknownplaceholder;
+            isa[13] = _claimMessageModel.RunNumber.ToString().PadLeft(9, '0');
             isa[14] = "0";
             isa[15] = "T";
             isa[16] = ":";
@@ -40,7 +40,7 @@ namespace PracticeCompass.Messaging.Genaration
         {
             Segment iea = new Segment { Name = "IEA", FieldSeparator = FieldSeparator };
             iea[1] = "1";  
-            iea[2] = _unknownplaceholder;//isa[13]
+            iea[2] = _claimMessageModel.RunNumber.ToString().PadLeft(9, '0');
             return iea;            
         }
     }

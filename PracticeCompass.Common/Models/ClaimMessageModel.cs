@@ -97,6 +97,7 @@ namespace PracticeCompass.Common.Models
         public string ClaimNumber { get; set; }
         public string POSCode { get; set; }
         public string ClaimMemberID { get; set; }
+        public int RunNumber { get; set; }
 
     }
 
