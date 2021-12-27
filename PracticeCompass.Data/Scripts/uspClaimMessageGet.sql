@@ -44,7 +44,8 @@ BEGIN
 	financialAddress.Line1 as FinancialLine1,
 	financialAddress.Line2 as FinancialLine2 , financialAddress.City as FinancialCity,
 	financialState.StateCode as FinancialState,financialAddress.Zip as FinancialZip,PracCommSetup.ReceiverID,
-	PracCommSetup.SenderID,BatchRunClaim.RunNumber
+	PracCommSetup.SenderID,Practice.PracticeCode,BatchRunClaim.RunNumber,[plan].ProfileOverrideAllowed,
+	INSTAMEDPlan.ID as INSTAMEDPlanID,PAYORIDPlan.ID as PAYORIDPlanID
 	from claim
 inner join Person on Person.PersonID = Claim.PatientID
 left outer join Address on [dbo].[Address].[EntitySID] = PersonID
@@ -73,20 +74,22 @@ left outer join [dbo].ProcedureEventDiag as Dag3 on Dag3.[ProcedureEventSID] = P
 left outer join [dbo].ProcedureEventDiag as Dag4 on Dag4.[ProcedureEventSID] = ProcedureEvent.ProcedureEventSID and Dag4.[Order]=4
 left outer join PendingCharge on ProcedureEvent.EncounterSID = PendingCharge.EncounterSID
 left outer join StaffAltID on StaffAltID.staffID = Provider.ProviderID and AidTag ='NPI' and StaffAltID.PracticeID=ProcedureEvent.PracticeID
-left outer join StaffAltID as ProviderTaxID on ProviderTaxID.staffID = Provider.ProviderID and ProviderTaxID.AidTag ='TAXID' and StaffAltID.PracticeID=ProcedureEvent.PracticeID
+left outer join StaffAltID as ProviderTaxID on ProviderTaxID.staffID = Provider.ProviderID and ProviderTaxID.AidTag ='TAXID' and ProviderTaxID.PracticeID=Practice.PracticeID
 left outer join 
 ProviderSpecialty on ProviderSpecialty.ProviderID = Provider.ProviderID
 left outer join Specialty on ProviderSpecialty.SpecialtyCode = Specialty.SpecialtyCode and  Specialty.TaxonomyFlag = 1
 left outer join Staff on Staff.StaffID=Provider.ProviderID
-left outer join Address as practiceaddress on practiceaddress.EntitySID=Staff.PracticeID
+left outer join Address as practiceaddress on practiceaddress.EntitySID=ProcedureEvent.PracticeID and practiceaddress.Class='B'
 left outer join CountryState as practiceState on practiceaddress.State=practiceState.StateCode
-left outer join Address as financialAddress on  financialAddress.EntitySID=Staff.FinanceCenterID
+left outer join Address as financialAddress on  financialAddress.EntitySID=Charge.FinanceCenterID
 left outer join CountryState as financialState on financialAddress.State=financialState.StateCode
 left outer join Ailment on Ailment.AilmentSID=ProcedureEvent.AilmentSID
 left outer join [dbo].[Provider] as Referring on Referring.[ProviderID] = Ailment.RefDoctorID
 left outer join [dbo].[RefDoctorAltID] on [dbo].[RefDoctorAltID].[RefDoctorID] = Referring.[ProviderID] and RefDoctorAltID.AidTag ='NPI'
 inner join PracCommSetup on PracCommSetup.PracticeID = Practice.PracticeID
 left outer join BatchRunClaim on BatchRunClaim.ClaimSID=Claim.ClaimSID and BatchRunClaim.PlanID=[plan].PlanID and BatchRunClaim.PolicyNumber=PolicyMember.PolicyNumber
+left outer join PlanAltID as INSTAMEDPlan on INSTAMEDPlan.PlanID=[plan].PlanID and INSTAMEDPlan.AidTag='INSTAMED'
+left outer join PlanAltID as PAYORIDPlan on PAYORIDPlan.PlanID=[plan].PlanID and PAYORIDPlan.AidTag='PAYORID'
 where Claim.ClaimSID=@ClaimSID and PolicyMember.CoverageOrder=1
 END
 

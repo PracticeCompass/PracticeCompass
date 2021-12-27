@@ -21,21 +21,21 @@ namespace PracticeCompass.Messaging.Genaration
             NM1[2] = "2";
             NM1[3] = _claimMessageModel.PlanName;
             NM1[8] = "PI";
-            NM1[9] = _unknownplaceholder;
+            NM1[9] = _claimMessageModel.ProfileOverrideAllowed=="Y"? _claimMessageModel.PAYORIDPlanID: _claimMessageModel.INSTAMEDPlanID;
             return NM1;
         }
         public Segment GenerateLoop2010BB_N3_segment()
         {
             var N3 = new Segment { Name = "N3", FieldSeparator = FieldSeparator };
-            N3[1] = _claimMessageModel.PlanLine1;
-            N3[2] = _claimMessageModel.PlanLine2;
+            N3[1] = _claimMessageModel.PlanLine1.Replace("-", "");
+            N3[2] = _claimMessageModel.PlanLine2.Replace("-", "");
             return N3;
         }
         public Segment GenerateLoop2010BB_N4_segment()
         {
             var N4 = new Segment { Name = "N4", FieldSeparator = FieldSeparator };
             N4[1] = _claimMessageModel.PlanCity;
-            N4[2] = _claimMessageModel.PlanState;
+            N4[2] = _claimMessageModel.PlanState.Replace("-", "");
             N4[3] = _claimMessageModel.PlanZip.Replace("-","");
             return N4;
         }

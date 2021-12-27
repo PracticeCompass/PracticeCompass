@@ -31,16 +31,16 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2010BA_N3_segment()
         {
             var N3 = new Segment { Name = "N3", FieldSeparator = FieldSeparator };
-            N3[1] = _claimMessageModel.Line1;
-            N3[2] = _claimMessageModel.Line2;
+            N3[1] = _claimMessageModel.Line1.Replace("-", "");
+            N3[2] = _claimMessageModel.Line2.Replace("-", "");
             return N3;
         }
         public Segment GenerateLoop2010BA_N4_segment()
         {
             var N4 = new Segment { Name = "N4", FieldSeparator = FieldSeparator };
             N4[1] = _claimMessageModel.City;
-            N4[2] = _claimMessageModel.StateCode;
-            N4[3] = _claimMessageModel.Zip;
+            N4[2] = _claimMessageModel.StateCode.Replace("-", "");
+            N4[3] = _claimMessageModel.Zip.Replace("-", "");
             return N4;
         }
         public Segment GenerateLoop2010BA_DMG_segment()

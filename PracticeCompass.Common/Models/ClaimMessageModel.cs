@@ -83,6 +83,7 @@ namespace PracticeCompass.Common.Models
         public string PracticeState { get; set; }
         public string PracticeZip { get; set; }
         public string PracticeContact { get; set; }
+        public string PracticeCode { get; set; }
         /// financial
         public string FinancialLine1 { get; set; }
         public string FinancialLine2 { get; set; }
@@ -98,6 +99,9 @@ namespace PracticeCompass.Common.Models
         public string POSCode { get; set; }
         public string ClaimMemberID { get; set; }
         public int RunNumber { get; set; }
+        public string ProfileOverrideAllowed { get; set; }
+        public string PAYORIDPlanID { get; set; }
+        public string INSTAMEDPlanID { get; set; }
 
     }
 

@@ -17,7 +17,7 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2300_CLM_segment()
         {
             var clm = new Segment { Name = "CLM", FieldSeparator = FieldSeparator };
-            clm[1] = _claimMessageModel.ClaimNumber+ "TPHT";
+            clm[1] = _claimMessageModel.ClaimNumber+ _claimMessageModel.PracticeCode;
             clm[2] = _claimMessageModel.ChargeAmount;
             clm[5] = string.Format("{0}:B:{1}", 11, 1);
             clm[6] = "Y";
@@ -62,10 +62,14 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2300_HI_segment()
         {
             var HI = new Segment { Name = "HI", FieldSeparator = FieldSeparator };
-            HI[1] = string.Format("ABK:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag1) ? "" : _claimMessageModel.Diag1.Replace(".",""));
-            HI[2] = string.Format("ABF:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag2) ? "" : _claimMessageModel.Diag2.Replace(".", ""));
-            HI[3] = string.Format("ABF:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag3) ? "" : _claimMessageModel.Diag3.Replace(".", ""));
-            HI[4] = string.Format("ABF:{0}", string.IsNullOrEmpty(_claimMessageModel.Diag4) ? "" : _claimMessageModel.Diag4.Replace(".", ""));
+            if(!string.IsNullOrEmpty(_claimMessageModel.Diag1))
+            HI[1] = string.Format("ABK:{0}", _claimMessageModel.Diag1.Replace(".",""));
+            if(!string.IsNullOrEmpty(_claimMessageModel.Diag2))
+            HI[2] = string.Format("ABF:{0}", _claimMessageModel.Diag2.Replace(".", ""));
+            if(!string.IsNullOrEmpty(_claimMessageModel.Diag3))
+            HI[3] = string.Format("ABF:{0}", _claimMessageModel.Diag3.Replace(".", ""));
+            if(!string.IsNullOrEmpty(_claimMessageModel.Diag4))
+            HI[4] = string.Format("ABF:{0}", _claimMessageModel.Diag4.Replace(".", ""));
             return HI;
         }
         public Segment GenerateLoop2300_HIProcedure_segment()
