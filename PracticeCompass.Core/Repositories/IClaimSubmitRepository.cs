@@ -6,6 +6,6 @@ namespace PracticeCompass.Core.Repositories
 {
     public interface IClaimSubmitRepository : IRepository<ClaimMessageModel>
     {
-        public ClaimMessageModel ClaimMessageModelGet(int ClaimSID);
+        public List<ClaimMessageModel> ClaimMessageModelGet(string ClaimSID);
     }
 }

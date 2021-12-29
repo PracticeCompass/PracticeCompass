@@ -9,16 +9,18 @@ namespace PracticeCompass.Messaging.Genaration
         ClaimMessageModel _claimMessageModel;
         string FieldSeparator;
         string _unknownplaceholder;
-        public Generateloop2000Asegment(ClaimMessageModel claimMessageModel, string fieldSeparator, string unknownplaceholder)
+        int _parentindex;
+        public Generateloop2000Asegment(ClaimMessageModel claimMessageModel, string fieldSeparator, string unknownplaceholder,int parentindex)
         {
             FieldSeparator = fieldSeparator;
             _unknownplaceholder = unknownplaceholder;
             _claimMessageModel = claimMessageModel;
+            _parentindex = parentindex;
         }
         public Segment GenerateLoop2000A_HL_segment()
         {
             var HL = new Segment { Name = "HL", FieldSeparator = FieldSeparator };
-            HL[1] = "1"; 
+            HL[1] = _parentindex.ToString(); 
             HL[3] = "20";
             HL[4] = "1"; 
             return HL;

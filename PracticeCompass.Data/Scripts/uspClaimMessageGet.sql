@@ -13,7 +13,7 @@ GO
 --exec uspClaimMessageGet 1
 -- =============================================
 CREATE OR ALTER   PROCEDURE [dbo].[uspClaimMessageGet] 
-@ClaimSID int
+@ClaimSID varchar(max)
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -90,7 +90,7 @@ inner join PracCommSetup on PracCommSetup.PracticeID = Practice.PracticeID
 left outer join BatchRunClaim on BatchRunClaim.ClaimSID=Claim.ClaimSID and BatchRunClaim.PlanID=[plan].PlanID and BatchRunClaim.PolicyNumber=PolicyMember.PolicyNumber
 left outer join PlanAltID as INSTAMEDPlan on INSTAMEDPlan.PlanID=[plan].PlanID and INSTAMEDPlan.AidTag='INSTAMED'
 left outer join PlanAltID as PAYORIDPlan on PAYORIDPlan.PlanID=[plan].PlanID and PAYORIDPlan.AidTag='PAYORID'
-where Claim.ClaimSID=@ClaimSID and PolicyMember.CoverageOrder=1
+where Claim.ClaimSID in (select value from STRING_SPLIT(@ClaimSID,',')) and PlanClaim.CoverageOrder<>99
 END
 
 GO

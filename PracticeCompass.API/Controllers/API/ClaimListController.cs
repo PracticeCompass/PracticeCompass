@@ -107,19 +107,19 @@ namespace PracticeCompass.API.Controllers.API
         {
             try
             {
-                List<string> Claims = ClaimSID.Replace("\"", "").Split(",").ToList();
-                Claims.RemoveRange(Claims.Count - 1, 1);
+                //List<string> Claims = ClaimSID.Replace("\"", "").Split(",").ToList();
+                //Claims.RemoveRange(Claims.Count - 1, 1);
                 var X12_837Gen = new X12_837Generator();
-                foreach (var Claim in Claims)
-                {
-                    var ClaimMessageModel = unitOfWork.ClaimSubmitRepository.ClaimMessageModelGet(Int32.Parse(Claim));
+                //foreach (var Claim in Claims)
+                //{
+                    var ClaimMessageModel = unitOfWork.ClaimSubmitRepository.ClaimMessageModelGet(ClaimSID);
                     if (ClaimMessageModel != null)
                     {
                         X12_837Gen.Generate837PMessage(ClaimMessageModel, "~", "*", "XXXX");
                         unitOfWork.AuditLogRepository.AuditLogInsert("", "", 0, 0, "", "Test user", AuditType.New, "Billing", AuditModule.ClaimList, "", string.Format("Claim {0} Submitted", ClaimSID));
                     }
 
-                }
+                //}
 
             }
             catch (Exception ex)

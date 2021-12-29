@@ -30,10 +30,10 @@ namespace PracticeCompass.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public ClaimMessageModel ClaimMessageModelGet(int ClaimSID)
+        public List<ClaimMessageModel> ClaimMessageModelGet(string ClaimSID)
         {
             var data = this.db.QueryMultiple("uspClaimMessageGet", new { @ClaimSID = ClaimSID }, commandType: CommandType.StoredProcedure);
-            return data.Read<ClaimMessageModel>().FirstOrDefault();
+            return data.Read<ClaimMessageModel>().ToList();
         }
 
         public Task<int> CountAsync(Expression<Func<ClaimMessageModel, bool>> predicate)

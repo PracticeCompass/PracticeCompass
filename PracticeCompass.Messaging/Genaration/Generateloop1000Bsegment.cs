@@ -19,7 +19,7 @@ namespace PracticeCompass.Messaging.Genaration
             var Nm1 = new Segment { Name = "NM1", FieldSeparator = FieldSeparator };
             Nm1[1] = "40"; 
             Nm1[2] = "2";  
-            Nm1[3] = _unknownplaceholder;
+            Nm1[3] = "I11.10.00.51-F01.31.2014";
             Nm1[8] = "46"; 
             Nm1[9] = _claimMessageModel.ReceiverID;
             return Nm1;

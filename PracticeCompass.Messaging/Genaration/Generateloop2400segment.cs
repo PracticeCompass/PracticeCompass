@@ -8,16 +8,18 @@ namespace PracticeCompass.Messaging.Genaration
         ClaimMessageModel _claimMessageModel;
         string FieldSeparator;
         string _unknownplaceholder;
-        public Generateloop2400segment(ClaimMessageModel claimMessageModel, string fieldSeparator, string unknownplaceholder)
+        int _index;
+        public Generateloop2400segment(ClaimMessageModel claimMessageModel, string fieldSeparator, string unknownplaceholder,int index)
         {
             FieldSeparator = fieldSeparator;
             _unknownplaceholder = unknownplaceholder;
             _claimMessageModel = claimMessageModel;
+            _index = index;
         }
         public Segment GenerateLoop2400_LX_segment()
         {
             var LX = new Segment { Name = "LX", FieldSeparator = FieldSeparator};
-            LX[1] = "1"; //to be modified when we have 2400 inside for loop to be the index of the loop start with one 
+            LX[1] = _index.ToString();
             return LX;
         }
         public Segment GenerateLoop2400_SV1_segment()
