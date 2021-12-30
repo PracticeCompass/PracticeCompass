@@ -38,11 +38,11 @@ namespace PracticeCompass.Messaging.Genaration
             Envelope transactionEnvelope = new Envelope { EnvelopeType = EnvelopeType.Transaction, SegmentSeparator = segmentSeparator };
             var transaction = new Generatetransactionsegment(ClaimMessageModel[0], FieldSeparator, unknownplaceholder);
             var ST = transaction.GeneratetransactionHeader();
-            var SE = transaction.GeneratetransactionTrailer();
+          
             var bht = transaction.GenerateBHTSegment();
             transactionEnvelope.Segments.Add(bht);
             transactionEnvelope.HeaderSegment = ST;
-            transactionEnvelope.TrailerSegment = SE;
+
             FunctionalGroup.NestedEnvelopes.Add(transactionEnvelope);
             #endregion
             #region Loop: 1000A
@@ -216,18 +216,19 @@ namespace PracticeCompass.Messaging.Genaration
 
             }
             #region Loop: 2320
-          
+
             //var loop2320_CAS = loop2320.GenerateLoop2320_CAS_segment();
             //var loop2320_AMT = loop2320.GenerateLoop2320_AMT_segment();
-            
+
             //var loop2320_MOA = loop2320.GenerateLoop2320_MOA_segment();
-           
+
             //transactionEnvelope.Segments.Add(loop2320_CAS);
             //transactionEnvelope.Segments.Add(loop2320_AMT);
-            
+
             //transactionEnvelope.Segments.Add(loop2320_MOA);
             #endregion
-
+            var SE = transaction.GeneratetransactionTrailer(transactionEnvelope.Segments.Count);
+            transactionEnvelope.TrailerSegment = SE;
             var returnme = message.GenerateMessage();
             if (!Directory.Exists(@"C:\PracticeCompas\Outbound\"))
             {

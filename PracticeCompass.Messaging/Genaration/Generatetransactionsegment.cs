@@ -23,11 +23,11 @@ namespace PracticeCompass.Messaging.Genaration
             st[3] = "005010X222A1";
             return st;
         }
-        public Segment GeneratetransactionTrailer()
+        public Segment GeneratetransactionTrailer(int SegmentsCount)
         {
             Segment se = new Segment { Name = "SE", FieldSeparator = FieldSeparator };
             
-            se[1] = _unknownplaceholder;
+            se[1] = (SegmentsCount+2).ToString();
             se[2] = "0001";
             return se;
         } 
