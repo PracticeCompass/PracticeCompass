@@ -98,121 +98,133 @@ namespace PracticeCompass.Messaging.Genaration
                 //for (var l=0;l<filteredbyfilling.Count;l++)
                 //{
                 //Log.LogError("filteredbyfilling : " + filteredbyfilling.Count,"","");
-                //var claimnumbers = filteredbyfilling.Select(x => x.ClaimNumber).Distinct().ToList();
-                //for (var c = 0; c < claimnumbers.Count; c++)
-                //{
-                // Log.LogError("claimnumbers : " + claimnumbers.Count, "", "");
-                loopindex++;
-                var rowsbyclaimnumber = ClaimMessageModel.Where(x => x.ClaimNumber == filteredbyfilling.ClaimNumber).Select(x => new { claimnum = x.ClaimNumber, covorder = x.CoverageOrder }).Distinct().OrderBy(x => x.covorder).ToList();
-                //create 2000B HL segment 
-                var parenthl = ClaimMessageModel.FirstOrDefault(x => x.ClaimNumber == filteredbyfilling.ClaimNumber);
-                var loop2000BHL = new Generateloop2000Bsegment(parenthl, FieldSeparator, unknownplaceholder, parentlooindex, loopindex);
-                var Loop2000B_HL = loop2000BHL.GenerateLoop2000B_HL_segment();
-                transactionEnvelope.Segments.Add(Loop2000B_HL);
-
-                for (var r = 0; r < rowsbyclaimnumber.Count; r++)
+                var claimnumbers = ClaimMessageModel.Where(x => x.FilingCode == fillingcodes[f]).Select(x => x.ClaimNumber).Distinct().ToList();
+                for (var c = 0; c < claimnumbers.Count; c++)
                 {
-                    var childmodel = ClaimMessageModel.FirstOrDefault(x => x.ClaimNumber == rowsbyclaimnumber[r].claimnum && x.CoverageOrder == rowsbyclaimnumber[r].covorder);
-                    Log.LogError("rowsbyclaimnumber : " + rowsbyclaimnumber.Count, "", "");
-                    //create 2000B SBR 
-                    var loop2000Bsbr = new Generateloop2000Bsegment(childmodel, FieldSeparator, unknownplaceholder, 0, 0);
-                    var Loop2000B_SBR = loop2000Bsbr.GenerateLoop2000B_SBR_segment();
-                    transactionEnvelope.Segments.Add(Loop2000B_SBR);
+                    Log.LogError("claimnumbers : " + claimnumbers.Count, "", "");
+                    loopindex++;
+                    var rowsbyclaimnumber = ClaimMessageModel.Where(x => x.ClaimNumber == claimnumbers[c]).Select(x => new { claimnum = x.ClaimNumber, covorder = x.CoverageOrder }).Distinct().OrderBy(x => x.covorder).ToList();
+                    //create 2000B HL segment 
+                    var parenthl = ClaimMessageModel.FirstOrDefault(x => x.ClaimNumber == claimnumbers[c]);
+                    var loop2000BHL = new Generateloop2000Bsegment(parenthl, FieldSeparator, unknownplaceholder, parentlooindex, loopindex);
+                    var Loop2000B_HL = loop2000BHL.GenerateLoop2000B_HL_segment();
+                    transactionEnvelope.Segments.Add(Loop2000B_HL);
 
-                    // create 2010BA
-                    //create 2010BB
-                    #region Loop: 2010BA
-                    var Loop2010BA = new Generateloop2010BAsegment(childmodel, FieldSeparator, unknownplaceholder);
-                    var Loop2010BA_NM1 = Loop2010BA.GenerateLoop2010BA_NM1_segment();
-                    var Loop2010BA_N3 = Loop2010BA.GenerateLoop2010BA_N3_segment();
-                    var Loop2010BA_N4 = Loop2010BA.GenerateLoop2010BA_N4_segment();
-                    var Loop2010BA_DMG = Loop2010BA.GenerateLoop2010BA_DMG_segment();
-                    transactionEnvelope.Segments.Add(Loop2010BA_NM1);
-                    transactionEnvelope.Segments.Add(Loop2010BA_N3);
-                    transactionEnvelope.Segments.Add(Loop2010BA_N4);
-                    transactionEnvelope.Segments.Add(Loop2010BA_DMG);
-                    #endregion
-                    #region Loop: 2010BB
-                    var Loop2010BB = new Generateloop2010BBsegment(childmodel, FieldSeparator, unknownplaceholder);
-                    var Loop2010BB_NM1 = Loop2010BB.GenerateLoop2010BB_NM1_segment();
-                    var Loop2010BB_N3 = Loop2010BB.GenerateLoop2010BB_N3_segment();
-                    var Loop2010BB_N4 = Loop2010BB.GenerateLoop2010BB_N4_segment();
-                    transactionEnvelope.Segments.Add(Loop2010BB_NM1);
-                    transactionEnvelope.Segments.Add(Loop2010BB_N3);
-                    transactionEnvelope.Segments.Add(Loop2010BB_N4);
-                    #endregion
-                    if (rowsbyclaimnumber[r].covorder == 1)
+                    for (var r = 0; r < rowsbyclaimnumber.Count; r++)
                     {
-                        //create 2300 
-                        #region Loop: 2300
-                        var loop2300 = new Generateloop2300segment(childmodel, FieldSeparator, unknownplaceholder);
-                        var Loop2300_CLM = loop2300.GenerateLoop2300_CLM_segment();
-                        //var Loop2300_PWK = loop2300.GenerateLoop2300_PWK_segment();
-                        // var Loop2300_AMT = loop2300.GenerateLoop2300_AMT_segment();
-                        // var Loop2300_REF = loop2300.GenerateLoop2300_REF_segment();
-                        // var Loop2300_NTE = loop2300.GenerateLoop2300_NTE_segment();
-                        var Loop2300_HI = loop2300.GenerateLoop2300_HI_segment();
-                        // var Loop2300_HIProcedure = loop2300.GenerateLoop2300_HIProcedure_segment();
-                        transactionEnvelope.Segments.Add(Loop2300_CLM);
-                        //transactionEnvelope.Segments.Add(Loop2300_PWK);
-                        //transactionEnvelope.Segments.Add(Loop2300_AMT);
-                        //transactionEnvelope.Segments.Add(Loop2300_REF);
-                        //transactionEnvelope.Segments.Add(Loop2300_NTE);
-                        transactionEnvelope.Segments.Add(Loop2300_HI);
-                        //transactionEnvelope.Segments.Add(Loop2300_HIProcedure);
+                        var childmodel = ClaimMessageModel.FirstOrDefault(x => x.ClaimNumber == rowsbyclaimnumber[r].claimnum && x.CoverageOrder == rowsbyclaimnumber[r].covorder);
+                      
+                        Log.LogError("rowsbyclaimnumber : " + rowsbyclaimnumber.Count, "", "");
+                        //create 2000B SBR 
+                        if (rowsbyclaimnumber[r].covorder == 1)
+                        {
+                            var loop2000Bsbr = new Generateloop2000Bsegment(childmodel, FieldSeparator, unknownplaceholder, 0, 0);
+                            var Loop2000B_SBR = loop2000Bsbr.GenerateLoop2000B_SBR_segment();
+                            transactionEnvelope.Segments.Add(Loop2000B_SBR);
+                        }
+                        else
+                        {
+                            var loop2320 = new Generateloop2320segment(childmodel, FieldSeparator, unknownplaceholder);
+                            var loop2320_SBR = loop2320.GenerateLoop2320_SBR_segment();
+                            var loop2320_OI = loop2320.GenerateLoop2320_OI_segment();
+                            transactionEnvelope.Segments.Add(loop2320_SBR);
+                            transactionEnvelope.Segments.Add(loop2320_OI);
+                        }
+                        // create 2010BA
+                        //create 2010BB
+                        #region Loop: 2010BA
+                        var Loop2010BA = new Generateloop2010BAsegment(childmodel, FieldSeparator, unknownplaceholder);
+                        var Loop2010BA_NM1 = Loop2010BA.GenerateLoop2010BA_NM1_segment();
+                        var Loop2010BA_N3 = Loop2010BA.GenerateLoop2010BA_N3_segment();
+                        var Loop2010BA_N4 = Loop2010BA.GenerateLoop2010BA_N4_segment();
+                        var Loop2010BA_DMG = Loop2010BA.GenerateLoop2010BA_DMG_segment();
+                        transactionEnvelope.Segments.Add(Loop2010BA_NM1);
+                        transactionEnvelope.Segments.Add(Loop2010BA_N3);
+                        transactionEnvelope.Segments.Add(Loop2010BA_N4);
+                        if (rowsbyclaimnumber[r].covorder == 1)  transactionEnvelope.Segments.Add(Loop2010BA_DMG);
                         #endregion
-                        #region Loop: 2310A
-                        var loop2310A = new Generateloop2310Asegment(childmodel, FieldSeparator, unknownplaceholder);
-                        var loop2310A_NM1 = loop2310A.GenerateLoop2310A_NM1_segment();
-                        transactionEnvelope.Segments.Add(loop2310A_NM1);
+                        #region Loop: 2010BB
+                        var Loop2010BB = new Generateloop2010BBsegment(childmodel, FieldSeparator, unknownplaceholder);
+                        var Loop2010BB_NM1 = Loop2010BB.GenerateLoop2010BB_NM1_segment();
+                        var Loop2010BB_N3 = Loop2010BB.GenerateLoop2010BB_N3_segment();
+                        var Loop2010BB_N4 = Loop2010BB.GenerateLoop2010BB_N4_segment();
+                        transactionEnvelope.Segments.Add(Loop2010BB_NM1);
+                        transactionEnvelope.Segments.Add(Loop2010BB_N3);
+                        transactionEnvelope.Segments.Add(Loop2010BB_N4);
                         #endregion
-                        #region Loop: 2310B
-                        var loop2310B = new Generateloop2310Bsegment(childmodel, FieldSeparator, unknownplaceholder);
-                        var loop2310B_NM1 = loop2310B.GenerateLoop2310B_NM1_segment();
-                        var loop2310B_PRV = loop2310B.GenerateLoop2310B_PRV_segment();
-                        transactionEnvelope.Segments.Add(loop2310B_NM1);
-                        transactionEnvelope.Segments.Add(loop2310B_PRV);
-                        #endregion
-                    }
+                        if (rowsbyclaimnumber[r].covorder == 1)
+                        {
+                           var totalamount = ClaimMessageModel.Where(x => x.ClaimNumber == rowsbyclaimnumber[r].claimnum && x.CoverageOrder == rowsbyclaimnumber[r].covorder).Sum(x=>x.ChargeAmount);
+                            childmodel.ChargeTotalAmount = totalamount; 
+                            //create 2300 
+                            #region Loop: 2300
+                            var loop2300 = new Generateloop2300segment(childmodel, FieldSeparator, unknownplaceholder);
+                            var Loop2300_CLM = loop2300.GenerateLoop2300_CLM_segment();
+                            //var Loop2300_PWK = loop2300.GenerateLoop2300_PWK_segment();
+                            // var Loop2300_AMT = loop2300.GenerateLoop2300_AMT_segment();
+                            // var Loop2300_REF = loop2300.GenerateLoop2300_REF_segment();
+                            // var Loop2300_NTE = loop2300.GenerateLoop2300_NTE_segment();
+                            var Loop2300_HI = loop2300.GenerateLoop2300_HI_segment();
+                            // var Loop2300_HIProcedure = loop2300.GenerateLoop2300_HIProcedure_segment();
+                            transactionEnvelope.Segments.Add(Loop2300_CLM);
+                            //transactionEnvelope.Segments.Add(Loop2300_PWK);
+                            //transactionEnvelope.Segments.Add(Loop2300_AMT);
+                            //transactionEnvelope.Segments.Add(Loop2300_REF);
+                            //transactionEnvelope.Segments.Add(Loop2300_NTE);
+                            transactionEnvelope.Segments.Add(Loop2300_HI);
+                            //transactionEnvelope.Segments.Add(Loop2300_HIProcedure);
+                            #endregion
+                            #region Loop: 2310A
+                            var loop2310A = new Generateloop2310Asegment(childmodel, FieldSeparator, unknownplaceholder);
+                            var loop2310A_NM1 = loop2310A.GenerateLoop2310A_NM1_segment();
+                            transactionEnvelope.Segments.Add(loop2310A_NM1);
+                            #endregion
+                            #region Loop: 2310B
+                            var loop2310B = new Generateloop2310Bsegment(childmodel, FieldSeparator, unknownplaceholder);
+                            var loop2310B_NM1 = loop2310B.GenerateLoop2310B_NM1_segment();
+                            var loop2310B_PRV = loop2310B.GenerateLoop2310B_PRV_segment();
+                            transactionEnvelope.Segments.Add(loop2310B_NM1);
+                            transactionEnvelope.Segments.Add(loop2310B_PRV);
+                            #endregion
+                        }
 
-                }
-                var charges = ClaimMessageModel.Where(x => x.ClaimNumber == filteredbyfilling.ClaimNumber).Select(x => x.ChargeSID).Distinct().ToList();
-                for (var ch = 0; ch < charges.Count; ch++)
-                {
-                    Log.LogError("charges : " + charges.Count, "", "");
-                    var chargemodel = ClaimMessageModel.FirstOrDefault(t => t.ChargeSID == charges[ch]);
-                    if (chargemodel != null)
+                    }
+                    var charges = ClaimMessageModel.Where(x => x.ClaimNumber == claimnumbers[c]).Select(x => x.ChargeSID).Distinct().ToList();
+                    for (var ch = 0; ch < charges.Count; ch++)
                     {
-                        // create 2400
-                        #region Loop: 2400 
-                        var loop2400 = new Generateloop2400segment(chargemodel, FieldSeparator, unknownplaceholder, ch + 1);
-                        var loop2400_LX = loop2400.GenerateLoop2400_LX_segment();
-                        var loop2400_SV1 = loop2400.GenerateLoop2400_SV1_segment();
-                        var loop2400_DTP = loop2400.GenerateLoop2400_DTP_segment();
-                        var loop2400_REF = loop2400.GenerateLoop2400_REF_segment();
-                        transactionEnvelope.Segments.Add(loop2400_LX);
-                        transactionEnvelope.Segments.Add(loop2400_SV1);
-                        transactionEnvelope.Segments.Add(loop2400_DTP);
-                        transactionEnvelope.Segments.Add(loop2400_REF);
-                        #endregion
+                        Log.LogError("charges : " + charges.Count, "", "");
+                        var chargemodel = ClaimMessageModel.FirstOrDefault(t => t.ChargeSID == charges[ch]);
+                        if (chargemodel != null)
+                        {
+                            // create 2400
+                            #region Loop: 2400 
+                            var loop2400 = new Generateloop2400segment(chargemodel, FieldSeparator, unknownplaceholder, ch + 1);
+                            var loop2400_LX = loop2400.GenerateLoop2400_LX_segment();
+                            var loop2400_SV1 = loop2400.GenerateLoop2400_SV1_segment();
+                            var loop2400_DTP = loop2400.GenerateLoop2400_DTP_segment();
+                            var loop2400_REF = loop2400.GenerateLoop2400_REF_segment();
+                            transactionEnvelope.Segments.Add(loop2400_LX);
+                            transactionEnvelope.Segments.Add(loop2400_SV1);
+                            transactionEnvelope.Segments.Add(loop2400_DTP);
+                            transactionEnvelope.Segments.Add(loop2400_REF);
+                            #endregion
+                        }
                     }
                 }
-                // }
 
                 // }
 
             }
             #region Loop: 2320
-            //var loop2320     = new Generateloop2320segment(ClaimMessageModel, FieldSeparator, unknownplaceholder);
-            //var loop2320_SBR = loop2320.GenerateLoop2320_SBR_segment();
+          
             //var loop2320_CAS = loop2320.GenerateLoop2320_CAS_segment();
             //var loop2320_AMT = loop2320.GenerateLoop2320_AMT_segment();
-            //var loop2320_OI  = loop2320.GenerateLoop2320_OI_segment();
+            
             //var loop2320_MOA = loop2320.GenerateLoop2320_MOA_segment();
-            //transactionEnvelope.Segments.Add(loop2320_SBR);
+           
             //transactionEnvelope.Segments.Add(loop2320_CAS);
             //transactionEnvelope.Segments.Add(loop2320_AMT);
-            //transactionEnvelope.Segments.Add(loop2320_OI);
+            
             //transactionEnvelope.Segments.Add(loop2320_MOA);
             #endregion
 

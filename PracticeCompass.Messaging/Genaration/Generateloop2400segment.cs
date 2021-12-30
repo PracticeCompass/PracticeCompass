@@ -30,7 +30,7 @@ namespace PracticeCompass.Messaging.Genaration
                           string.IsNullOrEmpty(_claimMessageModel.Mod2) ? "" : ":" +_claimMessageModel.Mod2,
                           string.IsNullOrEmpty(_claimMessageModel.Mod3) ? "" : ":" +_claimMessageModel.Mod3,
                           string.IsNullOrEmpty(_claimMessageModel.Mod4) ? "" : ":" +_claimMessageModel.Mod4);
-            SV1[2] = _claimMessageModel.ChargeAmount;
+            SV1[2] = _claimMessageModel.ChargeAmount.ToString();
             SV1[3] = "UN";
             SV1[4] = _claimMessageModel.Units;
             SV1[5] = _claimMessageModel.POSCode;
