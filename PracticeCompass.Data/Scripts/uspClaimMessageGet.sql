@@ -99,6 +99,7 @@ left outer join BatchRunClaim on BatchRunClaim.ClaimSID=Claim.ClaimSID and Batch
 left outer join PlanAltID as INSTAMEDPlan on INSTAMEDPlan.PlanID=[plan].PlanID and INSTAMEDPlan.AidTag='INSTAMED'
 left outer join PlanAltID as PAYORIDPlan on PAYORIDPlan.PlanID=[plan].PlanID and PAYORIDPlan.AidTag='PAYORID'
 where Claim.ClaimSID in (select value from STRING_SPLIT(@ClaimSID,',')) and PlanClaim.CoverageOrder<>99
+order by Claim.ClaimNumber
 END
 
 GO
