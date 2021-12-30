@@ -102,8 +102,8 @@ PlanClaimSeconadry.CurrentStatus as SeconadryStatus ,PlanClaimSeconadry.PlanID a
 PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as Plan3,
 dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimPrimary.PlanID) as PrimaryClaimStatus,
 dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimSeconadry.PlanID) as SecondaryClaimStatus,
-dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus
-
+dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus,
+dbo.FuncGetClaimPastDue(Claim.ClaimSID) as ClaimPastDue
 from 
 Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
 inner join PlanClaim on PlanClaim.ClaimSID = Claim.ClaimSID

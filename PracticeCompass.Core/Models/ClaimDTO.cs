@@ -23,6 +23,7 @@
         public string PrimaryClaimStatus { get; set; }
         public string SecondaryClaimStatus { get; set; }
         public string TertiaryClaimStatus { get; set; }
+        public int ClaimPastDue { get; set; }
         public int totalCount { get; set; }
         public int Plan1 { get; set; }
         public int Plan2 { get; set; }
