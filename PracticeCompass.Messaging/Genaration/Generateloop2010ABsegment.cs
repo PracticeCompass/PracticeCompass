@@ -33,7 +33,7 @@ namespace PracticeCompass.Messaging.Genaration
             var N4 = new Segment { Name = "N4", FieldSeparator = FieldSeparator };
             N4[1] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderCity : _claimMessageModel.FinancialCity;
             N4[2] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderState : _claimMessageModel.FinancialState;
-            N4[3] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderZip : _claimMessageModel.FinancialZip;
+            N4[3] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderZip : _claimMessageModel.FinancialZip.Replace("-","");
             return N4;
         }
 

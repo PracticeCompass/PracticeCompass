@@ -58,8 +58,19 @@ namespace PracticeCompass.Common.Models
         public string Order3 { get; set; }
         public string Order4 { get; set; }
         public string FromServiceDate { get; set; }
+        //rendering
+        
+        public string  renderingLastName { get; set; }
+        public string renderingMiddleName { get; set; }
+        public string renderingFirstName { get; set; }
+        public string renderingSuffix { get; set; }
+        public string renderingTaxonomy { get; set; }
+        public string renderingNPI { get; set; }
 
-        //Provider Rendering
+
+        /// 
+
+        //Provider 
         public string ProviderLastName { get; set; }
         public string ProviderMiddleName { get; set; }
         public string ProviderSuffix { get; set; }
@@ -84,6 +95,7 @@ namespace PracticeCompass.Common.Models
         public string PracticeZip { get; set; }
         public string PracticeContact { get; set; }
         public string PracticeCode { get; set; }
+        public string ParcticeTaxonomy { get; set; }
         /// financial
         public string FinancialLine1 { get; set; }
         public string FinancialLine2 { get; set; }

@@ -44,7 +44,7 @@ namespace PracticeCompass.Messaging.Genaration
         {
             var REF = new Segment { Name = "REF", FieldSeparator = FieldSeparator };
             REF[1] = "EI";
-            REF[2] = _claimMessageModel.ProviderTaxID;
+            REF[2] = _claimMessageModel.ParcticeTaxonomy;
             return REF;
         }
 

@@ -19,7 +19,7 @@ namespace PracticeCompass.Messaging.Genaration
         {
             Segment gs = new Segment { Name = "GS", FieldSeparator = FieldSeparator };
             gs[1] = "HC";
-            gs[2] = _claimMessageModel.ProviderTaxID;
+            gs[2] = _claimMessageModel.ParcticeTaxonomy;
             gs[3] = _claimMessageModel.ReceiverID;
             gs[4] = DateTime.Now.ToString("yyyyMMdd");
             gs[5] = DateTime.Now.ToString("HHmm");

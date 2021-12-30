@@ -17,12 +17,15 @@ CREATE OR ALTER   PROCEDURE [dbo].[uspClaimMessageGet]
 AS
 BEGIN
 	SET NOCOUNT ON;
+	set @ClaimSID = REPLACE(@ClaimSID,'"','')
 	Select distinct Person.LastName , Person.FirstName , Person.MiddleName 
 ,Person.NameSuffix , Person.Sex,CONVERT(varchar,Person.DOB,112) as DOB  ,Person.PersonID
 ,Address.Line1 , Address.Line2 ,
 	Address.City , CountryState.StateCode  , Address.Zip 
 	,Provider.ProviderType , Provider.SortName as ProviderName , Provider.FirstName as ProviderFristName
 	,Provider.LastName as ProviderLastName , Provider.MiddleName as ProviderMiddleName ,Provider.NameSuffix as ProviderSuffix,
+	rendering.LastName as renderingLastName, rendering.MiddleName as renderingMiddleName,rendering.FirstName as renderingFirstName, 
+	rendering.NameSuffix as renderingSuffix,renderingTaxID.ID as renderingTaxonomy,renderingNPI.ID as renderingNPI, 
 	ProviderSpecialty.SpecialtyCode as TaxonomyCode
 	,Provideradress.Line1 as ProviderLine1,
 	Provideradress.Line2 as ProviderLine2 , Provideradress.City as ProviderCity,
@@ -45,7 +48,7 @@ BEGIN
 	financialAddress.Line2 as FinancialLine2 , financialAddress.City as FinancialCity,
 	financialState.StateCode as FinancialState,financialAddress.Zip as FinancialZip,PracCommSetup.ReceiverID,
 	PracCommSetup.SenderID,Practice.PracticeCode,BatchRunClaim.RunNumber,[plan].ProfileOverrideAllowed,
-	INSTAMEDPlan.ID as INSTAMEDPlanID,PAYORIDPlan.ID as PAYORIDPlanID
+	INSTAMEDPlan.ID as INSTAMEDPlanID,PAYORIDPlan.ID as PAYORIDPlanID,practiceTaxID.ID as ParcticeTaxonomy
 	from claim
 inner join Person on Person.PersonID = Claim.PatientID
 left outer join Address on [dbo].[Address].[EntitySID] = PersonID
@@ -53,14 +56,16 @@ left outer join CountryState on Address.State = CountryState.StateCode
 inner join PlanClaim on PlanClaim.ClaimSID = claim.ClaimSID
 inner join ClaimCharge on ClaimCharge.ClaimSID = Claim.ClaimSID
 inner join ProcedureEvent on ProcedureEvent.ChargeSID = ClaimCharge.ChargeSID
-inner join Provider on Provider.ProviderID = ProcedureEvent.StaffID
+inner join Practice on ProcedureEvent.PracticeID = Practice.PracticeID
+inner join Provider on Provider.ProviderID = Practice.GroupStaffID
+left outer join Provider as rendering on rendering.ProviderID=ProcedureEvent.StaffID
 left outer join Address as Provideradress on Provideradress.EntitySID = Provider.ProviderID
 left outer join CountryState as ProviderState on Provideradress.State = ProviderState.StateCode
 inner join PolicyMember on PolicyMember.PlanID = PlanClaim.PlanID and PolicyMember.PolicyNumber = PlanClaim.PolicyNumber
 inner join [Plan] on [Plan].PlanID = PlanClaim.PlanID
 left outer join Address as PlanAddress on PlanAddress.EntitySID = PlanClaim.PlanID
 left outer join ServiceCenter on ProcedureEvent.ServiceCenterID=ServiceCenter.ServiceCenterID
-inner join Practice on ProcedureEvent.PracticeID = Practice.PracticeID
+
 inner join Entity as PracticeEntity on PracticeEntity.EntitySID = Practice.PracticeID
 left outer join Phone as PracticePhone on PracticePhone.EntitySID = PracticeEntity.EntitySID and PracticePhone.Class = 'B'
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID
@@ -75,8 +80,11 @@ left outer join [dbo].ProcedureEventDiag as Dag4 on Dag4.[ProcedureEventSID] = P
 left outer join PendingCharge on ProcedureEvent.EncounterSID = PendingCharge.EncounterSID
 left outer join StaffAltID on StaffAltID.staffID = Provider.ProviderID and AidTag ='NPI' and StaffAltID.PracticeID=ProcedureEvent.PracticeID
 left outer join StaffAltID as ProviderTaxID on ProviderTaxID.staffID = Provider.ProviderID and ProviderTaxID.AidTag ='TAXID' and ProviderTaxID.PracticeID=Practice.PracticeID
+left outer join StaffAltID as renderingNPI on renderingNPI.staffID = rendering.ProviderID and renderingNPI.AidTag ='NPI' and renderingNPI.PracticeID=ProcedureEvent.PracticeID
+left outer join StaffAltID  as renderingTaxID on renderingTaxID.staffID = rendering.ProviderID and renderingTaxID.AidTag ='TAXID' and renderingTaxID.PracticeID=Practice.PracticeID
 left outer join 
 ProviderSpecialty on ProviderSpecialty.ProviderID = Provider.ProviderID
+left outer join StaffAltID as practiceTaxID on practice.GroupStaffID= practiceTaxID.StaffID and practiceTaxID.AidTag='TAXID' and practiceTaxID.PracticeID=Practice.PracticeID
 left outer join Specialty on ProviderSpecialty.SpecialtyCode = Specialty.SpecialtyCode and  Specialty.TaxonomyFlag = 1
 left outer join Staff on Staff.StaffID=Provider.ProviderID
 left outer join Address as practiceaddress on practiceaddress.EntitySID=ProcedureEvent.PracticeID and practiceaddress.Class='B'
