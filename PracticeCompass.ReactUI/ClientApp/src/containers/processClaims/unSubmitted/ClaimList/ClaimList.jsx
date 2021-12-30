@@ -1104,38 +1104,33 @@ class ClaimList extends Component {
         this.setState({ isVisibleNextData: false });
     };
     onRowRender(trElement, props) {
-        const activity = props.dataItem.activityType;
+        const primary = props.dataItem.primaryStatus;
+        const secondary = props.dataItem.seconadryStatus;
+        const Tertiary = props.dataItem.tertiaryStatus;
+
         const white = {
             backgroundColor: "rgb(255, 255, 255)",
         };
         const yellow = {
             backgroundColor: "rgb(255, 255, 0)",
         };
-        const green = {
-            backgroundColor: "rgb(55, 180, 0,0.32)",
+        const red = {
+            backgroundColor: "rgb(255,0,0)",
         };
-        // const orange= {
-        //   backgroundColor: "rgb(255, 191, 128)",
-        // }
-        // const red = {
-        //   backgroundColor: "rgb(243, 23, 0, 0.32)",
-        // };
+
         let trProps = {
             style: white,
         };
-        switch (activity) {
-            case "Charge Details":
-                trProps = { style: yellow };
-                break;
-            case "Claim":
-                trProps = { style: white };
-                break;
-            case "Txn":
-                trProps = { style: green };
-                break;
-            default:
-                trProps = { style: white };
-                break;
+
+        if (primary == "Rejected" || secondary == "Rejected" || Tertiary == "Rejected") {
+            trProps = { style: red };
+
+        }
+        else if (primary == "Denied" || secondary == "Denied" || Tertiary == "Denied") {
+            trProps = { style: yellow };
+        }
+        else {
+            trProps = { style: white };
         }
 
         return React.cloneElement(
@@ -1886,7 +1881,7 @@ class ClaimList extends Component {
                                                 ? this.props.Claims[0].totalCount
                                                 : this.props.Claims.length
                                         }
-                                        activeRowRender={false}
+                                        activeRowRender={true}
                                         onRowRender={this.onRowRender}
                                         height="600px"
                                         width="100%"

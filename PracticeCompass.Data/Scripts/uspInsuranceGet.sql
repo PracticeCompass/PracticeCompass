@@ -19,10 +19,10 @@ BEGIN
 	SET NOCOUNT ON;
 
 	--select top 20  EntitySID,SortName,prrowid from Entity where Class = 'I' and( @sortname is null or @sortname='' or sortname like @sortname+'%')
-select COUNT(*) OVER() as totalCount, CarrierID as entitySID,CarrierCode,[Name] as sortName,prrowid from Carrier where @sortname is null or @sortname='' or [Name] like @sortname+'%' 
-order by [Name]
-OFFSET @Skip ROWS -- skip 10 rows
-FETCH NEXT 500 ROWS ONLY; -- take 10 rows
+select COUNT(*) OVER() as totalCount, PlanID as entitySID,CarrierCode,SortName,prrowid,Code as PlanCode from [Plan] where  (@sortname is null or @sortname='' or SortName like @sortname+'%' ) 
+order by SortName
+--OFFSET @Skip ROWS -- skip 10 rows
+--FETCH NEXT 500 ROWS ONLY; -- take 10 rows
 END
 
 GO

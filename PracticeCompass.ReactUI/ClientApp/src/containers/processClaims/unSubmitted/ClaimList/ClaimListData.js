@@ -89,18 +89,21 @@ export const columns = [
         title: "Plan 1",
         minWidth: 50,
         orderIndex: 8,
+        showToolTip: true,
     },
     {
         field: "seconadryStatus",
         title: "Plan 2",
         minWidth: 50,
         orderIndex: 9,
+        showToolTip: true,
     },
     {
         field: "tertiaryStatus",
         title: "Plan 3",
         minWidth: 50,
         orderIndex: 10,
+        showToolTip: true,
     },
     {
         field: "destination",

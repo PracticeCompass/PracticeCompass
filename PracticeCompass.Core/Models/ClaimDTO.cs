@@ -17,6 +17,12 @@
         public string PrimaryStatus { get; set; }
         public string SeconadryStatus { get; set; }
         public string TertiaryStatus { get; set; }
+        public string PrimaryStatus_ { get; set; }
+        public string SeconadryStatus_ { get; set; }
+        public string TertiaryStatus_ { get; set; }
+        public string PrimaryClaimStatus { get; set; }
+        public string SecondaryClaimStatus { get; set; }
+        public string TertiaryClaimStatus { get; set; }
         public int totalCount { get; set; }
         public int Plan1 { get; set; }
         public int Plan2 { get; set; }

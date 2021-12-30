@@ -93,6 +93,24 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.BillNumber, searchCriteria.ClaimIcnNumber, searchCriteria.Age, searchCriteria.ClaimValue, searchCriteria.CoverageOrder, searchCriteria.InsuranceStatus,
                     searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims, searchCriteria.IncludeCashClaims, searchCriteria.IncludeVoidedClaims,
                     searchCriteria.Rejections, searchCriteria.PastDue, searchCriteria.Denials, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
+                foreach(var claim in Result)
+                {
+                    if (claim.PrimaryClaimStatus != null)
+                    {
+                        claim.PrimaryStatus = claim.PrimaryClaimStatus.Split("$$")[0];
+                        claim.PrimaryStatus_ = claim.PrimaryClaimStatus.Split("$$")[1];
+                    }
+                    if (claim.SecondaryClaimStatus != null)
+                    {
+                        claim.SeconadryStatus = claim.SecondaryClaimStatus.Split("$$")[0];
+                        claim.SeconadryStatus_ = claim.SecondaryClaimStatus.Split("$$")[1];
+                    }
+                    if (claim.TertiaryClaimStatus != null)
+                    {
+                        claim.TertiaryStatus = claim.TertiaryClaimStatus.Split("$$")[0];
+                        claim.TertiaryStatus_ = claim.TertiaryClaimStatus.Split("$$")[1];
+                    }
+                }
                 return Result;
             }
             catch (Exception ex)

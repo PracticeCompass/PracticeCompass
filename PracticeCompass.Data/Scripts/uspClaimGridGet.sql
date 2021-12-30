@@ -99,7 +99,11 @@ select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
 ,Provider.SortName as ProviderName , convert(varchar,Max(ProcedureEvent.FromServiceDate),101) as DOS , convert(Date,Max(ProcedureEvent.FromServiceDate),101) as DOSDate ,
 PlanClaimPrimary.CurrentStatus as PrimaryStatus ,PlanClaimPrimary.PlanID as Plan1,
 PlanClaimSeconadry.CurrentStatus as SeconadryStatus ,PlanClaimSeconadry.PlanID as Plan2,
-PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as Plan3
+PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as Plan3,
+dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimPrimary.PlanID) as PrimaryClaimStatus,
+dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimSeconadry.PlanID) as SecondaryClaimStatus,
+dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus
+
 from 
 Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
 inner join PlanClaim on PlanClaim.ClaimSID = Claim.ClaimSID
