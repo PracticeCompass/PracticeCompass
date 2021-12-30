@@ -18,12 +18,9 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2320_SBR_segment()
         {
             var SBR = new Segment { Name = "SBR", FieldSeparator = FieldSeparator };
-            SBR[1] = _unknownplaceholder;
-            SBR[2] = "18";
-            SBR[3] = _unknownplaceholder;
-            SBR[4] = _unknownplaceholder;
-            SBR[5] = _unknownplaceholder;
-            SBR[9] = _unknownplaceholder;
+            SBR[1] = GetInsuranceLevelFromCoverageOrder(_claimMessageModel.CoverageOrder);
+            SBR[2] = _claimMessageModel.RelationToSub == "S" ? "18" : "";
+            SBR[9] = _claimMessageModel.FilingCode;
             return SBR;
         }
         public Segment GenerateLoop2320_CAS_segment()
@@ -56,6 +53,37 @@ namespace PracticeCompass.Messaging.Genaration
             AMT[2] = _unknownplaceholder;
             AMT[3] = _unknownplaceholder;
             return AMT;
+        }
+
+        private string GetInsuranceLevelFromCoverageOrder(int CoverageOrder)
+        {
+            switch (CoverageOrder)
+            {
+                case 1:
+                    return "P";
+                case 2:
+                    return "S";
+                case 3:
+                    return "T";
+                case 4:
+                    return "A";
+                case 5:
+                    return "B";
+                case 6:
+                    return "C";
+                case 7:
+                    return "D";
+                case 8:
+                    return "E";
+                case 9:
+                    return "F";
+                case 10:
+                    return "G";
+                case 11:
+                    return "H";
+                default:
+                    return "P";
+            }
         }
     }
 }

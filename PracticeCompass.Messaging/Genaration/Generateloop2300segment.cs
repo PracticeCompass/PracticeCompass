@@ -18,7 +18,7 @@ namespace PracticeCompass.Messaging.Genaration
         {
             var clm = new Segment { Name = "CLM", FieldSeparator = FieldSeparator };
             clm[1] = _claimMessageModel.ClaimNumber+ _claimMessageModel.PracticeCode;
-            clm[2] = _claimMessageModel.ChargeAmount;
+            clm[2] = _claimMessageModel.ChargeTotalAmount.ToString();
             clm[5] = string.Format("{0}:B:{1}", 11, 1);
             clm[6] = "Y";
             clm[7] = "A";

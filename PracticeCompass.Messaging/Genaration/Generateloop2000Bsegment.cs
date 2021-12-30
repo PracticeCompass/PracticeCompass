@@ -35,6 +35,7 @@ namespace PracticeCompass.Messaging.Genaration
             SBR[9] = _claimMessageModel.FilingCode;
             return SBR;
         }
+
         private string GetInsuranceLevelFromCoverageOrder(int CoverageOrder)
         {
             switch (CoverageOrder)
@@ -65,5 +66,6 @@ namespace PracticeCompass.Messaging.Genaration
                     return "P";
             }
         }
+
     }
 }

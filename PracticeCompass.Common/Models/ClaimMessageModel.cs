@@ -45,7 +45,9 @@ namespace PracticeCompass.Common.Models
         public string Mod4 { get; set; }
 
         //charge
-        public string ChargeAmount { get; set; }
+        public decimal? ChargeAmount { get; set; }
+
+        public decimal? ChargeTotalAmount { get; set; }
         public string Units { get; set; }
         public string ProcedureEventSID { get; set; }
         //Diagnosis
