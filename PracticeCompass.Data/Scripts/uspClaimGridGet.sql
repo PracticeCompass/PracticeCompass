@@ -49,9 +49,9 @@ BEGIN
 
 
 		set @insurancefilter=Case @InsuranceType 
-		when 1 then ' and ((PlanClaim.PlanID in (select top 1 PlanID from [Plan] where CarrierCode in ( select top 1 CarrierCode from Carrier where Carrierid=  '+convert(varchar, @InsuranceID,10)+') ) ) and (PlanClaim.CoverageOrder = 1))'
-		when 2 then ' and ((PlanClaim.PlanID in (select top 1 PlanID from [Plan] where CarrierCode in ( select top 1 CarrierCode from Carrier where Carrierid=  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 2))'
-		when 3 then ' and ((PlanClaim.PlanID in (select top 1 PlanID from [Plan] where CarrierCode in ( select top 1 CarrierCode from Carrier where Carrierid=  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 3))'
+		when 1 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+') ) ) and (PlanClaim.CoverageOrder = 1))'
+		when 2 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 2))'
+		when 3 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 3))'
 		else ''
 		end
 
