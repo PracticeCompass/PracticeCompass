@@ -49,9 +49,9 @@ BEGIN
 
 
 		set @insurancefilter=Case @InsuranceType 
-		when 1 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+') ) ) and (PlanClaim.CoverageOrder = 1))'
-		when 2 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 2))'
-		when 3 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' ) )) and (PlanClaim.CoverageOrder = 3))'
+		when 1 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' )  and (PlanClaim.CoverageOrder = 1))'
+		when 2 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' ) and (PlanClaim.CoverageOrder = 2))'
+		when 3 then ' and ((PlanClaim.PlanID =  '+convert(varchar, @InsuranceID,10)+' ) and (PlanClaim.CoverageOrder = 3))'
 		else ''
 		end
 
@@ -100,9 +100,9 @@ select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
 PlanClaimPrimary.CurrentStatus as PrimaryStatus ,PlanClaimPrimary.PlanID as Plan1,
 PlanClaimSeconadry.CurrentStatus as SeconadryStatus ,PlanClaimSeconadry.PlanID as Plan2,
 PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as Plan3,
-dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimPrimary.PlanID) as PrimaryClaimStatus,
-dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimSeconadry.PlanID) as SecondaryClaimStatus,
-dbo.FuncClaimRejectionStatus(Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus,
+dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimPrimary.PlanID) as PrimaryClaimStatus,
+dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimSeconadry.PlanID) as SecondaryClaimStatus,
+dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus,
 dbo.FuncGetClaimPastDue(Claim.ClaimSID) as ClaimPastDue
 from 
 Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
