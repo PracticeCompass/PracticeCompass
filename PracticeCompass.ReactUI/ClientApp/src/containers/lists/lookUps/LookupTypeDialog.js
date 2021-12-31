@@ -155,6 +155,7 @@ class LookupTypeDialogComponent extends Component {
               <TextBox
                 type="numeric"
                 className="unifyHeight"
+                format={""}
                 value={this.state.length}
                 onChange={(e) =>
                   this.setState({

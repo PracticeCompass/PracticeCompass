@@ -96,7 +96,7 @@ export const itemsList = [
   {
     text: "Document Manager",
     icon: "k-i-menu",
-    id: 19,
+    id: 59,
     ["data-expanded"]: false,
     route: "/applypayments",
   },
@@ -104,7 +104,7 @@ export const itemsList = [
     text: "Documents",
     icon: "k-i-inbox",
     id: 22,
-    parentId: 19,
+    parentId: 59,
     route: "/applypayments/documentManager",
   },
   {

@@ -186,7 +186,6 @@ class LookUpsList extends Component {
 
     };
     componentDidMount = () => {
-        debugger;
         this.setState({
             selectedLookUpType: this.props.selectedLookUpType
         })
@@ -235,7 +234,6 @@ class LookUpsList extends Component {
                 entityName: event.dataItem.lookupType,
             },
         });
-        debugger;
         if(this.state.lookupFilter== "UserLookup"){
             this.props.SaveLookups(event.dataItem.lookupType, "userlookupTypes");
         }else{
