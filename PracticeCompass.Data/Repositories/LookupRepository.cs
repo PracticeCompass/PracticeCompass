@@ -36,6 +36,15 @@ namespace PracticeCompass.Data.Repositories
             }, commandType: CommandType.StoredProcedure);
             return data.Read<LookupType>().ToList();
         }
+        public List<LookupType> UserLookupTypeGet(string search)
+        {
+            var data = this.db.QueryMultiple("uspUserLookupType", new
+            {
+                @search = search
+            }, commandType: CommandType.StoredProcedure);
+            return data.Read<LookupType>().ToList();
+        }
+        
         public List<LookupList> LookupCodeGet(string LookupType, string isActive, string lookupCode)
         {
             var data = this.db.QueryMultiple("uspLookupCodeGet", new
@@ -47,6 +56,55 @@ namespace PracticeCompass.Data.Repositories
                 commandType: CommandType.StoredProcedure);
             return data.Read<LookupList>().ToList();
         }
+        public List<LookupList> UserLookupCodeGet(string LookupType, string isActive, string lookupCode)
+        {
+            var data = this.db.QueryMultiple("uspUserLookupCodeGet", new
+            {
+                @LookupType = LookupType,
+                @isActive = isActive,
+                @lookupCode = lookupCode,
+            },
+                commandType: CommandType.StoredProcedure);
+            return data.Read<LookupList>().ToList();
+        }
+
+        public bool AddUserLookupCode(LookupList lookup)
+        {
+            var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
+            var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+            string LookupCodeMAXRowID = GetMAXRowID("UserLookupCode", "0", "prrowid");
+            string LookupOrderMAXRowID = GetMAXRowID("UserLookupCode", "0", "order");
+            try
+            {
+                var data = this.db.QueryMultiple("uspUserLookupCodeSave", new
+                {
+                    @CreateStamp = timestamp,
+                    @CreateUser = practiceCompassHelper.CurrentUser(),
+                    @RecordStatus = lookup.RecordStatus,
+                    @Description = lookup.description,
+                    @LookupCode = lookup.LookupCode,
+                    @LookupType = lookup.LookupType,
+                    @order = Convert.ToInt32(LookupOrderMAXRowID),
+                    @LastUser = practiceCompassHelper.CurrentUser(),
+                    @pro2created = DateTime.Now,
+                    @pro2modified = DateTime.Now,
+                    @Pro2SrcPDB = "medman2",
+                    @prrowid = LookupCodeMAXRowID,
+                    @TimeStamp = timestamp,
+                    @IsAdd = lookup.IsAdd,
+                    @gridId = lookup.gridId
+
+                },
+                  commandType: CommandType.StoredProcedure);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+
         public bool AddLookupCode(LookupList lookup)
         {
             var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
@@ -116,6 +174,42 @@ namespace PracticeCompass.Data.Repositories
                 return false;
             }
         }
+
+
+
+        public bool AddUserLookupType(LookupType lookup)
+        {
+            var practiceCompassHelper = new Utilities.PracticeCompassHelper(this.db);
+            var timestamp = practiceCompassHelper.GetTimeStampfromDate(DateTime.Now);
+            string LookupCodeMAXRowID = GetMAXRowID("UserLookupType", "0", "prrowid");
+            try
+            {
+                var data = this.db.QueryMultiple("uspUserLookupTypeSave", new
+                {
+                    @CreateStamp = timestamp,
+                    @CreateUser = practiceCompassHelper.CurrentUser(),
+                    @Length = lookup.Length,
+                    @Description = lookup.description,
+                    @DescriptionLabel = lookup.descriptionLabel,
+                    @LookupType = lookup.lookupType,
+                    @LastUser = practiceCompassHelper.CurrentUser(),
+                    @pro2created = DateTime.Now,
+                    @pro2modified = DateTime.Now,
+                    @Pro2SrcPDB = "medman",
+                    @prrowid = LookupCodeMAXRowID,
+                    @TimeStamp = timestamp,
+
+                },
+                  commandType: CommandType.StoredProcedure);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+
         private string GetMAXRowID(string tableName, string lastprrowid,string columnName)
         {
             try

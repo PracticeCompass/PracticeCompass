@@ -73,7 +73,7 @@ export const SET_PLAN_LIST_FAILED = "SET_PLAN_LIST_FAILED";
 
 export const GET_PLANS_GROUP_filter = "GET_PLANS_GROUP_filter";
 export const GET_PLANS_GROUP_filter_FAILS = "GET_PLANS_GROUP_filter_FAILS";
-
+export const GET_User_LOOKUP_TYPES_Filter="GET_User_LOOKUP_TYPES_Filter";
 
 //Charge Details
 export const ICD10_DIAGNOSIS = "ICD10_DIAGNOSIS";

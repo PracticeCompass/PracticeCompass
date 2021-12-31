@@ -322,3 +322,12 @@ button {
   word-wrap: break-word;
   max-width: 250px;
 }
+.k-radio + .k-radio-label, .k-radio-label + .k-radio, .k-label + .k-radio {
+  font-size: 12px !important;
+  font-family: Segoe UI, Helvetica Neue, Ubuntu, Arial;
+  font-weight: bold;
+  color: #000000 !important;
+  padding-right: 4px;
+  height: 18px;
+  display: inline-block;
+}

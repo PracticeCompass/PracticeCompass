@@ -78,3 +78,7 @@ uspLookupCodeSave.sql
 uspLookupTypeSave.sql
 FuncGetClaimStatus.sql
 FuncGetClaimPastDue.sql
+uspUserLookupCodeGet.sql
+uspUserLookupType.sql
+uspUserLookupCodeSave.sql
+uspUserLookupTypeSave.sql

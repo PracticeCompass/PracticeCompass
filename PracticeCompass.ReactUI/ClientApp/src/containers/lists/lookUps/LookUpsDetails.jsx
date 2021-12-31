@@ -26,7 +26,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     resetlookupTypeList: () => dispatch(resetlookupTypeList()),
-    getLookupTypes: (search) => dispatch(getLookupTypes(search)),
+    getLookupTypes: (search,lookupFilter) => dispatch(getLookupTypes(search,lookupFilter)),
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     addLookupCodes: (data) =>
@@ -96,7 +96,7 @@ class LookUpsDetails extends Component {
     this.toggleLookupDialog();
   }
   lookupCodesSearch = () => {
-    this.props.getLookupTypes(this.state.lookupSearchText ?? '');
+    this.props.getLookupTypes(this.state.lookupSearchText ?? '',this.props.lookupFilter);
   };
   saveLookUpDetails = async () => {
     if (this.state.lookupCode == null || this.state.description == null || this.state.selectedLookUpType == null) {
@@ -116,7 +116,8 @@ class LookUpsDetails extends Component {
       description: this.state.description,
       RecordStatus: this.state.active == null || this.state.active == false ? 'I' : 'A',
       IsAdd: this.state.isAdd,
-      gridId: this.state.gridId
+      gridId: this.state.gridId,
+      lookupFilter:this.props.lookupFilter
     };
     let result = await this.props.addLookupCodes(lookupGrid);
     if (result) {
@@ -162,6 +163,7 @@ class LookUpsDetails extends Component {
          {this.state.lookupTypeAddVisible && (
                 <LookupTypeDialogComponent
                  toggleLookupTypeDialog={this.toggleLookupTypeDialog}
+                 lookupFilter={this.props.lookupFilter}
                 >
 
                 </LookupTypeDialogComponent>)}

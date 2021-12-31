@@ -12,6 +12,7 @@ import {
   GET_PLANS_GROUP_filter,
   GET_PLANS_GROUP_FAILS,
   GET_LOOKUP_TYPES_Filter_FAILS,
+  GET_User_LOOKUP_TYPES_Filter,
   GET_LOOKUP_TYPES_Filter
 } from "../actionTypes/actionTypes";
 
@@ -19,15 +20,16 @@ const INITIAL_STATE = {
   patients: [],
   insurances: [],
   guarantors: [],
-  practices:[],
-  patientTypes:[],
-  physicians:[],
-  cpts:[],
-  iCD10s:[],
-  companies:[],
-  companiesFailed:false,
-  planGroups:[],
-  lookupTypes:[]
+  practices: [],
+  patientTypes: [],
+  physicians: [],
+  cpts: [],
+  iCD10s: [],
+  companies: [],
+  companiesFailed: false,
+  planGroups: [],
+  lookupTypes: [],
+  userlookupTypes:[]
 };
 
 export function lookupsReducer(state = INITIAL_STATE, action) {
@@ -47,17 +49,19 @@ export function lookupsReducer(state = INITIAL_STATE, action) {
     case FILTERS_CPT:
       return { ...state, cpts: action.payload };
     case FILTERS_ICD10:
-      return {...state,iCD10s:action.payload}
-      case SET_COMPANIES:
-        return { ...state, companies: action.payload };
-      case GET_COMPANIES_FAILED:
-      return {...state,companiesFailed:action.payload}
-      case GET_PLANS_GROUP_filter:
-        return {...state,planGroups:action.payload}
-      case GET_LOOKUP_TYPES_Filter:
-        return {...state,lookupTypes:action.payload}
-        case GET_LOOKUP_TYPES_Filter_FAILS:
-          return {...state,lookupTypesFail:action.payload}
+      return { ...state, iCD10s: action.payload }
+    case SET_COMPANIES:
+      return { ...state, companies: action.payload };
+    case GET_COMPANIES_FAILED:
+      return { ...state, companiesFailed: action.payload }
+    case GET_PLANS_GROUP_filter:
+      return { ...state, planGroups: action.payload }
+    case GET_LOOKUP_TYPES_Filter:
+      return { ...state, lookupTypes: action.payload }
+    case GET_LOOKUP_TYPES_Filter_FAILS:
+      return { ...state, lookupTypesFail: action.payload }
+    case GET_User_LOOKUP_TYPES_Filter:
+      return { ...state, userlookupTypes: action.payload }
     default:
       return state;
   }

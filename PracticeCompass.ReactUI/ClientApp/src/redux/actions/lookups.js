@@ -13,7 +13,8 @@ import {
   SET_COMPANIES_LIST,
   GET_PLANS_GROUP_filter,
   GET_LOOKUP_TYPES_Filter,
-  GET_LOOKUP_TYPES_Filter_FAILS
+  GET_LOOKUP_TYPES_Filter_FAILS,
+  GET_User_LOOKUP_TYPES_Filter
 
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
@@ -57,6 +58,7 @@ export const GetLookupsByEnityName =
       else if (EntityName == "Company") dispatch(setCompanies(resp.data));
       else if (EntityName == "PlanGroup") dispatch(setPlanGroupList(resp.data));
       else if (EntityName == "lookupTypes") dispatch(setLookupTypesList(resp.data));
+      else if (EntityName == "userlookupTypes") dispatch(setUserLookupTypesList(resp.data));
     } catch (error) {
     } finally {
       // dispatch(uiStopLoading());
@@ -147,6 +149,14 @@ export const GetLookups = () => async (dispatch, getState) => {
     });
     dispatch(setLookupTypesList(lookupTypes.data));
 
+    const userlookupTypes = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=userlookupTypes`,
+    });
+    dispatch(setUserLookupTypesList(userlookupTypes.data));
+
+    
+
     // dispatch(uiStopLoading());
   } catch (error) {
   } finally {
@@ -226,6 +236,12 @@ export const setPlanGroupList = (data) => {
 export const setLookupTypesList =(data)=>{
   return {
     type: GET_LOOKUP_TYPES_Filter,
+    payload: data,
+  };
+}
+export const setUserLookupTypesList =(data)=>{
+  return {
+    type: GET_User_LOOKUP_TYPES_Filter,
     payload: data,
   };
 }

@@ -9,10 +9,11 @@ import FindDialogComponent from "../../common/findDialog";
 import { getter } from "@progress/kendo-react-common";
 import TextBox from "../../../components/TextBox";
 import DropDown from "../../../components/DropDown";
+import RadioButtonComponent from "../../../components/RadioButton";
 import CheckboxComponent from "../../../components/Checkbox";
 import GridComponent from "../../../components/Grid";
 import ButtonComponent from "../../../components/Button";
-import { lookupColumns, lookupTypeColumns } from "./LookUpsData";
+import { lookupColumns, lookupTypeColumns ,LookupFilter} from "./LookUpsData";
 import config from "../../../../src/config";
 import { getLookupCodes, resetlookupTypeList, getLookupTypes } from "../../../redux/actions/lookupCode"
 import { SaveLookups } from "../../../redux/actions/lookups";
@@ -31,6 +32,7 @@ function mapStateToProps(state) {
         UiExpand: state.ui.UiExpand,
         lookupTypes: state.lookupCodes.lookupTypes,
         dropDownlookupTypes: state.lookups.lookupTypes,
+        dropDownuserlookupTypes: state.lookups.userlookupTypes
     };
 }
 
@@ -38,7 +40,7 @@ function mapDispatchToProps(dispatch) {
     return {
         getLookupCodes: (entity) => dispatch(getLookupCodes(entity)),
         resetlookupTypeList: () => dispatch(resetlookupTypeList()),
-        getLookupTypes: (search) => dispatch(getLookupTypes(search)),
+        getLookupTypes: (search,lookupFilter) => dispatch(getLookupTypes(search,lookupFilter)),
         SaveLookups: (EntityValueID, EntityName) =>
             dispatch(SaveLookups(EntityValueID, EntityName)),
     };
@@ -160,7 +162,7 @@ class LookUpsList extends Component {
             lookupVisible: !this.state.lookupVisible,
         });
     };
-    lookupsGridSearch = async (lookupType, showNotification = false) => {
+    lookupsGridSearch = async (lookupType, showNotification = false,lookupFilter=null) => {
         if (this.state.selectedLookUpType == null && (lookupType == undefined && lookupType?.entityId == undefined) && showNotification) {
             this.setState({ warning: true, message: "Please select lookup type." });
             setTimeout(() => {
@@ -176,17 +178,26 @@ class LookUpsList extends Component {
                     : '',
                 LookupType: lookupType ? lookupType.entityId : '',
                 // skip: refreshData ? 0 : this.props.Patients.length,
-                IsActive: this.state.active == null || this.state.active == false ? 'I' : 'A'
+                IsActive: this.state.active == null || this.state.active == false ? 'I' : 'A',
+                lookupFilter:lookupFilter != null ?lookupFilter: this.state.lookupFilter
             };
             await this.props.getLookupCodes(lookupGrid);
         }
 
     };
     componentDidMount = () => {
+        debugger;
         this.setState({
             selectedLookUpType: this.props.selectedLookUpType
         })
-        this.lookupsGridSearch(this.props.selectedLookUpType);
+        if(this.props.lookupFilter){
+            this.setState({
+                lookupFilter: this.props.lookupFilter
+            })
+        }else{
+            this.setState({lookupFilter:"SyatemLookup"});
+        }
+        this.lookupsGridSearch(this.props.selectedLookUpType,false,this.props.lookupFilter);
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
     };
@@ -201,7 +212,7 @@ class LookUpsList extends Component {
         });
     }
     lookupCodesSearch = () => {
-        this.props.getLookupTypes(this.state.lookupSearchText ?? '');
+        this.props.getLookupTypes(this.state.lookupSearchText ?? '',this.state.lookupFilter);
     };
     onLookupTypesKeyDown = (event) => {
         var selectedDataItems = event.dataItems.slice(
@@ -224,7 +235,12 @@ class LookUpsList extends Component {
                 entityName: event.dataItem.lookupType,
             },
         });
-        this.props.SaveLookups(event.dataItem.lookupType, "lookupTypes");
+        debugger;
+        if(this.state.lookupFilter== "UserLookup"){
+            this.props.SaveLookups(event.dataItem.lookupType, "userlookupTypes");
+        }else{
+            this.props.SaveLookups(event.dataItem.lookupType, "lookupTypes");
+        }
         //this.selectPatient();
         this.toggleLookupDialog();
     }
@@ -236,7 +252,7 @@ class LookUpsList extends Component {
     }
     onLookupGridDoubleSelectionChange = (event) => {
         this.props.setLookupsDetailExpanded();
-        this.props.setLookupsDetails(event.dataItem);
+        this.props.setLookupsDetails(event.dataItem,this.state.lookupFilter);
     }
     openLookupRow = () => {
         if (this.state.selectedLookup == null) {
@@ -249,12 +265,12 @@ class LookUpsList extends Component {
             return;
         } else {
             this.props.setLookupsDetailExpanded();
-            this.props.setLookupsDetails(this.state.selectedLookup);
+            this.props.setLookupsDetails(this.state.selectedLookup,this.state.lookupFilter);
         }
     }
     addLookupRow = () => {
         this.props.setLookupsDetailExpanded();
-        this.props.setLookupsDetails(null);
+        this.props.setLookupsDetails(null,this.state.lookupFilter);
     }
     onSortChange = () => {
 
@@ -264,6 +280,10 @@ class LookUpsList extends Component {
             lookupTypeAddVisible: !this.state.lookupTypeAddVisible,
         });
     };
+    changeLookupFilter=(e)=>{
+      this.setState({lookupFilter:e.value,selectedLookUpType:''});
+      this.lookupsGridSearch(this.state.selectedLookUpType,false,e.value);
+    }
     render() {
         return (
             <Fragment>
@@ -333,7 +353,21 @@ class LookUpsList extends Component {
                     }}
                 >
                     <div style={{ width: "100%" }}>
-
+                        <div
+                            className="rowHeight"
+                            style={{ display: "flex", flexFlow: "row nowrap" ,marginLeft:"10px"}}
+                        >
+                    <RadioButtonComponent
+                      name="LookupFilter"
+                      className="userInfoLabel"
+                      items={LookupFilter}
+                      selectedValue={
+                        this.state.lookupFilter
+                      }
+                      type="horizontal"
+                      handleChange={(e) => this.changeLookupFilter(e)}
+                    ></RadioButtonComponent>
+                        </div>
                         <div
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -345,7 +379,7 @@ class LookUpsList extends Component {
                                 <div style={{ width: "200px", float: "left" }}>
                                     <DropDown
                                         className="unifyHeight"
-                                        data={this.props.dropDownlookupTypes}
+                                        data={this.state.lookupFilter=="UserLookup"? this.props.dropDownuserlookupTypes:this.props.dropDownlookupTypes}
                                         textField="entityName"
                                         dataItemKey="entityId"
                                         defaultValue={this.state.selectedLookUpType}

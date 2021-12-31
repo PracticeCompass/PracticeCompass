@@ -57,7 +57,8 @@ class LookupTypeDialogComponent extends Component {
       description:this.state.description??"",
       descriptionLabel:this.state.descriptionLabel??"",
       Class:this.state.class?this.state.class.id:"",
-      Length:this.state.Length?this.state.length:0
+      Length:this.state.Length?this.state.length:0,
+      lookupFilter:this.props.lookupFilter
     }
     let result = await this.props.AddLookupType(data);
     if (result) {

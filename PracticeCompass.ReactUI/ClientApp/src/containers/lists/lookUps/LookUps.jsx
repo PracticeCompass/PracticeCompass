@@ -27,16 +27,17 @@ class LookUps extends Component {
     $("#lookupDetail").children("span").trigger("click");
   };
   handleSelect = () => { };
-  setLookupsDetails = (lookup) => {
+  setLookupsDetails = (lookup,lookupFilter) => {
     this.setState({
       LookupDetails: lookup,
       LookupsDetailExpanded: true,
       LookupsListExpanded: false,
+      lookupFilter:lookupFilter
     });
   };
   setLookupType=(lookupType)=>{
     this.setState({
-      selectedLookUpType:lookupType
+      selectedLookUpType:lookupType,
     })
   }
   render() {
@@ -52,6 +53,7 @@ class LookUps extends Component {
               setLookupsDetailExpanded={this.setLookupsDetailExpanded}
               setLookupsDetails={this.setLookupsDetails}
               selectedLookUpType={this.state.selectedLookUpType}
+              lookupFilter={this.state.lookupFilter}
             ></LookUpsList>
           </PanelBarItem>
           <PanelBarItem
@@ -63,6 +65,7 @@ class LookUps extends Component {
               setLookupsExpanded={this.setLookupsExpanded}
               LookupsDetails={this.state.LookupDetails}
               setLookupType={this.setLookupType}
+              lookupFilter={this.state.lookupFilter}
             ></LookUpsDetails>
           </PanelBarItem>
         </PanelBar>
