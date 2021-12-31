@@ -92,11 +92,19 @@ export const itemsList = [
     parentId: 9,
     route: "/applypayments/eraPayments",
   },
+
+  {
+    text: "Document Manager",
+    icon: "k-i-menu",
+    id: 19,
+    ["data-expanded"]: false,
+    route: "/applypayments",
+  },
   {
     text: "Documents",
     icon: "k-i-inbox",
     id: 22,
-    parentId: 9,
+    parentId: 19,
     route: "/applypayments/documentManager",
   },
   {
