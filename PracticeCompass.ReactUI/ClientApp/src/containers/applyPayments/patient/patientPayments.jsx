@@ -1143,7 +1143,7 @@ class PatientPayments extends Component {
                         this.state.practiceVisibleSubInsurance) && (
                             <FindDialogComponent
                                 title="Practice Search"
-                                placeholder="Enter Practice Name"
+                                placeholder="Enter Practice Name Or Practice Code"
                                 searcTextBoxValue={this.state.practiceSearchText}
                                 onTextSearchChange={(e) => {
                                     this.setState({

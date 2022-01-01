@@ -17,7 +17,7 @@ BEGIN
 	SET NOCOUNT ON;
 
 	select  practiceid , sortname , PracticeCode from practice
-	where (@practicename is null or @practicename='' or sortname like @practicename+'%') and
+	where (@practicename is null or @practicename='' or sortname like @practicename+'%' or PracticeCode like @practicename+'%') and
 	( sortname not like '%PM' )
 	Order By SortName
 END
