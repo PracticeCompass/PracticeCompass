@@ -97,7 +97,10 @@ export const getclaims =
           searchCriteria.GurantorID
         }&DOSvalue=${
           searchCriteria.DOSvalue ? searchCriteria.DOSvalue : ""
-        }&PatientClass=${
+        }&ToDOSvalue=${
+          searchCriteria.ToDOSvalue ? searchCriteria.ToDOSvalue : ""
+        }
+        &PatientClass=${
           searchCriteria.PatientClass ? searchCriteria.PatientClass : ""
         }&InsuranceType=${searchCriteria.InsuranceType}&InsuranceID=${
           searchCriteria.InsurancID

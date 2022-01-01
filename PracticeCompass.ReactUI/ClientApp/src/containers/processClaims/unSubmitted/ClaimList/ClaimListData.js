@@ -150,6 +150,10 @@ export const DOSFilter = [
         id: "3",
         text: "Newer than",
     },
+    {
+        id: "4",
+        text: "Range than",
+    },
 ];
 export const InsuranceCategory = [
     {

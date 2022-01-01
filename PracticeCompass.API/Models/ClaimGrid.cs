@@ -7,6 +7,7 @@
         public int PhysicianID { get; set; }
         public int DOSType { get; set; }
         public string DOSvalue { get; set; }
+        public string ToDOSvalue { get; set; }
         public string PatientClass { get; set; }
         public int InsuranceType { get; set; }
         public int InsuranceID { get; set; }

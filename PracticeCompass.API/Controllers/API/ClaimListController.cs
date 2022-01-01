@@ -74,6 +74,8 @@ namespace PracticeCompass.API.Controllers.API
             {
                 if (searchCriteria.DOSvalue == null)
                     searchCriteria.DOSvalue = "";
+                if (searchCriteria.ToDOSvalue == null)
+                    searchCriteria.ToDOSvalue = "";
                 if (searchCriteria.PatientClass == null)
                     searchCriteria.PatientClass = "";
                 if (searchCriteria.BillNumber == null)
@@ -88,6 +90,7 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.SortColumn = "";
                 if (searchCriteria.SortDirection == null)
                     searchCriteria.SortDirection = "";
+
                 List<ClaimDTO> Result = unitOfWork.ClaimListRepository.ClaimGridGet(searchCriteria.PatientID, searchCriteria.PracticeID,
                     searchCriteria.PhysicianID, searchCriteria.DOSType, searchCriteria.DOSvalue, searchCriteria.PatientClass, searchCriteria.InsuranceType, searchCriteria.InsuranceID,
                     searchCriteria.BillNumber, searchCriteria.ClaimIcnNumber, searchCriteria.Age, searchCriteria.ClaimValue, searchCriteria.CoverageOrder, searchCriteria.InsuranceStatus,

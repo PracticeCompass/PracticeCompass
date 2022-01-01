@@ -305,6 +305,10 @@ class ClaimList extends Component {
         //await this.props.getclaimListFilters("");
         this.setState({ refreshFilter: true });
     };
+    setDosType=(e)=>{
+        debugger;
+        this.setState({ dostype: e.value })
+    }
     toggleDeleteDialog = () => {
         this.setState({
             visibleDeleteDialog: !this.state.visibleDeleteDialog,
@@ -687,6 +691,7 @@ class ClaimList extends Component {
                 physicianID: body.Physician,
                 dostype: body.DOSType,
                 dos: body.DOSvalue ? new Date(body.DOSvalue) : null,
+                toDos: body.ToDOSvalue ? new Date(body.ToDOSvalue) : null,
                 patientType: body.PatientClass,
                 insuranceType: body.InsuranceType,
                 insuranceNameSelected: body.InsuranceName,
@@ -721,6 +726,7 @@ class ClaimList extends Component {
             GurantorID: this.state.guarantorID ? this.state.guarantorID : 0,
             DOSType: this.state.dostype ? this.state.dostype.id : 0,
             DOSvalue: this.state.dos ? this.state.dos.toLocaleDateString() : null,
+            ToDOSvalue: this.state.toDos ? this.state.toDos.toLocaleDateString() : null,
             PatientClass: this.state.patientType
                 ? this.state.patientType.lookupCode
                 : null,
@@ -801,6 +807,7 @@ class ClaimList extends Component {
             Rejections: this.state.rejections ? this.state.rejections : 0,
             Denials: this.state.denials ? this.state.denials : 0,
             PastDue: this.state.pastDue ? this.state.pastDue : 0,
+            ToDOSvalue : this.state.toDos ? new Date(this.state.toDos) : null,
         });
         if (this.state.currentFilter && this.state.currentFilter.filterID) {
             let updateFilter = await this.props.FilterUpdate(
@@ -1716,9 +1723,15 @@ class ClaimList extends Component {
                                         id="tins"
                                         name="tins"
                                         value={this.state.dostype}
-                                        onChange={(e) => this.setState({ dostype: e.value })}
+                                        onChange={(e) =>
+                                             this.setDosType(e)
+                                        }
                                     ></DropDown>
                                 </div>
+                                {this.state.dostype !=null && this.state.dostype.id =="4" &&(
+                                <div style={{ width: "28px", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">From </label>
+                                </div>)}
                                 <div className="dateStyle" style={{ marginLeft: "5px" }}>
                                     <DatePickerComponent
                                         className="unifyHeight"
@@ -1728,6 +1741,22 @@ class ClaimList extends Component {
                                         onChange={(e) => this.setState({ dos: e.value })}
                                     ></DatePickerComponent>
                                 </div>
+                                {this.state.dostype !=null && this.state.dostype.id =="4" &&(
+                                <div style={{ width: "15px", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">To </label>
+                                </div>
+                                )}
+                                {this.state.dostype !=null && this.state.dostype.id =="4" &&(
+                                <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                    <DatePickerComponent
+                                        className="unifyHeight"
+                                        placeholder="MM/DD/YYYY"
+                                        format="M/dd/yyyy"
+                                        value={this.state.toDos}
+                                        onChange={(e) => this.setState({ toDos: e.value })}
+                                    ></DatePickerComponent>
+                                </div>
+                                )}
                             </div>
                             <div
                                 className="row nowrap rowHeight"
