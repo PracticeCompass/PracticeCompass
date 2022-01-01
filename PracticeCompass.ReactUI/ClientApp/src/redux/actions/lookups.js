@@ -14,12 +14,16 @@ import {
   GET_PLANS_GROUP_filter,
   GET_LOOKUP_TYPES_Filter,
   GET_LOOKUP_TYPES_Filter_FAILS,
-  GET_User_LOOKUP_TYPES_Filter
+  GET_User_LOOKUP_TYPES_Filter,
+  FILTERS_RENDERING_DROPDOWN,
+  FILTERS_REFERRING_DROPDOWN,
+  FILTERS_SUPERVISING_DROPDOWN
 
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../../src/config";
 import { setCompanies } from "./patient";
+
 
 
 export const SaveLookups =
@@ -59,6 +63,9 @@ export const GetLookupsByEnityName =
       else if (EntityName == "PlanGroup") dispatch(setPlanGroupList(resp.data));
       else if (EntityName == "lookupTypes") dispatch(setLookupTypesList(resp.data));
       else if (EntityName == "userlookupTypes") dispatch(setUserLookupTypesList(resp.data));
+      else if (EntityName == "Rendering") dispatch(setRenderingList(resp.data));
+      else if (EntityName == "Ordering") dispatch(setOrderingList(resp.data));
+      else if (EntityName == "Supervising") dispatch(setSupervisingList(resp.data));
     } catch (error) {
     } finally {
       // dispatch(uiStopLoading());
@@ -155,6 +162,24 @@ export const GetLookups = () => async (dispatch, getState) => {
     });
     dispatch(setUserLookupTypesList(userlookupTypes.data));
 
+    const Rendering = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=Rendering`,
+    });
+    dispatch(setRenderingList(Rendering.data));
+
+    const Ordering = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=Ordering`,
+    });
+    dispatch(setOrderingList(Ordering.data));
+
+    const Supervising = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/Trends/TrendsGet?UserId=${userId}&EntityName=Supervising`,
+    });
+    dispatch(setSupervisingList(Supervising.data));
+
     
 
     // dispatch(uiStopLoading());
@@ -242,6 +267,26 @@ export const setLookupTypesList =(data)=>{
 export const setUserLookupTypesList =(data)=>{
   return {
     type: GET_User_LOOKUP_TYPES_Filter,
+    payload: data,
+  };
+}
+
+
+export const setRenderingList =(data)=>{
+  return {
+    type:FILTERS_RENDERING_DROPDOWN,
+    payload: data,
+  };
+}
+export const setOrderingList =(data)=>{
+  return {
+    type: FILTERS_REFERRING_DROPDOWN,
+    payload: data,
+  };
+}
+export const setSupervisingList =(data)=>{
+  return {
+    type: FILTERS_SUPERVISING_DROPDOWN,
     payload: data,
   };
 }

@@ -331,3 +331,6 @@ button {
   height: 18px;
   display: inline-block;
 }
+.k-tabstrip-items-wrapper{
+  z-index: 0 !important;
+}

@@ -76,6 +76,24 @@ namespace PracticeCompass.Data.Repositories
              commandType: CommandType.StoredProcedure);
             return data.Read<Reading>().ToList();
         }
+        public List<Reading> ReferralStaffGet(string filter)
+        {
+            var data = this.db.QueryMultiple("uspReferralStaffGet", new
+            {
+                @filter = filter
+            },
+             commandType: CommandType.StoredProcedure);
+            return data.Read<Reading>().ToList();
+        }
+        public List<Reading> SupervisingStaffGet(string filter)
+        {
+            var data = this.db.QueryMultiple("uspSupervisingStaffGet", new
+            {
+                @filter = filter
+            },
+             commandType: CommandType.StoredProcedure);
+            return data.Read<Reading>().ToList();
+        }
         public List<Modifier> ModifierGet()
         {
             var data = this.db.QueryMultiple("uspModifierGet", new

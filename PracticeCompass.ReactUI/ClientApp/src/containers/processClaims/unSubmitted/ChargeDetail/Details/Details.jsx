@@ -21,7 +21,13 @@ import {
   GetICD10Codes,
   GetCPTCodes,
   resetCPTCodes,
-  GetCharageDetails
+  GetCharageDetails,
+  GetRendering,
+  resetRendering,
+  resetReferring,
+  GetReferring,
+  resetSupervising,
+  GetSupervising
 } from "../../../../../redux/actions/chargeDetail";
 import {
   SaveLookups,
@@ -34,7 +40,7 @@ const idGetterIcd = getter(DATA_ITEM_KEY_ICD);
 const DATA_ITEM_KEY_CPT = "procedureCode";
 const cptGetterCode = getter(DATA_ITEM_KEY_CPT);
 
-const DATA_ITEM_KEY_PROVIDER = "providerId";
+const DATA_ITEM_KEY_PROVIDER = "providerID";
 const providerId = getter(DATA_ITEM_KEY_PROVIDER);
 
 function mapStateToProps(state) {
@@ -47,7 +53,13 @@ function mapStateToProps(state) {
     modifiers4: state.charageDetails.modifiers?.filter(x => x.order == 4),
     dropDownCpts: state.lookups.cpts,
     dropDownICD10: state.lookups.iCD10s,
-    dropDownphysicians: state.lookups.physicians
+    dropDownphysicians: state.lookups.physicians,
+    dropDownRendering: state.lookups.rendering,
+    dropDownReferring: state.lookups.referring,
+    dropDownSupervising: state.lookups.supervising,
+    rendering: state.charageDetails.rendering,
+    referring: state.charageDetails.referring,
+    supervising: state.charageDetails.supervising,
   };
 }
 
@@ -62,7 +74,14 @@ function mapDispatchToProps(dispatch) {
     SaveLookups: (EntityValueID, EntityName) =>
       dispatch(SaveLookups(EntityValueID, EntityName)),
     GetLookupsByEnityName: EntityName =>
-      dispatch(GetLookupsByEnityName(EntityName))
+      dispatch(GetLookupsByEnityName(EntityName)),
+    GetRendering: filter => dispatch(GetRendering(filter)),
+    resetRendering: () => dispatch(resetRendering()),
+    GetReferring: filter => dispatch(GetReferring(filter)),
+    resetReferring: () => dispatch(resetReferring()),
+    GetSupervising: filter => dispatch(GetSupervising(filter)),
+    resetSupervising: () => dispatch(resetSupervising()),
+
   };
 }
 
@@ -272,45 +291,45 @@ class Details extends Component {
         cptCode:
           chargeDetailsData.procedureCode !== null
             ? this.props.dropDownCpts.filter(
-                x => x.entityId == chargeDetailsData.procedureCode
-              )[0]
+              x => x.entityId == chargeDetailsData.procedureCode
+            )[0]
             : null,
         cptCodeDescription: chargeDetailsData.procedureDescription,
         modifier1:
           chargeDetailsData.modifier1 !== null
             ? this.props.modifiers1.filter(
-                x => x.modifier == chargeDetailsData.modifier1
-              )[0]
+              x => x.modifier == chargeDetailsData.modifier1
+            )[0]
             : null,
         modifier2:
           chargeDetailsData.modifier2 !== null
             ? this.props.modifiers2.filter(
-                x => x.modifier == chargeDetailsData.modifier2
-              )[0]
+              x => x.modifier == chargeDetailsData.modifier2
+            )[0]
             : null,
         modifier3:
           chargeDetailsData.modifier3 !== null
             ? this.props.modifiers3.filter(
-                x => x.modifier == chargeDetailsData.modifier3
-              )[0]
+              x => x.modifier == chargeDetailsData.modifier3
+            )[0]
             : null,
         modifier4:
           chargeDetailsData.modifier4 !== null
             ? this.props.modifiers4.filter(
-                x => x.modifier == chargeDetailsData.modifier4
-              )[0]
+              x => x.modifier == chargeDetailsData.modifier4
+            )[0]
             : null,
         recordStatus:
           chargeDetailsData.recordStatus !== null
             ? recordStatusLookUp.filter(
-                x => x.id == chargeDetailsData.recordStatus
-              )[0]
+              x => x.id == chargeDetailsData.recordStatus
+            )[0]
             : null,
         currentStatus:
           chargeDetailsData.currentStatus !== null
             ? currentStatusLookup.filter(
-                x => x.id == chargeDetailsData.currentStatus
-              )[0]
+              x => x.id == chargeDetailsData.currentStatus
+            )[0]
             : null,
         from:
           chargeDetailsData.fromServiceDate != null
@@ -323,116 +342,116 @@ class Details extends Component {
         icd10_1:
           chargeDetailsData.diag1 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag1
-              )[0]
+              x => x.entityId == chargeDetailsData.diag1
+            )[0]
             : null,
         icd10_2:
           chargeDetailsData.diag2 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag2
-              )[0]
+              x => x.entityId == chargeDetailsData.diag2
+            )[0]
             : null,
         icd10_3:
           chargeDetailsData.diag3 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag3
-              )[0]
+              x => x.entityId == chargeDetailsData.diag3
+            )[0]
             : null,
         icd10_4:
           chargeDetailsData.diag4 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag4
-              )[0]
+              x => x.entityId == chargeDetailsData.diag4
+            )[0]
             : null,
         icd10_5:
           chargeDetailsData.diag5 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag5
-              )[0]
+              x => x.entityId == chargeDetailsData.diag5
+            )[0]
             : null,
         icd10_6:
           chargeDetailsData.diag6 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag6
-              )[0]
+              x => x.entityId == chargeDetailsData.diag6
+            )[0]
             : null,
         icd10_7:
           chargeDetailsData.diag7 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag7
-              )[0]
+              x => x.entityId == chargeDetailsData.diag7
+            )[0]
             : null,
         icd10_8:
           chargeDetailsData.diag8 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag8
-              )[0]
+              x => x.entityId == chargeDetailsData.diag8
+            )[0]
             : null,
         descriptionICD1:
           chargeDetailsData.diag1 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag1
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag1
+            )[0].entityName
             : null,
         descriptionICD2:
           chargeDetailsData.diag2 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag2
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag2
+            )[0].entityName
             : null,
         descriptionICD3:
           chargeDetailsData.diag3 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag3
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag3
+            )[0].entityName
             : null,
         descriptionICD4:
           chargeDetailsData.diag4 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag4
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag4
+            )[0].entityName
             : null,
         descriptionICD5:
           chargeDetailsData.diag5 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag5
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag5
+            )[0].entityName
             : null,
         descriptionICD6:
           chargeDetailsData.diag6 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag6
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag6
+            )[0].entityName
             : null,
         descriptionICD7:
           chargeDetailsData.diag7 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag7
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag7
+            )[0].entityName
             : null,
         descriptionICD8:
           chargeDetailsData.diag8 != null
             ? this.props.dropDownICD10.filter(
-                x => x.entityId == chargeDetailsData.diag8
-              )[0].entityName
+              x => x.entityId == chargeDetailsData.diag8
+            )[0].entityName
             : null,
         rendering:
           chargeDetailsData.renderingID != null
             ? this.props.dropDownphysicians.filter(
-                x => x.entityId == chargeDetailsData.renderingID
-              )[0]
+              x => x.entityId == chargeDetailsData.renderingID
+            )[0]
             : null,
         ordering:
           chargeDetailsData.referralSID != null
             ? this.props.dropDownphysicians.filter(
-                x => x.entityId == chargeDetailsData.referralSID
-              )[0]
+              x => x.entityId == chargeDetailsData.referralSID
+            )[0]
             : null,
         supervising:
           chargeDetailsData.supervisingID != null
             ? this.props.dropDownphysicians.filter(
-                x => x.entityId == chargeDetailsData.supervisingID
-              )[0]
+              x => x.entityId == chargeDetailsData.supervisingID
+            )[0]
             : null,
         authorizationNumber: chargeDetailsData.authorizationNumber,
         units: chargeDetailsData.units
@@ -473,7 +492,47 @@ class Details extends Component {
     }
     this.cancelCptCodeDialog(null);
   };
-  onCptCodeKeyDown = event => {};
+  onRenderingDoubleClick = event => {
+    if (event.dataItem != null) {
+      this.setState({
+        rendering: {
+          entityName: event.dataItem.sortName,
+          entityId: event.dataItem.providerID
+        },
+      });
+      this.props.SaveLookups(event.dataItem.providerID, "Rendering");
+    }
+    this.cancelProviderDialog();
+  }
+  onOrderingDoubleClick=event=>{
+    if (event.dataItem != null) {
+      this.setState({
+        ordering: {
+          entityName: event.dataItem.sortName,
+          entityId: event.dataItem.providerID
+        },
+      });
+      this.props.SaveLookups(event.dataItem.providerID, "Ordering");
+    }
+    this.cancelProviderDialog();
+  }
+  onSupervisingDoubleClick=event=>{
+    if (event.dataItem != null) {
+      this.setState({
+        supervising: {
+          entityName: event.dataItem.sortName,
+          entityId: event.dataItem.providerID
+        },
+      });
+      this.props.SaveLookups(event.dataItem.providerID, "Supervising");
+    }
+    this.cancelProviderDialog();
+  }
+  
+  onRenderingSelectionChange = event => { };
+  onOrderingSelectionChange=event=>{};
+  onSupervisingSelectionChange=event=>{};
+  onCptCodeKeyDown = event => { };
   cancelCptCodeDialog = event => {
     this.props.resetCPTCodes();
     this.setState({ cptDialogVisible: false });
@@ -482,10 +541,20 @@ class Details extends Component {
   cptSearch = async () => {
     this.props.GetCPTCodes(this.state.cptSearchText ?? "");
   };
+  GetRendering = async () => {
+    this.props.GetRendering(this.state.providerText ?? "");
+  };
+  GetOrdering =async()=>{
+    this.props.GetReferring(this.state.orderingText ?? "");
+  }
+  GetSupervising=async()=>{
+    this.props.GetSupervising(this.state.SupervisingText ?? "");
+  }
   cancelProviderDialog = event => {
-    this.props.resetCPTCodes();
-    this.setState({ providerVisible: false });
-    this.setState({ providerText: null });
+    this.props.resetRendering();
+    this.props.resetReferring();
+    this.props.resetSupervising();
+    this.setState({ providerVisible: false, providerText: null, orderingVisible: false, supervisingVisible: false });
   };
   setSelectedIcd10Codes = (diagnosisCode, shortDescription) => {
     if (this.state.visiableICD1) {
@@ -628,29 +697,29 @@ class Details extends Component {
           this.state.visiableICD6 ||
           this.state.visiableICD7 ||
           this.state.visiableICD8) && (
-          <FindDialogComponent
-            title="ICD Search"
-            placeholder="Enter ICD Code , Short or Long Description"
-            searcTextBoxValue={this.state.icd10SearchText}
-            onTextSearchChange={e => {
-              this.setState({
-                icd10SearchText: e.value
-              });
-            }}
-            clickOnSearch={this.icd10CodesSearch}
-            dataItemKey="diagnosisCode"
-            data={this.props.ICD10List}
-            columns={ICDcolumns}
-            onSelectionChange={this.onICD10SelectionChange}
-            onRowDoubleClick={this.onICD10DoubleClick}
-            onKeyDown={this.onICD10KeyDown}
-            idGetterLookup={idGetterIcd}
-            toggleDialog={this.cancelICD10Dialog}
-            cancelDialog={this.cancelICD10Dialog}
-            pageChange={this.pageChange}
-            getNextData={true}
-          />
-        )}
+            <FindDialogComponent
+              title="ICD Search"
+              placeholder="Enter ICD Code , Short or Long Description"
+              searcTextBoxValue={this.state.icd10SearchText}
+              onTextSearchChange={e => {
+                this.setState({
+                  icd10SearchText: e.value
+                });
+              }}
+              clickOnSearch={this.icd10CodesSearch}
+              dataItemKey="diagnosisCode"
+              data={this.props.ICD10List}
+              columns={ICDcolumns}
+              onSelectionChange={this.onICD10SelectionChange}
+              onRowDoubleClick={this.onICD10DoubleClick}
+              onKeyDown={this.onICD10KeyDown}
+              idGetterLookup={idGetterIcd}
+              toggleDialog={this.cancelICD10Dialog}
+              cancelDialog={this.cancelICD10Dialog}
+              pageChange={this.pageChange}
+              getNextData={true}
+            />
+          )}
         {this.state.cptDialogVisible && (
           <FindDialogComponent
             title="Cpt Search"
@@ -683,14 +752,58 @@ class Details extends Component {
                 providerText: e.value
               });
             }}
-            clickOnSearch={this.cptSearch}
-            dataItemKey="providerId"
-            data={[]}
+            clickOnSearch={this.GetRendering}
+            dataItemKey="providerID"
+            data={this.props.rendering}
             columns={ProviderColumns}
-            onSelectionChange={this.onCptCodeSelectionChange}
-            onRowDoubleClick={this.onCptCodeDoubleClick}
+            onSelectionChange={this.onRenderingSelectionChange}
+            onRowDoubleClick={this.onRenderingDoubleClick}
             onKeyDown={this.onCptCodeKeyDown}
-            idGetterLookup={cptGetterCode}
+            idGetterLookup={providerId}
+            toggleDialog={this.cancelProviderDialog}
+            cancelDialog={this.cancelProviderDialog}
+          />
+        )}
+        {this.state.orderingVisible && (
+          <FindDialogComponent
+            title={this.state.providerTitle}
+            placeholder={"Enter " + this.state.providerTitle}
+            searcTextBoxValue={this.state.orderingText}
+            onTextSearchChange={e => {
+              this.setState({
+                orderingText: e.value
+              });
+            }}
+            clickOnSearch={this.GetOrdering}
+            dataItemKey="providerID"
+            data={this.props.referring}
+            columns={ProviderColumns}
+            onSelectionChange={this.onOrderingSelectionChange}
+            onRowDoubleClick={this.onOrderingDoubleClick}
+            onKeyDown={this.onCptCodeKeyDown}
+            idGetterLookup={providerId}
+            toggleDialog={this.cancelProviderDialog}
+            cancelDialog={this.cancelProviderDialog}
+          />
+        )}
+        {this.state.supervisingVisible && (
+          <FindDialogComponent
+            title={this.state.providerTitle}
+            placeholder={"Enter " + this.state.providerTitle}
+            searcTextBoxValue={this.state.providerText}
+            onTextSearchChange={e => {
+              this.setState({
+                SupervisingText: e.value
+              });
+            }}
+            clickOnSearch={this.GetSupervising}
+            dataItemKey="providerID"
+            data={this.props.supervising}
+            columns={ProviderColumns}
+            onSelectionChange={this.onSupervisingSelectionChange}
+            onRowDoubleClick={this.onSupervisingDoubleClick}
+            onKeyDown={this.onCptCodeKeyDown}
+            idGetterLookup={providerId}
             toggleDialog={this.cancelProviderDialog}
             cancelDialog={this.cancelProviderDialog}
           />
@@ -1448,7 +1561,7 @@ class Details extends Component {
                                 className="unifyHeight"
                                 textField="entityName"
                                 dataItemKey="entityId"
-                                data={this.props.dropDownphysicians}
+                                data={this.props.dropDownRendering}
                                 defaultValue={this.state.rendering}
                                 value={this.state.rendering}
                                 onChange={e =>
@@ -1490,7 +1603,7 @@ class Details extends Component {
                                 className="unifyHeight"
                                 textField="entityName"
                                 dataItemKey="entityId"
-                                data={this.props.dropDownphysicians}
+                                data={this.props.dropDownReferring}
                                 defaultValue={this.state.ordering}
                                 value={this.state.ordering}
                                 onChange={e =>
@@ -1510,7 +1623,7 @@ class Details extends Component {
                                 classButton="infraBtn-primary find-button"
                                 onClick={e =>
                                   this.setState({
-                                    providerVisible: true,
+                                    orderingVisible: true,
                                     providerTitle: "Ordering"
                                   })
                                 }
@@ -1532,7 +1645,7 @@ class Details extends Component {
                                 className="unifyHeight"
                                 textField="entityName"
                                 dataItemKey="entityId"
-                                data={this.props.dropDownphysicians}
+                                data={this.props.dropDownSupervising}
                                 defaultValue={this.state.supervising}
                                 value={this.state.supervising}
                                 onChange={e =>
@@ -1552,7 +1665,7 @@ class Details extends Component {
                                 classButton="infraBtn-primary find-button"
                                 onClick={e =>
                                   this.setState({
-                                    providerVisible: true,
+                                    supervisingVisible: true,
                                     providerTitle: "Supervising"
                                   })
                                 }

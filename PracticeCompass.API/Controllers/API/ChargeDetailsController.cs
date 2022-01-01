@@ -98,6 +98,35 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
         [HttpGet]
+        [Route("api/ChargeDetails/ReferralStaffGet")]
+        public List<Reading> ReferralStaffGet(string filter)
+        {
+            try
+            {
+                return unitOfWork.ChargeDetailsRepository.ReferralStaffGet(filter);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<Reading>();
+            }
+        }
+        
+        [HttpGet]
+        [Route("api/ChargeDetails/SupervisingStaffGet")]
+        public List<Reading> SupervisingStaffGet(string filter)
+        {
+            try
+            {
+                return unitOfWork.ChargeDetailsRepository.SupervisingStaffGet(filter);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<Reading>();
+            }
+        }
+        [HttpGet]
         [Route("api/ChargeDetails/ModifierGet")]
         public List<Modifier> ModifierGet()
         {

@@ -10,6 +10,8 @@ namespace PracticeCompass.Core.Repositories
         public ChargeDetails ChargeDetailsGet(int ChargeSID);
         public List<ICD10> ICD10PopupGet(string filter,int skip);
         public List<Reading> ProviderGet(string filter);
+        public List<Reading> ReferralStaffGet(string filter);
+        public List<Reading> SupervisingStaffGet(string filter);
         public List<Modifier> ModifierGet();
         public List<CPTCode> CptCodesGet(string cptCode);
         public bool ChargeDetailsUpdate(ChargeDetails chargeDetails);

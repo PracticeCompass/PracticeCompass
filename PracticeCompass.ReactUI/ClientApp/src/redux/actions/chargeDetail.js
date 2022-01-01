@@ -9,6 +9,12 @@ import {
   CPT_LIST_FAILED,
   CPT_LIST,
   CHARGE_ACTIVITY_GRID,
+  FILTERS_RENDERING_FAILED,
+  FILTERS_REFERRING,
+  FILTERS_REFERRING_FAILED,
+  FILTERS_SUPERVISING_FAILED,
+  FILTERS_SUPERVISING,
+  FILTERS_RENDERING
 
 } from "../actionTypes/actionTypes";
 
@@ -70,6 +76,115 @@ export const resetCPTCodes = () => async (dispatch, getState) => {
     console.log("error ==> ", error);
     dispatch({
       type: CPT_LIST_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+
+
+export const GetRendering = (filter) => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    //await dispatch(setCPTList([]));
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/ChargeDetails/ProviderGet?filter=${filter}`,
+    });
+    await dispatch(setRenderingList(resp.data || []));
+  } catch (error) {
+    await dispatch(setRenderingList([]));
+    console.log("error ==> ", error);
+    dispatch({
+      type: FILTERS_RENDERING_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+
+export const GetReferring = (filter) => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    //await dispatch(setCPTList([]));
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/ChargeDetails/ReferralStaffGet?filter=${filter}`,
+    });
+    await dispatch(setReferringList(resp.data || []));
+  } catch (error) {
+    await dispatch(setReferringList([]));
+    console.log("error ==> ", error);
+    dispatch({
+      type: FILTERS_RENDERING_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+
+export const GetSupervising = (filter) => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    //await dispatch(setCPTList([]));
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/ChargeDetails/SupervisingStaffGet?filter=${filter}`,
+    });
+    await dispatch(setSupervisingList(resp.data || []));
+  } catch (error) {
+    await dispatch(setSupervisingList([]));
+    console.log("error ==> ", error);
+    dispatch({
+      type: FILTERS_SUPERVISING_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+
+export const resetRendering = () => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    await dispatch(setRenderingList([]));
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: FILTERS_RENDERING_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+
+export const resetReferring = () => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    await dispatch(setReferringList([]));
+    await dispatch(setSupervisingList([]));
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: FILTERS_RENDERING_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
+export const resetSupervising = () => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    await dispatch(setSupervisingList([]));
+  } catch (error) {
+    console.log("error ==> ", error);
+    dispatch({
+      type: FILTERS_SUPERVISING_FAILED,
       payload: error,
     });
   } finally {
@@ -143,6 +258,25 @@ export const setCPTList = (cptCodes) => {
   return {
     type: CPT_LIST,
     payload: cptCodes,
+  };
+};
+
+export const setRenderingList = (rendering) => {
+  return {
+    type: FILTERS_RENDERING,
+    payload: rendering,
+  };
+};
+export const setReferringList = (referring) => {
+  return {
+    type: FILTERS_REFERRING,
+    payload: referring,
+  };
+};
+export const setSupervisingList = (supervising) => {
+  return {
+    type: FILTERS_SUPERVISING,
+    payload: supervising,
   };
 };
 

@@ -12,6 +12,7 @@ namespace PracticeCompass.Core.Models
 
         #region Generated Properties
         public string SortName { get; set; }
+        public string providerID { get; set; }
         #endregion
 
     }

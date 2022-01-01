@@ -13,7 +13,10 @@ import {
   GET_PLANS_GROUP_FAILS,
   GET_LOOKUP_TYPES_Filter_FAILS,
   GET_User_LOOKUP_TYPES_Filter,
-  GET_LOOKUP_TYPES_Filter
+  GET_LOOKUP_TYPES_Filter,
+  FILTERS_RENDERING_DROPDOWN,
+  FILTERS_REFERRING_DROPDOWN,
+  FILTERS_SUPERVISING_DROPDOWN
 } from "../actionTypes/actionTypes";
 
 const INITIAL_STATE = {
@@ -29,7 +32,10 @@ const INITIAL_STATE = {
   companiesFailed: false,
   planGroups: [],
   lookupTypes: [],
-  userlookupTypes:[]
+  userlookupTypes: [],
+  rendering: [],
+  referring: [],
+  supervising:[]
 };
 
 export function lookupsReducer(state = INITIAL_STATE, action) {
@@ -50,6 +56,12 @@ export function lookupsReducer(state = INITIAL_STATE, action) {
       return { ...state, cpts: action.payload };
     case FILTERS_ICD10:
       return { ...state, iCD10s: action.payload }
+    case FILTERS_RENDERING_DROPDOWN:
+      return { ...state, rendering: action.payload }
+    case FILTERS_REFERRING_DROPDOWN:
+      return { ...state, referring: action.payload }
+    case FILTERS_SUPERVISING_DROPDOWN:
+      return { ...state, supervising: action.payload }
     case SET_COMPANIES:
       return { ...state, companies: action.payload };
     case GET_COMPANIES_FAILED:

@@ -393,3 +393,6 @@ textarea:disabled  {
   font-size: 12px !important;
   overflow:"auto" ;
 }
+.k-tabstrip-items-wrapper{
+  z-index: 0 !important;
+}

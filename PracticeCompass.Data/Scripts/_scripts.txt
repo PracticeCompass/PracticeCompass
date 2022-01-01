@@ -82,3 +82,6 @@ uspUserLookupCodeGet.sql
 uspUserLookupType.sql
 uspUserLookupCodeSave.sql
 uspUserLookupTypeSave.sql
+uspProviderGet.sql
+uspReferralStaffGet.sql
+uspSupervisingStaffGet.sql

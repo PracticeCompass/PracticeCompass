@@ -8,7 +8,13 @@ import {
   CHARGE_ACTIVITY_GRID,
   CHARGE_ACTIVITY_GRID_FAILED,
   GET_MODIFIER_LIST,
-  GET_MODIFIER_LIST_FAILED
+  GET_MODIFIER_LIST_FAILED,
+  FILTERS_RENDERING_FAILED,
+  FILTERS_REFERRING,
+  FILTERS_REFERRING_FAILED,
+  FILTERS_SUPERVISING_FAILED,
+  FILTERS_SUPERVISING,
+  FILTERS_RENDERING
 } from "../actionTypes/actionTypes";
 
 const INITIAL_STATE = {
@@ -22,6 +28,9 @@ const INITIAL_STATE = {
   chargeActivityFailed: false,
   modifiers: [],
   modifiersFailed: false,
+  rendering: [],
+  referring: [],
+  supervising: []
 };
 
 export function charageDetailsReducer(state = INITIAL_STATE, action) {
@@ -46,6 +55,18 @@ export function charageDetailsReducer(state = INITIAL_STATE, action) {
       return { ...state, modifiers: action.payload };
     case GET_MODIFIER_LIST_FAILED:
       return { ...state, modifiersFailed: action.payload };
+    case FILTERS_RENDERING:
+      return { ...state, rendering: action.payload };
+    case FILTERS_REFERRING:
+      return { ...state, referring: action.payload };
+    case FILTERS_SUPERVISING:
+      return { ...state, supervising: action.payload };
+    case FILTERS_RENDERING_FAILED:
+      return { ...state, renderingFailed: action.payload };
+    case FILTERS_REFERRING_FAILED:
+      return { ...state, referringFailed: action.payload };
+    case FILTERS_SUPERVISING_FAILED:
+      return { ...state, supervisingFailed: action.payload };
     default:
       return state;
   }

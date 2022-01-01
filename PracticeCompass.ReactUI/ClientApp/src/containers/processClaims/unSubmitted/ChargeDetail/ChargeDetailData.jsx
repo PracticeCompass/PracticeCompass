@@ -84,9 +84,17 @@ export const CptColumns = [
 ];
 export const ProviderColumns = [
     {
-        field: "name",
-        title: "Name",
-        minWidth: 300,
+        field: "providerID",
+        title: "ID",
+        minWidth: 0,
+        orderIndex: 1,
+        hide:true
+
+    },
+    {
+        field: "sortName",
+        title: "Sort Name",
+        minWidth: 700,
         orderIndex: 2,
     },
 ];

@@ -63,6 +63,15 @@ ElSE if @EntityName ='lookupTypes'
 ElSE if @EntityName ='userlookupTypes'
 		        SELECT distinct   Trends.EntityValueID as EntityId,userLookupType.LookupType as EntityName,searchcount from Trends inner join userLookupType on userLookupType.LookupType=EntityValueID
 		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
+ElSE if @EntityName ='Rendering'
+		        SELECT distinct   Trends.EntityValueID as EntityId,[Provider].sortName as EntityName,searchcount from Trends inner join [Provider] on [Provider].[ProviderID]=EntityValueID
+		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
+ElSE if @EntityName ='Ordering'
+		        SELECT distinct   Trends.EntityValueID as EntityId,[Provider].sortName as EntityName,searchcount from Trends inner join [Provider] on [Provider].[ProviderID]=EntityValueID
+		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
+ElSE if @EntityName ='Supervising'
+		        SELECT distinct   Trends.EntityValueID as EntityId,[Provider].sortName as EntityName,searchcount from Trends inner join [Provider] on [Provider].[ProviderID]=EntityValueID
+		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
 	
 END
 GO
