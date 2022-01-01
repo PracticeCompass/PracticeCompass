@@ -217,6 +217,7 @@ class LookUpsDetails extends Component {
                     disabled={this.state.lookupDetais != null}
                     defaultValue={this.state.selectedLookUpType}
                     value={this.state.selectedLookUpType}
+                    disabled={this.state.lookupDetais != null && this.props.lookupFilter != "UserLookup"}
                     onChange={(e) =>
                       this.setState({
                         selectedLookUpType: {
@@ -231,7 +232,7 @@ class LookUpsDetails extends Component {
                   <ButtonComponent
                     icon="search"
                     type="search"
-                    disabled={this.state.lookupDetais != null}
+                    disabled={this.state.lookupDetais != null && this.props.lookupFilter != "UserLookup"}
                     classButton="infraBtn-primary find-button"
                     onClick={this.toggleLookupDialog}
                   >
@@ -257,6 +258,7 @@ class LookUpsDetails extends Component {
                   <TextBox
                     className="unifyHeight"
                     value={this.state.lookupCode}
+                    disabled={this.state.lookupDetais != null && this.props.lookupFilter != "UserLookup"}
                     onChange={(e) =>
                       this.setState({
                         lookupCode: e.value,
@@ -271,6 +273,7 @@ class LookUpsDetails extends Component {
                   id="active"
                   label="Active"
                   value={this.state.active}
+                  disabled={this.state.lookupDetais != null && this.props.lookupFilter != "UserLookup"}
                   onChange={(e) => this.setState({ active: e.value })}
                 />
               </div>
@@ -295,6 +298,7 @@ class LookUpsDetails extends Component {
                         description: e.value,
                       })
                     }
+                    disabled={this.state.lookupDetais != null && this.props.lookupFilter != "UserLookup"}
                   ></TextArea>
                 </div>
               </div>
@@ -311,6 +315,7 @@ class LookUpsDetails extends Component {
                   onClick={() => {
                     this.saveLookUpDetails();
                   }}
+                  disabled={this.state.lookupDetais != null && this.props.lookupFilter != "UserLookup"}
                 >
                   Save
                 </ButtonComponent>
