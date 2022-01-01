@@ -1175,7 +1175,7 @@ class insurancePayments extends Component {
                         this.state.insuranceDetailsVisible) && (
                             <FindDialogComponent
                                 title="Plan Search"
-                                placeholder="Enter Plan Company Name"
+                                placeholder="Enter Plan Company Name Or Company Code"
                                 searcTextBoxValue={this.state.insuranceSearchText}
                                 onTextSearchChange={(e) => {
                                     this.setState({

@@ -16,7 +16,8 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	select  lookupcode, description from[LookupCode] where lookuptype = 'PatientClass' and( @description is null or @description='' or description like @description+'%')
+	select  lookupcode, description from[LookupCode] where lookuptype = 'PatientClass'
+	 and( @description is null or @description='' or description like @description+'%' or lookupcode like @description+'%')
 
 	order by Description
 END

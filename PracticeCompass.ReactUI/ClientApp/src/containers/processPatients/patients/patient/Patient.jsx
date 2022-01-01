@@ -1336,7 +1336,7 @@ class Patient extends Component {
                 {this.state.patientTypeVisible && (
                     <FindDialogComponent
                         title="Patient Type Search"
-                        placeholder="Enter Patient Type Name"
+                        placeholder="Enter Patient Type Name or Patient Code"
                         searcTextBoxValue={this.state.patientTypeSearchText}
                         onTextSearchChange={(e) => {
                             this.setState({
@@ -1381,7 +1381,7 @@ class Patient extends Component {
                 {this.state.insuranceVisible && (
                     <FindDialogComponent
                         title="Plan Search"
-                        placeholder="Enter Plan Company Name"
+                        placeholder="Enter Plan Company Name Or Company Code"
                         searcTextBoxValue={this.state.insuranceSearchText}
                         onTextSearchChange={(e) => {
                             this.setState({
