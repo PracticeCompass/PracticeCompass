@@ -66,6 +66,16 @@ namespace PracticeCompass.Data.Repositories
                 commandType: CommandType.StoredProcedure);
             return data.Read<ICD10>().ToList();
         }
+
+        public List<Reading> ProviderGet(string filter)
+        {
+            var data = this.db.QueryMultiple("uspProviderGet", new
+            {
+                @filter = filter
+            },
+             commandType: CommandType.StoredProcedure);
+            return data.Read<Reading>().ToList();
+        }
         public List<Modifier> ModifierGet()
         {
             var data = this.db.QueryMultiple("uspModifierGet", new

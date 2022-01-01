@@ -54,13 +54,13 @@ namespace PracticeCompass.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public List<PaymentDTO> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue, bool Fullyapplied)
+        public List<PaymentDTO> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue,string totxnDate, bool Fullyapplied)
         {
             var data = this.db.QueryMultiple("uspInsurancePaymentGet", new { @PracticeID = PracticeID, @InsuranceID = InsuranceID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
             return data.Read<PaymentDTO>().ToList();
         }
 
-        public List<PaymentDTO> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue, bool Fullyapplied)
+        public List<PaymentDTO> GetPatientPayment(int PracticeID, int PatientID, int DateType, string Datevalue,string totxnDate, bool Fullyapplied)
         {
             var data = this.db.QueryMultiple("uspPatientPaymentGet", new { @PracticeID = PracticeID, @PatientID = PatientID, @DateType = DateType, @Datevalue = Datevalue, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
             return data.Read<PaymentDTO>().ToList();

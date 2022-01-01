@@ -84,6 +84,20 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
         [HttpGet]
+        [Route("api/ChargeDetails/ProviderGet")]
+        public List<Reading> ProviderGet(string filter)
+        {
+            try
+            {
+                return unitOfWork.ChargeDetailsRepository.ProviderGet(filter);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<Reading>();
+            }
+        }
+        [HttpGet]
         [Route("api/ChargeDetails/ModifierGet")]
         public List<Modifier> ModifierGet()
         {

@@ -152,7 +152,7 @@ export const DOSFilter = [
     },
     {
         id: "4",
-        text: "Range than",
+        text: "Range",
     },
 ];
 export const InsuranceCategory = [

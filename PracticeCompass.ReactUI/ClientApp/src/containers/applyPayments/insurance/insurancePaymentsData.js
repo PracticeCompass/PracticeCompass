@@ -284,6 +284,10 @@ export const DOSFilter = [
         id: "3",
         text: "Newer than",
     },
+    {
+        id: "4",
+        text: "Range",
+    },
 ];
 export const AmountFilter = [
     {

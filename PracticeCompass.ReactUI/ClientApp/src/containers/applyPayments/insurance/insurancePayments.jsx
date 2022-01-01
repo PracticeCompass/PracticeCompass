@@ -103,6 +103,7 @@ function mapDispatchToProps(dispatch) {
             PatientID,
             DateType,
             Datevalue,
+            totxnDate,
             Fullyapplied,
             amountType,
             amountFilter
@@ -113,6 +114,7 @@ function mapDispatchToProps(dispatch) {
                     PatientID,
                     DateType,
                     Datevalue,
+                    totxnDate,
                     Fullyapplied,
                     amountType,
                     amountFilter
@@ -525,6 +527,7 @@ class insurancePayments extends Component {
             this.state.insuranceID,
             this.state.txnDatetype ? this.state.txnDatetype.id : 0,
             this.state.txnDate ? this.state.txnDate.toLocaleDateString() : null,
+            this.state.totxnDate ? this.state.totxnDate.toLocaleDateString() : null,
             this.state.fullyApplied ?? false,
             this.state.amountType,
             this.state.amountFilter
@@ -1307,6 +1310,10 @@ class insurancePayments extends Component {
                                         onChange={(e) => this.setState({ txnDatetype: e.value })}
                                     ></DropDown>
                                 </div>
+                                {this.state.txnDatetype !=null && this.state.txnDatetype.id =="4" &&(
+                                <div style={{ width: "28px", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">From </label>
+                                </div>)}
                                 <div className="dateStyle" style={{ marginLeft: "5px" }}>
                                     <DatePickerComponent
                                         className="unifyHeight"
@@ -1316,7 +1323,22 @@ class insurancePayments extends Component {
                                         onChange={(e) => this.setState({ txnDate: e.value })}
                                     ></DatePickerComponent>
                                 </div>
-
+                                {this.state.txnDatetype !=null && this.state.txnDatetype.id =="4" &&(
+                                <div style={{ width: "15px", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">To </label>
+                                </div>
+                                )}
+                                {this.state.txnDatetype !=null && this.state.txnDatetype.id =="4" &&(
+                                <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                    <DatePickerComponent
+                                        className="unifyHeight"
+                                        placeholder="MM/DD/YYYY"
+                                        format="M/dd/yyyy"
+                                        value={this.state.toDos}
+                                        onChange={(e) => this.setState({ totxnDate: e.value })}
+                                    ></DatePickerComponent>
+                                </div>
+                                )}
                                 <div style={{ width: "57px", marginLeft: "10px" }}>
                                     <label className="userInfoLabel">Amount</label>
                                 </div>

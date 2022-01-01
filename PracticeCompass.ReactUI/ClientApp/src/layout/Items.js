@@ -98,14 +98,14 @@ export const itemsList = [
     icon: "k-i-menu",
     id: 59,
     ["data-expanded"]: false,
-    route: "/applypayments",
+    route: "/documentManager",
   },
   {
     text: "Documents",
     icon: "k-i-inbox",
     id: 22,
     parentId: 59,
-    route: "/applypayments/documentManager",
+    route: "/documentManager",
   },
   {
     text: "Automation Tasks",

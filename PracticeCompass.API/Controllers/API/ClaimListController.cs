@@ -92,7 +92,7 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.SortDirection = "";
 
                 List<ClaimDTO> Result = unitOfWork.ClaimListRepository.ClaimGridGet(searchCriteria.PatientID, searchCriteria.PracticeID,
-                    searchCriteria.PhysicianID, searchCriteria.DOSType, searchCriteria.DOSvalue, searchCriteria.PatientClass, searchCriteria.InsuranceType, searchCriteria.InsuranceID,
+                    searchCriteria.PhysicianID, searchCriteria.DOSType, searchCriteria.DOSvalue, searchCriteria.ToDOSvalue searchCriteria.PatientClass, searchCriteria.InsuranceType, searchCriteria.InsuranceID,
                     searchCriteria.BillNumber, searchCriteria.ClaimIcnNumber, searchCriteria.Age, searchCriteria.ClaimValue, searchCriteria.CoverageOrder, searchCriteria.InsuranceStatus,
                     searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims, searchCriteria.IncludeCashClaims, searchCriteria.IncludeVoidedClaims,
                     searchCriteria.Rejections, searchCriteria.PastDue, searchCriteria.Denials, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);

@@ -127,7 +127,7 @@ class Main extends Component {
                 component={Claims}
               />
               <Route exact={true} path="/automationTasks/era" component={ERA} />
-              <Route exact={true} path="/applypayments/documentManager" component={DocumentManager} />
+              <Route exact={true} path="/documentManager" component={DocumentManager} />
             </Switch>
           </DrawerContainer>
         </HashRouter>

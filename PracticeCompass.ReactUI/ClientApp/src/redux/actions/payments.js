@@ -23,6 +23,7 @@ export const getPatientPayments =
         PatientID,
         DateType,
         Datevalue,
+        totxnDate,
         Fullyapplied,
         amountType,
         amountFilter
@@ -34,7 +35,7 @@ export const getPatientPayments =
                 // if (PracticeID == null && PatientID == null) return;
                 const resp = await axios({
                     method: "GET",
-                    url: `${config.baseUrl}/payment/PatientPaymentGet?PracticeID=${PracticeID}&PatientID=${PatientID}&DateType=${DateType}&Datevalue=${Datevalue}&Fullyapplied=${Fullyapplied}`,
+                    url: `${config.baseUrl}/payment/PatientPaymentGet?PracticeID=${PracticeID}&PatientID=${PatientID}&DateType=${DateType}&Datevalue=${Datevalue}&totxnDate=${totxnDate}&Fullyapplied=${Fullyapplied}`,
                 });
                 dispatch(setPatientPayments(resp.data || []));
             } catch (error) {
@@ -86,6 +87,7 @@ export const getInsurancePayments =
         InsuranceID,
         DateType,
         Datevalue,
+        totxnDate,
         Fullyapplied,
         amountType,
         amountFilter
@@ -97,7 +99,7 @@ export const getInsurancePayments =
                 // if (PracticeID == null && InsuranceID == null) return;
                 const resp = await axios({
                     method: "GET",
-                    url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}&DateType=${DateType}&Datevalue=${Datevalue}&Fullyapplied=${Fullyapplied}`,
+                    url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}&DateType=${DateType}&Datevalue=${Datevalue}&totxnDate=${totxnDate}&Fullyapplied=${Fullyapplied}`,
                 });
                 dispatch(setInsurancePayments(resp.data || []));
             } catch (error) {
