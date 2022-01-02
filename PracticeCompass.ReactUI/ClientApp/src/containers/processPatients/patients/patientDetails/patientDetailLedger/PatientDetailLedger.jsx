@@ -13,7 +13,8 @@ import {
 } from "../../../../../redux/actions/GridColumns";
 import ClaimDetail from "../../../../processClaims/unSubmitted/ClaimDetail/ClaimDetail";
 import ChargeDetail from "../../../../processClaims/unSubmitted/ChargeDetail/ChargeDetail";
-
+import { exportExcelFile } from "../../../../common/export";
+import moment from 'moment';
 function mapStateToProps(state) {
   return { UiExpand: state.ui.UiExpand };
 }
@@ -80,7 +81,7 @@ class PatientDetailLedger extends Component {
   handleSelect = (e) => {
     this.setState({ selected: e.selected });
   };
-  onSortChange = () => {};
+  onSortChange = () => { };
   getGridColumns = async () => {
     this.setState({ refreshGrid: false });
     let currentColumns = await this.props.GetGridColumns("patientLedger");
@@ -211,6 +212,9 @@ class PatientDetailLedger extends Component {
     // );
     // this.props.setPatientDetailExpanded();
   };
+  setExporter = (exporter) => {
+    this.setState({ _export: exporter });
+  }
   render() {
     return (
       <Fragment>
@@ -236,6 +240,16 @@ class PatientDetailLedger extends Component {
                       right: "0",
                     }}
                   >
+                    <ButtonComponent
+                      type="add"
+                      icon="export"
+                      classButton="infraBtn-primary"
+                      onClick={() => {
+                        exportExcelFile(this.state._export, this.state.patientDetailsLedger, this.state.ledgerColumns);
+                      }}
+                    >
+                      Export to Excel
+                    </ButtonComponent>
                     <ButtonComponent
                       type="add"
                       classButton="infraBtn-primary action-button"
@@ -265,7 +279,9 @@ class PatientDetailLedger extends Component {
                     idGetter={idGetterPaientLedger}
                     sortColumns={[]}
                     onSortChange={this.onSortChange}
-                    // pageChange={this.pageChange}
+                    setExporter={this.setExporter}
+                    fileName={"Ledger " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
+                  // pageChange={this.pageChange}
                   ></FilterableGridComponent>
                 </div>
               )}
@@ -313,7 +329,7 @@ class PatientDetailLedger extends Component {
                             right: 0,
                             marginRight: "20px",
                           }}
-                          onClick={() => {}}
+                          onClick={() => { }}
                         >
                           Ok
                         </button>
@@ -359,7 +375,7 @@ class PatientDetailLedger extends Component {
                             right: 0,
                             marginRight: "20px",
                           }}
-                          onClick={() => {}}
+                          onClick={() => { }}
                         >
                           Ok
                         </button>
