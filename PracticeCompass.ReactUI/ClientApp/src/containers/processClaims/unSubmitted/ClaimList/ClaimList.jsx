@@ -1284,7 +1284,7 @@ class ClaimList extends Component {
                             saveFilter={this.saveFilter}
                         ></SaveFilterComponent>
                     )}
-                    <div className="row">
+                    <div className="row" style={{ flexWrap: "nowrap" }}>
                         <div
                             style={{
                                 borderStyle: "dotted",
