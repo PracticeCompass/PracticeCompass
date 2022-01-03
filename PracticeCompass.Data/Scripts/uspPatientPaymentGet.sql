@@ -15,6 +15,7 @@ Create or Alter   PROCEDURE [dbo].[uspPatientPaymentGet]
 	-- Add the parameters for the stored procedure here
     @PracticeID int , @PatientID int,@DateType int,
 @Datevalue varchar(12),
+@totxnDate varchar(12),
 @Fullyapplied int
 AS
 BEGIN
@@ -26,6 +27,7 @@ Declare  @SQL varchar(max), @Datefilter varchar(50) ,@Fullyappliedfilter varchar
 		when 1 then 'and (PostDate =  '''+@Datevalue+''' )'
 		when 2 then 'and (PostDate < '''+@Datevalue+''' )'
 		when 3 then 'and (PostDate > '''+@Datevalue+''' )'
+		when 4 then 'and (PostDate between  '''+@Datevalue+''' and  '''+@totxnDate+''')'
 		else ''
 		end
 

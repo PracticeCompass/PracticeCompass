@@ -13,6 +13,7 @@ CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet]
 @PhysicianID int,
 @DOSType int,
 @DOSvalue varchar(12),
+@ToDOSvalue varchar(12),
 @PatientClass varchar(12),
 @InsuranceType int,
 @InsuranceID int,
@@ -44,6 +45,7 @@ BEGIN
 		when 1 then ' and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
 		when 2 then ' and (PlanClaim.FromDate < '''+@DOSvalue+''' )'
 		when 3 then ' and (PlanClaim.FromDate > '''+@DOSvalue+''' )'
+			when 4 then 'and (PostDate between  '''+@DOSvalue+''' and  '''+@ToDOSvalue+''')'
 		else ''
 		end
 

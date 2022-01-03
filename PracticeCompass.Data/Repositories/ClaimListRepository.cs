@@ -89,6 +89,7 @@ namespace PracticeCompass.Data.Repositories
                 @PhysicianID = PhysicianID,
                 @DOSType = DOSType,
                 @DOSvalue = DOSvalue,
+                @ToDOSvalue = ToDOSvalue,
                 @PatientClass = PatientClass,
                 @InsuranceType = InsuranceType,
                 @InsuranceID = InsuranceID,
