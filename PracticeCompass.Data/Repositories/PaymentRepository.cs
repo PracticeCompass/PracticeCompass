@@ -128,6 +128,15 @@ namespace PracticeCompass.Data.Repositories
             }, commandType: CommandType.StoredProcedure);
             return data.Read<InsurancePayment>().ToList();
         }
+        public List<ChargeAdjustmentDetail> GetChargeAdjustmentDetails(int ChargeSID, int ClaimSID)
+        {
+            var data = this.db.QueryMultiple("uspChargeAdjustmentDetailsGet", new
+            {
+                @ChargeSID = ChargeSID,
+                @ClaimSID = ClaimSID
+            }, commandType: CommandType.StoredProcedure);
+            return data.Read<ChargeAdjustmentDetail>().ToList();
+        }
         public List<PaymentClass> GetPaymentClass()
         {
             var data = this.db.QueryMultiple("uspPayClassGet", new { }, commandType: CommandType.StoredProcedure);

@@ -17,7 +17,7 @@ import {
     getguarantorList,
     resetGuarantorList,
 } from "../../../redux/actions/claimList";
-import ApplyPaymentDialogComponent from "../applyPaymentDialog";
+import ApplyPlanPaymentDialogComponent from "./applyPlanPaymentDialog";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
 import GridComponent from "../../../components/Grid";
@@ -770,24 +770,21 @@ class insurancePayments extends Component {
             }, this.state.timer);
             return;
         }
-        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
-            //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
-            //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
-        ) {
+        else  {
             this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
         }
-        else {
-            this.setState({
-                error: true,
-                message: "Payment Plan or Practice is Not Matched With Selected Claim, Please Select Another Claim or Another Payment",
-            });
-            setTimeout(() => {
-                this.setState({
-                    error: false,
-                });
-            }, this.state.timer);
-            return;
-        }
+        // else {
+        //     this.setState({
+        //         error: true,
+        //         message: "Payment Plan or Practice is Not Matched With Selected Claim, Please Select Another Claim or Another Payment",
+        //     });
+        //     setTimeout(() => {
+        //         this.setState({
+        //             error: false,
+        //         });
+        //     }, this.state.timer);
+        //     return;
+        // }
     };
     togglePaymentDialog = () => {
         this.setState({ ShowApplyPayment: false });
@@ -1087,6 +1084,7 @@ class insurancePayments extends Component {
                     style={{
                         backgroundColor: "white",
                         padding: "5px",
+                        zIndex:0
                     }}
                 >
                     <NotificationComponent
@@ -1099,11 +1097,11 @@ class insurancePayments extends Component {
                         none={this.state.none}
                     ></NotificationComponent>
                     {this.state.ShowApplyPayment && (
-                        <ApplyPaymentDialogComponent
+                        <ApplyPlanPaymentDialogComponent
                             paymentRow={this.state.paymentRow}
                             togglePaymentDialog={this.togglePaymentDialog}
                             applyPaymentTransaction={this.applyPaymentTransaction}
-                        ></ApplyPaymentDialogComponent>
+                        ></ApplyPlanPaymentDialogComponent>
                     )}
                     {this.state.Show_HidePlanDialogVisible && (
                         <Show_HideDialogComponent

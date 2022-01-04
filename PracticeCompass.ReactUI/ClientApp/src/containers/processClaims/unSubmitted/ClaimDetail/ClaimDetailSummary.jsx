@@ -103,6 +103,7 @@ class ClaimDetailSummary extends Component {
                     "Practice"
                 );
             }
+            if(claimDetailsData ==null) return;
             await this.setState({
                 // patientId: claimDetails.patientID,
                 claimDetailsSummary: claimDetailsData,

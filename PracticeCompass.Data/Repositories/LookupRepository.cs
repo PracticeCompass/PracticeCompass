@@ -88,7 +88,7 @@ namespace PracticeCompass.Data.Repositories
                     @LastUser = practiceCompassHelper.CurrentUser(),
                     @pro2created = DateTime.Now,
                     @pro2modified = DateTime.Now,
-                    @Pro2SrcPDB = "medman2",
+                    @Pro2SrcPDB = "medman",
                     @prrowid = LookupCodeMAXRowID,
                     @TimeStamp = timestamp,
                     @IsAdd = lookup.IsAdd,

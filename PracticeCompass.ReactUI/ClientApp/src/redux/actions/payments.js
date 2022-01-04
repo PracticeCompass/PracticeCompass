@@ -13,7 +13,8 @@ import {
     GET_APPLY_PLAN_PAYMENTS,
     GET_APPLY_PLAN_PAYMENTS_FAILS,
     GET_ERA_PAYMENTS,
-    GET_ERA_PAYMENTS_FAILS, POST_ERA_PAYMENTS_FAILS
+    GET_ERA_PAYMENTS_FAILS, POST_ERA_PAYMENTS_FAILS,
+    GET_CHARGE_ADJUSTMENT_DETAILS_FAILED
 } from "../actionTypes/actionTypes";
 import { uiStopLoading, uiStartLoading } from "./ui";
 import config from "../../config";
@@ -125,6 +126,21 @@ export const GetPaymentClass = () => async (dispatch, getState) => {
         console.log("error ==> ", error);
         dispatch({
             type: GET_PAYMENT_CLASS_FAILED,
+            payload: error,
+        });
+    }
+};
+export const GetChargeAdjustmentDetails = (chargeSID,claimSID) => async (dispatch, getState) => {
+    try {
+        const resp = await axios({
+            method: "GET",
+            url: `${config.baseUrl}/payment/GetChargeAdjustmentDetails?ChargeSID=${chargeSID}&ClaimSID=${claimSID}`,
+        });
+        return resp.data || [];
+    } catch (error) {
+        console.log("error ==> ", error);
+        dispatch({
+            type: GET_CHARGE_ADJUSTMENT_DETAILS_FAILED,
             payload: error,
         });
     }

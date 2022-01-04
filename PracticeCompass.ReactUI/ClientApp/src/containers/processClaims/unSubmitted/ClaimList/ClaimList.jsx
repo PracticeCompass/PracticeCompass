@@ -306,7 +306,6 @@ class ClaimList extends Component {
         this.setState({ refreshFilter: true });
     };
     setDosType=(e)=>{
-        debugger;
         this.setState({ dostype: e.value })
     }
     toggleDeleteDialog = () => {

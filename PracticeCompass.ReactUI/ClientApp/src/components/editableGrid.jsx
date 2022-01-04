@@ -75,6 +75,9 @@ class EditableGrid extends React.Component {
     MyCurrencyCell = (props) => {
         return <CurrencyGridCell {...props} myProp={this.props} />;
     };
+    MyDropDownCell=(props)=>{
+        return <DropDownCell {...props} myProp={this.props} />;
+    }
     MyCellWithIcon = (props) => {
         return <CellWithIcon {...props} myProp={this.props} />;
     }
@@ -357,7 +360,7 @@ class EditableGrid extends React.Component {
                                                     : column.cell == "checkBox"
                                                         ? this.MyCheckBoxCell
                                                         : column.cell == "dropDown"
-                                                            ? DropDownCell
+                                                            ? this.MyDropDownCell
                                                             : column.type == "currency"
                                                                 ? this.MyCurrencyCell
                                                                 : column.iscellWithIcon

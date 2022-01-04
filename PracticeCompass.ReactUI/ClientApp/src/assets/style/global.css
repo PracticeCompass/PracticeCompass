@@ -396,3 +396,6 @@ textarea:disabled  {
 .k-tabstrip-items-wrapper{
   z-index: 0 !important;
 }
+/* .k-animation-container{
+  z-index: 10003 !important;
+} */

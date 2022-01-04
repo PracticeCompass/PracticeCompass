@@ -106,6 +106,21 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
         [HttpGet]
+        [Route("api/payment/GetChargeAdjustmentDetails")]
+        public List<ChargeAdjustmentDetail> GetChargeAdjustmentDetails(int ChargeSID, int ClaimSID)
+        {
+            try
+            {
+                return unitOfWork.PaymentRepository.GetChargeAdjustmentDetails(ChargeSID, ClaimSID);
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<ChargeAdjustmentDetail>();
+            }
+        }
+        [HttpGet]
         [Route("api/payment/PaymentSave")]
         public bool PaymentSave(int PaymentSID, int PracticeID, string PostDate, string Source, int PayorID, string Class, float Amount, string Method,
             string CreditCard, string AuthorizationCode, string Voucher, string CreateMethod, int CurrentUser)

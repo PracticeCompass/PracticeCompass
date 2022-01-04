@@ -289,6 +289,63 @@ export const DOSFilter = [
         text: "Range",
     },
 ];
+export const applyPlanColumns=[
+    
+    {
+        field: "gridId",
+        title: "gridId",
+        minWidth: 0,
+        hide:true,
+        orderIndex: 0,
+    },
+    {
+        field: "chargeSid",
+        title: "chargeSid",
+        minWidth: 0,
+        hide:true,
+        orderIndex: 0,
+    },
+    {
+        field: "claimSid",
+        title: "claimSid",
+        minWidth: 0,
+        hide:true,
+        orderIndex: 0,
+    },
+    {
+        field: "adjustmentAmount",
+        title: "Adjustment",
+        minWidth: 150,
+        editor: "edit",
+        orderIndex: 1,
+        cell : "currency"
+    },
+    {
+        field: "claimAdjustmentGroupCode",
+        title: "Group Code",
+        minWidth: 200,
+        orderIndex: 2,
+        editor: "edit",
+        cell: "dropDown",
+        Items:"GroupCode"
+    },
+    {
+        field: "adjustmentReasonCode",
+        title: "Reason Code",
+        minWidth: 200,
+        orderIndex: 3,
+        editor: "edit",
+        cell: "dropDown",
+        Items:"ReasonCode"
+    },
+
+    // {
+    //     field: "description",
+    //     title: "Description",
+    //     minWidth: 100,
+    //     orderIndex: 4,
+    // },
+]
 export const AmountFilter = [
     {
         id: "0",

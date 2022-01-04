@@ -50,7 +50,7 @@ export class CurrencyGridCell extends React.Component {
           node.style.setProperty("padding-right", "5px", "important");
         }
       }}>
-        {(dataItem.inEdit && column.editable!= false) ? (
+        {(dataItem.inEdit || this.props.editor == "edit") ? (
           <TextBox
             type="numeric"
             format="c2"

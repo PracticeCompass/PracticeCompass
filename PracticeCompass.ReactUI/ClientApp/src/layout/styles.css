@@ -334,3 +334,6 @@ button {
 .k-tabstrip-items-wrapper{
   z-index: 0 !important;
 }
+.k-drawer-content{
+  z-index: 0 !important;
+}
