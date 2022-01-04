@@ -18,22 +18,22 @@ namespace PracticeCompass.Messaging.Genaration
         {
             var NM1 = new Segment { Name = "NM1", FieldSeparator = FieldSeparator };
             NM1[1] = "87";
-            NM1[2] = _claimMessageModel.ProviderType == "I" ? "1" : "2";
+            NM1[2] =  "2";
             return NM1;
         }
         public Segment GenerateLoop2010AB_N3_segment()
         {
             var N3 = new Segment { Name = "N3", FieldSeparator = FieldSeparator };
-            N3[1] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderLine1: _claimMessageModel.FinancialLine1;
-            N3[2] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderLine2 : _claimMessageModel.FinancialLine2;
+            N3[1] =  _claimMessageModel.FinancialLine1;
+            N3[2] =  _claimMessageModel.FinancialLine2;
             return N3;
         }
         public Segment GenerateLoop2010AB_N4_segment()
         {
             var N4 = new Segment { Name = "N4", FieldSeparator = FieldSeparator };
-            N4[1] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderCity : _claimMessageModel.FinancialCity;
-            N4[2] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderState : _claimMessageModel.FinancialState;
-            N4[3] = _claimMessageModel.ProviderType == "I" ? _claimMessageModel.ProviderZip : _claimMessageModel.FinancialZip.Replace("-","");
+            N4[1] =  _claimMessageModel.FinancialCity;
+            N4[2] =  _claimMessageModel.FinancialState;
+            N4[3] =  _claimMessageModel.FinancialZip.Replace("-","");
             return N4;
         }
 

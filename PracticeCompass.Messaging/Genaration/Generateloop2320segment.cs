@@ -32,11 +32,18 @@ namespace PracticeCompass.Messaging.Genaration
             PRV[4] = _unknownplaceholder;
             return PRV;
         } 
-        public Segment GenerateLoop2320_AMT_segment()
+        public Segment GenerateLoop2320_payerAMT_segment()
         {
             var AMT = new Segment { Name = "AMT", FieldSeparator = FieldSeparator };
-            AMT[1] = _unknownplaceholder;
-            AMT[2] = "EAF";
+            AMT[1] = "D";
+            AMT[2] = _claimMessageModel.InsuranceReceipts.ToString();
+            return AMT;
+        }
+        public Segment GenerateLoop2320_patientAMT_segment()
+        {
+            var AMT = new Segment { Name = "AMT", FieldSeparator = FieldSeparator };
+            AMT[1] = "EAF";
+            AMT[2] = (_claimMessageModel.ApprovedAmount-_claimMessageModel.InsuranceReceipts).ToString();
             return AMT;
         }
         public Segment GenerateLoop2320_OI_segment()

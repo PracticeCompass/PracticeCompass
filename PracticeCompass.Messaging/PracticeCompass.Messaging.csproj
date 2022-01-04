@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PracticeCompass.Common\PracticeCompass.Common.csproj" />
     <ProjectReference Include="..\PracticeCompass.Core\PracticeCompass.Core.csproj" />
+    <ProjectReference Include="..\PracticeCompass.Data\PracticeCompass.Data.csproj" />
     <ProjectReference Include="..\PracticeCompass.Logger\PracticeCompass.Logger.csproj" />
   </ItemGroup>
 

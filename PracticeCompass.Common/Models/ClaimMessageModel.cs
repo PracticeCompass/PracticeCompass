@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 
 namespace PracticeCompass.Common.Models
 {
@@ -16,15 +17,15 @@ namespace PracticeCompass.Common.Models
         public string City { get; set; }
         public string StateCode { get; set; }
         public string Zip { get; set; }
-        public string ProviderType { get; set; }
-        public string ProviderName { get; set; }
-        public string ProviderFristName { get; set; }
-        public string ProviderLine1 { get; set; }
-        public string ProviderLine2 { get; set; }
-        public string ProviderCity { get; set; }
-        public string ProviderState { get; set; }
-        public string ProviderZip { get; set; }
-        public string ProviderID { get; set; }
+        //public string ProviderType { get; set; }
+        public string ServiceCenterName { get; set; }
+        
+        public string ServiceCenterLine1 { get; set; }
+        public string ServiceCenterLine2 { get; set; }
+        public string ServiceCenterCity { get; set; }
+        public string ServiceCenterState { get; set; }
+        public string ServiceCenterZip { get; set; }
+        public string ServiceCenterNPI { get; set; }
         public int CoverageOrder { get; set; }
         public string RelationToSub { get; set; }
 
@@ -68,17 +69,9 @@ namespace PracticeCompass.Common.Models
         public string renderingSuffix { get; set; }
         public string renderingTaxonomy { get; set; }
         public string renderingNPI { get; set; }
+        public int? LowestRespCoverageOrder { get; set; }
 
-
-        /// 
-
-        //Provider 
-        public string ProviderLastName { get; set; }
-        public string ProviderMiddleName { get; set; }
-        public string ProviderSuffix { get; set; }
-        public string NPI { get; set; }
-        public string TaxonomyCode { get; set; }
-        public string ProviderTaxID { get; set; }
+        //public string TaxonomyCode { get; set; }
 
         //Referring
         public string RefLastName { get; set; }
@@ -108,7 +101,7 @@ namespace PracticeCompass.Common.Models
         public string ReceiverID { get; set; }
         public string SenderID { get; set; }
 
-        public int? ChargeSID { get; set; }
+        public int ChargeSID { get; set; }
         public string ClaimNumber { get; set; }
         public string POSCode { get; set; }
         public string ClaimMemberID { get; set; }
@@ -116,6 +109,26 @@ namespace PracticeCompass.Common.Models
         public string ProfileOverrideAllowed { get; set; }
         public string PAYORIDPlanID { get; set; }
         public string INSTAMEDPlanID { get; set; }
+
+        //billing provider
+        public string BillingProviderType { get; set; }
+        public string BillingProviderName { get; set; }
+        public string BillingFirstName { get; set; }
+        public string BillingLine1 { get; set; }
+        public string BillingLine2 { get; set; }
+        public string BillingCity { get; set; }
+        public string BillingState { get; set; }
+        public string BillingZip { get; set; }
+        public string BillingNPI { get; set; }
+        public string BillingTaxID { get; set; }
+
+        ///
+        public decimal? InsuranceReceipts { get; set; }
+        public decimal? ApprovedAmount { get; set; }
+        public DateTime? PostDate { get; set; }
+        public int PlanID { get; set; }
+        public string PolicyNumber { get; set; }
+        public int ClaimSID { get; set; }
 
     }
 

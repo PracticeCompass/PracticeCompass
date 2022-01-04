@@ -136,7 +136,7 @@ namespace PracticeCompass.API.Controllers.API
                     var ClaimMessageModel = unitOfWork.ClaimSubmitRepository.ClaimMessageModelGet(ClaimSID);
                     if (ClaimMessageModel != null)
                     {
-                        X12_837Gen.Generate837PMessage(ClaimMessageModel, "~", "*", "XXXX");
+                        X12_837Gen.Generate837PMessage(ClaimMessageModel, "~", "*", "XXXX", this._configuration);
                         unitOfWork.AuditLogRepository.AuditLogInsert("", "", 0, 0, "", "Test user", AuditType.New, "Billing", AuditModule.ClaimList, "", string.Format("Claim {0} Submitted", ClaimSID));
                     }
 

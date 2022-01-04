@@ -17,6 +17,7 @@ namespace PracticeCompass.Messaging.Genaration
         }
         public Segment GenerateLoop2310A_NM1_segment()
         {
+           
             var Nm1 = new Segment { Name = "NM1", FieldSeparator = FieldSeparator };
             Nm1[1] = "DN";
             Nm1[2] = "1"; 

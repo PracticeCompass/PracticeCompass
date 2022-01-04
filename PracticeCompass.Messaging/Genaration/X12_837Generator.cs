@@ -6,12 +6,14 @@ using PracticeCompass.Common.Models;
 using System.Linq;
 using System.Collections.Generic;
 using PracticeCompass.Logger;
+using Microsoft.Extensions.Configuration;
+using PracticeCompass.Data.Repositories;
 
 namespace PracticeCompass.Messaging.Genaration
 {
     public class X12_837Generator
     {
-        public void Generate837PMessage(List<ClaimMessageModel> ClaimMessageModel, string segmentSeparator, string FieldSeparator, string unknownplaceholder)
+        public void Generate837PMessage(List<ClaimMessageModel> ClaimMessageModel, string segmentSeparator, string FieldSeparator, string unknownplaceholder, IConfiguration configuration)
         {
 
             Message message = new Message { };
@@ -19,7 +21,7 @@ namespace PracticeCompass.Messaging.Genaration
             #region INTERCHANGE envelope
             Envelope interchangeEnvelope = new Envelope { EnvelopeType = EnvelopeType.INTERCHANGE, SegmentSeparator = segmentSeparator };
             message.Envelopes.Add(interchangeEnvelope);
-            var GenerateISA = new GenerateISAsegment(ClaimMessageModel.FirstOrDefault(x => x.CoverageOrder == 1), FieldSeparator, unknownplaceholder);
+            var GenerateISA = new GenerateISAsegment(ClaimMessageModel.FirstOrDefault(x => x.CoverageOrder == x.LowestRespCoverageOrder), FieldSeparator, unknownplaceholder);
             var isa = GenerateISA.GenerateISAHeader();
             var iea = GenerateISA.GenerateISATrailer();
             interchangeEnvelope.HeaderSegment = isa;
@@ -57,7 +59,7 @@ namespace PracticeCompass.Messaging.Genaration
             var loop1000B_Nm1 = loop1000B.GenerateLoop1000B_NM1_segment();
             transactionEnvelope.Segments.Add(loop1000B_Nm1);
             #endregion
-            var fillingcodes = ClaimMessageModel.Where(x => x.CoverageOrder == 1).Select(x => x.FilingCode).Distinct().ToList();
+            var fillingcodes = ClaimMessageModel.Where(x => x.CoverageOrder == x.LowestRespCoverageOrder).Select(x => x.FilingCode).Distinct().ToList();
             var loopindex = 0;
             for (var f = 0; f < fillingcodes.Count; f++)
             {
@@ -65,7 +67,7 @@ namespace PracticeCompass.Messaging.Genaration
                 Log.LogError("amr ahmed : " + fillingcodes.Count, "", "");
                 loopindex++;
                 var parentlooindex = loopindex;
-                var parentmodel = ClaimMessageModel.FirstOrDefault(x => x.FilingCode == fillingcodes[f]);
+                var parentmodel = ClaimMessageModel.FirstOrDefault(x => x.FilingCode == fillingcodes[f]&&x.CoverageOrder==x.LowestRespCoverageOrder);
                 //create 2000A segment
                 #region Loop: 2000A
                 var loop2000A = new Generateloop2000Asegment(parentmodel, FieldSeparator, unknownplaceholder, parentlooindex);
@@ -103,7 +105,8 @@ namespace PracticeCompass.Messaging.Genaration
                 {
                     Log.LogError("claimnumbers : " + claimnumbers.Count, "", "");
                     loopindex++;
-                    var rowsbyclaimnumber = ClaimMessageModel.Where(x => x.ClaimNumber == claimnumbers[c]).Select(x => new { claimnum = x.ClaimNumber, covorder = x.CoverageOrder }).Distinct().OrderBy(x => x.covorder).ToList();
+                    var rowsbyclaimnumber = ClaimMessageModel.Where(x => x.ClaimNumber == claimnumbers[c])
+                        .Select(x => new { claimnum = x.ClaimNumber, covorder = x.CoverageOrder,lowestOrder=x.LowestRespCoverageOrder }).Distinct().OrderBy(x => x.covorder).ToList();
                     //create 2000B HL segment 
                     var parenthl = ClaimMessageModel.FirstOrDefault(x => x.ClaimNumber == claimnumbers[c]);
                     var loop2000BHL = new Generateloop2000Bsegment(parenthl, FieldSeparator, unknownplaceholder, parentlooindex, loopindex);
@@ -116,7 +119,7 @@ namespace PracticeCompass.Messaging.Genaration
                       
                         Log.LogError("rowsbyclaimnumber : " + rowsbyclaimnumber.Count, "", "");
                         //create 2000B SBR 
-                        if (rowsbyclaimnumber[r].covorder == 1)
+                        if (rowsbyclaimnumber[r].covorder == rowsbyclaimnumber[r].lowestOrder)
                         {
                             var loop2000Bsbr = new Generateloop2000Bsegment(childmodel, FieldSeparator, unknownplaceholder, 0, 0);
                             var Loop2000B_SBR = loop2000Bsbr.GenerateLoop2000B_SBR_segment();
@@ -126,8 +129,12 @@ namespace PracticeCompass.Messaging.Genaration
                         {
                             var loop2320 = new Generateloop2320segment(childmodel, FieldSeparator, unknownplaceholder);
                             var loop2320_SBR = loop2320.GenerateLoop2320_SBR_segment();
+                            var loop2320_payerAMT = loop2320.GenerateLoop2320_payerAMT_segment();
+                            var loop2320_patientAMT = loop2320.GenerateLoop2320_patientAMT_segment();
                             var loop2320_OI = loop2320.GenerateLoop2320_OI_segment();
                             transactionEnvelope.Segments.Add(loop2320_SBR);
+                            transactionEnvelope.Segments.Add(loop2320_payerAMT);
+                            transactionEnvelope.Segments.Add(loop2320_patientAMT);
                             transactionEnvelope.Segments.Add(loop2320_OI);
                         }
                         // create 2010BA
@@ -152,7 +159,7 @@ namespace PracticeCompass.Messaging.Genaration
                         transactionEnvelope.Segments.Add(Loop2010BB_N3);
                         transactionEnvelope.Segments.Add(Loop2010BB_N4);
                         #endregion
-                        if (rowsbyclaimnumber[r].covorder == 1)
+                        if (rowsbyclaimnumber[r].covorder == rowsbyclaimnumber[r].lowestOrder)
                         {
                            var totalamount = ClaimMessageModel.Where(x => x.ClaimNumber == rowsbyclaimnumber[r].claimnum && x.CoverageOrder == rowsbyclaimnumber[r].covorder).Sum(x=>x.ChargeAmount);
                             childmodel.ChargeTotalAmount = totalamount; 
@@ -176,15 +183,35 @@ namespace PracticeCompass.Messaging.Genaration
                             #endregion
                             #region Loop: 2310A
                             var loop2310A = new Generateloop2310Asegment(childmodel, FieldSeparator, unknownplaceholder);
-                            var loop2310A_NM1 = loop2310A.GenerateLoop2310A_NM1_segment();
-                            transactionEnvelope.Segments.Add(loop2310A_NM1);
+                            if (!string.IsNullOrEmpty(childmodel.RefLastName))
+                            {
+                                var loop2310A_NM1 = loop2310A.GenerateLoop2310A_NM1_segment();
+                                transactionEnvelope.Segments.Add(loop2310A_NM1);
+                            }
+
                             #endregion
                             #region Loop: 2310B
                             var loop2310B = new Generateloop2310Bsegment(childmodel, FieldSeparator, unknownplaceholder);
-                            var loop2310B_NM1 = loop2310B.GenerateLoop2310B_NM1_segment();
+                            if (childmodel.BillingNPI != childmodel.renderingNPI)
+                            {
+                                var loop2310B_NM1 = loop2310B.GenerateLoop2310B_NM1_segment();
+                                transactionEnvelope.Segments.Add(loop2310B_NM1);
+                            }
                             var loop2310B_PRV = loop2310B.GenerateLoop2310B_PRV_segment();
-                            transactionEnvelope.Segments.Add(loop2310B_NM1);
                             transactionEnvelope.Segments.Add(loop2310B_PRV);
+                            #endregion
+                            #region Loop: 2310C
+                            if (string.IsNullOrEmpty(childmodel.RefLastName))
+                            {
+                                
+                                var loop2310C = new Generateloop2310csegment(childmodel, FieldSeparator);
+                                var loop2310C_nm1 = loop2310C.GenerateLoop2310C_NM1_segment();
+                                var loop2310C_n3 = loop2310C.GenerateLoop2310C_N3_segment();
+                                var loop2310C_n4 = loop2310C.GenerateLoop2310C_N4_segment();
+                                transactionEnvelope.Segments.Add(loop2310C_nm1);
+                                transactionEnvelope.Segments.Add(loop2310C_n3);
+                                transactionEnvelope.Segments.Add(loop2310C_n4);
+                            }
                             #endregion
                         }
 
@@ -208,8 +235,30 @@ namespace PracticeCompass.Messaging.Genaration
                             transactionEnvelope.Segments.Add(loop2400_DTP);
                             transactionEnvelope.Segments.Add(loop2400_REF);
                             #endregion
+                            var casmodel = ClaimMessageModel.FirstOrDefault(x => x.CoverageOrder == 1 && x.ClaimNumber == claimnumbers[c] && x.ChargeSID == charges[ch]);
+                            if (casmodel != null&& casmodel.LowestRespCoverageOrder!=1)// loop 2430 should be added in case not billing primary insurance
+                            {
+                                var claimrepository = new ClaimListRepository(configuration.GetConnectionString("PracticeCompass"));
+                                var chargeadjustments = claimrepository.GetLineAdjustments(casmodel.ChargeSID,casmodel.PlanID,casmodel.ClaimSID, casmodel.PolicyNumber);
+                                #region Loop: 2430 
+                                var loop2430 = new Generateloop2430segment(casmodel, FieldSeparator);
+                                var loop2430_svd = loop2430.GenerateLoop2430_SVD_segment();
+                                transactionEnvelope.Segments.Add(loop2430_svd);
+                                for (var chadj=0; chadj< chargeadjustments.Count; chadj++)
+                                {
+                                    if (chadj > 18) break;//maximum adjustments in standard = 19
+                                    var loop2430_cas = loop2430.GenerateLoop2430_CAS_segment(chargeadjustments[chadj]);
+                                    transactionEnvelope.Segments.Add(loop2430_cas);
+                                }
+                                var loop2430_Dtp = loop2430.GenerateLoop2430_DTP_segment();
+                                transactionEnvelope.Segments.Add(loop2430_Dtp);
+                                #endregion
+                            }
+
                         }
                     }
+                    
+
                 }
 
                 // }
@@ -218,12 +267,11 @@ namespace PracticeCompass.Messaging.Genaration
             #region Loop: 2320
 
             //var loop2320_CAS = loop2320.GenerateLoop2320_CAS_segment();
-            //var loop2320_AMT = loop2320.GenerateLoop2320_AMT_segment();
+            
 
             //var loop2320_MOA = loop2320.GenerateLoop2320_MOA_segment();
 
             //transactionEnvelope.Segments.Add(loop2320_CAS);
-            //transactionEnvelope.Segments.Add(loop2320_AMT);
 
             //transactionEnvelope.Segments.Add(loop2320_MOA);
             #endregion

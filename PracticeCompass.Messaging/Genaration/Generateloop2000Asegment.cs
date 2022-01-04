@@ -25,14 +25,14 @@ namespace PracticeCompass.Messaging.Genaration
             HL[4] = "1"; 
             return HL;
         }  
-        public Segment GenerateLoop2000A_PRV_segment()
-        {
-            var PRV = new Segment { Name = "PRV", FieldSeparator = FieldSeparator };
-            PRV[1] = "BI"; 
-            PRV[2] = "PXC"; 
-            PRV[3] = _claimMessageModel.TaxonomyCode;
-            return PRV;
-        }
+        //public Segment GenerateLoop2000A_PRV_segment()
+        //{
+        //    var PRV = new Segment { Name = "PRV", FieldSeparator = FieldSeparator };
+        //    PRV[1] = "BI"; 
+        //    PRV[2] = "PXC"; 
+        //    PRV[3] = _claimMessageModel.TaxonomyCode;
+        //    return PRV;
+        //}
         
     }
 }

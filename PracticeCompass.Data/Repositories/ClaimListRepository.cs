@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Repositories;
+using PracticeCompass.Common.Models;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -63,7 +64,14 @@ namespace PracticeCompass.Data.Repositories
 
             return data.Read<Entity>().ToList();
         }
+        public List<LineAdjustments> GetLineAdjustments(int ChargeSID,int PlanID,int ClaimSID,string PolicyNumber)
+        {
 
+            var adjSQl = "select ClaimAdjustmentGroupCode as GroupCode,AdjustmentReasonCode as ReasonCode,AdjustmentAmount as Amount from PlanClaimChargeRemitAdj where ChargeSID=@ChargeSID and PlanID=@PlanID and ClaimSID=@ClaimSID and PolicyNumber=@PolicyNumber";
+            var lineadjs = this.db.QueryMultiple(adjSQl, new { ChargeSID = ChargeSID, PlanID= PlanID, ClaimSID= ClaimSID, PolicyNumber= PolicyNumber });
+            return lineadjs.Read<LineAdjustments>().ToList();
+
+        }
         public void Remove(LookupCodes entity)
         {
             throw new NotImplementedException();
