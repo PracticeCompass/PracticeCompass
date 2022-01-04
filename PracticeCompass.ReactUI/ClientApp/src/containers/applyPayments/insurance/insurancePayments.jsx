@@ -770,21 +770,24 @@ class insurancePayments extends Component {
             }, this.state.timer);
             return;
         }
-        else  {
+        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
+            //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
+            //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
+        )  {
             this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
         }
-        // else {
-        //     this.setState({
-        //         error: true,
-        //         message: "Payment Plan or Practice is Not Matched With Selected Claim, Please Select Another Claim or Another Payment",
-        //     });
-        //     setTimeout(() => {
-        //         this.setState({
-        //             error: false,
-        //         });
-        //     }, this.state.timer);
-        //     return;
-        // }
+        else {
+            this.setState({
+                error: true,
+                message: "Payment Plan or Practice is Not Matched With Selected Claim, Please Select Another Claim or Another Payment",
+            });
+            setTimeout(() => {
+                this.setState({
+                    error: false,
+                });
+            }, this.state.timer);
+            return;
+        }
     };
     togglePaymentDialog = () => {
         this.setState({ ShowApplyPayment: false });
