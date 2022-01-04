@@ -85,3 +85,4 @@ uspUserLookupTypeSave.sql
 uspProviderGet.sql
 uspReferralStaffGet.sql
 uspSupervisingStaffGet.sql
+uspChargeAdjustmentDetailsGet.sql
