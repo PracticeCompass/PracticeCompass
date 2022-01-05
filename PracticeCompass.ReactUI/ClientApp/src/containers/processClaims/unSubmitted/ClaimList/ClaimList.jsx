@@ -1246,7 +1246,7 @@ class ClaimList extends Component {
                     {this.state.patientTypeVisible && (
                         <FindDialogComponent
                             title="Patient Type Search"
-                            placeholder="Enter Patient Type Name or Patient Code"
+                            placeholder="Enter Patient Type Name or Patient Type Code"
                             searcTextBoxValue={this.state.patientTypeSearchText}
                             onTextSearchChange={(e) => {
                                 this.setState({

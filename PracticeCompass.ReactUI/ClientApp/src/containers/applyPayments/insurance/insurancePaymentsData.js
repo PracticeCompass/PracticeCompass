@@ -31,15 +31,30 @@ export const InsuranceCategory = [
 ];
 export const PracticeColumns = [
     {
+        field: "practiceCode",
+        title: "Practice Code",
+        orderIndex:0,
+        minWidth: "100px",
+    },
+    {
         field: "sortName",
         title: "Practice Name",
+        orderIndex:1,
+        minWidth: "700px",
     },
 ];
 export const insurancePatientColumns = [
     {
+        field: "carrierCode",
+        title: "Plan Code",
+        orderIndex:0,
+        minWidth: "100px",
+    },
+    {
         field: "sortName",
         title: "Plan Company",
-        //minWidth: "100px",
+        orderIndex:1,
+        minWidth: "700px",
     },
 ];
 

@@ -16,28 +16,32 @@ class FindDialogComponent extends Component {
   state = {
     filterName: this.props.filterName,
   };
-  onSortChange=()=>{
-    
+  onSortChange = () => {
+
   }
   pageChange = async (skip, take) => {
-    if(skip==0)return;
-    if (this.props.data.length < (skip + take)+2) {
-      this.setState({isVisibleNextData:true,skip:this.props.data.length});
+    if (skip == 0) return;
+    if (this.props.data.length < (skip + take) + 2) {
+      this.setState({ isVisibleNextData: true, skip: this.props.data.length });
       this.getNextData();
-    }else{
+    } else {
       this.setState({ isVisibleNextData: false });
     }
   };
-  getNextData=async ()=>{
-    await this.props.clickOnSearch(false,this.props.data.length);
-    this.setState({isVisibleNextData:false})
-   }
-   componentDidMount(){
-   }
-   componentDidUpdate(){
-   }
-   onSelectionChange=()=>{};
-  onKeyDown = () => {};
+  getNextData = async () => {
+    await this.props.clickOnSearch(false, this.props.data.length);
+    this.setState({ isVisibleNextData: false })
+  }
+  componentDidMount() {
+  }
+  componentDidUpdate() {
+  }
+  onSelectionChange = () => { };
+  onKeyDown = () => { };
+  onTextSearchChange = async(e) => {
+    await this.props.onTextSearchChange(e);
+    this.props.clickOnSearch();
+  }
   render() {
     return (
       <Fragment>
@@ -53,7 +57,7 @@ class FindDialogComponent extends Component {
                 id="insuranceDialog"
                 placeholder={this.props.placeholder} //"Enter Insurance Company Name"
                 value={this.props.searcTextBoxValue}
-                onChange={this.props.onTextSearchChange}
+                onChange={this.onTextSearchChange}
                 onEnterPress={this.props.clickOnSearch}
               ></TextBox>
             </div>
@@ -99,7 +103,7 @@ class FindDialogComponent extends Component {
                   columns={this.props.columns}
                   data={this.props.data}
                   //sort={this.props.sort}
-                  totalCount={this.props.data !=null && this.props.data.length>0?this.props.data[0].totalCount:this.props.data.length}
+                  totalCount={this.props.data != null && this.props.data.length > 0 ? this.props.data[0].totalCount : this.props.data.length}
                   allowUnsort={true}
                   multiple={false}
                   selectionMode="single"
@@ -114,16 +118,16 @@ class FindDialogComponent extends Component {
             </div>
           </div>
           <DialogActionsBar>
-              <div style={{ textAlign:"right",marginRight: "15px"}}>
-                <ButtonComponent
-                  type="button"
-                  className="k-button"
-                  onClick={this.props.cancelDialog}
-                  style={{ fontSize: "12px" }}
-                >
-                  Cancel
-                </ButtonComponent>
-              </div>
+            <div style={{ textAlign: "right", marginRight: "15px" }}>
+              <ButtonComponent
+                type="button"
+                className="k-button"
+                onClick={this.props.cancelDialog}
+                style={{ fontSize: "12px" }}
+              >
+                Cancel
+              </ButtonComponent>
+            </div>
           </DialogActionsBar>
         </Dialog>
       </Fragment>

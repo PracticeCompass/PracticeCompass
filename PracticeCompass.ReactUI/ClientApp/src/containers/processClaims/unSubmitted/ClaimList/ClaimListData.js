@@ -1,16 +1,36 @@
 export const PatientTypesColumns = [
+    
+    {
+        field: "lookupCode",
+        title: "Patient Type Code",
+        minWidth: "150px",
+        orderIndex:0,
+    },
     {
         field: "description",
         title: "Patient Type",
-        minWidth: "817px",
+        minWidth: "650px",
+        orderIndex:1,
     },
 ];
 export const PracticeColumns = [
     {
+        field: "practiceCode",
+        title: "Practice Code",
+        orderIndex:0,
+        minWidth: "100px",
+    },
+    {
         field: "sortName",
         title: "Practice Name",
-        minWidth: "817px",
+        orderIndex:1,
+        minWidth: "700px",
     },
+    // {
+    //     field: "sortName",
+    //     title: "Practice Name",
+    //     minWidth: "817px",
+    // },
 ];
 export const PhysicianColumns = [
     {
@@ -21,10 +41,16 @@ export const PhysicianColumns = [
 ];
 export const insuranceColumns = [
     {
+        field: "carrierCode",
+        title: "Plan Code",
+        orderIndex:0,
+        minWidth: "100px",
+    },
+    {
         field: "sortName",
         title: "Plan Company",
-        minWidth: "817px",
-        //minWidth: "100px",
+        orderIndex:1,
+        minWidth: "700px",
     },
 ];
 export const guarantorColumns = [
