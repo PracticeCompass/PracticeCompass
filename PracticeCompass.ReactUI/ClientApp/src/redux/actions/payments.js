@@ -130,11 +130,11 @@ export const GetPaymentClass = () => async (dispatch, getState) => {
         });
     }
 };
-export const GetChargeAdjustmentDetails = (chargeSID,claimSID) => async (dispatch, getState) => {
+export const GetChargeAdjustmentDetails = (chargeSID,claimSID,planId) => async (dispatch, getState) => {
     try {
         const resp = await axios({
             method: "GET",
-            url: `${config.baseUrl}/payment/GetChargeAdjustmentDetails?ChargeSID=${chargeSID}&ClaimSID=${claimSID}`,
+            url: `${config.baseUrl}/payment/GetChargeAdjustmentDetails?ChargeSID=${chargeSID}&ClaimSID=${claimSID}&PlanId=${planId}`,
         });
         return resp.data || [];
     } catch (error) {

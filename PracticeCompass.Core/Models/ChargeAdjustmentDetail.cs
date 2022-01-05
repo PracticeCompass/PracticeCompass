@@ -11,6 +11,7 @@ namespace PracticeCompass.Core.Models
         }
         public string gridId { get; set; }
         public int chargeSid { get; set; }
+        public int planId { get; set; }
         public int claimSid { get; set; }
         public float AdjustmentAmount { get; set; }
         public string AdjustmentReasonCode { get; set; }

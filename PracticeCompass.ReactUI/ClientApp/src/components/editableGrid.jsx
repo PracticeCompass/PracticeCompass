@@ -25,6 +25,7 @@ import $ from "jquery";
 import DropDownCell from "./DropDownCell";
 import CheckBoxCell from "./CheckBoxCell";
 import CurrencyGridCell from "./CurrencyCell";
+import RemoveButton from "./RemoveButton";
 import MergeCell from "./mergeCell";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 const SELECTED_FIELD = "selected";
@@ -75,7 +76,7 @@ class EditableGrid extends React.Component {
     MyCurrencyCell = (props) => {
         return <CurrencyGridCell {...props} myProp={this.props} />;
     };
-    MyDropDownCell=(props)=>{
+    MyDropDownCell = (props) => {
         return <DropDownCell {...props} myProp={this.props} />;
     }
     MyCellWithIcon = (props) => {
@@ -83,6 +84,9 @@ class EditableGrid extends React.Component {
     }
     MyCheckBoxCell = (props) => {
         return <CheckBoxCell {...props} myProp={this.props} />;
+    }
+    MyRemoveButton = (props) => {
+        return <RemoveButton {...props} myProp={this.props} />
     }
     minGridWidth = 0;
     state = {
@@ -367,7 +371,9 @@ class EditableGrid extends React.Component {
                                                                     ? this.MyCellWithIcon
                                                                     : column.isCustomCell
                                                                         ? this.MyCustomCell
-                                                                        : column.showToolTip && ColumnNameCell
+                                                                        : column.cell == "removeButton"
+                                                                            ? this.MyRemoveButton
+                                                                            : column.showToolTip && ColumnNameCell
                                         }
                                         editable={false}
                                         editor={column.editor}

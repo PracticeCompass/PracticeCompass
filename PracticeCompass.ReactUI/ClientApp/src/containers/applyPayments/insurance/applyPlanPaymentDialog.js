@@ -5,6 +5,7 @@ import { Button } from "@progress/kendo-react-buttons";
 import TextBox from "../../../components/TextBox";
 import CheckboxComponent from "../../../components/Checkbox";
 import ButtonComponent from "../../../components/Button";
+import NotificationComponent from "../../common/notification";
 import DropDown from "../../../components/DropDown";
 import EditableGrid from "../../../components/editableGrid";
 import { getter } from "@progress/kendo-react-common";
@@ -25,14 +26,15 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    GetChargeAdjustmentDetails: (chargeSID, claimSID) => dispatch(GetChargeAdjustmentDetails(chargeSID, claimSID))
+    GetChargeAdjustmentDetails: (chargeSID, claimSID,planId) => dispatch(GetChargeAdjustmentDetails(chargeSID, claimSID,planId))
   };
 }
 
 class ApplyPlanPaymentDialogComponent extends Component {
   state = {
     refresh: true,
-    ChargeAdjustmentDetails: []
+    ChargeAdjustmentDetails: [],
+    timer: 5000,
   };
   setShowValue = (e, index) => {
     this.setState({ refresh: false });
@@ -51,8 +53,23 @@ class ApplyPlanPaymentDialogComponent extends Component {
       deductibleApplied: item?.deductibleApplied,
       copayAmount: item?.copayAmount
     })
-    let result = await this.props.GetChargeAdjustmentDetails(item?.chargeSID, item?.claimSID);
-    this.setState({ ChargeAdjustmentDetails: result });
+    let data = [];
+    if (item?.isEdit) {
+      data = item?.ChargeAdjustmentDetails;
+      this.setState({ ChargeAdjustmentDetails: item?.ChargeAdjustmentDetails });
+    } else {
+
+      //data = await this.props.GetChargeAdjustmentDetails(1447762, 1100381,4271);
+      data = await this.props.GetChargeAdjustmentDetails(item?.chargeSID, item?.claimSID,this.props.planId);
+      this.setState({ ChargeAdjustmentDetails: data });
+    }
+    let adjustments = data.filter(row => !row.isDelete).map(a => a.adjustmentAmount).reduce(function (a, b) {
+      return a + b;
+    },0);
+    this.setState(
+      {
+        adjustments
+      })
   }
   onBlur = () => {
     this.setState({
@@ -61,10 +78,27 @@ class ApplyPlanPaymentDialogComponent extends Component {
   }
   onRowRender = () => { }
   onSortChange = () => { }
+  deleteRow = (row) => {
+    let data = this.state.ChargeAdjustmentDetails.map((item) =>
+      item["gridId"] === row.gridId
+        ? {
+          ...item,
+          isDelete: true,
+        }
+        : item
+    );
+    let adjustments =(data.filter(row => !row.isDelete)||[]).map(a => a.adjustmentAmount).reduce(function (a, b) {
+      return a + b;
+    },0);
+    this.setState(
+      {
+        adjustments
+      })
+    this.setState({ ChargeAdjustmentDetails: data });
+  }
   onSelectionChange = () => { }
   onDoubleSelectionChange = () => { }
   applyItemChanged = (event) => {
-    debugger;
     const field = event.field || "";
     const inEditID = event.dataItem["gridId"];
     let data = this.state.ChargeAdjustmentDetails.map((item) =>
@@ -77,9 +111,9 @@ class ApplyPlanPaymentDialogComponent extends Component {
         : item
     );
     this.setState({ ChargeAdjustmentDetails: data });
-    let adjustments = data.map(a => a.adjustmentAmount).reduce(function (a, b) {
+    let adjustments = data.filter(row => !row.isDelete).map(a => a.adjustmentAmount).reduce(function (a, b) {
       return a + b;
-    });
+    },0);
     this.setState(
       {
         chargeBalance: this.state.amount - this.state.insurancePaid - adjustments,
@@ -87,18 +121,52 @@ class ApplyPlanPaymentDialogComponent extends Component {
       })
   }
   addAdjustment = () => {
-    if(this.state.ChargeAdjustmentDetails.filter(x=>x.adjustmentAmount == null) != null) return;
-    let item={
+    if (this.state.ChargeAdjustmentDetails.filter(x => x.adjustmentAmount == null || x.adjustmentReasonCode == null || x.claimAdjustmentGroupCode == null).length > 0) {
+      this.setState({
+        error: true,
+        message: "Plase fill last row.",
+      });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    let item = {
       adjustmentAmount: null,
       adjustmentReasonCode: null,
       chargeSid: null,
       claimAdjustmentGroupCode: null,
       claimSid: null,
       gridId: uuidv4(),
-      isAdd:true
+      isAdd: true
     };
     this.setState({
       ChargeAdjustmentDetails: this.state.ChargeAdjustmentDetails.concat(item)
+    })
+  }
+  applyPaymentTransaction(){
+    if (this.state.ChargeAdjustmentDetails.filter(x => x.adjustmentAmount == null || x.adjustmentReasonCode == null || x.claimAdjustmentGroupCode == null).length > 0) {
+      this.setState({
+        error: true,
+        message: "Plase fill last row.",
+      });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+      return;
+    }
+    this.props.applyPaymentTransaction({
+      insurancePaid: this.state.insurancePaid,
+      adjustments: this.state.adjustments,
+      amount: this.state.amount,
+      chargeBalance: this.state.chargeBalance,
+      moveToNextPlan: this.state.moveToNextPlan,
+      chargeSID: this.state.chargeSID,
+      ChargeAdjustmentDetails: this.state.ChargeAdjustmentDetails
     })
   }
   render() {
@@ -109,6 +177,15 @@ class ApplyPlanPaymentDialogComponent extends Component {
           onClose={this.props.togglePaymentDialog}
           width={700}
         >
+          <NotificationComponent
+            message={this.state.message}
+            onClose={this.closeNotification}
+            success={this.state.success}
+            error={this.state.error}
+            warning={this.state.warning}
+            info={this.state.info}
+            none={this.state.none}
+          ></NotificationComponent>
           <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
             <div style={{ marginLeft: "77px" }}>
               <label className="userInfoLabel" >Amount </label>
@@ -281,7 +358,7 @@ class ApplyPlanPaymentDialogComponent extends Component {
                     editColumn={"gridId"}
                     DATA_ITEM_KEY="gridId"
                     idGetter={idGetterDetailsPaymentID}
-                    data={this.state.ChargeAdjustmentDetails}
+                    data={this.state.ChargeAdjustmentDetails.filter(item => !item.isDelete)}
                     height="400px"
                     width="100%"
                     noPageable={true}
@@ -290,6 +367,7 @@ class ApplyPlanPaymentDialogComponent extends Component {
                     //hasCheckBox={true}
                     sortColumns={[]}
                     onSortChange={this.onSortChange}
+                    deleteRow={this.deleteRow}
                   // pageChange={this.pageChange}
                   ></EditableGrid>
                 </div>
@@ -314,14 +392,11 @@ class ApplyPlanPaymentDialogComponent extends Component {
                 <button
                   type="button"
                   className="k-button k-primary"
-                  onClick={() => this.props.applyPaymentTransaction({
-                    insurancePaid: this.state.insurancePaid,
-                    adjustments: this.state.adjustments,
-                    amount: this.state.amount,
-                    chargeBalance: this.state.chargeBalance,
-                    moveToNextPlan: this.state.moveToNextPlan,
-                    chargeSID: this.state.chargeSID
-                  })}
+                  onClick={() =>
+                    this.applyPaymentTransaction()
+
+                
+                }
                 >
                   Ok
                 </button>

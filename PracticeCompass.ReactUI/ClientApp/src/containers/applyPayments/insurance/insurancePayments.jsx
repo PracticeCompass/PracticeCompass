@@ -773,7 +773,8 @@ class insurancePayments extends Component {
         else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
             //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
             //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
-        )  {
+        )
+          {
             this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
         }
         else {
@@ -919,6 +920,7 @@ class insurancePayments extends Component {
                         paymentRemaining: this.state.InsurancePaymentDetails?.remaining,
                         approvedAmount: null,
                         goToNext: item.moveToNextPlan,
+                        ChargeAdjustments:item.ChargeAdjustmentDetails,
                         planID: item.respCoverageOrder == 1 ? item.plan1 : item.respCoverageOrder == 2 ? item.plan2 : item.respCoverageOrder == 3 ? item.plan3 : item.respCoverageOrder == 4 ? item.plan4 : null,
                         policyNumber: item.respCoverageOrder == 1 ? item.policyNumber1 : item.respCoverageOrder == 2 ? item.policyNumber2 : item.respCoverageOrder == 3 ? item.policyNumber3 : item.respCoverageOrder == 4 ? item.policyNumber4 : "",
                     }
@@ -1054,12 +1056,12 @@ class insurancePayments extends Component {
             }, this.state.timer);
             return;
         }
-
         data[paymentindex].insurancePaid = row.insurancePaid ?? 0;
         data[paymentindex].adjustments = row.adjustments;
         data[paymentindex].amount = row.amount;
         data[paymentindex].chargeBalance = row.chargeBalance;
         data[paymentindex].moveToNextPlan = row.moveToNextPlan;
+        data[paymentindex].ChargeAdjustmentDetails=row.ChargeAdjustmentDetails;
         data[paymentindex].isEdit = true;
         this.setState({
             applyPlanPayments: data,
@@ -1102,6 +1104,7 @@ class insurancePayments extends Component {
                     {this.state.ShowApplyPayment && (
                         <ApplyPlanPaymentDialogComponent
                             paymentRow={this.state.paymentRow}
+                            planId= {this.state.InsurancePaymentDetails?.payorID}
                             togglePaymentDialog={this.togglePaymentDialog}
                             applyPaymentTransaction={this.applyPaymentTransaction}
                         ></ApplyPlanPaymentDialogComponent>

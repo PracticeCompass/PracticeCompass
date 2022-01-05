@@ -17,5 +17,20 @@ namespace PracticeCompass.Core.Models
         public decimal? ApprovedAmount { get; set; }
         public bool? GoToNext { get; set; }
         public string PolicyNumber { get; set; }
+        public List<ChargeAdjustment> ChargeAdjustments { get; set; }
+    }
+
+    public class ChargeAdjustment
+    {
+        public int chargeSid { get; set; }
+        public int claimSid { get; set; }
+        public int planId { get; set; }
+        public decimal? adjustmentAmount { get; set; }
+        public string claimAdjustmentGroupCode { get; set; }
+        public string adjustmentReasonCode { get; set; }
+        public bool isAdd { get; set; }
+        public bool isDelete { get; set; }
+        public bool isEdit { get; set; }
+        public string gridId { get; set; }
     }
 }

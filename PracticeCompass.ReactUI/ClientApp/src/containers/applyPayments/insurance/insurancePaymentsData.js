@@ -338,6 +338,14 @@ export const applyPlanColumns=[
         cell: "dropDown",
         Items:"ReasonCode"
     },
+    {
+        field: "remove",
+        title: "Remove",
+        minWidth: 50,
+        orderIndex: 4,
+        editor: "edit",
+        cell: "removeButton"
+    },
 
     // {
     //     field: "description",

@@ -107,11 +107,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/GetChargeAdjustmentDetails")]
-        public List<ChargeAdjustmentDetail> GetChargeAdjustmentDetails(int ChargeSID, int ClaimSID)
+        public List<ChargeAdjustmentDetail> GetChargeAdjustmentDetails(int ChargeSID, int ClaimSID,int PlanId)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetChargeAdjustmentDetails(ChargeSID, ClaimSID);
+                return unitOfWork.PaymentRepository.GetChargeAdjustmentDetails(ChargeSID, ClaimSID, PlanId);
 
             }
             catch (Exception ex)
