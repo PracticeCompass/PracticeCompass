@@ -20,18 +20,22 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	Declare  @SQL varchar(max),@sortClaimsfilter varchar(300),@rejectionsClaimsfilter varchar(300),@DenialsClaimsfilter varchar(300)
+	Declare  @SQL varchar(max),@sortClaimsfilter varchar(max),@rejectionsClaimsfilter varchar(max),@DenialsClaimsfilter varchar(max)
 
 	 	
 
 		set @rejectionsClaimsfilter=Case @Rejections
 		when 0 then ''
-		when 1 then 'inner join ClaimStatus on Claim.ClaimSID = ClaimStatus.ClaimSID and ClaimStatus.PlanID = PlanClaim.PlanID and ClaimStatus.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatus.status = ''Rejected'''
+		when 1 then 'left outer join ClaimStatus as ClaimStatusPrimary on Claim.ClaimSID = ClaimStatusPrimary.ClaimSID and ClaimStatusPrimary.PlanID = PlanClaim.PlanID and ClaimStatusPrimary.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusPrimary.CoverageOrder=1 and ClaimStatusPrimary.status = ''Rejected''
+					 left outer join ClaimStatus as ClaimStatusSeconadry on Claim.ClaimSID = ClaimStatusSeconadry.ClaimSID and ClaimStatusSeconadry.PlanID = PlanClaim.PlanID and ClaimStatusSeconadry.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusSeconadry.CoverageOrder=2 and ClaimStatusSeconadry.status = ''Rejected''
+					 left outer join ClaimStatus as ClaimStatusTertiary on Claim.ClaimSID = ClaimStatusTertiary.ClaimSID and ClaimStatusTertiary.PlanID = PlanClaim.PlanID and ClaimStatusTertiary.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusTertiary.CoverageOrder=3 and ClaimStatusTertiary.status = ''Rejected'''
 		else ''
 		end
 		set @DenialsClaimsfilter=Case @Denials
 		when 0 then ''
-		when 1 then 'inner join ClaimStatus on Claim.ClaimSID = ClaimStatus.ClaimSID and ClaimStatus.PlanID = PlanClaim.PlanID and ClaimStatus.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatus.status = ''Denied'''
+		when 1 then 'left outer join ClaimStatus as ClaimStatusPrimary on Claim.ClaimSID = ClaimStatusPrimary.ClaimSID and ClaimStatusPrimary.PlanID = PlanClaim.PlanID and ClaimStatusPrimary.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusPrimary.CoverageOrder=1 and ClaimStatusPrimary.status = ''Denied''
+					 left outer join ClaimStatus as ClaimStatusSeconadry on Claim.ClaimSID = ClaimStatusSeconadry.ClaimSID and ClaimStatusSeconadry.PlanID = PlanClaim.PlanID and ClaimStatusSeconadry.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusSeconadry.CoverageOrder=2 and ClaimStatusSeconadry.status = ''Denied''
+					 left outer join ClaimStatus as ClaimStatusTertiary on Claim.ClaimSID = ClaimStatusTertiary.ClaimSID and ClaimStatusTertiary.PlanID = PlanClaim.PlanID and ClaimStatusTertiary.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusTertiary.CoverageOrder=3 and ClaimStatusTertiary.status = ''Denied'''
 		else ''
 		end
 
@@ -53,7 +57,7 @@ BEGIN
 		else ''
 		end
 	
-set @SQL= 'select distinct COUNT(*) OVER() as totalCount,Patient.PatientID as PatientID,
+set @SQL= 'select distinct COUNT(*) OVER() as totalCount,Person.PersonID as PatientID,
    convert(varchar,Claim.ClaimSID,10) as GridID,
    Claim.ClaimSID,Claim.ClaimNumber,cast(max(PlanClaim.TotalClaimAmount)as money) as TotalClaimAmount, 
   dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID,0) AS OutStandingBalanace
@@ -70,22 +74,19 @@ from
 Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
 inner join PlanClaim on PlanClaim.ClaimSID = Claim.ClaimSID
 inner join PlanClaimStatus on PlanClaimStatus.ClaimSID = Claim.ClaimSID
-inner join patient on PatientAccount.PracticeID = Patient.PracticeID and PatientAccount.PatientID = Patient.PatientID
 left outer join Account on PatientAccount.AccountSID = Account.AccountSID
-inner join Practice on Practice.PracticeID=Patient.PracticeID
-inner join Person on Person.PersonID=Patient.PatientID
+inner join Practice on Practice.PracticeID=PatientAccount.PracticeID
+inner join Person on Person.PersonID=PatientAccount.PatientID
 inner join ClaimCharge on Claim.ClaimSID = ClaimCharge.ClaimSID
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID
 inner join ProcedureEvent on ProcedureEvent.ChargeSID = Charge.ChargeSID 
 left outer join Provider on PlanClaim.PerformingProviderID = Provider.ProviderID
 left outer join PlanClaim as PlanClaimPrimary on PlanClaimPrimary.ClaimSID = Claim.ClaimSID and PlanClaimPrimary.CoverageOrder=1
 left outer join PlanClaim as PlanClaimSeconadry on PlanClaimSeconadry.ClaimSID = Claim.ClaimSID and PlanClaimSeconadry.CoverageOrder=2
-left outer join PlanClaim as PlanClaimTertiary on PlanClaimTertiary.ClaimSID = Claim.ClaimSID and PlanClaimTertiary.CoverageOrder=3
-left outer join ClaimStatus as ClaimStatusPrimary on Claim.ClaimSID = ClaimStatusPrimary.ClaimSID and ClaimStatusPrimary.PlanID = PlanClaim.PlanID and ClaimStatusPrimary.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusPrimary.CoverageOrder=1
-left outer join ClaimStatus as ClaimStatusSeconadry on Claim.ClaimSID = ClaimStatusSeconadry.ClaimSID and ClaimStatusSeconadry.PlanID = PlanClaim.PlanID and ClaimStatusSeconadry.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusSeconadry.CoverageOrder=2
-left outer join ClaimStatus as ClaimStatusTertiary on Claim.ClaimSID = ClaimStatusTertiary.ClaimSID and ClaimStatusTertiary.PlanID = PlanClaim.PlanID and ClaimStatusTertiary.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatusTertiary.CoverageOrder=3'
+left outer join PlanClaim as PlanClaimTertiary on PlanClaimTertiary.ClaimSID = Claim.ClaimSID and PlanClaimTertiary.CoverageOrder=3' +@rejectionsClaimsfilter + @DenialsClaimsfilter
 
-set @SQL = @SQL +  ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus,PlanClaimPrimary.PlanID ,PlanClaimSeconadry.PlanID,PlanClaimTertiary.PlanID,Patient.PatientID,ClaimStatusPrimary.Status,ClaimStatusSeconadry.Status,ClaimStatusTertiary.Status '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
+set @SQL = @SQL +  ' group by Claim.ClaimSID ,Claim.ClaimNumber, Practice.SortName , Practice.PracticeID, Person.SortName , Provider.SortName, PlanClaimPrimary.CurrentStatus ,PlanClaimSeconadry.CurrentStatus,PlanClaimTertiary.CurrentStatus
+,PlanClaimPrimary.PlanID ,PlanClaimSeconadry.PlanID,PlanClaimTertiary.PlanID,Person.PersonID,ClaimStatusPrimary.Status,ClaimStatusSeconadry.Status,ClaimStatusTertiary.Status '+@sortClaimsfilter+ ' OFFSET '+convert(varchar, @Skip,10)+' ROWS FETCH NEXT  '+convert(varchar,500,10)+' ROWS ONLY'
 print @SQL
  exec(@SQL)
 
