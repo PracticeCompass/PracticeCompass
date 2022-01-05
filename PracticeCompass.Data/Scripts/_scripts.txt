@@ -86,3 +86,4 @@ uspReferralStaffGet.sql
 uspSupervisingStaffGet.sql
 uspChargeAdjustmentDetailsGet.sql
 CreateClaimStatusTable.sql
+uspClaimGridGetByStatus.sql

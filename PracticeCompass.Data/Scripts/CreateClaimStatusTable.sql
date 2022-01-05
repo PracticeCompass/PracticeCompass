@@ -16,7 +16,7 @@ Begin
 CREATE TABLE [dbo].[ClaimStatus](
 	[ClaimStatusSID] [int] IDENTITY(1,1) NOT NULL,
 	[ClaimSID] [int]  NOT NULL,
-	[ClaimNumber] [varchar](50) NOT NULL,
+	[ClaimNumber] [varchar](50) ,
 	[Status] [varchar](50) NOT NULL,
 	[PlanID] [int] NOT NULL,
 	[CoverageOrder] [int] NOT NULL,
@@ -94,15 +94,16 @@ End
 ------------------------------------------------------------------------------------
 --DECLARE @ClaimSID int
 --DECLARE @PlanID int
+--DECLARE @CoverageOrder int
 --DECLARE @PolicyNumber VARCHAR(50) 
 --DECLARE @Status VARCHAR(50) 
 
 --DECLARE db_cursor CURSOR FOR 
---SELECT ClaimSID,PlanID,PolicyNumber 
+--SELECT ClaimSID,PlanID,PolicyNumber,CoverageOrder
 --FROM PlanClaim 
 
 --OPEN db_cursor  
---FETCH NEXT FROM db_cursor INTO @ClaimSID, @PlanID,@PolicyNumber
+--FETCH NEXT FROM db_cursor INTO @ClaimSID, @PlanID,@PolicyNumber,@CoverageOrder
 
 --WHILE @@FETCH_STATUS = 0  
 --BEGIN  
@@ -112,14 +113,14 @@ End
 --           ([ClaimSID]
 --           ,[Status]
 --           ,[PlanID]
---           ,[PolicyNumber])
+--           ,[PolicyNumber],[CoverageOrder])
 --     VALUES
 --           (@ClaimSID
 --           ,@Status
 --           ,@PlanID
---           ,@PolicyNumber)
+--           ,@PolicyNumber,@CoverageOrder)
 --		   end
---      FETCH NEXT FROM db_cursor INTO @ClaimSID, @PlanID,@PolicyNumber 
+--      FETCH NEXT FROM db_cursor INTO @ClaimSID, @PlanID,@PolicyNumber ,@CoverageOrder
 --END 
 
 --CLOSE db_cursor  
