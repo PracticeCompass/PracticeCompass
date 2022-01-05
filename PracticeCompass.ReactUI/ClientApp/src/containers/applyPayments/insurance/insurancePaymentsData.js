@@ -32,13 +32,13 @@ export const InsuranceCategory = [
 export const PracticeColumns = [
     {
         field: "practiceCode",
-        title: "Practice Code",
+        title: "Code",
         orderIndex:0,
         minWidth: "100px",
     },
     {
         field: "sortName",
-        title: "Practice Name",
+        title: "Name",
         orderIndex:1,
         minWidth: "700px",
     },
@@ -46,13 +46,13 @@ export const PracticeColumns = [
 export const insurancePatientColumns = [
     {
         field: "carrierCode",
-        title: "Plan Code",
+        title: "Code",
         orderIndex:0,
         minWidth: "100px",
     },
     {
         field: "sortName",
-        title: "Plan Company",
+        title: "Company",
         orderIndex:1,
         minWidth: "700px",
     },

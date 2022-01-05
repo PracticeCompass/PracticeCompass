@@ -2,7 +2,7 @@ export const PatientTypesColumns = [
     
     {
         field: "lookupCode",
-        title: "Patient Type Code",
+        title: "Code",
         minWidth: "150px",
         orderIndex:0,
     },
@@ -16,13 +16,13 @@ export const PatientTypesColumns = [
 export const PracticeColumns = [
     {
         field: "practiceCode",
-        title: "Practice Code",
+        title: "Code",
         orderIndex:0,
         minWidth: "100px",
     },
     {
         field: "sortName",
-        title: "Practice Name",
+        title: "Name",
         orderIndex:1,
         minWidth: "700px",
     },
@@ -42,13 +42,13 @@ export const PhysicianColumns = [
 export const insuranceColumns = [
     {
         field: "carrierCode",
-        title: "Plan Code",
+        title: "Code",
         orderIndex:0,
         minWidth: "100px",
     },
     {
         field: "sortName",
-        title: "Plan Company",
+        title: "Company",
         orderIndex:1,
         minWidth: "700px",
     },

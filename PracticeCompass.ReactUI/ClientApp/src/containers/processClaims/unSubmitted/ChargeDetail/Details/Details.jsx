@@ -723,7 +723,7 @@ class Details extends Component {
         {this.state.cptDialogVisible && (
           <FindDialogComponent
             title="Cpt Search"
-            placeholder="Enter Cpt Code"
+            placeholder="Enter Cpt Code Or Description"
             searcTextBoxValue={this.state.cptSearchText}
             onTextSearchChange={e => {
               this.setState({

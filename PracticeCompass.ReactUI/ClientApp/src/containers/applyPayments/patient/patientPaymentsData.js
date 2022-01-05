@@ -32,13 +32,13 @@ export const PhysicianColumns = [
 export const PracticeColumns = [
     {
         field: "practiceCode",
-        title: "Practice Code",
+        title: "Code",
         orderIndex:0,
         minWidth: "100px",
     },
     {
         field: "sortName",
-        title: "Practice Name",
+        title: "Name",
         orderIndex:1,
         minWidth: "700px",
     },

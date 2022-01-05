@@ -33,13 +33,13 @@ export const patientColumns = [
 export const PracticeColumns = [
   {
     field: "practiceCode",
-    title: "Practice Code",
+    title: "Code",
     orderIndex:0,
     minWidth: "100px",
 },
 {
     field: "sortName",
-    title: "Practice Name",
+    title: "Name",
     orderIndex:1,
     minWidth: "700px",
 },
@@ -52,7 +52,7 @@ export const PracticeColumns = [
 export const PatientTypesColumns = [
   {
     field: "lookupCode",
-    title: "Patient Type Code",
+    title: "Code",
     minWidth: "150px",
     orderIndex:0,
 },

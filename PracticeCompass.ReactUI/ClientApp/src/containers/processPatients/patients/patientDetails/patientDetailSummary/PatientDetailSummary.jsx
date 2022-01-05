@@ -640,7 +640,7 @@ class PatientDetailSummary extends Component {
           {this.state.practiceVisible && (
             <FindDialogComponent
               title="Practice Search"
-              placeholder="Enter Practice Name Or Practice Code"
+              placeholder="Enter Practice Name or Practice Code"
               searcTextBoxValue={this.state.practiceSearchText}
               onTextSearchChange={(e) => {
                 this.setState({
