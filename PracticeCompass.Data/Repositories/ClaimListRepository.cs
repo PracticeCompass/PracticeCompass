@@ -90,41 +90,60 @@ namespace PracticeCompass.Data.Repositories
         public List<ClaimDTO> ClaimGridGet(int PatientID, int PracticeID, int PhysicianID, int DOSType, string DOSvalue,string ToDOSvalue, string PatientClass, int InsuranceType, int InsuranceID, string BillNumber, string ClaimIcnNumber, int Age, int ClaimValue, string CoverageOrder, string InsuranceStatus, string Batch, int GuarantorID, bool IncludeCompletedClaims,
             bool IncludeCashClaims, bool IncludeVoidedClaims, bool IncludeRejections, bool IncludePastDue, bool IncludeDenials, bool Rejections, bool PastDue, bool Denials, bool TimelyFilling , int Skip, string SortColumn, string SortDirection)
         {
-            var data = this.db.QueryMultiple("uspClaimGridGet", new
+            if (Rejections || Denials)
             {
-                @PatientID = PatientID,
-                @PracticeID = PracticeID,
-                @PhysicianID = PhysicianID,
-                @DOSType = DOSType,
-                @DOSvalue = DOSvalue,
-                @ToDOSvalue = ToDOSvalue,
-                @PatientClass = PatientClass,
-                @InsuranceType = InsuranceType,
-                @InsuranceID = InsuranceID,
-                @BillNumber = BillNumber,
-                @ClaimIcnNumber = ClaimIcnNumber,
-                @Age = Age,
-                @InsuranceStatus = InsuranceStatus,
-                @CoverageOrder = CoverageOrder,
-                @TotalClaimAmount = ClaimValue,
-                @Batch = Batch,
-                @GuarantorID = GuarantorID,
-                @IncludeCompletedClaims = IncludeCompletedClaims,
-                @IncludeCashClaims = IncludeCashClaims,
-                @IncludeVoidedClaims = IncludeVoidedClaims,
-                @IncludeRejections = IncludeRejections,
-                @IncludePastDue = IncludePastDue,
-                @IncludeDenials = IncludeDenials,
-                @Skip = Skip,
-                @SortColumn = SortColumn,
-                @SortDirection = SortDirection,
-                @Rejections = Rejections,
-                @PastDue = PastDue,
-                @Denials = Denials,
-                @TimelyFilling = TimelyFilling
-            },
-                commandType: CommandType.StoredProcedure);
-            return data.Read<ClaimDTO>().ToList();
+                var data = this.db.QueryMultiple("uspClaimGridGetByStatus", new
+                {
+                    @Skip = Skip,
+                    @SortColumn = SortColumn,
+                    @SortDirection = SortDirection,
+                    @Rejections = Rejections,
+                    @PastDue = PastDue,
+                    @Denials = Denials,
+                    @TimelyFilling = TimelyFilling
+                },
+                    commandType: CommandType.StoredProcedure);
+                return data.Read<ClaimDTO>().ToList();
+            }
+            else
+            {
+               var  data = this.db.QueryMultiple("uspClaimGridGet", new
+                {
+                    @PatientID = PatientID,
+                    @PracticeID = PracticeID,
+                    @PhysicianID = PhysicianID,
+                    @DOSType = DOSType,
+                    @DOSvalue = DOSvalue,
+                    @ToDOSvalue = ToDOSvalue,
+                    @PatientClass = PatientClass,
+                    @InsuranceType = InsuranceType,
+                    @InsuranceID = InsuranceID,
+                    @BillNumber = BillNumber,
+                    @ClaimIcnNumber = ClaimIcnNumber,
+                    @Age = Age,
+                    @InsuranceStatus = InsuranceStatus,
+                    @CoverageOrder = CoverageOrder,
+                    @TotalClaimAmount = ClaimValue,
+                    @Batch = Batch,
+                    @GuarantorID = GuarantorID,
+                    @IncludeCompletedClaims = IncludeCompletedClaims,
+                    @IncludeCashClaims = IncludeCashClaims,
+                    @IncludeVoidedClaims = IncludeVoidedClaims,
+                    @IncludeRejections = IncludeRejections,
+                    @IncludePastDue = IncludePastDue,
+                    @IncludeDenials = IncludeDenials,
+                    @Skip = Skip,
+                    @SortColumn = SortColumn,
+                    @SortDirection = SortDirection,
+                    @Rejections = Rejections,
+                    @PastDue = PastDue,
+                    @Denials = Denials,
+                    @TimelyFilling = TimelyFilling
+                },
+                    commandType: CommandType.StoredProcedure);
+                return data.Read<ClaimDTO>().ToList();
+            }
+            
         }
     }
 }

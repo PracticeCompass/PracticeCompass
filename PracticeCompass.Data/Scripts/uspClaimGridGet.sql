@@ -121,11 +121,10 @@ PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as P
 dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimPrimary.PlanID) as PrimaryClaimStatus,
 dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimSeconadry.PlanID) as SecondaryClaimStatus,
 dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus,
-DATEDIFF(day, Max(PlanClaimStatus.pro2created), GETDATE() ) - 30  as ClaimPastDue
+DATEDIFF(day, Max(ProcedureEvent.FromServiceDate), GETDATE() ) - 30  as ClaimPastDue
 from 
 Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
 inner join PlanClaim on PlanClaim.ClaimSID = Claim.ClaimSID
-inner join PlanClaimStatus on PlanClaimStatus.ClaimSID = Claim.ClaimSID
 inner join patient on PatientAccount.PracticeID = Patient.PracticeID and PatientAccount.PatientID = Patient.PatientID
 left outer join Account on PatientAccount.AccountSID = Account.AccountSID
 inner join Practice on Practice.PracticeID=Patient.PracticeID

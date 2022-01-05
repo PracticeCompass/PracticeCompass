@@ -87,3 +87,4 @@ uspSupervisingStaffGet.sql
 uspChargeAdjustmentDetailsGet.sql
 CreateClaimStatusTable.sql
 uspClaimGridGetByStatus.sql
+PlanClaimIndex_ClaimCoverage.sql
