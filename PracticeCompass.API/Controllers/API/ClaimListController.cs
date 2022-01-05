@@ -101,18 +101,15 @@ namespace PracticeCompass.API.Controllers.API
                 {
                     if (claim.PrimaryClaimStatus != null)
                     {
-                        claim.PrimaryStatus = claim.PrimaryClaimStatus.Split("$$")[0];
-                        claim.PrimaryStatus_ = claim.PrimaryClaimStatus.Split("$$")[1];
+                        claim.PrimaryStatus = claim.PrimaryClaimStatus;
                     }
                     if (claim.SecondaryClaimStatus != null)
                     {
-                        claim.SeconadryStatus = claim.SecondaryClaimStatus.Split("$$")[0];
-                        claim.SeconadryStatus_ = claim.SecondaryClaimStatus.Split("$$")[1];
+                        claim.SeconadryStatus = claim.SecondaryClaimStatus;
                     }
                     if (claim.TertiaryClaimStatus != null)
                     {
-                        claim.TertiaryStatus = claim.TertiaryClaimStatus.Split("$$")[0];
-                        claim.TertiaryStatus_ = claim.TertiaryClaimStatus.Split("$$")[1];
+                        claim.TertiaryStatus = claim.TertiaryClaimStatus;
                     }
                 }
                 return Result;
