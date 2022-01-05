@@ -77,7 +77,6 @@ uspLookupCodeGet.sql
 uspLookupCodeSave.sql
 uspLookupTypeSave.sql
 FuncGetClaimStatus.sql
-FuncGetClaimPastDue.sql
 uspUserLookupCodeGet.sql
 uspUserLookupType.sql
 uspUserLookupCodeSave.sql
@@ -86,3 +85,4 @@ uspProviderGet.sql
 uspReferralStaffGet.sql
 uspSupervisingStaffGet.sql
 uspChargeAdjustmentDetailsGet.sql
+CreateClaimStatusTable.sql

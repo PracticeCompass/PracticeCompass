@@ -88,7 +88,7 @@ namespace PracticeCompass.Data.Repositories
         }
 
         public List<ClaimDTO> ClaimGridGet(int PatientID, int PracticeID, int PhysicianID, int DOSType, string DOSvalue,string ToDOSvalue, string PatientClass, int InsuranceType, int InsuranceID, string BillNumber, string ClaimIcnNumber, int Age, int ClaimValue, string CoverageOrder, string InsuranceStatus, string Batch, int GuarantorID, bool IncludeCompletedClaims,
-            bool IncludeCashClaims, bool IncludeVoidedClaims, bool Rejections, bool PastDue, bool Denials, int Skip, string SortColumn, string SortDirection)
+            bool IncludeCashClaims, bool IncludeVoidedClaims, bool IncludeRejections, bool IncludePastDue, bool IncludeDenials, bool Rejections, bool PastDue, bool Denials, bool TimelyFilling , int Skip, string SortColumn, string SortDirection)
         {
             var data = this.db.QueryMultiple("uspClaimGridGet", new
             {
@@ -112,12 +112,16 @@ namespace PracticeCompass.Data.Repositories
                 @IncludeCompletedClaims = IncludeCompletedClaims,
                 @IncludeCashClaims = IncludeCashClaims,
                 @IncludeVoidedClaims = IncludeVoidedClaims,
+                @IncludeRejections = IncludeRejections,
+                @IncludePastDue = IncludePastDue,
+                @IncludeDenials = IncludeDenials,
+                @Skip = Skip,
+                @SortColumn = SortColumn,
+                @SortDirection = SortDirection,
                 @Rejections = Rejections,
                 @PastDue = PastDue,
                 @Denials = Denials,
-                @Skip = Skip,
-                @SortColumn = SortColumn,
-                @SortDirection = SortDirection
+                @TimelyFilling = TimelyFilling
             },
                 commandType: CommandType.StoredProcedure);
             return data.Read<ClaimDTO>().ToList();

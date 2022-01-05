@@ -22,6 +22,10 @@
         public bool IncludeCompletedClaims { get; set; }
         public bool IncludeCashClaims { get; set; }
         public bool IncludeVoidedClaims { get; set; }
+        public bool IncludeRejections { get; set; }
+        public bool IncludePastDue { get; set; }
+        public bool IncludeDenials { get; set; }
+        public bool TimelyFilling { get; set; }
         public bool Rejections { get; set; }
         public bool PastDue { get; set; }
         public bool Denials { get; set; }

@@ -116,9 +116,10 @@ export const getclaims =
           searchCriteria.completedClaims
         }&IncludeCashClaims=${searchCriteria.CashClaims}&IncludeVoidedClaims=${
           searchCriteria.VoidedClaims
-        }&Rejections=${searchCriteria.Rejections}&Denials=${
-          searchCriteria.Denials
-        }&PastDue=${searchCriteria.PastDue}&Skip=${
+            }&IncludeRejections=${searchCriteria.IncludeRejections}&IncludeDenials=${
+            searchCriteria.IncludeDenials
+            }&IncludePastDue=${searchCriteria.IncludePastDue}&Rejections=${searchCriteria.Rejections}&Denials=${searchCriteria.Denials
+            }&PastDue=${searchCriteria.PastDue}&TimelyFilling=${searchCriteria.TimelyFilling}&Skip=${
           searchCriteria.Skip
         }&SortColumn=${
           searchCriteria.SortColumn ? searchCriteria.SortColumn : ""

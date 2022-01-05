@@ -114,8 +114,8 @@ export const columns = [
     },
     {
         field: "destination",
-        title: "Lowest Resp. Coverage Order",
-        minWidth: 150,
+        title: "L.R.C.O",
+        minWidth: 70,
         orderIndex: 12,
     },
     {

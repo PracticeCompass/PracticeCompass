@@ -28,18 +28,23 @@ CREATE OR ALTER PROCEDURE [dbo].[uspClaimGridGet]
 @IncludeCompletedClaims int,
 @IncludeCashClaims int,
 @IncludeVoidedClaims int,
+@IncludeRejections int,
+@IncludePastDue int,
+@IncludeDenials int,
+@Skip int=0,
+@SortColumn varchar(50)='',
+@SortDirection varchar(50)='',
 @Rejections int,
 @PastDue int,
 @Denials int,
-@Skip int=0,
-@SortColumn varchar(50)='',
-@SortDirection varchar(50)=''
+@TimelyFilling int
 
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 	Declare  @SQL varchar(max), @DOSfilter varchar(50) , @insurancefilter varchar(300) , @completedclaimsfilter varchar(300),@sortClaimsfilter varchar(300), @cashclaimsfilter varchar(300),@voidedclaimsfilter varchar(300)
+	,@rejectionsClaimsfilter varchar(300),@DenialsClaimsfilter varchar(300)
 
 	 	set @DOSfilter=Case @DOSType 
 		when 1 then ' and (PlanClaim.FromDate =  '''+@DOSvalue+''' )'
@@ -60,6 +65,17 @@ BEGIN
 		set @completedclaimsfilter=Case @IncludeCompletedClaims
 		when 0 then ' and dbo.FuncGetClaimOutStandingBalance(Claim.ClaimSID,@IncludeVoidedClaims) > 0  and Claim.LowestRespCoverageOrder != 99'
 		when 1 then ''
+		else ''
+		end
+
+		set @rejectionsClaimsfilter=Case @Rejections
+		when 0 then ''
+		when 1 then 'inner join ClaimStatus on Claim.ClaimSID = ClaimStatus.ClaimSID and ClaimStatus.PlanID = PlanClaim.PlanID and ClaimStatus.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatus.status = ''Rejected'''
+		else ''
+		end
+		set @DenialsClaimsfilter=Case @Denials
+		when 0 then ''
+		when 1 then 'inner join ClaimStatus on Claim.ClaimSID = ClaimStatus.ClaimSID and ClaimStatus.PlanID = PlanClaim.PlanID and ClaimStatus.PolicyNumber= PlanClaim.PolicyNumber and ClaimStatus.status = ''Denied'''
 		else ''
 		end
 
@@ -105,18 +121,19 @@ PlanClaimTertiary.CurrentStatus as TertiaryStatus ,PlanClaimTertiary.PlanID as P
 dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimPrimary.PlanID) as PrimaryClaimStatus,
 dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimSeconadry.PlanID) as SecondaryClaimStatus,
 dbo.[FuncGetClaimStatus](Claim.ClaimSID,PlanClaimTertiary.PlanID) as TertiaryClaimStatus,
-dbo.FuncGetClaimPastDue(Claim.ClaimSID) as ClaimPastDue
+DATEDIFF(day, Max(PlanClaimStatus.pro2created), GETDATE() ) - 30  as ClaimPastDue
 from 
 Claim inner join PatientAccount on Claim.PracticeID = PatientAccount.PracticeID and Claim.PatientID = PatientAccount.PatientID and Claim.AccountSID = PatientAccount.AccountSID
 inner join PlanClaim on PlanClaim.ClaimSID = Claim.ClaimSID
+inner join PlanClaimStatus on PlanClaimStatus.ClaimSID = Claim.ClaimSID
 inner join patient on PatientAccount.PracticeID = Patient.PracticeID and PatientAccount.PatientID = Patient.PatientID
 left outer join Account on PatientAccount.AccountSID = Account.AccountSID
 inner join Practice on Practice.PracticeID=Patient.PracticeID
 inner join Person on Person.PersonID=Patient.PatientID
 inner join ClaimCharge on Claim.ClaimSID = ClaimCharge.ClaimSID
 inner join Charge on Charge.ChargeSID = ClaimCharge.ChargeSID
-inner join ProcedureEvent on ProcedureEvent.ChargeSID = Charge.ChargeSID
-left outer join Provider on PlanClaim.PerformingProviderID = Provider.ProviderID
+inner join ProcedureEvent on ProcedureEvent.ChargeSID = Charge.ChargeSID '+ @rejectionsClaimsfilter+@DenialsClaimsfilter + '
+ left outer join Provider on PlanClaim.PerformingProviderID = Provider.ProviderID
 left outer join PlanClaim as PlanClaimPrimary on PlanClaimPrimary.ClaimSID = Claim.ClaimSID and PlanClaimPrimary.CoverageOrder=1
 left outer join PlanClaim as PlanClaimSeconadry on PlanClaimSeconadry.ClaimSID = Claim.ClaimSID and PlanClaimSeconadry.CoverageOrder=2
 left outer join PlanClaim as PlanClaimTertiary on PlanClaimTertiary.ClaimSID = Claim.ClaimSID and PlanClaimTertiary.CoverageOrder=3

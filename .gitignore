@@ -375,3 +375,12 @@ PracticeCompass.Data/Scripts/__tmp_uspLookupTypeSave.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspLookupCodeSave.sql.txt
 PracticeCompass.Data/Scripts/__tmp_FuncGetClaimStatus.sql.txt
 PracticeCompass.Data/Scripts/__tmp_FuncGetClaimPastDue.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspProviderGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspReferralStaffGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspSupervisingStaffGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspUserLookupCodeGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspUserLookupCodeSave.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspUserLookupType.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspUserLookupTypeSave.sql.txt
+PracticeCompass.Data/Scripts/FuncGetClaimPastDue.sql
+PracticeCompass.Data/Scripts/__tmp_uspChargeAdjustmentDetailsGet.sql.txt
