@@ -32,6 +32,7 @@ namespace PracticeCompass.Messaging.Genaration
             var SBR = new Segment { Name = "SBR", FieldSeparator = FieldSeparator };
             SBR[1] = GetInsuranceLevelFromCoverageOrder(_claimMessageModel.CoverageOrder);
             SBR[2] = _claimMessageModel.RelationToSub == "S" ? "18" : "";
+            SBR[3] = _claimMessageModel.GroupNumber;
             SBR[9] = _claimMessageModel.FilingCode;
             return SBR;
         }

@@ -53,7 +53,7 @@ BEGIN
 	PracCommSetup.SenderID,Practice.PracticeCode,BatchRunClaim.RunNumber,[plan].ProfileOverrideAllowed,
 	INSTAMEDPlan.ID as INSTAMEDPlanID,PAYORIDPlan.ID as PAYORIDPlanID,practiceTaxID.ID as ParcticeTaxonomy,
 	claim.LowestRespCoverageOrder,ServiceCenterAltID.ID as ServiceCenterNPI,charge.ApprovedAmount,charge.InsuranceReceipts,ChargeActivity.PostDate,
-	PlanClaim.PlanID,PlanClaim.PolicyNumber,Claim.ClaimSID
+	PlanClaim.PlanID,PlanClaim.PolicyNumber,Claim.ClaimSID,Policy.GroupNumber
 	from claim
 inner join Person on Person.PersonID = Claim.PatientID
 left outer join Address on [dbo].[Address].[EntitySID] = PersonID
@@ -94,7 +94,7 @@ left outer join StaffAltID as BillingNPI on BillingNPI.staffID = billingProvider
 left outer join StaffAltID  as BillingTaxID on BillingTaxID.staffID = billingProvider.ProviderID and BillingTaxID.AidTag ='TAXID' and BillingTaxID.PracticeID=Practice.PracticeID
 --left outer join ProviderSpecialty on ProviderSpecialty.ProviderID = Provider.ProviderID
 left outer join StaffAltID as practiceTaxID on practice.GroupStaffID= practiceTaxID.StaffID and practiceTaxID.AidTag='TAXID' and practiceTaxID.PracticeID=Practice.PracticeID
-
+left outer join Policy on Policy.PlanID=PlanClaim.PlanID and Policy.PolicyNumber=PlanClaim.PolicyNumber
 left outer join Address as practiceaddress on practiceaddress.EntitySID=ProcedureEvent.PracticeID and practiceaddress.Class='B'
 left outer join CountryState as practiceState on practiceaddress.State=practiceState.StateCode
 left outer join Address as financialAddress on  financialAddress.EntitySID=Charge.FinanceCenterID

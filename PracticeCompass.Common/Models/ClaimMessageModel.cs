@@ -129,6 +129,7 @@ namespace PracticeCompass.Common.Models
         public int PlanID { get; set; }
         public string PolicyNumber { get; set; }
         public int ClaimSID { get; set; }
+        public string GroupNumber { get; set; }
 
     }
 
