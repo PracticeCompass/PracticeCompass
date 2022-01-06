@@ -384,3 +384,6 @@ PracticeCompass.Data/Scripts/__tmp_uspUserLookupType.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspUserLookupTypeSave.sql.txt
 PracticeCompass.Data/Scripts/FuncGetClaimPastDue.sql
 PracticeCompass.Data/Scripts/__tmp_uspChargeAdjustmentDetailsGet.sql.txt
+PracticeCompass.Data/Scripts/__tmp_CreateClaimStatusTable.sql.txt
+PracticeCompass.Data/Scripts/__tmp_PlanClaimIndex_ClaimCoverage.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspClaimGridGetByStatus.sql.txt
