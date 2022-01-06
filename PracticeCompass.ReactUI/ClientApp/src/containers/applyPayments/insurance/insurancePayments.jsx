@@ -770,13 +770,14 @@ class insurancePayments extends Component {
             }, this.state.timer);
             return;
         }
-        else if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
-            //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
-            //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
-        )
+        else
+         if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
+        //     //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
+        //     //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
+         )
           {
             this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
-        }
+         }
         else {
             this.setState({
                 error: true,
@@ -918,7 +919,9 @@ class insurancePayments extends Component {
                         adjustment: item.adjustments,
                         PaymentType: "I",
                         paymentRemaining: this.state.InsurancePaymentDetails?.remaining,
-                        approvedAmount: null,
+                        deductibleApplied : item.deductibleApplied,
+                        copayAmount : item.copayAmount,
+                        approvedAmount : item.approvedAmount,
                         goToNext: item.moveToNextPlan,
                         ChargeAdjustments:item.ChargeAdjustmentDetails,
                         planID: item.respCoverageOrder == 1 ? item.plan1 : item.respCoverageOrder == 2 ? item.plan2 : item.respCoverageOrder == 3 ? item.plan3 : item.respCoverageOrder == 4 ? item.plan4 : null,
@@ -1061,6 +1064,9 @@ class insurancePayments extends Component {
         data[paymentindex].amount = row.amount;
         data[paymentindex].chargeBalance = row.chargeBalance;
         data[paymentindex].moveToNextPlan = row.moveToNextPlan;
+        data[paymentindex].deductibleApplied = row.deductibleApplied;
+        data[paymentindex].copayAmount = row.copayAmount;
+        data[paymentindex].approvedAmount=row.approvedAmount;
         data[paymentindex].ChargeAdjustmentDetails=row.ChargeAdjustmentDetails;
         data[paymentindex].isEdit = true;
         this.setState({

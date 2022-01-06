@@ -19,6 +19,7 @@ namespace PracticeCompass.Core.Models
         public float Amount { get; set; }
         public float ChargeBalance { get; set; }
         public float InsurancePaid { get; set; }
+        public float ApprovedAmount { get; set; }
         public float DeductibleApplied { get; set; }
         public float CopayAmount { get; set; }
         public float Adjustments { get; set; }

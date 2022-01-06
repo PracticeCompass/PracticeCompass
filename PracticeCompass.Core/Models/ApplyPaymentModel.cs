@@ -15,6 +15,8 @@ namespace PracticeCompass.Core.Models
         public int? PlanID { get; set; }
         public decimal PaymentRemaining { get; set; }
         public decimal? ApprovedAmount { get; set; }
+        public decimal? deductibleApplied { get; set; }
+        public decimal? copayAmount { get; set; }
         public bool? GoToNext { get; set; }
         public string PolicyNumber { get; set; }
         public List<ChargeAdjustment> ChargeAdjustments { get; set; }

@@ -237,6 +237,10 @@ namespace PracticeCompass.Data.Repositories
                 }
                 if (paymentmodel.ApprovedAmount != null)
                     chargerow.ApprovedAmount = paymentmodel.ApprovedAmount;
+                if (paymentmodel.copayAmount != null)
+                    chargerow.CopayAmount = paymentmodel.copayAmount;
+                if (paymentmodel.deductibleApplied != null)
+                    chargerow.DeductibleApplied = paymentmodel.deductibleApplied;
                 #endregion
 
             }
