@@ -68,7 +68,7 @@ export const columns = [
     },
     {
         field: "insuranceTypeName",
-        title: "Type",
+        title: "Plan Type",
         minWidth: 140,
         orderIndex: 5,
     },
@@ -92,7 +92,7 @@ export const columns = [
     },
     {
         field: "planTypeName",
-        title: "Plan Type",
+        title: "Plan Class",
         minWidth: 100,
         orderIndex: 9,
     },

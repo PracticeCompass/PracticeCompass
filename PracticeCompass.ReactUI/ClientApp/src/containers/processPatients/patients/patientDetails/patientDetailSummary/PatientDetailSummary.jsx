@@ -1376,7 +1376,7 @@ class PatientDetailSummary extends Component {
                         </ButtonComponent>
                       </div>
                       <div style={{ float: "left", marginLeft: "15px" }}>
-                        <label className="userInfoLabel">Type</label>
+                        <label className="userInfoLabel">Plan Type</label>
                       </div>
                       <div style={{ float: "left", width: "362px" }}>
                         <DropDown
@@ -1417,7 +1417,7 @@ class PatientDetailSummary extends Component {
                         ></TextBox>
                       </div>
                       <div style={{ float: "left", marginLeft: "15px" }}>
-                        <label className="userInfoLabel">Plan Type</label>
+                        <label className="userInfoLabel">Plan Class</label>
                       </div>
                       <div style={{ float: "left", width: "261px" }}>
                         <DropDown
