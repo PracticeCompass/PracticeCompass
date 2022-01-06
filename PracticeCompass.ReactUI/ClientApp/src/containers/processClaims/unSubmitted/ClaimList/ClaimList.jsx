@@ -1187,10 +1187,10 @@ class ClaimList extends Component {
             backgroundColor: "rgb(255, 255, 255)",
         };
         const yellow = {
-            backgroundColor: "rgb(255, 255, 0)",
+            backgroundColor: "rgb(252, 252, 207)",
         };
         const red = {
-            backgroundColor: "rgb(255,0,0)",
+            backgroundColor: "rgb(252,207,207)",
         };
 
         let trProps = {
