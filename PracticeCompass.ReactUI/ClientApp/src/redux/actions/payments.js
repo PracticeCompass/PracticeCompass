@@ -265,7 +265,7 @@ export const getApplyPatientPayments =
     };
 
 export const getApplyInsurancePayment =
-    (GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber) =>
+    (GuarantorID, DOSType, DOSvalue,toTxnApplyDate, InsuranceID, ClaimIcnNumber) =>
         async (dispatch, getState) => {
             try {
                 dispatch(uiStartLoading());
@@ -273,7 +273,7 @@ export const getApplyInsurancePayment =
                 // if (PracticeID == null && PatientID == null) return;
                 const resp = await axios({
                     method: "GET",
-                    url: `${config.baseUrl}/payment/ApplyInsurancePaymentGet?GuarantorID=${GuarantorID}&DOSType=${DOSType}&DOSvalue=${DOSvalue}&InsuranceID=${InsuranceID}&ClaimIcnNumber=${ClaimIcnNumber}`,
+                    url: `${config.baseUrl}/payment/ApplyInsurancePaymentGet?GuarantorID=${GuarantorID}&DOSType=${DOSType}&DOSvalue=${DOSvalue}&ToDOSvalue=${toTxnApplyDate}&InsuranceID=${InsuranceID}&ClaimIcnNumber=${ClaimIcnNumber}`,
                 });
                 dispatch(setApplyPlanPayments(resp.data || []));
                 return resp.data;

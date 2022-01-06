@@ -92,11 +92,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/ApplyInsurancePaymentGet")]
-        public List<InsurancePayment> ApplyInsurancePaymentGet(int GuarantorID, int DOSType, string DOSvalue, int InsuranceID, string ClaimIcnNumber)
+        public List<InsurancePayment> ApplyInsurancePaymentGet(int GuarantorID, int DOSType, string DOSvalue,string ToDOSvalue, int InsuranceID, string ClaimIcnNumber)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetInsurancePaymentforApply(GuarantorID, DOSType, DOSvalue, InsuranceID, ClaimIcnNumber);
+                return unitOfWork.PaymentRepository.GetInsurancePaymentforApply(GuarantorID, DOSType, DOSvalue, ToDOSvalue, InsuranceID, ClaimIcnNumber);
 
             }
             catch (Exception ex)

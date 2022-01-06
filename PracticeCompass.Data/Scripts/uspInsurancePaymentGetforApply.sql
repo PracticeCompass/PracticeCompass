@@ -12,6 +12,7 @@ CREATE OR ALTER PROCEDURE [dbo].[uspInsurancePaymentGetforApply]
 @GuarantorID int, 
 @DOSType int,
 @DOSvalue varchar(12),
+@ToDOSvalue varchar(12),
 @InsuranceID int,
 @ClaimIcnNumber varchar(40)
 AS
@@ -20,12 +21,12 @@ BEGIN
 	Declare  @SQL varchar(max), @DOSfilter varchar(50)  , @insurancefilter varchar(200)
 
 	 	set @DOSfilter=Case @DOSType 
-		when 1 then 'and (ProcedureEvent.FromServiceDate =  '''+@DOSvalue+''' )'
-		when 2 then 'and (ProcedureEvent.FromServiceDate < '''+@DOSvalue+''' )'
-		when 3 then 'and (ProcedureEvent.FromServiceDate > '''+@DOSvalue+''' )'
+		when 1 then 'and ([ProcedureEvent.FromServiceDate] = '+@DOSvalue+' ))'
+		when 2 then 'and ([ProcedureEvent.FromServiceDate] < '+@DOSvalue+' ))'
+		when 3 then 'and ([ProcedureEvent.FromServiceDate] > '+@DOSvalue+' ))'
+		when 4 then 'and ([ProcedureEvent.FromServiceDate] between'+@DOSvalue+'and'+@ToDOSvalue+'))'
 		else ''
 		end
-
 		set @insurancefilter=Case @InsuranceID 
 		when 0 then ''
 		else 'and ((PlanClaim.PlanID= '+convert(varchar, @InsuranceID,10)+'  ))'

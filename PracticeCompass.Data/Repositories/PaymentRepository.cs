@@ -116,13 +116,14 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspPatientPaymentGetforApply", new { @PatientID = PatientID }, commandType: CommandType.StoredProcedure);
             return data.Read<PatientPayment>().ToList();
         }
-        public List<InsurancePayment> GetInsurancePaymentforApply(int GuarantorID, int DOSType, string DOSvalue, int InsuranceID, string ClaimIcnNumber)
+        public List<InsurancePayment> GetInsurancePaymentforApply(int GuarantorID, int DOSType, string DOSvalue,string ToDOSvalue, int InsuranceID, string ClaimIcnNumber)
         {
             var data = this.db.QueryMultiple("uspInsurancePaymentGetforApply", new
             {
                 @GuarantorID = GuarantorID,
                 @DOSType = DOSType,
                 @DOSvalue = DOSvalue,
+                @ToDOSvalue= ToDOSvalue,
                 @InsuranceID = InsuranceID,
                 @ClaimIcnNumber = ClaimIcnNumber
             }, commandType: CommandType.StoredProcedure);

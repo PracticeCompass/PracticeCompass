@@ -329,6 +329,23 @@ class insurancePayments extends Component {
             }
         }
     };
+    toggleInsuranceApplyDialog =()=>{
+        if (this.state.insuranceApplyVisible) {
+            this.setState({
+                insuranceApplySearchText: null,
+            });
+            this.props.resetInsuranceList();
+        }
+        if (this.state.insuranceApplyVisible) {
+            this.setState({
+                insuranceApplyVisible: false
+            });
+        } else {
+                this.setState({
+                    insuranceApplyVisible: !this.state.insuranceApplyVisible,
+                });
+            }
+    }
     onInsuranceDoubleClick = async (event) => {
         if (this.state.insuranceVisible) {
             await this.setState({
@@ -357,6 +374,23 @@ class insurancePayments extends Component {
         //this.selectInsurance();
         this.toggleInsuranceDialog();
     };
+    onInsuranceApplyDoubleClick = async (event) => {
+            await this.setState({
+                insuranceApplySelectedState: event.dataItem.sortName,
+                insuranceApplyIDSelectedState: event.dataItem.entitySID,
+            });
+        if (
+            event.dataItem.entitySID != null &&
+            (this.props.dropDownInsurance == null ||
+                this.props.dropDownInsurance.filter(
+                    (x) => x.entityId == event.dataItem.entitySID
+                ).length == 0)
+        ) {
+            await this.props.SaveLookups(event.dataItem.entitySID, "Insurance");
+        }
+        //this.selectInsurance();
+        this.toggleInsuranceApplyDialog();
+    };
     onInsuranceKeyDown = (event) => {
         var selectedDataItems = event.dataItems.slice(
             event.startRowIndex,
@@ -374,6 +408,16 @@ class insurancePayments extends Component {
             });
         }
     };
+    onInsuranceApplyKeyDown = (event) => {
+        var selectedDataItems = event.dataItems.slice(
+            event.startRowIndex,
+            event.endRowIndex + 1
+        );
+        this.setState({
+            insuranceApplySelectedState: selectedDataItems[0].sortName,
+            insuranceApplyIDSelectedState: selectedDataItems[0].entitySID,
+        });
+    };
     insuranceSearch = async (refreshData, skip) => {
         this.props.getinsuranceList(
             this.state.insuranceSearchText,
@@ -382,21 +426,21 @@ class insurancePayments extends Component {
         );
     };
     onInsuranceSelectionChange = (event) => {
-        var selectedDataItems = event.dataItems.slice(
-            event.startRowIndex,
-            event.endRowIndex + 1
-        );
-        if (this.state.insuranceVisible) {
-            this.setState({
-                insuranceSelectedState: selectedDataItems[0].sortName,
-                insuranceIDSelectedState: selectedDataItems[0].entitySID,
-            });
-        } else if (this.state.insuranceDetailsVisible) {
-            this.setState({
-                insuranceDetailsSelectedState: selectedDataItems[0].sortName,
-                insuranceDetailsIDSelectedState: selectedDataItems[0].entitySID,
-            });
-        }
+        // var selectedDataItems = event.dataItems.slice(
+        //     event.startRowIndex,
+        //     event.endRowIndex + 1
+        // );
+        // if (this.state.insuranceVisible) {
+        //     this.setState({
+        //         insuranceSelectedState: selectedDataItems[0].sortName,
+        //         insuranceIDSelectedState: selectedDataItems[0].entitySID,
+        //     });
+        // } else if (this.state.insuranceDetailsVisible) {
+        //     this.setState({
+        //         insuranceDetailsSelectedState: selectedDataItems[0].sortName,
+        //         insuranceDetailsIDSelectedState: selectedDataItems[0].entitySID,
+        //     });
+        // }
     };
     cancelInsuranceDialog = () => {
         if (this.state.insuranceVisible) {
@@ -409,6 +453,12 @@ class insurancePayments extends Component {
             });
         }
         this.toggleInsuranceDialog();
+    };
+    cancelInsuranceApplyDialog = () => {
+            this.setState({
+                insuranceSelectedState: null,
+            });
+        this.toggleInsuranceApplyDialog();
     };
     onSortChange = () => { };
     toggleSaveInsuranceDialog = () => {
@@ -771,25 +821,24 @@ class insurancePayments extends Component {
             return;
         }
         else
-         if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
-        //     //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
-        //     //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
-         )
-          {
-            this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
-         }
-        else {
-            this.setState({
-                error: true,
-                message: "Payment Plan or Practice is Not Matched With Selected Claim, Please Select Another Claim or Another Payment",
-            });
-            setTimeout(() => {
+            if (event.dataItem.practiceID == this.state.InsurancePaymentDetails.practiceID
+                //     //&&(event.dataItem.plan1 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan2 == this.state.InsurancePaymentDetails.payorID
+                //     //    || event.dataItem.plan3 == this.state.InsurancePaymentDetails.payorID || event.dataItem.plan4 == this.state.InsurancePaymentDetails.payorID)
+            ) {
+                this.setState({ ShowApplyPayment: true, paymentRow: event.dataItem });
+            }
+            else {
                 this.setState({
-                    error: false,
+                    error: true,
+                    message: "Payment Plan or Practice is Not Matched With Selected Claim, Please Select Another Claim or Another Payment",
                 });
-            }, this.state.timer);
-            return;
-        }
+                setTimeout(() => {
+                    this.setState({
+                        error: false,
+                    });
+                }, this.state.timer);
+                return;
+            }
     };
     togglePaymentDialog = () => {
         this.setState({ ShowApplyPayment: false });
@@ -852,9 +901,10 @@ class insurancePayments extends Component {
         });
         let applyData = await this.props.getApplyInsurancePayment(
             this.state.patientApplyGuarantorID,
-            this.state.txnApplyDatetype,
+            this.state.txnApplyDatetype ? this.state.txnApplyDatetype.id : 0,
             this.state.txnApplyDate ? new Date(this.state.txnApplyDate) : null,
-            this.state.insuranceApplyID,
+            this.state.toTxnApplyDate?new Date(this.state.toTxnApplyDate):null,
+            this.state.insuranceApplyIDSelectedState,
             this.state.billNumber
         );
         this.setState({
@@ -919,11 +969,11 @@ class insurancePayments extends Component {
                         adjustment: item.adjustments,
                         PaymentType: "I",
                         paymentRemaining: this.state.InsurancePaymentDetails?.remaining,
-                        deductibleApplied : item.deductibleApplied,
-                        copayAmount : item.copayAmount,
-                        approvedAmount : item.approvedAmount,
+                        deductibleApplied: item.deductibleApplied,
+                        copayAmount: item.copayAmount,
+                        approvedAmount: item.approvedAmount,
                         goToNext: item.moveToNextPlan,
-                        ChargeAdjustments:item.ChargeAdjustmentDetails,
+                        ChargeAdjustments: item.ChargeAdjustmentDetails,
                         planID: item.respCoverageOrder == 1 ? item.plan1 : item.respCoverageOrder == 2 ? item.plan2 : item.respCoverageOrder == 3 ? item.plan3 : item.respCoverageOrder == 4 ? item.plan4 : null,
                         policyNumber: item.respCoverageOrder == 1 ? item.policyNumber1 : item.respCoverageOrder == 2 ? item.policyNumber2 : item.respCoverageOrder == 3 ? item.policyNumber3 : item.respCoverageOrder == 4 ? item.policyNumber4 : "",
                     }
@@ -1066,8 +1116,8 @@ class insurancePayments extends Component {
         data[paymentindex].moveToNextPlan = row.moveToNextPlan;
         data[paymentindex].deductibleApplied = row.deductibleApplied;
         data[paymentindex].copayAmount = row.copayAmount;
-        data[paymentindex].approvedAmount=row.approvedAmount;
-        data[paymentindex].ChargeAdjustmentDetails=row.ChargeAdjustmentDetails;
+        data[paymentindex].approvedAmount = row.approvedAmount;
+        data[paymentindex].ChargeAdjustmentDetails = row.ChargeAdjustmentDetails;
         data[paymentindex].isEdit = true;
         this.setState({
             applyPlanPayments: data,
@@ -1095,7 +1145,7 @@ class insurancePayments extends Component {
                     style={{
                         backgroundColor: "white",
                         padding: "5px",
-                        zIndex:0
+                        zIndex: 0
                     }}
                 >
                     <NotificationComponent
@@ -1110,7 +1160,7 @@ class insurancePayments extends Component {
                     {this.state.ShowApplyPayment && (
                         <ApplyPlanPaymentDialogComponent
                             paymentRow={this.state.paymentRow}
-                            planId= {this.state.InsurancePaymentDetails?.payorID}
+                            planId={this.state.InsurancePaymentDetails?.payorID}
                             togglePaymentDialog={this.togglePaymentDialog}
                             applyPaymentTransaction={this.applyPaymentTransaction}
                         ></ApplyPlanPaymentDialogComponent>
@@ -1208,6 +1258,30 @@ class insurancePayments extends Component {
                                 getNextData={true}
                             ></FindDialogComponent>
                         )}
+                        {(this.state.insuranceApplyVisible) && (
+                            <FindDialogComponent
+                                title="Plan Search"
+                                placeholder="Enter Plan Company Name Or Company Code"
+                                searcTextBoxValue={this.state.insuranceApplySearchText}
+                                onTextSearchChange={(e) => {
+                                    this.setState({
+                                        insuranceApplySearchText: e.value,
+                                    });
+                                }}
+                                clickOnSearch={this.insuranceSearch}
+                                dataItemKey="entitySID"
+                                data={this.props.insuranceList}
+                                columns={insurancePatientColumns}
+                                onSelectionChange={this.onInsuranceSelectionChange}
+                                onRowDoubleClick={this.onInsuranceApplyDoubleClick}
+                                onKeyDown={this.onInsuranceApplyKeyDown}
+                                idGetterLookup={idGetterInsurance}
+                                toggleDialog={this.cancelInsuranceApplyDialog}
+                                cancelDialog={this.cancelInsuranceApplyDialog}
+                                getNextData={true}
+                            ></FindDialogComponent>
+                        )}
+                        
                     <PanelBar onSelect={this.handleSelect} expandMode={"single"}>
                         <PanelBarItem
                             id="InsurancePaymentSearch"
@@ -1320,10 +1394,10 @@ class insurancePayments extends Component {
                                         onChange={(e) => this.setState({ txnDatetype: e.value })}
                                     ></DropDown>
                                 </div>
-                                {this.state.txnDatetype !=null && this.state.txnDatetype.id =="4" &&(
-                                <div style={{ width: "28px", marginLeft: "10px" }}>
-                                    <label className="userInfoLabel">From </label>
-                                </div>)}
+                                {this.state.txnDatetype != null && this.state.txnDatetype.id == "4" && (
+                                    <div style={{ width: "28px", marginLeft: "10px" }}>
+                                        <label className="userInfoLabel">From </label>
+                                    </div>)}
                                 <div className="dateStyle" style={{ marginLeft: "5px" }}>
                                     <DatePickerComponent
                                         className="unifyHeight"
@@ -1333,21 +1407,21 @@ class insurancePayments extends Component {
                                         onChange={(e) => this.setState({ txnDate: e.value })}
                                     ></DatePickerComponent>
                                 </div>
-                                {this.state.txnDatetype !=null && this.state.txnDatetype.id =="4" &&(
-                                <div style={{ width: "15px", marginLeft: "10px" }}>
-                                    <label className="userInfoLabel">To </label>
-                                </div>
+                                {this.state.txnDatetype != null && this.state.txnDatetype.id == "4" && (
+                                    <div style={{ width: "15px", marginLeft: "10px" }}>
+                                        <label className="userInfoLabel">To </label>
+                                    </div>
                                 )}
-                                {this.state.txnDatetype !=null && this.state.txnDatetype.id =="4" &&(
-                                <div className="dateStyle" style={{ marginLeft: "5px" }}>
-                                    <DatePickerComponent
-                                        className="unifyHeight"
-                                        placeholder="MM/DD/YYYY"
-                                        format="M/dd/yyyy"
-                                        value={this.state.toDos}
-                                        onChange={(e) => this.setState({ totxnDate: e.value })}
-                                    ></DatePickerComponent>
-                                </div>
+                                {this.state.txnDatetype != null && this.state.txnDatetype.id == "4" && (
+                                    <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                        <DatePickerComponent
+                                            className="unifyHeight"
+                                            placeholder="MM/DD/YYYY"
+                                            format="M/dd/yyyy"
+                                            value={this.state.toDos}
+                                            onChange={(e) => this.setState({ totxnDate: e.value })}
+                                        ></DatePickerComponent>
+                                    </div>
                                 )}
                                 <div style={{ width: "57px", marginLeft: "10px" }}>
                                     <label className="userInfoLabel">Amount</label>
@@ -2069,9 +2143,9 @@ class insurancePayments extends Component {
                                                                         this.state.insuranceApplyNameSelected,
                                                                 }}
                                                                 value={{
-                                                                    entityId: this.state.insuranceApplyID,
+                                                                    entityId: this.state.insuranceApplyIDSelectedState,
                                                                     entityName:
-                                                                        this.state.insuranceApplyNameSelected,
+                                                                        this.state.insuranceApplySelectedState,
                                                                 }}
                                                                 onChange={(e) =>
                                                                     this.setState({
@@ -2093,7 +2167,7 @@ class insurancePayments extends Component {
                                                                 type="search"
                                                                 classButton="infraBtn-primary find-button"
                                                                 onClick={() =>
-                                                                    this.toggleInsuranceDialog(false)
+                                                                    this.toggleInsuranceApplyDialog()
                                                                 }
                                                                 style={{ marginTop: "0px" }}
                                                             >
@@ -2125,6 +2199,11 @@ class insurancePayments extends Component {
                                                                 }
                                                             ></DropDown>
                                                         </div>
+                                                        {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
+                                                            <div style={{ width: "28px", marginLeft: "10px" }}>
+                                                                <label className="userInfoLabel">From </label>
+                                                            </div>
+                                                        )}
                                                         <div
                                                             className="dateStyle"
                                                             style={{ marginLeft: "5px" }}
@@ -2139,6 +2218,22 @@ class insurancePayments extends Component {
                                                                 }
                                                             ></DatePickerComponent>
                                                         </div>
+                                                        {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
+                                                            <div style={{ width: "15px", marginLeft: "10px" }}>
+                                                                <label className="userInfoLabel">To </label>
+                                                            </div>
+                                                        )}
+                                                        {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
+                                                            <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                                                <DatePickerComponent
+                                                                    className="unifyHeight"
+                                                                    placeholder="MM/DD/YYYY"
+                                                                    format="M/dd/yyyy"
+                                                                    value={this.state.toTxnApplyDate}
+                                                                    onChange={(e) => this.setState({ toTxnApplyDate: e.value })}
+                                                                ></DatePickerComponent>
+                                                            </div>
+                                                        )}
                                                         <div>
                                                             <ButtonComponent
                                                                 icon="search"
