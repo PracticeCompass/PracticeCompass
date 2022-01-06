@@ -73,9 +73,9 @@ const DATA_ITEM_KEY_Physician = "entitySID";
 const idGetterPhysicianID = getter(DATA_ITEM_KEY_Physician);
 const filters = [
     { label: "Rejections", value: "rejections" },
-    { label: "Denails", value: "denails" },
+    { label: "Denials", value: "denials" },
     { label: "Past Due", value: "pastDue" },
-    { label: "Timely Filling", value: "timelyFilling" },
+    { label: "Timely Filing", value: "timelyFiling" },
     { label: "Filter", value: "filter" },
 ];
 
@@ -1140,7 +1140,7 @@ class ClaimList extends Component {
                 timelyFillingFilter : false,
             });
             await this.claimGridSearch();
-        } else if (e.value === "denails") {
+        } else if (e.value === "denials") {
             await this.setState({
                 showFilter: false,
                 rejectionsFilter: false,
@@ -1158,7 +1158,7 @@ class ClaimList extends Component {
                 timelyFillingFilter: false,
             });
             await this.claimGridSearch();
-        } else if (e.value === "timelyFilling") {
+        } else if (e.value === "timelyFiling") {
             await  this.setState({
                 showFilter: false,
                 rejectionsFilter: false,
