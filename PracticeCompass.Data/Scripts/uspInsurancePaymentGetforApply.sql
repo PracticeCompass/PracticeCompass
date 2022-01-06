@@ -18,18 +18,18 @@ CREATE OR ALTER PROCEDURE [dbo].[uspInsurancePaymentGetforApply]
 AS
 BEGIN
 	SET NOCOUNT ON;
-	Declare  @SQL varchar(max), @DOSfilter varchar(50)  , @insurancefilter varchar(200)
+	Declare  @SQL varchar(max), @DOSfilter varchar(200)  , @insurancefilter varchar(200)
 
 	 	set @DOSfilter=Case @DOSType 
-		when 1 then 'and ([ProcedureEvent.FromServiceDate] = '+@DOSvalue+' ))'
-		when 2 then 'and ([ProcedureEvent.FromServiceDate] < '+@DOSvalue+' ))'
-		when 3 then 'and ([ProcedureEvent.FromServiceDate] > '+@DOSvalue+' ))'
-		when 4 then 'and ([ProcedureEvent.FromServiceDate] between'+@DOSvalue+'and'+@ToDOSvalue+'))'
+		when 1 then 'and (ProcedureEvent.FromServiceDate = '+@DOSvalue+' )'
+		when 2 then 'and (ProcedureEvent.FromServiceDate < '+@DOSvalue+' )'
+		when 3 then 'and (ProcedureEvent.FromServiceDate > '+@DOSvalue+' )'
+		when 4 then 'and (ProcedureEvent.FromServiceDate between '+@DOSvalue+' and '+@ToDOSvalue+' )'
 		else ''
 		end
 		set @insurancefilter=Case @InsuranceID 
 		when 0 then ''
-		else 'and ((PlanClaim.PlanID= '+convert(varchar, @InsuranceID,10)+'  ))'
+		else 'and (PlanClaim.PlanID= '+convert(varchar, @InsuranceID,10)+'  )'
 		END
 
 set @SQL= 'select distinct Charge.ChargeSID ,CONVERT(varchar,ProcedureEvent.FromServiceDate,101) As FromServiceDate, 
