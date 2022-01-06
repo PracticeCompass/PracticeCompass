@@ -194,7 +194,7 @@ class LookUpsList extends Component {
                 lookupFilter: this.props.lookupFilter
             })
         }else{
-            this.setState({lookupFilter:"SyatemLookup"});
+            this.setState({lookupFilter:"SystemLookup"});
         }
         this.lookupsGridSearch(this.props.selectedLookUpType,false,this.props.lookupFilter);
         this.updateDimensions();

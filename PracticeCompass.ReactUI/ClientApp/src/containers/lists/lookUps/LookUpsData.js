@@ -47,7 +47,7 @@ export const lookupColumns = [
 
 ];
 export const LookupFilter = [
-    { id: "SyatemLookup", label: "Syatem Lookup", value: "SyatemLookup" },
+    { id: "SystemLookup", label: "System Lookup", value: "SystemLookup" },
     { id: "UserLookup", label: "User Lookup", value: "UserLookup" },
 ];
 
