@@ -129,12 +129,18 @@ namespace PracticeCompass.Messaging.Genaration
                         {
                             var loop2320 = new Generateloop2320segment(childmodel, FieldSeparator, unknownplaceholder);
                             var loop2320_SBR = loop2320.GenerateLoop2320_SBR_segment();
-                            var loop2320_payerAMT = loop2320.GenerateLoop2320_payerAMT_segment();
-                            var loop2320_patientAMT = loop2320.GenerateLoop2320_patientAMT_segment();
-                            var loop2320_OI = loop2320.GenerateLoop2320_OI_segment();
                             transactionEnvelope.Segments.Add(loop2320_SBR);
-                            transactionEnvelope.Segments.Add(loop2320_payerAMT);
-                            transactionEnvelope.Segments.Add(loop2320_patientAMT);
+                            if (childmodel.InsuranceReceipts != 0)
+                            {
+                                var loop2320_payerAMT = loop2320.GenerateLoop2320_payerAMT_segment();
+                                transactionEnvelope.Segments.Add(loop2320_payerAMT);
+                            }
+                            if ((childmodel.ApprovedAmount - childmodel.InsuranceReceipts) != 0)
+                            {
+                                var loop2320_patientAMT = loop2320.GenerateLoop2320_patientAMT_segment();
+                                transactionEnvelope.Segments.Add(loop2320_patientAMT);
+                            }
+                            var loop2320_OI = loop2320.GenerateLoop2320_OI_segment();
                             transactionEnvelope.Segments.Add(loop2320_OI);
                         }
                         // create 2010BA
@@ -197,8 +203,11 @@ namespace PracticeCompass.Messaging.Genaration
                                 var loop2310B_NM1 = loop2310B.GenerateLoop2310B_NM1_segment();
                                 transactionEnvelope.Segments.Add(loop2310B_NM1);
                             }
-                            var loop2310B_PRV = loop2310B.GenerateLoop2310B_PRV_segment();
-                            transactionEnvelope.Segments.Add(loop2310B_PRV);
+                            if (!string.IsNullOrEmpty(childmodel.renderingTaxonomy))
+                            {
+                                var loop2310B_PRV = loop2310B.GenerateLoop2310B_PRV_segment();
+                                transactionEnvelope.Segments.Add(loop2310B_PRV);
+                            }
                             #endregion
                             #region Loop: 2310C
                             if (string.IsNullOrEmpty(childmodel.RefLastName))

@@ -28,11 +28,11 @@ BEGIN
 	Billingadress.Line1 as BillingLine1,Billingadress.Line2 as BillingLine2 , Billingadress.City as BillingCity,
 	BillingState.StateCode as BillingState,Billingadress.Zip as BillingZip ,BillingNPI.ID as BillingNPI, BillingTaxID.ID as BillingTaxID,
 	rendering.LastName as renderingLastName, rendering.MiddleName as renderingMiddleName,rendering.FirstName as renderingFirstName, 
-	rendering.NameSuffix as renderingSuffix,renderingTaxID.ID as renderingTaxonomy,renderingNPI.ID as renderingNPI, 
+	rendering.NameSuffix as renderingSuffix,renderingstaff.DefaultSpecialtyCode as renderingTaxonomy,renderingNPI.ID as renderingNPI, 
 	--ProviderSpecialty.SpecialtyCode as TaxonomyCode ,
 	ServiceCenteradress.Line1 as ServiceCenterLine1,
 	ServiceCenteradress.Line2 as ServiceCenterLine2 , ServiceCenteradress.City as ServiceCenterCity,
-	ServiceCenterState.StateCode as ServiceCenterState,ServiceCenteradress.Zip as ServiceCenterZip , PolicyMember.CoverageOrder
+	ServiceCenterState.StateCode as ServiceCenterState,ServiceCenteradress.Zip as ServiceCenterZip , PlanClaim.CoverageOrder
 	,PolicyMember.RelationToSub ,PolicyMember.ClaimMemberID, [Plan].SortName as PlanName,
 	PlanAddress.Line1 as PlanLine1 , PlanAddress.Line2 as PlanLine2 , 
 	PlanAddress.Zip as PlanZip , PlanAddress.City as PlanCity , PlanAddress.State as PlanState,
@@ -65,6 +65,7 @@ inner join Practice on ProcedureEvent.PracticeID = Practice.PracticeID
 left outer join  ServiceCenter on ServiceCenter.ServiceCenterID = ProcedureEvent.ServiceCenterID
 left outer join Provider as billingProvider on billingProvider.ProviderID=PlanClaim.BillingProviderID
 left outer join Provider as rendering on rendering.ProviderID=ProcedureEvent.StaffID
+left outer join Staff as renderingstaff on renderingstaff.StaffID=rendering.ProviderID
 left outer join Address as ServiceCenteradress on ServiceCenteradress.EntitySID = ServiceCenter.ServiceCenterID
 left outer join CountryState as ServiceCenterState on ServiceCenteradress.State = ServiceCenterState.StateCode
 left outer join Address as Billingadress on Billingadress.EntitySID = billingProvider.ProviderID

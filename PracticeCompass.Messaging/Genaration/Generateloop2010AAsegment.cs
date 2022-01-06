@@ -28,16 +28,16 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2010AA_N3_segment()
         {
             var N3 = new Segment { Name = "N3", FieldSeparator = FieldSeparator };
-            N3[1] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingLine1: _claimMessageModel.PracticeLine1;
-            N3[2] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingLine2 : _claimMessageModel.PracticeLine2;
+            N3[1] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingLine1: _claimMessageModel.ServiceCenterLine1;
+            N3[2] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingLine2 : _claimMessageModel.ServiceCenterLine2;
             return N3;
         }
         public Segment GenerateLoop2010AA_N4_segment()
         {
             var N4 = new Segment { Name = "N4", FieldSeparator = FieldSeparator };
-            N4[1] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingCity : _claimMessageModel.PracticeCity;
-            N4[2] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingState : _claimMessageModel.PracticeState;
-            N4[3] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingZip : _claimMessageModel.PracticeZip;
+            N4[1] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingCity : _claimMessageModel.ServiceCenterCity;
+            N4[2] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingState : _claimMessageModel.ServiceCenterState;
+            N4[3] = _claimMessageModel.BillingProviderType == "I" ? _claimMessageModel.BillingZip : _claimMessageModel.ServiceCenterZip;
             return N4;
         }
         public Segment GenerateLoop2010AA_REF_segment()
