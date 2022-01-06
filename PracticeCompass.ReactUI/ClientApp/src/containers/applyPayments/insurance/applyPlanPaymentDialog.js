@@ -333,7 +333,7 @@ class ApplyPlanPaymentDialogComponent extends Component {
                 type="numeric"
                 format="c2"
                 className="unifyHeight"
-                disabled={this.state.approvedAmount>0?false:true}
+                disabled={this.state.approvedAmount>0?true:false}
                 value={this.state.approvedAmount}
                 onChange={(e) =>
                   this.setState({
