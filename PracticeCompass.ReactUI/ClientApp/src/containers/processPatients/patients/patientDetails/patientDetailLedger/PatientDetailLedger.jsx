@@ -127,10 +127,10 @@ class PatientDetailLedger extends Component {
       backgroundColor: "rgb(255, 255, 255)",
     };
     const yellow = {
-      backgroundColor: "rgb(255, 255, 0)",
+        backgroundColor: "rgb(252, 252, 207)",
     };
     const green = {
-      backgroundColor: "rgb(55, 180, 0,0.32)",
+        backgroundColor: "rgb(144,238,144)",
     };
     // const orange= {
     //   backgroundColor: "rgb(255, 191, 128)",
