@@ -431,29 +431,29 @@ class InsuranceDetails extends Component {
                       <div style={{ width: "200px", float: "left" }}>
                         <CheckboxComponent
                           style={{ marginRight: "5px" }}
-                          id="isCopayExmpted"
+                          id="instituteAsRendering"
                           label="Use Institute As Rendering"
-                          value={this.state.isCopayExmpted}
-                          onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                          value={this.state.instituteAsRendering}
+                          onChange={(e) => this.setState({ instituteAsRendering: e.value })}
                         />
                       </div>
                     </div>
                     <div style={{ width: "180px", marginLeft: "-32px" }}>
                       <CheckboxComponent
                         style={{ marginRight: "5px" }}
-                        id="isCopayExmpted"
+                        id="useSSNAsCardNumber"
                         label="Use SSN as CardNumber"
-                        value={this.state.isCopayExmpted}
-                        onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                        value={this.state.useSSNAsCardNumber}
+                        onChange={(e) => this.setState({ useSSNAsCardNumber: e.value })}
                       />
                     </div>
                     <div style={{ width: "180px" }}>
                       <CheckboxComponent
                         style={{ marginRight: "5px" }}
-                        id="isCopayExmpted"
+                        id="suppressSecondaryIds"
                         label="Suppress Secondary Ids"
-                        value={this.state.isCopayExmpted}
-                        onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                        value={this.state.suppressSecondaryIds}
+                        onChange={(e) => this.setState({ suppressSecondaryIds: e.value })}
                       />
                     </div>
                   </div>
@@ -467,26 +467,26 @@ class InsuranceDetails extends Component {
                       style={{ marginRight: "5px" }}
                       id="supportEligibility"
                       label="Support Eligibility"
-                      value={this.state.isCopayExmpted}
-                      onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                      value={this.state.supportEligibility}
+                      onChange={(e) => this.setState({ supportEligibility: e.value })}
                     />
                   </div>
                   <div style={{ width: "180px" }}>
                     <CheckboxComponent
                       style={{ marginRight: "5px" }}
-                      id="isCopayExmpted"
+                      id="inactivate"
                       label="Inactivate"
-                      value={this.state.isCopayExmpted}
-                      onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                      value={this.state.inactivate}
+                      onChange={(e) => this.setState({ inactivate: e.value })}
                     />
                   </div>
                   <div style={{ width: "280px" }}>
                     <CheckboxComponent
                       style={{ marginRight: "5px" }}
-                      id="isCopayExmpted"
+                      id="useReferringSameAsRendering"
                       label="Use Referring Same As Rendering"
-                      value={this.state.isCopayExmpted}
-                      onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                      value={this.state.useReferringSameAsRendering}
+                      onChange={(e) => this.setState({ useReferringSameAsRendering: e.value })}
                     />
                   </div>
                 </div>
@@ -499,8 +499,8 @@ class InsuranceDetails extends Component {
                       style={{ marginRight: "5px" }}
                       id="supportEligibility"
                       label="Send Home Claims Service Location"
-                      value={this.state.isCopayExmpted}
-                      onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                      value={this.state.sendHomeClaimsServiceLocation}
+                      onChange={(e) => this.setState({ sendHomeClaimsServiceLocation: e.value })}
                     />
                   </div>
                   <div style={{ width: "280px" }}>
@@ -508,8 +508,8 @@ class InsuranceDetails extends Component {
                       style={{ marginRight: "5px" }}
                       id="isCopayExmpted"
                       label="Force Old HCFA"
-                      value={this.state.isCopayExmpted}
-                      onChange={(e) => this.setState({ isCopayExmpted: e.value })}
+                      value={this.state.forceOldHCFA}
+                      onChange={(e) => this.setState({ forceOldHCFA: e.value })}
                     />
                   </div>
                 </div>
