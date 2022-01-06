@@ -168,7 +168,8 @@ class Patient extends Component {
         sortDirection: null,
         patientListColumns: columns,
         gridWidth: 0,
-        _export:null
+        _export: null,
+        showfilter: true,
     };
     setExporter=(exporter)=>{
         this.setState({_export:exporter});
@@ -780,6 +781,16 @@ class Patient extends Component {
         });
         this.toggleInsuranceDialog();
     };
+    expandFilter = () => {
+        this.setState({
+            showfilter: true,
+        });
+    };
+    collapseFilter = () => {
+        this.setState({
+            showfilter: false,
+        });
+    };
     patientGridSearch = async (refreshData = true) => {
         var patientGrid = {
             PatientID: this.state.selectedPatient
@@ -881,7 +892,7 @@ class Patient extends Component {
                             saveFilter={this.saveFilter}
                         ></SaveFilterComponent>
                     )}
-                    <div style={{ width: "100%" }}>
+                    {this.state.showfilter && <div style={{ width: "100%" }}>
                         <div
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -935,7 +946,6 @@ class Patient extends Component {
                                 </ButtonComponent>
                             </div>
                         </div>
-
                         <div
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -974,12 +984,6 @@ class Patient extends Component {
                                 </div>
                             </div>
                             <div style={{ float: "left", width: "536px" }}>
-                                {/* <label
-                  className="userInfoLabel"
-                  style={{ float: "left" }}
-                >
-                  Practice{" "}
-                </label> */}
                                 <div style={{ float: "left", marginLeft: "5px" }}>
                                     <label className="userInfoLabel">Practice</label>
                                 </div>
@@ -1017,40 +1021,6 @@ class Patient extends Component {
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
                         >
-                            {/* <div style={{ float: "left", width: "341px" }}>
-                <div style={{ float: "left" }}>
-                  <label
-                    className="userInfoLabel"
-                    style={{ marginLeft: "6px" }}
-                  >
-                    DOB
-                  </label>
-                </div> 
-                 <div
-                  style={{ float: "left", width: "148px", marginRight: "3px" }}
-                >
-                  <DropDown
-                    className="unifyHeight"
-                    id="DOB"
-                    name="DOB"
-                    data={DOBFilter}
-                    textField="text"
-                    dataItemKey="text"
-                    defaultValue={this.state.dobtype}
-                    value={this.state.dobtype}
-                    onChange={(e) => this.setState({ dobtype: e.value })}
-                  ></DropDown>
-                </div>
-                <div style={{ float: "left", width: "150px" }}>
-                  <DatePickerComponent
-                    className="unifyHeight"
-                    placeholder="MM/DD/YYYY"
-                    format="M/dd/yyyy"
-                    value={this.state.dndob}
-                    onChange={(e) => this.setState({ dndob: e.value })}
-                  ></DatePickerComponent>
-                </div> 
-              </div> */}
                             <div style={{ float: "left", width: "505px" }}>
                                 <div style={{ float: "left" }}>
                                     <label className="userInfoLabel">Patient Type</label>
@@ -1189,6 +1159,8 @@ class Patient extends Component {
                                 </div>
                             </div>
                         </div>
+                    </div>}
+                    <div>
                         <div
                             className="rowHeight"
                             style={{
@@ -1198,6 +1170,22 @@ class Patient extends Component {
                             }}
                         >
                             <div style={{ float: "left", width: "430px" }}>
+                                {this.state.showfilter && <ButtonComponent
+                                    classButton="infraBtn-primary action-button"
+                                    look="outline"
+                                    icon="arrow-60-up"
+                                    type="search"
+                                    onClick={this.collapseFilter}
+                                >
+                                </ButtonComponent>}
+                                {!this.state.showfilter && <ButtonComponent
+                                    classButton="infraBtn-primary action-button"
+                                    look="outline"
+                                    icon="arrow-60-down"
+                                    type="search"
+                                    onClick={this.expandFilter}
+                                >
+                                </ButtonComponent>}
                                 <ButtonComponent
                                     classButton="infraBtn-primary action-button"
                                     look="outline"
@@ -1240,7 +1228,7 @@ class Patient extends Component {
                                     icon="export"
                                     classButton="infraBtn-primary"
                                     onClick={() => {
-                                        exportExcelFile(this.state._export,this.props.Patients,this.state.patientListColumns);
+                                        exportExcelFile(this.state._export, this.props.Patients, this.state.patientListColumns);
                                     }}
                                 >
                                     Export to Excel

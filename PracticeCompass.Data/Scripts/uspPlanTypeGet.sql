@@ -16,7 +16,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	select top 20  lookupcode, description from [dbo].[LookupCode] where lookuptype = 'planclass' and( @description is null or @description='' or description like @description+'%')
+	select top 20  lookupcode, description from [dbo].[LookupCode] where lookuptype = 'planclass'  and RecordStatus = 'A' and( @description is null or @description='' or description like @description+'%')
 
 	order by Description
 END
