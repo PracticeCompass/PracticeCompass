@@ -163,7 +163,8 @@ class LookUpsList extends Component {
         });
     };
     lookupsGridSearch = async (lookupType, showNotification = false,lookupFilter=null) => {
-        if (this.state.selectedLookUpType == null && (lookupType == undefined && lookupType?.entityId == undefined) && showNotification) {
+        if ((this.state.selectedLookUpType == null || this.state.selectedLookUpType=="")
+            && (lookupType =="" || (lookupType == undefined && lookupType?.entityId == undefined)) && showNotification) {
             this.setState({ warning: true, message: "Please select lookup type." });
             setTimeout(() => {
                 this.setState({
