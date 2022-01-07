@@ -116,7 +116,7 @@ class PhysiciansDetails extends Component {
                       ></TextBox>
                     </div>
                   </div>
-                  <div style={{ float: "left", width: "282px", marginLeft: "13px" }}>
+                  <div style={{ float: "left", width: "296px", marginLeft: "13px" }}>
                     <div style={{ float: "left" }}>
                       <label className="userInfoLabel">First Name</label>
                     </div>
@@ -130,7 +130,7 @@ class PhysiciansDetails extends Component {
                     <div style={{ float: "left", marginLeft: "15px" }}>
                       <label className="userInfoLabel">M.I.</label>
                     </div>
-                    <div style={{ float: "left", width: "36px" }}>
+                    <div style={{ float: "left", width: "50px" }}>
                       <TextBox
                         max={1}
                         className="unifyHeight"

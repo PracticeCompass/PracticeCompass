@@ -681,8 +681,9 @@ class PatientDetailSummary extends Component {
                   <div style={{ float: "left", marginLeft: "15px" }}>
                     <label className="userInfoLabel">M.I.</label>
                   </div>
-                  <div style={{ float: "left", width: "36px" }}>
+                  <div style={{ float: "left", width: "50px" }}>
                     <TextBox
+                      max={1}
                       className="unifyHeight"
                       value={this.state.MI}
                       onChange={(e) => this.setState({ MI: e.value })}
