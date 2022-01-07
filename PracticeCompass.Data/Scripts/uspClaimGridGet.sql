@@ -70,12 +70,12 @@ BEGIN
 		
 		set @rejectionsClaimsfilter=Case @IncludeRejections
 		when 0 then ''
-		when 1 then 'and (ClaimStatusPrimary.status = ''Rejected''  or ClaimStatusSeconadry.status = ''Rejected'' or ClaimStatusTertiary.status = ''Rejected'')'
+		when 1 then 'or (ClaimStatusPrimary.status = ''Rejected''  or ClaimStatusSeconadry.status = ''Rejected'' or ClaimStatusTertiary.status = ''Rejected'')'
 		else ''
 		end
 		set @DenialsClaimsfilter=Case @IncludeDenials
 		when 0 then ''
-		when 1 then 'and (ClaimStatusPrimary.status = ''Denied''  or ClaimStatusSeconadry.status = ''Denied'' or ClaimStatusTertiary.status = ''Denied'')'
+		when 1 then 'or (ClaimStatusPrimary.status = ''Denied''  or ClaimStatusSeconadry.status = ''Denied'' or ClaimStatusTertiary.status = ''Denied'')'
 		else ''
 		end
 
@@ -85,11 +85,11 @@ BEGIN
 		end
 		else if @IncludeRejections = 1 and @IncludeDenials = 0
 		begin 
-		set @ClaimStatusFilter = 'and ('+@rejectionsClaimsfilter+')'
+		set @ClaimStatusFilter = @rejectionsClaimsfilter
 		end
 		else if @IncludeRejections = 0 and @IncludeDenials = 1
 		begin 
-		set @ClaimStatusFilter = 'and ('+@DenialsClaimsfilter+')'
+		set @ClaimStatusFilter = @DenialsClaimsfilter
 		end
 		else
 		begin 
