@@ -40,7 +40,9 @@ class FindDialogComponent extends Component {
   onKeyDown = () => { };
   onTextSearchChange = async(e) => {
     await this.props.onTextSearchChange(e);
-    this.props.clickOnSearch();
+    if(e.value.length>2 || e.value.length==0){
+       this.props.clickOnSearch();
+    }
   }
   render() {
     return (
