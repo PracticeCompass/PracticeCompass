@@ -7,6 +7,9 @@ import {
   columnsclaimNote
 } from "./ClaimDetailData";
 import { getter } from "@progress/kendo-react-common";
+import { exportExcelFile } from "../../../common/export";
+import ButtonComponent from "../../../../components/Button";
+import moment from "moment";
 const DATA_ITEM_KEY_NOTE = "claimNoteSID";
 const idGetterNoteID = getter(DATA_ITEM_KEY_NOTE);
 function mapStateToProps(state) {
@@ -21,7 +24,7 @@ function mapDispatchToProps(dispatch) {
 class ClaimDetailClaimNotes extends Component {
   state = {
     claimNotes: "",
-    claimId:null
+    claimId: null
   };
   onNoteGridSelectionChange = (event) => {
     if (event.dataItem) {
@@ -42,8 +45,11 @@ class ClaimDetailClaimNotes extends Component {
       });
     }
   }
-  onSortChange=()=>{
-    
+  setExporter = (exporter) => {
+    this.setState({ _export: exporter });
+};
+  onSortChange = () => {
+
   }
   render() {
     return (
@@ -60,6 +66,29 @@ class ClaimDetailClaimNotes extends Component {
           <div className="row">
             <div className="col-12">
               <label className="userInfoLabel">Claim Notes</label>
+              <div
+                style={{
+                  float: "right",
+                  // position: "absolute",
+                  // marginRight: "35px",
+                  // right: "0",
+                }}
+              >
+                <ButtonComponent
+                  type="add"
+                  icon="export"
+                  classButton="infraBtn-primary"
+                  onClick={() => {
+                    exportExcelFile(
+                      this.state._export,
+                      this.props.claimNotes,
+                      columnsclaimNote
+                    );
+                  }}
+                >
+                  Export to Excel
+                </ButtonComponent>
+              </div>
             </div>
           </div>
           <div className="row">
@@ -76,6 +105,7 @@ class ClaimDetailClaimNotes extends Component {
               ></TextArea>
             </div>
             <div className="col-6" style={{ marginTop: "3px" }}>
+
               <GridComponent
                 id="claimDetailClaimGridId"
                 data={this.props.claimNotes}
@@ -91,6 +121,12 @@ class ClaimDetailClaimNotes extends Component {
                 DATA_ITEM_KEY="claimNoteSID"
                 sortColumns={[]}
                 onSortChange={this.onSortChange}
+                setExporter={this.setExporter}
+                fileName={
+                    "Claim Note" +
+                    moment().format("DD/MM/YYYY, h:mm:ss a") +
+                    ".xlsx"
+                }
               ></GridComponent>
             </div>
           </div>
