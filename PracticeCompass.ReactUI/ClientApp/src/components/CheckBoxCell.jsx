@@ -39,7 +39,7 @@ export class CheckBoxCell extends React.Component {
         style={{ marginRight: "5px" }}
         label=""
         value={dataValue}
-        // disabled={!dataItem.inEdit}
+        disabled={!dataItem.inEdit}
         onChange={this.handleChange}
       />
     </td>;

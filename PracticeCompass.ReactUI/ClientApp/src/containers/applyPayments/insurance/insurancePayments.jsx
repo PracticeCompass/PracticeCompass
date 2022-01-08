@@ -32,6 +32,9 @@ import { getter } from "@progress/kendo-react-common";
 import { SaveLookups } from "../../../redux/actions/lookups";
 import NotificationComponent from "../../common/notification";
 import { exportExcelFile } from "../../common/export";
+import {
+    GetChargeAdjustmentDetails
+  } from "../../../redux/actions/payments";
 import moment from 'moment';
 import {
     GetGridColumns,
@@ -98,6 +101,7 @@ function mapDispatchToProps(dispatch) {
             dispatch(SaveLookups(EntityValueID, EntityName)),
         getPracticeList: (name) => dispatch(getPracticeList(name)),
         resetPracticeList: () => dispatch(resetPracticeList()),
+        GetChargeAdjustmentDetails: (chargeSID, claimSID, planId) => dispatch(GetChargeAdjustmentDetails(chargeSID, claimSID, planId)),
         getInsurancePayments: (
             PracticeID,
             PatientID,
@@ -806,8 +810,10 @@ class insurancePayments extends Component {
             selectedDataItems[0].sortName
         );
     };
-    onApplyPaymentGridSelectionChange = () => { };
+    onApplyPaymentGridSelectionChange = () => { 
+    };
     onApplyPaymentGridDoubleSelectionChange = (event) => {
+        debugger;
         if (this.state.InsurancePaymentDetails == null || this.state.applyPlanPayments == null) {
             this.setState({
                 warning: true,
@@ -953,8 +959,12 @@ class insurancePayments extends Component {
             let list = this.state.applyPlanPayments.filter(
                 (item) => item.isEdit == true
             );
+            let filterList=[];
+            list.map(
+                (item) => filterList.push({...item})
+            );
 
-            this.setState({ filterApplyPlanPayments: list || [] });
+            this.setState({ filterApplyPlanPayments: (filterList || [] )});
         }
     };
     ApplyListChanged = async () => {
@@ -1081,7 +1091,15 @@ class insurancePayments extends Component {
             });
         }
     };
-
+    applyItemChanged =async (event) => {
+        debugger;
+        let row =event.dataItem;
+        row[event.field]=event.value;
+        if(!row?.isEdit  || ( row?.ChargeAdjustmentDetails !=null || row?.ChargeAdjustmentDetails.length != 0 )){
+            row["ChargeAdjustmentDetails"] = await this.props.GetChargeAdjustmentDetails(row?.chargeSID, row?.claimSID, this.state.InsurancePaymentDetails?.payorID);
+        }
+        this.applyPaymentTransaction(row)
+    }
     applyPaymentTransaction = (row) => {
         if (row.chargeBalance < 0) return;
 
@@ -1126,7 +1144,7 @@ class insurancePayments extends Component {
             applyPlanPayments: data,
             InsurancePaymentDetails: InsurancePaymentDetailsCopy,
         });
-        this.filterApplyListChanged();
+        //this.filterApplyListChanged();
         this.togglePaymentDialog();
     };
     setExporter = (exporter) => {
@@ -2305,7 +2323,32 @@ class insurancePayments extends Component {
                                                 >
                                                     Assignement Payment
                                                 </legend>
-
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        flexFlow: "row nowrap",
+                                                        width: "100%",
+                                                    }}
+                                                >
+                                                    <ButtonComponent
+                                                        icon="edit"
+                                                        type="edit"
+                                                        classButton="infraBtn-primary"
+                                                        onClick={() => {
+                                                            this.filterApplyListChanged();
+                                                        }}
+                                                        style={{ marginTop: "0px", marginLeft: "12px" }}
+                                                        disabled={
+                                                            this.state.disableApply ||
+                                                            this.state.applyPlanPayments == null ||
+                                                            this.state.applyPlanPayments.filter(
+                                                                (item) => item.isEdit
+                                                            ).length == 0
+                                                        }
+                                                    >
+                                                        Apply
+                                                    </ButtonComponent>
+                                                </div>
                                                 <div
                                                     style={{
                                                         display: "flex",
@@ -2328,12 +2371,12 @@ class insurancePayments extends Component {
                                                                 aria-labelledby="headingOne"
                                                                 data-parent="#accordionExample"
                                                             >
-                                                                <GridComponent
+                                                                <EditableGrid
                                                                     data={this.state.applyPlanPayments}
                                                                     id="applyedPatient"
                                                                     skip={0}
                                                                     take={10}
-                                                                    height="290px"
+                                                                    height="280px"
                                                                     width="100%"
                                                                     editColumn={"chargeSID"}
                                                                     DATA_ITEM_KEY="chargeSID"
@@ -2346,6 +2389,7 @@ class insurancePayments extends Component {
                                                                     }
                                                                     columns={this.state.applyPlanPaymentColumns}
                                                                     onSortChange={this.onSortChange}
+                                                                    itemChange={this.applyItemChanged}
                                                                     // pageChange={this.pageChange}
                                                                     isEditable={true}
                                                                     // totalCount={
@@ -2355,7 +2399,7 @@ class insurancePayments extends Component {
                                                                     // }
                                                                     setExporter={this.setExporterApply}
                                                                     fileName={"Payment Applyed " + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
-                                                                ></GridComponent>
+                                                                ></EditableGrid>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2433,16 +2477,16 @@ class insurancePayments extends Component {
                                                                     id="applyedPlan"
                                                                     skip={0}
                                                                     take={10}
-                                                                    height="290px"
+                                                                    height="280px"
                                                                     width="100%"
                                                                     editColumn={"chargeSID"}
                                                                     DATA_ITEM_KEY="chargeSID"
                                                                     idGetter={idGetterApplyPlanPaymentID}
                                                                     onSelectionChange={
-                                                                        this.onApplyPaymentGridSelectionChange
+                                                                        ()=>{}
                                                                     }
                                                                     onRowDoubleClick={
-                                                                        this.onApplyPaymentGridDoubleSelectionChange
+                                                                        ()=>{}
                                                                     }
                                                                     columns={this.state.applyPlanPaymentColumns}
                                                                     //itemChange={this.applyItemChanged}
