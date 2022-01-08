@@ -2289,7 +2289,7 @@ class insurancePayments extends Component {
                                                         icon="export"
                                                         classButton="infraBtn-primary"
                                                         onClick={() => {
-                                                            exportExcelFile(this.state._exportApply, this.props.applyPlanPayments, this.state.applyPlanPaymentColumns);
+                                                            exportExcelFile(this.state._exportApply, this.state.applyPlanPayments, this.state.applyPlanPaymentColumns);
                                                         }}
                                                     >
                                                         Export to Excel
