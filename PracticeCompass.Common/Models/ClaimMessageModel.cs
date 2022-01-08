@@ -106,10 +106,7 @@ namespace PracticeCompass.Common.Models
         public string POSCode { get; set; }
         public string ClaimMemberID { get; set; }
         public int RunNumber { get; set; }
-        public string ProfileOverrideAllowed { get; set; }
-        public string PAYORIDPlanID { get; set; }
-        public string INSTAMEDPlanID { get; set; }
-
+        public string EnvoyPayerID { get; set; }
         //billing provider
         public string BillingProviderType { get; set; }
         public string BillingProviderName { get; set; }

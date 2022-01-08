@@ -16,7 +16,7 @@ namespace PracticeCompass.Messaging.Genaration
         public Segment GenerateLoop2430_SVD_segment()
         {
             var SVD = new Segment { Name = "SVD", FieldSeparator = FieldSeparator };
-            SVD[1] = _claimMessageModel.ProfileOverrideAllowed == "Y" ? _claimMessageModel.PAYORIDPlanID : _claimMessageModel.INSTAMEDPlanID;
+            SVD[1] = _claimMessageModel.EnvoyPayerID;
             SVD[2] = _claimMessageModel.InsuranceReceipts.ToString();
             SVD[3] = string.Format("HC{0}{1}{2}{3}{4}", string.IsNullOrEmpty(_claimMessageModel.ProcedureCode) ? "" : ":" + _claimMessageModel.ProcedureCode,
                           string.IsNullOrEmpty(_claimMessageModel.Mod1) ? "" : ":" + _claimMessageModel.Mod1,

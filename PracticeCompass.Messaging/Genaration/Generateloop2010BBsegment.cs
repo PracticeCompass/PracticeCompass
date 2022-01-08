@@ -21,7 +21,7 @@ namespace PracticeCompass.Messaging.Genaration
             NM1[2] = "2";
             NM1[3] = _claimMessageModel.PlanName;
             NM1[8] = "PI";
-            NM1[9] = _claimMessageModel.ProfileOverrideAllowed=="Y"? _claimMessageModel.PAYORIDPlanID: _claimMessageModel.INSTAMEDPlanID;
+            NM1[9] = _claimMessageModel.EnvoyPayerID;
             return NM1;
         }
         public Segment GenerateLoop2010BB_N3_segment()
