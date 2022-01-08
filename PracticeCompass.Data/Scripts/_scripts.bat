@@ -110,7 +110,7 @@ for /f "delims==" %%x in (%scripts%) do (
 	rem Run the script, show the output on stdout and tee this to a
 	rem file with the same name as the script, prefixed with __tmp_
 	rem
-	sqlcmd %instance% -d Medstreaming -i "%~dp0\%%x" | tee "%~dp0\__tmp_%%x.txt"
+	sqlcmd %instance% -d medman -i "%~dp0\%%x" | tee "%~dp0\__tmp_%%x.txt"
 )
 
 rem
