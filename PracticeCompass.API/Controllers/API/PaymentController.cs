@@ -17,11 +17,11 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/payment/InsurancePaymentGet")]
-        public List<PaymentDTO> InsurancePaymentGet(int PracticeID, int InsuranceID, int DateType, string Datevalue,string totxnDate, bool Fullyapplied = false)
+        public List<PaymentDTO> InsurancePaymentGet(int PracticeID, int InsuranceID, int DateType, string Datevalue, string totxnDate, bool Fullyapplied, int amountType, int amount, string SortColumn, string SortDirection)
         {
             try
             {
-                return unitOfWork.PaymentRepository.GetInsurancePayment(PracticeID, InsuranceID, DateType, Datevalue, totxnDate, Fullyapplied);
+                return unitOfWork.PaymentRepository.GetInsurancePayment(PracticeID, InsuranceID, DateType, Datevalue, totxnDate, Fullyapplied,amountType,amount,SortColumn,SortDirection);
 
             }
             catch (Exception ex)

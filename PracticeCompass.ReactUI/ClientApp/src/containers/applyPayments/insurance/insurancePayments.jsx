@@ -110,7 +110,9 @@ function mapDispatchToProps(dispatch) {
             totxnDate,
             Fullyapplied,
             amountType,
-            amountFilter
+            amountFilter,
+            SortColumn,
+            SortDirection
         ) =>
             dispatch(
                 getInsurancePayments(
@@ -121,7 +123,9 @@ function mapDispatchToProps(dispatch) {
                     totxnDate,
                     Fullyapplied,
                     amountType,
-                    amountFilter
+                    amountFilter,
+                    SortColumn,
+                    SortDirection
                 )
             ),
         GetPaymentDetails: (PaymentSID) => dispatch(GetPaymentDetails(PaymentSID)),
@@ -464,7 +468,6 @@ class insurancePayments extends Component {
             });
         this.toggleInsuranceApplyDialog();
     };
-    onSortChange = () => { };
     toggleSaveInsuranceDialog = () => {
         this.setState({
             visibleInsuranceSaveFilter: false,
@@ -584,9 +587,22 @@ class insurancePayments extends Component {
             this.state.totxnDate ? this.state.totxnDate.toLocaleDateString() : null,
             this.state.fullyApplied ?? false,
             this.state.amountType,
-            this.state.amountFilter
+            this.state.amountFilter,
+            this.state.selectedSortColumn,
+            this.state.sortDirection,
         );
     };
+    onSortChange = async (column, sort) => {
+        await this.setState({
+            selectedSortColumn: column,
+            sortDirection: sort,
+        });
+        this.insurancePaymentGridSearch();
+    };
+    onSortPaymentAssignmentsChange=async (column, sort) => {};
+    onSortPaymentAssignmentsChange1=async (column, sort) => {};
+    onSortApplyPlanPaymentColumns=async (column, sort) => {};
+    onSortApplyPlanPaymentColumns1=async (column, sort) => {};
     onInsurancePaymentGridDoubleSelectionChange = async (event) => {
         let InsurancePaymentDetails =
             event.dataItems == null || event.dataItems.length == 0
@@ -2024,7 +2040,7 @@ class insurancePayments extends Component {
                                                         width="100%"
                                                         //hasCheckBox={true}
                                                         sortColumns={[]}
-                                                        onSortChange={this.onSortChange}
+                                                        onSortChange={this.onSortPaymentAssignmentsChange}
                                                         pageChange={this.pageChange}
                                                         setExporter={this.setExporterPayment}
                                                         fileName={"Plan Payment Details" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}
@@ -2388,7 +2404,7 @@ class insurancePayments extends Component {
                                                                         this.onApplyPaymentGridDoubleSelectionChange
                                                                     }
                                                                     columns={this.state.applyPlanPaymentColumns}
-                                                                    onSortChange={this.onSortChange}
+                                                                    onSortChange={this.onSortApplyPlanPaymentColumns}
                                                                     itemChange={this.applyItemChanged}
                                                                     // pageChange={this.pageChange}
                                                                     isEditable={true}
@@ -2490,7 +2506,7 @@ class insurancePayments extends Component {
                                                                     }
                                                                     columns={this.state.applyPlanPaymentColumns}
                                                                     //itemChange={this.applyItemChanged}
-                                                                    onSortChange={this.onSortChange}
+                                                                    onSortChange={this.onSortApplyPlanPaymentColumns1}
                                                                 // pageChange={this.pageChange}
                                                                 // isEditable={true}
                                                                 // totalCount={
@@ -2612,7 +2628,7 @@ class insurancePayments extends Component {
                                                                 width="100%"
                                                                 //hasCheckBox={true}
                                                                 sortColumns={[]}
-                                                                onSortChange={this.onSortChange}
+                                                                onSortChange={this.onSortPaymentAssignmentsChange1}
                                                                 pageChange={this.pageChange}
                                                                 setExporter={this.setExporterApplyPaymentAssignment}
                                                                 fileName={"Payment Assignment" + moment().format('DD/MM/YYYY, h:mm:ss a') + ".xlsx"}

@@ -91,7 +91,9 @@ export const getInsurancePayments =
         totxnDate,
         Fullyapplied,
         amountType,
-        amountFilter
+        amountFilter,
+        SortColumn,
+        SortDirection
     ) =>
         async (dispatch, getState) => {
             try {
@@ -100,7 +102,7 @@ export const getInsurancePayments =
                 // if (PracticeID == null && InsuranceID == null) return;
                 const resp = await axios({
                     method: "GET",
-                    url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}&DateType=${DateType}&Datevalue=${Datevalue}&totxnDate=${totxnDate}&Fullyapplied=${Fullyapplied}`,
+                    url: `${config.baseUrl}/payment/InsurancePaymentGet?PracticeID=${PracticeID}&InsuranceID=${InsuranceID}&DateType=${DateType}&Datevalue=${Datevalue}&totxnDate=${totxnDate}&Fullyapplied=${Fullyapplied}&amountType=${amountType}&amount=${amountFilter}&SortColumn=${SortColumn}&SortDirection=${SortDirection}`,
                 });
                 dispatch(setInsurancePayments(resp.data || []));
             } catch (error) {

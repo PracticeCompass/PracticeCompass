@@ -71,7 +71,9 @@ class GridComponent extends React.Component {
         take: 15,
         filterable: false,
         filter: {},
-        sort: [],
+        sort: [{
+            dir: "desc",
+          }],
         allowUnsort: true,
         multiple: false,
         dragEnabled: false,
@@ -152,6 +154,7 @@ class GridComponent extends React.Component {
         }
     };
     sortChange = (event) => {
+        debugger;
         this.setState({
             sort: event.sort,
         });
@@ -362,6 +365,7 @@ class GridComponent extends React.Component {
                                 if (column.hide) return;
                                 return (
                                     <Column
+                                        sortable={!column.sortable}
                                         field={column.field}
                                         title={column.title}
                                         key={index}

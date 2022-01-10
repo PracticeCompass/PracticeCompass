@@ -13,14 +13,18 @@ GO
 -- =============================================
 Create or Alter   PROCEDURE [dbo].[uspInsurancePaymentGet] 
 	-- Add the parameters for the stored procedure here
-    @PracticeID int , @InsuranceID int, 
+@PracticeID int , @InsuranceID int, 
 @DateType int,
 @Datevalue varchar(12),
 @totxnDate varchar(12),
-@Fullyapplied int
+@Fullyapplied int,
+@amountType int,
+@amount int,
+@SortColumn varchar(50),
+@SortDirection varchar(50)
 AS
 BEGIN
-Declare  @SQL varchar(max), @Datefilter varchar(50) ,@Fullyappliedfilter varchar(50)
+Declare  @SQL varchar(max), @Datefilter varchar(50) ,@Fullyappliedfilter varchar(50),@sortPaymentfilter varchar(200)
 
  	set @Datefilter=Case @DateType 
 		when 1 then 'and (PostDate =  '''+@Datevalue+''' )'
@@ -34,6 +38,18 @@ Declare  @SQL varchar(max), @Datefilter varchar(50) ,@Fullyappliedfilter varchar
 		when 0 then 'and (FullyApplied = ''N'')'
 		when 1 then 'and (FullyApplied = ''Y'')'
 		else 'and (FullyApplied = ''N'')'
+		end
+        set  @sortPaymentfilter= Case @SortColumn
+	   	when 'amount' then 'order by Amount '+@SortDirection+''
+		when 'remaining' then 'order by remaining '+@SortDirection+''
+		when 'payorName' then 'order by PayorName '+@SortDirection+''
+		when 'postDate' then 'order by postDate '+@SortDirection+''
+		when 'fullyApplied' then 'order by FullyApplied '+@SortDirection+''
+		when 'practiceName' then 'order by PracticeName '+@SortDirection+''
+		when 'payMethod' then 'order by PayMethod '+@SortDirection+''
+		when 'paymentClass' then 'order by paymentClass '+@SortDirection+''
+		when 'createMethod' then 'order by CreateMethod '+@SortDirection+''
+		else 'Order by Practice.SortName, [dbo].[Payment].[PaymentSID], Amount '
 		end
 
 set @SQL='select [dbo].[Payment].[PaymentSID] , Practice.SortName as PracticeName , Practice.PracticeID as PracticeID, CONVERT(varchar,PostDate,101) as PostDate  , Source , Entity.SortName as PayorName,Entity.EntitySID as payorID,
@@ -55,7 +71,7 @@ left outer join LookupCode on LookupCode.LookupCode=Payment.class and LookupType
  ('+convert(varchar,@PracticeID,10)+' is null or '+convert(varchar,@PracticeID,10)+'=0 or Payment.PracticeID='+convert(varchar,@PracticeID,10)+') and
  ('+convert(varchar,@InsuranceID,10)+' is null or '+convert(varchar,@InsuranceID,10)+'=0 or Payment.PayorID='+convert(varchar,@InsuranceID,10)+')'
 
- set @SQL = @SQL + @Datefilter + @Fullyappliedfilter + ' Order by Practice.SortName, [dbo].[Payment].[PaymentSID] '
+ set @SQL = @SQL + @Datefilter + @Fullyappliedfilter + @sortPaymentfilter
  print @SQL
  exec(@SQL)
 
