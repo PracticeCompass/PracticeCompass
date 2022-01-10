@@ -66,7 +66,7 @@ BEGIN
 	   	when 'email' then 'order by Email '+@SortDirection+''
 		when 'zip' then 'order by Zip '+@SortDirection+''
 		when 'nextAppt' then 'order by NextAppt '+@SortDirection+''
-		when 'practiceName' then 'order practiceName '+@SortDirection+''
+		when 'practiceName' then 'order by practiceName '+@SortDirection+''
 		when 'state' then 'order by Address.State '+@SortDirection+''
 		when 'city' then 'order by Address.City '+@SortDirection+''
 		when 'address' then 'order by Address '+@SortDirection+''
