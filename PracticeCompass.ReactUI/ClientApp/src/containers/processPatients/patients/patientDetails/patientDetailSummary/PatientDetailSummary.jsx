@@ -12,6 +12,7 @@ import "./PatientDetailSummary.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import { exportExcelFile } from "../../../../common/export";
+import PlanAddingDialogComponent from "./PlanAddingDialog"
 import moment from 'moment';
 import {
   getParacticesUrl,
@@ -572,7 +573,6 @@ class PatientDetailSummary extends Component {
     }
   };
   onSortChange = () => { };
-
   render() {
     return (
       <Fragment>
@@ -596,7 +596,7 @@ class PatientDetailSummary extends Component {
           {this.state.companyNameVisible && (
             <FindDialogComponent
               title="Company Name Search"
-              placeholder="Enter Company Name"
+              placeholder="Enter Plan Company Name Or Company Code"
               searcTextBoxValue={this.state.companySearchText}
               onTextSearchChange={(e) => {
                 this.setState({
@@ -1040,7 +1040,7 @@ class PatientDetailSummary extends Component {
                     icon="edit"
                     classButton="infraBtn-primary action-button"
                     onClick={() => {
-                      this.setState({ visibleSaveFilter: true });
+                      this.setState({ visibleInsuranceSave: true });
                     }}
                   >
                     Add
