@@ -223,7 +223,7 @@ class ClaimList extends Component {
         selectedClaims: null,
         claimListColumns: columns,
         gridWidth: 0,
-        showFilter : false,
+        showFilter: false,
     };
     setExporter = (exporter) => {
         this.setState({ _export: exporter });
@@ -257,6 +257,24 @@ class ClaimList extends Component {
         this.getGridColumns();
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
+        if (this.props.filterName == "Rejections") {
+            this.setState({
+                rejections: true,
+                denials: false,
+            });
+        }
+        else if (this.props.filterName == "Denials") {
+            this.setState({
+                denials: true,
+                rejections: false,
+            });
+        }
+        else {
+            this.setState({
+                rejections: false,
+                denials: false,
+            });
+        }
     }
     componentDidUpdate = (event) => {
         if (event.UiExpand != this.props.UiExpand) {
@@ -316,7 +334,7 @@ class ClaimList extends Component {
         //await this.props.getclaimListFilters("");
         this.setState({ refreshFilter: true });
     };
-    setDosType=(e)=>{
+    setDosType = (e) => {
         this.setState({ dostype: e.value })
     }
     toggleDeleteDialog = () => {
@@ -630,11 +648,8 @@ class ClaimList extends Component {
             pastDue: false,
             selectedSortColumn: null,
             sortDirection: null,
-            rejectionsFilter: false,
-            denailsFilter: false,
-            pastDueFilter: false,
             timelyFillingFilter: false,
-            filter : false,
+            filter: false,
         });
     };
     filterChange = async (event) => {
@@ -765,9 +780,6 @@ class ClaimList extends Component {
                 : 0,
             CashClaims: this.state.cashClaims ? this.state.cashClaims : 0,
             VoidedClaims: this.state.voidedClaims ? this.state.voidedClaims : 0,
-            IncludeRejections: this.state.rejections ? this.state.rejections : 0,
-            IncludeDenials: this.state.denials ? this.state.denials : 0,
-            IncludePastDue: this.state.pastDue ? this.state.pastDue : 0,
             Skip: refreshData ? 0 : this.props.Claims.length,
             SortColumn: this.state.selectedSortColumn
                 ? this.state.selectedSortColumn
@@ -775,9 +787,9 @@ class ClaimList extends Component {
             SortDirection: this.state.sortDirection
                 ? this.state.sortDirection
                 : sortColumns[0].dir,
-            Rejections: this.state.rejectionsFilter ? this.state.rejectionsFilter : 0,
-            Denials: this.state.denailsFilter ? this.state.denailsFilter : 0,
-            PastDue: this.state.pastDueFilter ? this.state.pastDueFilter : 0,
+            Rejections: this.state.rejections ? this.state.rejections : 0,
+            Denials: this.state.denials ? this.state.denials : 0,
+            PastDue: this.state.pastDue ? this.state.pastDue : 0,
             TimelyFilling: this.state.timelyFillingFilter ? this.state.timelyFillingFilter : 0,
         };
         this.props.getclaims(claimGrid, refreshData);
@@ -826,7 +838,7 @@ class ClaimList extends Component {
             Rejections: this.state.rejections ? this.state.rejections : 0,
             Denials: this.state.denials ? this.state.denials : 0,
             PastDue: this.state.pastDue ? this.state.pastDue : 0,
-            ToDOSvalue : this.state.toDos ? new Date(this.state.toDos) : null,
+            ToDOSvalue: this.state.toDos ? new Date(this.state.toDos) : null,
         });
         if (this.state.currentFilter && this.state.currentFilter.filterID) {
             let updateFilter = await this.props.FilterUpdate(
@@ -1129,55 +1141,6 @@ class ClaimList extends Component {
         await this.claimGridSearch(false);
         this.setState({ isVisibleNextData: false });
     };
-    handleChange = async (e) => {
-        this.setState({ checked: e.value });
-        if (e.value === "rejections") {
-            await this.setState({
-                showFilter: false,
-                rejectionsFilter: true,
-                denailsFilter: false,
-                pastDueFilter: false,
-                timelyFillingFilter : false,
-            });
-            await this.claimGridSearch();
-        } else if (e.value === "denials") {
-            await this.setState({
-                showFilter: false,
-                rejectionsFilter: false,
-                denailsFilter: true,
-                pastDueFilter: false,
-                timelyFillingFilter: false,
-            });
-            await this.claimGridSearch();
-        } else if (e.value === "pastDue") {
-            await  this.setState({
-                showFilter: false,
-                rejectionsFilter: false,
-                denailsFilter: false,
-                pastDueFilter: true,
-                timelyFillingFilter: false,
-            });
-            await this.claimGridSearch();
-        } else if (e.value === "timelyFiling") {
-            await  this.setState({
-                showFilter: false,
-                rejectionsFilter: false,
-                denailsFilter: false,
-                pastDueFilter: false,
-                timelyFillingFilter: true,
-            });
-            await this.claimGridSearch();
-        } else if (e.value === "filter") {
-            this.setState({
-                showFilter: true,
-                rejectionsFilter: false,
-                denailsFilter: false,
-                pastDueFilter: false,
-                timelyFillingFilter: false,
-            });
-
-        }
-    };
     onRowRender(trElement, props) {
         const primary = props.dataItem.primaryStatus;
         const secondary = props.dataItem.seconadryStatus;
@@ -1352,482 +1315,456 @@ class ClaimList extends Component {
                             saveFilter={this.saveFilter}
                         ></SaveFilterComponent>
                     )}
-                    <div className="row" style={{ margin: "5px" }}>
-                        <RadioGroup
-                            data={filters}
-                            value={this.state.checked}
-                            onChange={this.handleChange}
-                            layout="horizontal"
-                        />
+                    <div className="row" style={{ flexWrap: "nowrap" }}>
+                        <div>
+                            <div className="row nowrap rowHeight">
+                                <div style={{ textAlign: "right", marginLeft: "65px" }}>
+                                    <label className="userInfoLabel">Filter</label>
+                                </div>
+                                <div className="filterStyle">
+                                    {this.state.refreshFilter && (
+                                        <DropDown
+                                            className="unifyHeight"
+                                            id="patientFilter"
+                                            name="patientFilter"
+                                            type="remoteDropDown"
+                                            textField="displayName"
+                                            dataItemKey="filterID"
+                                            value={this.state.currentFilter}
+                                            getBaseUrl={() => this.getFilters("")}
+                                            onChange={(event) => this.filterChange(event)}
+                                        ></DropDown>
+                                    )}
+                                </div>
+                                <div style={{ width: "220px", marginLeft: "10px" }}>
+                                    <div className="float-left">
+                                        <ButtonComponent
+                                            type="edit"
+                                            icon="edit"
+                                            classButton="infraBtn-primary action-button"
+                                            onClick={() => {
+                                                this.setState({ visibleSaveFilter: true });
+                                            }}
+                                        >
+                                            Save
+                                        </ButtonComponent>
+                                    </div>
+                                    <div className="float-left ">
+                                        <ButtonComponent
+                                            type="delete"
+                                            icon="delete"
+                                            classButton="infraBtn-primary action-button"
+                                            onClick={this.delete}
+                                        >
+                                            Delete
+                                        </ButtonComponent>
+                                    </div>
+                                    <div className="float-left ">
+                                        <ButtonComponent
+                                            type="edit"
+                                            icon="reset"
+                                            classButton="infraBtn-primary action-button"
+                                            onClick={this.reset}
+                                        >
+                                            Reset
+                                        </ButtonComponent>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row nowrap rowHeight" style={{ width: "1350px" }}>
+                                <div style={{ textAlign: "right", marginLeft: "55px" }}>
+                                    <label className="userInfoLabel">Claim# </label>
+                                </div>
+                                <div style={{ width: "120px" }}>
+                                    <TextBox
+                                        type="text"
+                                        className="unifyHeight"
+                                        value={this.state.billNumber}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                billNumber: e.value,
+                                            })
+                                        }
+                                    ></TextBox>
+                                </div>
+                                <div style={{ textAlign: "right", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">CLaim ICN# </label>
+                                </div>
+                                <div style={{ width: "120px" }}>
+                                    <TextBox
+                                        type="text"
+                                        className="unifyHeight"
+                                        value={this.state.claimIcnNumber}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                claimIcnNumber: e.value,
+                                            })
+                                        }
+                                    ></TextBox>
+                                </div>
+                                <div style={{ marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">Practice </label>
+                                </div>
+                                <div className="PracticeStyle">
+                                    <DropDown
+                                        className="unifyHeight"
+                                        data={this.props.dropDownPractices}
+                                        textField="entityName"
+                                        dataItemKey="entityId"
+                                        defaultValue={this.state.selectedPractice}
+                                        value={this.state.selectedPractice}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                selectedPractice: {
+                                                    entityName: e.value?.entityName,
+                                                    entityId: e.value?.entityId,
+                                                },
+                                            })
+                                        }
+                                    ></DropDown>
+                                </div>
+                                <div style={{ float: "left" }}>
+                                    <ButtonComponent
+                                        icon="search"
+                                        type="search"
+                                        classButton="infraBtn-primary find-button"
+                                        style={{ marginTop: "0px" }}
+                                        onClick={(e) => this.setState({ practiceVisible: true })}
+                                    >
+                                        Find
+                                    </ButtonComponent>
+                                </div>
+                                <div style={{ marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">Physician </label>
+                                </div>
+                                <div className="physicianStyle">
+                                    <DropDown
+                                        className="unifyHeight"
+                                        data={this.props.dropDownPhysicians}
+                                        textField="entityName"
+                                        dataItemKey="entityId"
+                                        defaultValue={this.state.physicianID}
+                                        value={this.state.physicianID}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                physicianID: {
+                                                    entityName: e.value?.entityName,
+                                                    entityId: e.value?.entityId,
+                                                },
+                                            })
+                                        }
+                                    ></DropDown>
+                                </div>
+                                <div style={{ float: "left" }}>
+                                    <ButtonComponent
+                                        icon="search"
+                                        type="search"
+                                        classButton="infraBtn-primary find-button"
+                                        style={{ marginTop: "0px" }}
+                                        onClick={(e) => this.setState({ physicianVisible: true })}
+                                    >
+                                        Find
+                                    </ButtonComponent>
+                                </div>
+                            </div>
+                            <div className="row nowrap rowHeight">
+                                <div style={{ textAlign: "right", paddingLeft: "54px" }}>
+                                    <label className="userInfoLabel">Patient </label>
+                                </div>
+                                <div className="patientStyle">
+                                    <DropDown
+                                        className="unifyHeight"
+                                        data={this.props.dropDownPatients}
+                                        textField="entityName"
+                                        dataItemKey="entityId"
+                                        value={{
+                                            entityId: this.state.patientID,
+                                            entityName: this.state.patientNameSelected,
+                                        }}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                patientSelectedState: e.value?.entityName,
+                                                patientIDSelectedState: e.value?.entityId,
+                                                patientNameSelected: e.value?.entityName,
+                                                patientID: e.value?.entityId,
+                                            })
+                                        }
+                                    ></DropDown>
+                                </div>
+                                <div>
+                                    <ButtonComponent
+                                        icon="search"
+                                        type="search"
+                                        classButton="infraBtn-primary find-button"
+                                        onClick={this.togglePatientDialog}
+                                    >
+                                        Find
+                                    </ButtonComponent>
+                                </div>
+                                <div style={{ marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">Guarantor </label>
+                                </div>
+                                <div className="GuarantorStyle">
+                                    <DropDown
+                                        className="unifyHeight"
+                                        data={this.props.dropDownGuarantors}
+                                        textField="entityName"
+                                        dataItemKey="entityId"
+                                        defaultValue={{
+                                            entityId: this.state.guarantorID,
+                                            entityName: this.state.guarantorSelected,
+                                        }}
+                                        value={{
+                                            entityId: this.state.guarantorID,
+                                            entityName: this.state.guarantorSelected,
+                                        }}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                guarantorSelectedState: e.value?.entityName,
+                                                guarantorIDSelectedState: e.value?.entityId,
+                                                guarantorSelected: e.value?.entityName,
+                                                guarantorID: e.value?.entityId,
+                                            })
+                                        }
+                                    ></DropDown>
+                                </div>
+                                <div>
+                                    <ButtonComponent
+                                        icon="search"
+                                        type="search"
+                                        classButton="infraBtn-primary find-button"
+                                        onClick={this.toggleGuarantorDialog}
+                                    >
+                                        Find
+                                    </ButtonComponent>
+                                </div>
+                                <div style={{ marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">Patient Type </label>
+                                </div>
+                                <div className="patientTypeStyle">
+                                    <DropDown
+                                        className="unifyHeight"
+                                        data={this.props.dropDownPatientTypes}
+                                        textField="entityName"
+                                        dataItemKey="entityId"
+                                        defaultValue={this.state.patientType}
+                                        value={this.state.patientType}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                patientType: e.value,
+                                            })
+                                        }
+                                    ></DropDown>
+                                </div>
+                                <div style={{ float: "left" }}>
+                                    <ButtonComponent
+                                        icon="search"
+                                        type="search"
+                                        classButton="infraBtn-primary find-button"
+                                        style={{ marginTop: "0px" }}
+                                        onClick={(e) => this.setState({ patientTypeVisible: true })}
+                                    >
+                                        Find
+                                    </ButtonComponent>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    {this.state.showFilter &&
-                        <div className="row" style={{ flexWrap: "nowrap" }}>
+                    <div className="row" style={{ flexWrap: "nowrap" }}>
+                        <div>
+                            <div className="row nowrap rowHeight">
+                                <div style={{ textAlign: "right", marginLeft: "68px" }}>
+                                    <label className="userInfoLabel">Plan </label>
+                                </div>
+                                <div className="insPlan">
+                                    <DropDown
+                                        data={InsuranceCategory}
+                                        textField="text"
+                                        dataItemKey="id"
+                                        className="unifyHeight"
+                                        id="ins"
+                                        name="ins"
+                                        value={this.state.insuranceType}
+                                        onChange={(e) => this.setState({ insuranceType: e.value })}
+                                    ></DropDown>
+                                </div>
+                                <div style={{ float: "left", marginLeft: "5px" }}>
+                                    <label className="userInfoLabel">Plan Company</label>
+                                </div>
+                                <div className="insuranceStyle" style={{ marginLeft: "10px" }}>
+                                    <DropDown
+                                        className="unifyHeight"
+                                        data={this.props.dropDownInsurance}
+                                        textField="entityName"
+                                        dataItemKey="entityId"
+                                        defaultValue={{
+                                            entityId: this.state.insuranceID,
+                                            entityName: this.state.insuranceNameSelected,
+                                        }}
+                                        value={{
+                                            entityId: this.state.insuranceID,
+                                            entityName: this.state.insuranceNameSelected,
+                                        }}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                insuranceSelectedState: e.value?.entityName,
+                                                insuranceIDSelectedState: e.value?.entityId,
+                                                insuranceNameSelected: e.value?.entityName,
+                                                insuranceID: e.value?.entityId,
+                                            })
+                                        }
+                                    ></DropDown>
+                                </div>
+                                <div>
+                                    <ButtonComponent
+                                        look="outline"
+                                        icon="search"
+                                        type="search"
+                                        classButton="infraBtn-primary find-button"
+                                        onClick={this.toggleInsuranceDialog}
+                                    >
+                                        Find
+                                    </ButtonComponent>
+                                </div>
+                                <div style={{ textAlign: "right", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">Claim Status </label>
+                                </div>
+                                <div className="claimStyle">
+                                    <DropDown
+                                        data={InsuranceStatus}
+                                        textField="text"
+                                        dataItemKey="id"
+                                        className="unifyHeight2"
+                                        id="sins"
+                                        name="sins"
+                                        value={this.state.insuranceStatus}
+                                        onChange={(e) =>
+                                            this.setState({ insuranceStatus: e.value })
+                                        }
+                                    ></DropDown>
+                                </div>
+                            </div>
+                            <div
+                                className="row nowrap rowHeight"
+                                style={{ flexWrap: "nowrap" }}
+                            >
+                                <div style={{ width: "83px", marginLeft: "15px" }}>
+                                    <label className="userInfoLabel">Claim Value {">"}</label>
+                                </div>
+                                <div style={{ width: "80px" }}>
+                                    <TextBox
+                                        type="numeric"
+                                        format="c2"
+                                        className="unifyHeight"
+                                        value={this.state.claimValue}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                claimValue: e.value,
+                                            })
+                                        }
+                                    ></TextBox>
+                                </div>
+                                <div style={{ width: "75px", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">Claim Age {">"} </label>
+                                </div>
+                                <div style={{ width: "80px" }}>
+                                    <TextBox
+                                        type="numeric"
+                                        format="n"
+                                        className="unifyHeight"
+                                        value={this.state.age}
+                                        onChange={(e) =>
+                                            this.setState({
+                                                age: e.value,
+                                            })
+                                        }
+                                    ></TextBox>
+                                </div>
+                                <div style={{ width: "28px", marginLeft: "10px" }}>
+                                    <label className="userInfoLabel">DOS </label>
+                                </div>
+                                <div style={{ width: "147px" }}>
+                                    <DropDown
+                                        data={DOSFilter}
+                                        textField="text"
+                                        dataItemKey="id"
+                                        className="unifyHeight"
+                                        id="tins"
+                                        name="tins"
+                                        value={this.state.dostype}
+                                        onChange={(e) =>
+                                            this.setDosType(e)
+                                        }
+                                    ></DropDown>
+                                </div>
+                                {this.state.dostype != null && this.state.dostype.id == "4" && (
+                                    <div style={{ width: "28px", marginLeft: "10px" }}>
+                                        <label className="userInfoLabel">From </label>
+                                    </div>)}
+                                <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                    <DatePickerComponent
+                                        className="unifyHeight"
+                                        placeholder="MM/DD/YYYY"
+                                        format="M/dd/yyyy"
+                                        value={this.state.dos}
+                                        onChange={(e) => this.setState({ dos: e.value })}
+                                    ></DatePickerComponent>
+                                </div>
+                                {this.state.dostype != null && this.state.dostype.id == "4" && (
+                                    <div style={{ width: "15px", marginLeft: "10px" }}>
+                                        <label className="userInfoLabel">To </label>
+                                    </div>
+                                )}
+                                {this.state.dostype != null && this.state.dostype.id == "4" && (
+                                    <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                        <DatePickerComponent
+                                            className="unifyHeight"
+                                            placeholder="MM/DD/YYYY"
+                                            format="M/dd/yyyy"
+                                            value={this.state.toDos}
+                                            onChange={(e) => this.setState({ toDos: e.value })}
+                                        ></DatePickerComponent>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div style={{ marginLeft: "30px", marginTop: "5px" }}>
                             <div
                                 style={{
                                     borderStyle: "dotted",
                                     borderWidth: "thin",
-                                    width: "130px",
-                                    height: "160px",
+                                    width: "200px",
+                                    height: "80px",
                                 }}
                             >
                                 <div>
                                     <CheckboxComponent
-                                        label="Rejections"
-                                        value={this.state.rejections}
-                                        onChange={(e) => this.setState({ rejections: e.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <CheckboxComponent
-                                        label="Denials"
-                                        value={this.state.denials}
-                                        onChange={(e) => this.setState({ denials: e.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <CheckboxComponent
-                                        label="Completed"
+                                        label="Include Completed Claims"
                                         value={this.state.completedClaims}
                                         onChange={(e) => this.setState({ completedClaims: e.value })}
                                     />
                                 </div>
                                 <div>
                                     <CheckboxComponent
-                                        label="Cash Claims"
+                                        label="Include Cash Claims"
                                         value={this.state.cashClaims}
                                         onChange={(e) => this.setState({ cashClaims: e.value })}
                                     />
                                 </div>
                                 <div>
                                     <CheckboxComponent
-                                        label="Voided Claims"
+                                        label="Include Voided Claims"
                                         value={this.state.voidedClaims}
                                         onChange={(e) => this.setState({ voidedClaims: e.value })}
                                     />
                                 </div>
-                                <div>
-                                    <CheckboxComponent
-                                        label="Past Due"
-                                        value={this.state.pastDue}
-                                        onChange={(e) => this.setState({ pastDue: e.value })}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="row nowrap rowHeight">
-                                    <div style={{ textAlign: "right", marginLeft: "65px" }}>
-                                        <label className="userInfoLabel">Filter</label>
-                                    </div>
-                                    <div className="filterStyle">
-                                        {this.state.refreshFilter && (
-                                            <DropDown
-                                                className="unifyHeight"
-                                                id="patientFilter"
-                                                name="patientFilter"
-                                                type="remoteDropDown"
-                                                textField="displayName"
-                                                dataItemKey="filterID"
-                                                value={this.state.currentFilter}
-                                                getBaseUrl={() => this.getFilters("")}
-                                                onChange={(event) => this.filterChange(event)}
-                                            ></DropDown>
-                                        )}
-                                    </div>
-                                    <div style={{ width: "220px", marginLeft: "10px" }}>
-                                        <div className="float-left">
-                                            <ButtonComponent
-                                                type="edit"
-                                                icon="edit"
-                                                classButton="infraBtn-primary action-button"
-                                                onClick={() => {
-                                                    this.setState({ visibleSaveFilter: true });
-                                                }}
-                                            >
-                                                Save
-                                            </ButtonComponent>
-                                        </div>
-                                        <div className="float-left ">
-                                            <ButtonComponent
-                                                type="delete"
-                                                icon="delete"
-                                                classButton="infraBtn-primary action-button"
-                                                onClick={this.delete}
-                                            >
-                                                Delete
-                                            </ButtonComponent>
-                                        </div>
-                                        <div className="float-left ">
-                                            <ButtonComponent
-                                                type="edit"
-                                                icon="reset"
-                                                classButton="infraBtn-primary action-button"
-                                                onClick={this.reset}
-                                            >
-                                                Reset
-                                            </ButtonComponent>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row nowrap rowHeight" style={{ width: "1390px" }}>
-                                    <div style={{ textAlign: "right", marginLeft: "55px" }}>
-                                        <label className="userInfoLabel">Claim# </label>
-                                    </div>
-                                    <div style={{ width: "120px" }}>
-                                        <TextBox
-                                            type="text"
-                                            className="unifyHeight"
-                                            value={this.state.billNumber}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    billNumber: e.value,
-                                                })
-                                            }
-                                        ></TextBox>
-                                    </div>
-                                    <div style={{ textAlign: "right", marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">CLaim ICN# </label>
-                                    </div>
-                                    <div style={{ width: "120px" }}>
-                                        <TextBox
-                                            type="text"
-                                            className="unifyHeight"
-                                            value={this.state.claimIcnNumber}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    claimIcnNumber: e.value,
-                                                })
-                                            }
-                                        ></TextBox>
-                                    </div>
-                                    <div style={{ marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">Practice </label>
-                                    </div>
-                                    <div className="PracticeStyle">
-                                        <DropDown
-                                            className="unifyHeight"
-                                            data={this.props.dropDownPractices}
-                                            textField="entityName"
-                                            dataItemKey="entityId"
-                                            defaultValue={this.state.selectedPractice}
-                                            value={this.state.selectedPractice}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    selectedPractice: {
-                                                        entityName: e.value?.entityName,
-                                                        entityId: e.value?.entityId,
-                                                    },
-                                                })
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    <div style={{ float: "left" }}>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary find-button"
-                                            style={{ marginTop: "0px" }}
-                                            onClick={(e) => this.setState({ practiceVisible: true })}
-                                        >
-                                            Find
-                                        </ButtonComponent>
-                                    </div>
-                                    <div style={{ marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">Physician </label>
-                                    </div>
-                                    <div className="physicianStyle">
-                                        <DropDown
-                                            className="unifyHeight"
-                                            data={this.props.dropDownPhysicians}
-                                            textField="entityName"
-                                            dataItemKey="entityId"
-                                            defaultValue={this.state.physicianID}
-                                            value={this.state.physicianID}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    physicianID: {
-                                                        entityName: e.value?.entityName,
-                                                        entityId: e.value?.entityId,
-                                                    },
-                                                })
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    <div style={{ float: "left" }}>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary find-button"
-                                            style={{ marginTop: "0px" }}
-                                            onClick={(e) => this.setState({ physicianVisible: true })}
-                                        >
-                                            Find
-                                        </ButtonComponent>
-                                    </div>
-                                </div>
-                                <div className="row nowrap rowHeight">
-                                    <div style={{ textAlign: "right", paddingLeft: "54px" }}>
-                                        <label className="userInfoLabel">Patient </label>
-                                    </div>
-                                    <div className="patientStyle">
-                                        <DropDown
-                                            className="unifyHeight"
-                                            data={this.props.dropDownPatients}
-                                            textField="entityName"
-                                            dataItemKey="entityId"
-                                            value={{
-                                                entityId: this.state.patientID,
-                                                entityName: this.state.patientNameSelected,
-                                            }}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    patientSelectedState: e.value?.entityName,
-                                                    patientIDSelectedState: e.value?.entityId,
-                                                    patientNameSelected: e.value?.entityName,
-                                                    patientID: e.value?.entityId,
-                                                })
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    <div>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary find-button"
-                                            onClick={this.togglePatientDialog}
-                                        >
-                                            Find
-                                        </ButtonComponent>
-                                    </div>
-                                    <div style={{ marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">Guarantor </label>
-                                    </div>
-                                    <div className="GuarantorStyle">
-                                        <DropDown
-                                            className="unifyHeight"
-                                            data={this.props.dropDownGuarantors}
-                                            textField="entityName"
-                                            dataItemKey="entityId"
-                                            defaultValue={{
-                                                entityId: this.state.guarantorID,
-                                                entityName: this.state.guarantorSelected,
-                                            }}
-                                            value={{
-                                                entityId: this.state.guarantorID,
-                                                entityName: this.state.guarantorSelected,
-                                            }}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    guarantorSelectedState: e.value?.entityName,
-                                                    guarantorIDSelectedState: e.value?.entityId,
-                                                    guarantorSelected: e.value?.entityName,
-                                                    guarantorID: e.value?.entityId,
-                                                })
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    <div>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary find-button"
-                                            onClick={this.toggleGuarantorDialog}
-                                        >
-                                            Find
-                                        </ButtonComponent>
-                                    </div>
-                                    <div style={{ marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">Patient Type </label>
-                                    </div>
-                                    <div className="patientTypeStyle">
-                                        <DropDown
-                                            className="unifyHeight"
-                                            data={this.props.dropDownPatientTypes}
-                                            textField="entityName"
-                                            dataItemKey="entityId"
-                                            defaultValue={this.state.patientType}
-                                            value={this.state.patientType}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    patientType: e.value,
-                                                })
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    <div style={{ float: "left" }}>
-                                        <ButtonComponent
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary find-button"
-                                            style={{ marginTop: "0px" }}
-                                            onClick={(e) => this.setState({ patientTypeVisible: true })}
-                                        >
-                                            Find
-                                        </ButtonComponent>
-                                    </div>
-                                </div>
-                                <div className="row nowrap rowHeight">
-                                    <div style={{ textAlign: "right", marginLeft: "68px" }}>
-                                        <label className="userInfoLabel">Plan </label>
-                                    </div>
-                                    <div className="insPlan">
-                                        <DropDown
-                                            data={InsuranceCategory}
-                                            textField="text"
-                                            dataItemKey="id"
-                                            className="unifyHeight"
-                                            id="ins"
-                                            name="ins"
-                                            value={this.state.insuranceType}
-                                            onChange={(e) => this.setState({ insuranceType: e.value })}
-                                        ></DropDown>
-                                    </div>
-                                    <div style={{ float: "left", marginLeft: "5px" }}>
-                                        <label className="userInfoLabel">Plan Company</label>
-                                    </div>
-                                    <div className="insuranceStyle" style={{ marginLeft: "10px" }}>
-                                        <DropDown
-                                            className="unifyHeight"
-                                            data={this.props.dropDownInsurance}
-                                            textField="entityName"
-                                            dataItemKey="entityId"
-                                            defaultValue={{
-                                                entityId: this.state.insuranceID,
-                                                entityName: this.state.insuranceNameSelected,
-                                            }}
-                                            value={{
-                                                entityId: this.state.insuranceID,
-                                                entityName: this.state.insuranceNameSelected,
-                                            }}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    insuranceSelectedState: e.value?.entityName,
-                                                    insuranceIDSelectedState: e.value?.entityId,
-                                                    insuranceNameSelected: e.value?.entityName,
-                                                    insuranceID: e.value?.entityId,
-                                                })
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    <div>
-                                        <ButtonComponent
-                                            look="outline"
-                                            icon="search"
-                                            type="search"
-                                            classButton="infraBtn-primary find-button"
-                                            onClick={this.toggleInsuranceDialog}
-                                        >
-                                            Find
-                                        </ButtonComponent>
-                                    </div>
-                                </div>
-                                <div
-                                    className="row nowrap rowHeight"
-                                    style={{ flexWrap: "nowrap" }}
-                                >
-                                    <div style={{ textAlign: "right", marginLeft: "24px" }}>
-                                        <label className="userInfoLabel">Claim Status </label>
-                                    </div>
-                                    <div className="claimStyle">
-                                        <DropDown
-                                            data={InsuranceStatus}
-                                            textField="text"
-                                            dataItemKey="id"
-                                            className="unifyHeight2"
-                                            id="sins"
-                                            name="sins"
-                                            value={this.state.insuranceStatus}
-                                            onChange={(e) =>
-                                                this.setState({ insuranceStatus: e.value })
-                                            }
-                                        ></DropDown>
-                                    </div>
-
-                                    <div style={{ width: "83px" }}>
-                                        <label className="userInfoLabel">Claim Value {">"}</label>
-                                    </div>
-                                    <div style={{ width: "80px" }}>
-                                        <TextBox
-                                            type="numeric"
-                                            format="c2"
-                                            className="unifyHeight"
-                                            value={this.state.claimValue}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    claimValue: e.value,
-                                                })
-                                            }
-                                        ></TextBox>
-                                    </div>
-                                    <div style={{ width: "75px", marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">Claim Age {">"} </label>
-                                    </div>
-                                    <div style={{ width: "80px" }}>
-                                        <TextBox
-                                            type="numeric"
-                                            format="n"
-                                            className="unifyHeight"
-                                            value={this.state.age}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    age: e.value,
-                                                })
-                                            }
-                                        ></TextBox>
-                                    </div>
-                                    <div style={{ width: "28px", marginLeft: "10px" }}>
-                                        <label className="userInfoLabel">DOS </label>
-                                    </div>
-                                    <div style={{ width: "147px" }}>
-                                        <DropDown
-                                            data={DOSFilter}
-                                            textField="text"
-                                            dataItemKey="id"
-                                            className="unifyHeight"
-                                            id="tins"
-                                            name="tins"
-                                            value={this.state.dostype}
-                                            onChange={(e) =>
-                                                this.setDosType(e)
-                                            }
-                                        ></DropDown>
-                                    </div>
-                                    {this.state.dostype != null && this.state.dostype.id == "4" && (
-                                        <div style={{ width: "28px", marginLeft: "10px" }}>
-                                            <label className="userInfoLabel">From </label>
-                                        </div>)}
-                                    <div className="dateStyle" style={{ marginLeft: "5px" }}>
-                                        <DatePickerComponent
-                                            className="unifyHeight"
-                                            placeholder="MM/DD/YYYY"
-                                            format="M/dd/yyyy"
-                                            value={this.state.dos}
-                                            onChange={(e) => this.setState({ dos: e.value })}
-                                        ></DatePickerComponent>
-                                    </div>
-                                    {this.state.dostype != null && this.state.dostype.id == "4" && (
-                                        <div style={{ width: "15px", marginLeft: "10px" }}>
-                                            <label className="userInfoLabel">To </label>
-                                        </div>
-                                    )}
-                                    {this.state.dostype != null && this.state.dostype.id == "4" && (
-                                        <div className="dateStyle" style={{ marginLeft: "5px" }}>
-                                            <DatePickerComponent
-                                                className="unifyHeight"
-                                                placeholder="MM/DD/YYYY"
-                                                format="M/dd/yyyy"
-                                                value={this.state.toDos}
-                                                onChange={(e) => this.setState({ toDos: e.value })}
-                                            ></DatePickerComponent>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
                         </div>
-                    }
+                    </div>
                     <div>
                         <div
                             className="row nowrap rowHeight"
-                            style={{ marginTop: "10px", marginLeft: "20px" }}
+                            style={{ marginLeft: "20px" }}
                         >
                             <div style={{ width: "800px" }}>
                                 <div className="float-left">
@@ -1913,7 +1850,7 @@ class ClaimList extends Component {
                             </div>
                         </div>
 
-                        </div>
+                    </div>
                 </div>
                 <div
                     style={{

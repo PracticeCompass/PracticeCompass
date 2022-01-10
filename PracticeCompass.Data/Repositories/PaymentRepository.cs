@@ -54,9 +54,20 @@ namespace PracticeCompass.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public List<PaymentDTO> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue,string totxnDate, bool Fullyapplied)
+        public List<PaymentDTO> GetInsurancePayment(int PracticeID, int InsuranceID, int DateType, string Datevalue,string totxnDate, bool Fullyapplied,int amountType,int amount,string SortColumn,string SortDirection)
         {
-            var data = this.db.QueryMultiple("uspInsurancePaymentGet", new { @PracticeID = PracticeID, @InsuranceID = InsuranceID, @DateType = DateType, @Datevalue = Datevalue, @totxnDate= totxnDate, @Fullyapplied = Fullyapplied }, commandType: CommandType.StoredProcedure);
+            var data = this.db.QueryMultiple("uspInsurancePaymentGet", 
+                new { @PracticeID = PracticeID,
+                      @InsuranceID = InsuranceID, 
+                      @DateType = DateType, 
+                      @Datevalue = Datevalue, 
+                      @totxnDate= totxnDate, 
+                      @Fullyapplied = Fullyapplied,
+                      @amountType= amountType,
+                      @amount= amount,
+                      @SortColumn= SortColumn,
+                      @SortDirection= SortDirection,
+                }, commandType: CommandType.StoredProcedure);
             return data.Read<PaymentDTO>().ToList();
         }
 

@@ -56,12 +56,11 @@ class ApplyPlanPaymentDialogComponent extends Component {
       claimSID: item?.claimSID,
     })
     let data = [];
-    if (item?.isEdit) {
+    if (item?.isEdit  && ( item?.ChargeAdjustmentDetails !=null && item?.ChargeAdjustmentDetails.length != 0   )) {
       data = item?.ChargeAdjustmentDetails;
       this.setState({ ChargeAdjustmentDetails: item?.ChargeAdjustmentDetails });
     } else {
-
-      //data = await this.props.GetChargeAdjustmentDetails(1447762, 1100381, 4271);
+      //data = await this.props.GetChargeAdjustmentDetails(1447762, 1100381, 4271); this.props.planId
       data = await this.props.GetChargeAdjustmentDetails(item?.chargeSID, item?.claimSID, this.props.planId);
       this.setState({ ChargeAdjustmentDetails: data });
     }
@@ -182,8 +181,6 @@ class ApplyPlanPaymentDialogComponent extends Component {
       }, this.state.timer);
       return;
     }
-
-    debugger;
     this.props.applyPaymentTransaction({
       insurancePaid: this.state.insurancePaid,
       adjustments: this.state.adjustments,
@@ -214,7 +211,7 @@ class ApplyPlanPaymentDialogComponent extends Component {
             info={this.state.info}
             none={this.state.none}
           ></NotificationComponent>
-          <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
+          {/* <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
             <div style={{ marginLeft: "77px" }}>
               <label className="userInfoLabel" >Amount </label>
             </div>
@@ -352,7 +349,7 @@ class ApplyPlanPaymentDialogComponent extends Component {
               />
 
             </div>
-          </div>
+          </div> */}
           {this.state.chargeBalance < 0 && (
             <div style={{ marginLeft: "100px" }}>
               <label className="userInfoLabel" ref={(node) => {
@@ -405,7 +402,7 @@ class ApplyPlanPaymentDialogComponent extends Component {
                     editColumn={"gridId"}
                     DATA_ITEM_KEY="gridId"
                     idGetter={idGetterDetailsPaymentID}
-                    data={this.state.ChargeAdjustmentDetails.filter(item => !item.isDelete)}
+                    data={this.state.ChargeAdjustmentDetails?.filter(item => !item.isDelete) || []}
                     height="400px"
                     width="100%"
                     noPageable={true}

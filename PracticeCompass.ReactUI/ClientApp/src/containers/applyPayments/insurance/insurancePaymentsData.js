@@ -247,8 +247,7 @@ export const applyPlanPaymentColumns = [
         minWidth: 50,
         editor: "numeric",
         type: "currency",
-        orderIndex: 5,
-        editable: false,
+        orderIndex: 5
     },
     {
         field: "insurancePaid",
@@ -285,9 +284,8 @@ export const applyPlanPaymentColumns = [
         title: "Other Adjustment",
         minWidth: 50,
         orderIndex: 9,
-        editor: "numeric",
-        // cell: "currency",
         type: "currency",
+        editable:false
         //type:"currency",
     },
     {
@@ -381,14 +379,14 @@ export const applyPlanColumns=[
         cell: "dropDown",
         Items:"ReasonCode"
     },
-    {
-        field: "remove",
-        title: "Remove",
-        minWidth: 50,
-        orderIndex: 4,
-        editor: "edit",
-        cell: "removeButton"
-    },
+    // {
+    //     field: "remove",
+    //     title: "Remove",
+    //     minWidth: 50,
+    //     orderIndex: 4,
+    //     editor: "edit",
+    //     cell: "removeButton"
+    // },
 
     // {
     //     field: "description",

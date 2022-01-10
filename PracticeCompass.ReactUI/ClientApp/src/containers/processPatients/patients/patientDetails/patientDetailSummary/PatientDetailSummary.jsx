@@ -923,6 +923,7 @@ class PatientDetailSummary extends Component {
                   </div>
                   <div className="phoneExt" style={{ float: "left" }}>
                     <TextBox
+                      max={5}
                       type="maskedTextBox"
                       format="#####"
                       placeholder="00000"
@@ -1405,7 +1406,7 @@ class PatientDetailSummary extends Component {
                           onChange={(e) => this.setState({ PlanName: e.value })}
                         ></TextBox>
                       </div>
-                      <div style={{ float: "left", marginLeft: "15px" }}>
+                      <div style={{ float: "left", marginLeft: "17px" }}>
                         <label className="userInfoLabel">Policy Number</label>
                       </div>
                       <div style={{ float: "left" }}>
@@ -1483,7 +1484,7 @@ class PatientDetailSummary extends Component {
                           }
                         ></DatePicker>
                       </div>
-                      <div style={{ float: "left", marginLeft: "15px" }}>
+                      <div style={{ float: "left", marginLeft: "17px" }}>
                         <label className="userInfoLabel">Plan End Date</label>
                       </div>
                       <div className="dateStyle" style={{ float: "left" }}>
@@ -1699,6 +1700,7 @@ class PatientDetailSummary extends Component {
                         </div>
                         <div className="phoneExt" style={{ float: "left" }}>
                           <TextBox
+                            max={5}
                             type="maskedTextBox"
                             format="#####"
                             placeholder="00000"

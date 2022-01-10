@@ -21,36 +21,43 @@ export class CurrencyGridCell extends React.Component {
       });
     }
   };
- currencyFormat(num,isNegative) {
-     num= isNegative ? Number(num) * -1 : Number(num);
-    return '$' +(isNegative ? '(' : '') + (Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')) +(isNegative ? ')' : '')
- }
+  currencyFormat(num, isNegative) {
+    num = isNegative ? Number(num) * -1 : Number(num);
+    return '$' + (isNegative ? '(' : '') + (Number(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')) + (isNegative ? ')' : '')
+  }
   render() {
     const { dataItem } = this.props;
     const field = this.props.field || "";
     const dataValue = dataItem[field] === null ? "" : dataItem[field];
     let column = this.props.myProp.columns.find((x) => x.field == field);
-    let columnStyle={ textAlign: "right"};
-    let isNegative=false;
-    if(dataValue < 0){
-      columnStyle.color ="red";
-      isNegative=true;
+    let columnStyle = { textAlign: "right" };
+    let isNegative = false;
+    if (dataValue < 0) {
+      columnStyle.color = "red";
+      isNegative = true;
     }
-    if (column.fontColor)columnStyle.color =column.fontColor;
-    if(column.fontWeight) columnStyle.fontWeight=column.fontWeight;
-    if(dataItem["type"]=="Charge"){
-      columnStyle.borderTopWidth="3px";
-      columnStyle.borderTopColor="black";
+    if (column.fontColor) columnStyle.color = column.fontColor;
+    if (column.fontWeight) columnStyle.fontWeight = column.fontWeight;
+    if (dataItem["type"] == "Charge") {
+      columnStyle.borderTopWidth = "3px";
+      columnStyle.borderTopColor = "black";
     }
+    let isEdit = column.editable != false && (dataItem.inEdit || this.props.editor == "edit");
+    // if (isEdit) {
+
+    //   if (field == "approvedAmount" ) {
+    //     isEdit = dataValue == 0?true :false;
+    //   } 
+    // }
     return (
       <td style={columnStyle}
-      ref={(node) => {
-        if (node) {
-          node.style.setProperty("text-align", "right", "important");
-          node.style.setProperty("padding-right", "5px", "important");
-        }
-      }}>
-        {(dataItem.inEdit || this.props.editor == "edit") ? (
+        ref={(node) => {
+          if (node) {
+            node.style.setProperty("text-align", "right", "important");
+            node.style.setProperty("padding-right", "5px", "important");
+          }
+        }}>
+        {(isEdit) ? (
           <TextBox
             type="numeric"
             format="c2"
@@ -60,8 +67,8 @@ export class CurrencyGridCell extends React.Component {
             onChange={this.handleChange}
           ></TextBox>
         ) : (
-           (column.isEmptyZero && Number(dataValue)==0)?  '':
-            (this.currencyFormat(dataValue,isNegative))
+          (column.isEmptyZero && Number(dataValue) == 0) ? '' :
+            (this.currencyFormat(dataValue, isNegative))
         )}
       </td>
     );

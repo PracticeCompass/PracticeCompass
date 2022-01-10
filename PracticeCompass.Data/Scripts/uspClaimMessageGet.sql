@@ -50,10 +50,10 @@ BEGIN
 	financialAddress.Line1 as FinancialLine1,
 	financialAddress.Line2 as FinancialLine2 , financialAddress.City as FinancialCity,
 	financialState.StateCode as FinancialState,financialAddress.Zip as FinancialZip,PracCommSetup.ReceiverID,
-	PracCommSetup.SenderID,Practice.PracticeCode,BatchRunClaim.RunNumber,[plan].ProfileOverrideAllowed,
-	INSTAMEDPlan.ID as INSTAMEDPlanID,PAYORIDPlan.ID as PAYORIDPlanID,practiceTaxID.ID as ParcticeTaxonomy,
+	PracCommSetup.SenderID,Practice.PracticeCode,BatchRunClaim.RunNumber,
+	practiceTaxID.ID as ParcticeTaxonomy,
 	claim.LowestRespCoverageOrder,ServiceCenterAltID.ID as ServiceCenterNPI,charge.ApprovedAmount,charge.InsuranceReceipts,ChargeActivity.PostDate,
-	PlanClaim.PlanID,PlanClaim.PolicyNumber,Claim.ClaimSID,Policy.GroupNumber
+	PlanClaim.PlanID,PlanClaim.PolicyNumber,Claim.ClaimSID,Policy.GroupNumber,Payer.EnvoyPayerID
 	from claim
 inner join Person on Person.PersonID = Claim.PatientID
 left outer join Address on [dbo].[Address].[EntitySID] = PersonID
@@ -104,8 +104,7 @@ left outer join [dbo].[Provider] as Referring on Referring.[ProviderID] = Ailmen
 left outer join [dbo].[RefDoctorAltID] on [dbo].[RefDoctorAltID].[RefDoctorID] = Referring.[ProviderID] and RefDoctorAltID.AidTag ='NPI'
 inner join PracCommSetup on PracCommSetup.PracticeID = Practice.PracticeID
 left outer join BatchRunClaim on BatchRunClaim.ClaimSID=Claim.ClaimSID and BatchRunClaim.PlanID=[plan].PlanID and BatchRunClaim.PolicyNumber=PolicyMember.PolicyNumber
-left outer join PlanAltID as INSTAMEDPlan on INSTAMEDPlan.PlanID=[plan].PlanID and INSTAMEDPlan.AidTag='INSTAMED'
-left outer join PlanAltID as PAYORIDPlan on PAYORIDPlan.PlanID=[plan].PlanID and PAYORIDPlan.AidTag='PAYORID'
+left outer join Payer on payer.PayerID=[plan].PayerID
 left outer join ChargeActivity on ChargeActivity.ChargeSID=charge.ChargeSID and ChargeActivity.SourceType='I' and ChargeActivity.SourceID=PlanClaim.PlanID and ChargeActivity.Amount<0
 where Claim.ClaimSID in (select value from STRING_SPLIT(@ClaimSID,',')) and PlanClaim.CoverageOrder<>99
 order by Claim.ClaimNumber
