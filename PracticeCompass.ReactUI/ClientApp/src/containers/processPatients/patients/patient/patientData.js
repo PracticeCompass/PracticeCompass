@@ -65,23 +65,30 @@ export const PatientTypesColumns = [
 ];
 export const companyNameColumns = [
   {
+    field: "carrierCode",
+    title: "Code",
+    orderIndex:0,
+    minWidth: "100px",
+},
+  {
     field: "sortName",
     title: "Company Name",
+    orderIndex:1,
     minWidth: "817px",
   },
 ];
 export const insuranceColumns = [
   {
-    field: "entitySID",
-    title: "Id",
-    hide: true,
-    orderIndex: 0,
-  },
+    field: "carrierCode",
+    title: "Code",
+    orderIndex:0,
+    minWidth: "100px",
+},
   {
     field: "sortName",
     title: "Plan Company",
     orderIndex: 1,
-    minWidth: "817px",
+    minWidth: "700px",
   },
 ];
 export const sortColumns = [];
