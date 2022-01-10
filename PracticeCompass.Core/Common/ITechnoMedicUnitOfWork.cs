@@ -23,5 +23,6 @@ namespace PracticeCompass.Core.Common
         IFileManagerRepository ERAFileManagerRepository { get; }
 
         ILookupRepository lookupRepository { get; }
+        IClaimReportsRepository ClaimReportsRepository { get; }
     }
 }

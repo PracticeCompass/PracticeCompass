@@ -16,13 +16,9 @@ namespace PracticeCompass.Messaging.Parsing
 {
     public class ClaimReportsParser
     {
-        private readonly ITechnoMedicUnitOfWork unitOfWork;
-        private readonly IConfiguration _configuration;
-        public ClaimReportsParser(ITechnoMedicUnitOfWork unitOfWork, IConfiguration configuration)
+        public ClaimReportsParser()
 
         {
-            this.unitOfWork = unitOfWork;
-            this._configuration = configuration;
         }
         public ClaimReportModel ProcessClaimReport(string messageContent, string segmentSeparator, string FieldSeparator)
         {

@@ -44,7 +44,7 @@ namespace PracticeCompass.API.Controllers.API
                 {
                     Directory.CreateDirectory(@"C:\PracticeCompas\ParsedClaimReports");
                 }
-                var reportParser = new ClaimReportsParser(unitOfWork, this._configuration);
+                var reportParser = new ClaimReportsParser();
                 string[] files =
                 Directory.GetFiles(@"C:\PracticeCompas\Inbound\ClaimReports", "*.txt", SearchOption.AllDirectories);
                 for (var f = 0; f < files.Length; f++)
@@ -52,10 +52,10 @@ namespace PracticeCompass.API.Controllers.API
                     var filename = Path.GetFileName(files[f]);
                     var fileText = System.IO.File.ReadAllText(files[f]);
                     var reportData = reportParser.ProcessClaimReport(fileText, "~", "|");
+                    unitOfWork.ClaimReportsRepository.ParseClaimReport(reportData);
                     System.IO.File.Move(files[f], Path.Combine(@"C:\PracticeCompas\ParsedClaimReports", filename));
                 }
-
-                    return true;
+                return true;
             }
             catch (Exception ex)
             {
