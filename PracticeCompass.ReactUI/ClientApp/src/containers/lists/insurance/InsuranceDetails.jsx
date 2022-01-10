@@ -353,6 +353,7 @@ class InsuranceDetails extends Component {
                   </div>
                   <div className="phoneExt" style={{ float: "left" }}>
                     <TextBox
+                      max={5}
                       type="maskedTextBox"
                       format="#####"
                       placeholder="00000"
