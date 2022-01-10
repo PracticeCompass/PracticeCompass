@@ -363,30 +363,30 @@ class Details extends Component {
               x => x.entityId == chargeDetailsData.diag4
             )[0]
             : null,
-        icd10_5:
-          chargeDetailsData.diag5 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag5
-            )[0]
-            : null,
-        icd10_6:
-          chargeDetailsData.diag6 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag6
-            )[0]
-            : null,
-        icd10_7:
-          chargeDetailsData.diag7 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag7
-            )[0]
-            : null,
-        icd10_8:
-          chargeDetailsData.diag8 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag8
-            )[0]
-            : null,
+        //icd10_5:
+        //  chargeDetailsData.diag5 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag5
+        //    )[0]
+        //    : null,
+        //icd10_6:
+        //  chargeDetailsData.diag6 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag6
+        //    )[0]
+        //    : null,
+        //icd10_7:
+        //  chargeDetailsData.diag7 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag7
+        //    )[0]
+        //    : null,
+        //icd10_8:
+        //  chargeDetailsData.diag8 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag8
+        //    )[0]
+        //    : null,
         descriptionICD1:
           chargeDetailsData.diag1 != null
             ? this.props.dropDownICD10.filter(
@@ -411,30 +411,30 @@ class Details extends Component {
               x => x.entityId == chargeDetailsData.diag4
             )[0].entityName
             : null,
-        descriptionICD5:
-          chargeDetailsData.diag5 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag5
-            )[0].entityName
-            : null,
-        descriptionICD6:
-          chargeDetailsData.diag6 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag6
-            )[0].entityName
-            : null,
-        descriptionICD7:
-          chargeDetailsData.diag7 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag7
-            )[0].entityName
-            : null,
-        descriptionICD8:
-          chargeDetailsData.diag8 != null
-            ? this.props.dropDownICD10.filter(
-              x => x.entityId == chargeDetailsData.diag8
-            )[0].entityName
-            : null,
+        //descriptionICD5:
+        //  chargeDetailsData.diag5 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag5
+        //    )[0].entityName
+        //    : null,
+        //descriptionICD6:
+        //  chargeDetailsData.diag6 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag6
+        //    )[0].entityName
+        //    : null,
+        //descriptionICD7:
+        //  chargeDetailsData.diag7 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag7
+        //    )[0].entityName
+        //    : null,
+        //descriptionICD8:
+        //  chargeDetailsData.diag8 != null
+        //    ? this.props.dropDownICD10.filter(
+        //      x => x.entityId == chargeDetailsData.diag8
+        //    )[0].entityName
+        //    : null,
         rendering:
           chargeDetailsData.renderingID != null
             ? this.props.dropDownphysicians.filter(
@@ -808,12 +808,11 @@ class Details extends Component {
             cancelDialog={this.cancelProviderDialog}
           />
         )}
-        <div style={{ width: "100%", padding: "5px", height: "300px" }}>
+        <div style={{ width: "100%", padding: "5px", height: "225px" }}>
           <div style={{ display: "flex", flexFlow: "row" }}>
             <div style={{ float: "left" }}>
-              <div
-                className="rowHeight"
-                style={{ display: "flex", flexFlow: "row" }}
+              <div className="rowHeight"
+                   style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}
               >
                 <div style={{ float: "left", width: "270px" }}>
                   <div style={{ float: "left" }}>
@@ -893,12 +892,12 @@ class Details extends Component {
                         }
                       />
                     </div>
-                  </div>
+                                </div>
                 </div>
               </div>
               <div
                 className="rowHeight"
-                style={{ display: "flex", flexFlow: "row" }}
+                style={{ display: "flex", flexFlow: "row", marginLeft: "37px"}}
               >
                 <div style={{ float: "left" }}>
                   <div style={{ float: "left", marginLeft: "30px" }}>
@@ -980,8 +979,8 @@ class Details extends Component {
                 </div> */}
               </div>
               <div
-                className="rowHeight"
-                style={{ display: "flex", flexFlow: "row" }}
+                 className="rowHeight"
+                 style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}
               >
                 <div style={{ float: "left" }}>
                   <div style={{ float: "left", marginLeft: "4px" }}>
@@ -1077,13 +1076,13 @@ class Details extends Component {
                 style={{ display: "flex", flexFlow: "row" }}
               >
                 <div style={{ float: "left" }}>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
+                  <div style={{ display: "flex", flexFlow: "row", marginLeft: "37px" }}>
                     <div style={{ float: "left" }}>
                       <div style={{ float: "left", width: "255" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
                           <label className="userInfoLabel">ICD1</label>
                         </div>
-                        <div style={{ float: "left", width: "139px" }}>
+                        <div style={{ float: "left", width: "132px" }}>
                           <DropDown
                             className="unifyHeight"
                             data={this.props.dropDownICD10}
@@ -1129,13 +1128,13 @@ class Details extends Component {
                       </div>
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
+                  <div style={{ display: "flex", flexFlow: "row", marginLeft: "37px" }}>
                     <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
+                      <div style={{ float: "left", width: "260px" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
                           <label className="userInfoLabel">ICD2</label>
                         </div>
-                        <div style={{ float: "left", width: "139px" }}>
+                        <div style={{ float: "left", width: "132px" }}>
                           <DropDown
                             className="unifyHeight"
                             data={this.props.dropDownICD10}
@@ -1180,14 +1179,14 @@ class Details extends Component {
                         />
                       </div>
                     </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
+                                </div>
+                  <div style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}>
                     <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
+                      <div style={{ float: "left", width: "260px" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
                           <label className="userInfoLabel">ICD3</label>
                         </div>
-                        <div style={{ float: "left", width: "139px" }}>
+                        <div style={{ float: "left", width: "132px" }}>
                           <DropDown
                             className="unifyHeight"
                             data={this.props.dropDownICD10}
@@ -1232,14 +1231,14 @@ class Details extends Component {
                         />
                       </div>
                     </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
+                                </div>
+                  <div style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}>
                     <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
+                      <div style={{ float: "left", width: "260px" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
                           <label className="userInfoLabel">ICD4</label>
                         </div>
-                        <div style={{ float: "left", width: "139px" }}>
+                        <div style={{ float: "left", width: "132px" }}>
                           <DropDown
                             className="unifyHeight"
                             data={this.props.dropDownICD10}
@@ -1285,219 +1284,24 @@ class Details extends Component {
                       </div>
                     </div>
                   </div>
+
                   <div style={{ display: "flex", flexFlow: "row" }}>
                     <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
-                        <div style={{ float: "left", marginLeft: "30px" }}>
-                          <label className="userInfoLabel">ICD5</label>
-                        </div>
-                        <div style={{ float: "left", width: "139px" }}>
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownICD10}
-                            textField="entityId"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.icd10_5}
-                            value={this.state.icd10_5}
-                            onChange={e => {
-                              this.setState({
-                                icd10_5: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId
-                                },
-                                descriptionICD5: e.value?.entityName
-                              });
-                            }}
-                          />
-                        </div>
-                        <ButtonComponent
-                          icon="search"
-                          type="search"
-                          classButton="infraBtn-primary find-button"
-                          onClick={e => {
-                            this.setState({ visiableICD5: true });
-                          }}
-                        >
-                          Find
-                        </ButtonComponent>
+                      <div style={{ float: "left" }}>
+                        <label className="userInfoLabel">Referral Number</label>
                       </div>
-                    </div>
-                    <div style={{ float: "left", width: "380px" }}>
-                      <div style={{ float: "left", marginLeft: "10px" }}>
-                        <label className="userInfoLabel">Description</label>
-                      </div>
-                      <div style={{ float: "left", width: "300px" }}>
+                      <div style={{ float: "left", width: "195px" }}>
                         <TextBox
-                          value={this.state.descriptionICD5}
+                          value={this.state.referralNumber}
                           className="unifyHeight"
                           onChange={e =>
-                            this.setState({ descriptionICD5: e.value })
+                            this.setState({ referralNumber: e.value })
                           }
                         />
                       </div>
                     </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
                     <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
-                        <div style={{ float: "left", marginLeft: "30px" }}>
-                          <label className="userInfoLabel">ICD6</label>
-                        </div>
-                        <div style={{ float: "left", width: "139px" }}>
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownICD10}
-                            textField="entityId"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.icd10_6}
-                            value={this.state.icd10_6}
-                            onChange={e => {
-                              this.setState({
-                                icd10_6: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId
-                                },
-                                descriptionICD6: e.value?.entityName
-                              });
-                            }}
-                          />
-                        </div>
-                        <ButtonComponent
-                          icon="search"
-                          type="search"
-                          classButton="infraBtn-primary find-button"
-                          onClick={e => {
-                            this.setState({ visiableICD6: true });
-                          }}
-                        >
-                          Find
-                        </ButtonComponent>
-                      </div>
-                    </div>
-                    <div style={{ float: "left", width: "380px" }}>
-                      <div style={{ float: "left", marginLeft: "10px" }}>
-                        <label className="userInfoLabel">Description</label>
-                      </div>
-                      <div style={{ float: "left", width: "300px" }}>
-                        <TextBox
-                          value={this.state.descriptionICD6}
-                          className="unifyHeight"
-                          onChange={e =>
-                            this.setState({ descriptionICD6: e.value })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
-                        <div style={{ float: "left", marginLeft: "30px" }}>
-                          <label className="userInfoLabel">ICD7</label>
-                        </div>
-                        <div style={{ float: "left", width: "139px" }}>
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownICD10}
-                            textField="entityId"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.icd10_7}
-                            value={this.state.icd10_7}
-                            onChange={e => {
-                              this.setState({
-                                icd10_7: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId
-                                },
-                                descriptionICD7: e.value?.entityName
-                              });
-                            }}
-                          />
-                        </div>
-                        <ButtonComponent
-                          icon="search"
-                          type="search"
-                          classButton="infraBtn-primary find-button"
-                          onClick={e => {
-                            this.setState({ visiableICD7: true });
-                          }}
-                        >
-                          Find
-                        </ButtonComponent>
-                      </div>
-                    </div>
-                    <div style={{ float: "left", width: "380px" }}>
-                      <div style={{ float: "left", marginLeft: "10px" }}>
-                        <label className="userInfoLabel">Description</label>
-                      </div>
-                      <div style={{ float: "left", width: "300px" }}>
-                        <TextBox
-                          value={this.state.descriptionICD7}
-                          className="unifyHeight"
-                          onChange={e =>
-                            this.setState({ descriptionICD7: e.value })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left" }}>
-                      <div style={{ float: "left", width: "267px" }}>
-                        <div style={{ float: "left", marginLeft: "30px" }}>
-                          <label className="userInfoLabel">ICD8</label>
-                        </div>
-                        <div style={{ float: "left", width: "139px" }}>
-                          <DropDown
-                            className="unifyHeight"
-                            data={this.props.dropDownICD10}
-                            textField="entityId"
-                            dataItemKey="entityId"
-                            defaultValue={this.state.icd10_8}
-                            value={this.state.icd10_8}
-                            onChange={e => {
-                              this.setState({
-                                icd10_8: {
-                                  entityName: e.value?.entityName,
-                                  entityId: e.value?.entityId
-                                },
-                                descriptionICD8: e.value?.entityName
-                              });
-                            }}
-                          />
-                        </div>
-                        <ButtonComponent
-                          icon="search"
-                          type="search"
-                          classButton="infraBtn-primary find-button"
-                          onClick={e => {
-                            this.setState({ visiableICD8: true });
-                          }}
-                        >
-                          Find
-                        </ButtonComponent>
-                      </div>
-                    </div>
-                    <div style={{ float: "left", width: "380px" }}>
-                      <div style={{ float: "left", marginLeft: "10px" }}>
-                        <label className="userInfoLabel">Description</label>
-                      </div>
-                      <div style={{ float: "left", width: "300px" }}>
-                        <TextBox
-                          value={this.state.descriptionICD8}
-                          className="unifyHeight"
-                          onChange={e =>
-                            this.setState({ descriptionICD8: e.value })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ float: "left", width: "400px" }}>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left" }}>
-                      <div style={{ float: "left", marginLeft: "10px" }}>
+                    <div style={{ float: "left", marginLeft: "55px"}}> 
                         <label className="userInfoLabel">
                           Authorization Number
                         </label>
@@ -1513,22 +1317,217 @@ class Details extends Component {
                       </div>
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexFlow: "row" }}>
-                    <div style={{ float: "left" }}>
-                      <div style={{ float: "left", marginLeft: "44px" }}>
-                        <label className="userInfoLabel">Referral Number</label>
-                      </div>
-                      <div style={{ float: "left", width: "195px" }}>
-                        <TextBox
-                          value={this.state.referralNumber}
-                          className="unifyHeight"
-                          onChange={e =>
-                            this.setState({ referralNumber: e.value })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
+
+                  {/*<div style={{ display: "flex", flexFlow: "row" }}>*/}
+                  {/*  <div style={{ float: "left" }}>*/}
+                  {/*    <div style={{ float: "left", width: "267px" }}>*/}
+                  {/*      <div style={{ float: "left", marginLeft: "30px" }}>*/}
+                  {/*        <label className="userInfoLabel">ICD5</label>*/}
+                  {/*      </div>*/}
+                  {/*      <div style={{ float: "left", width: "139px" }}>*/}
+                  {/*        <DropDown*/}
+                  {/*          className="unifyHeight"*/}
+                  {/*          data={this.props.dropDownICD10}*/}
+                  {/*          textField="entityId"*/}
+                  {/*          dataItemKey="entityId"*/}
+                  {/*          defaultValue={this.state.icd10_5}*/}
+                  {/*          value={this.state.icd10_5}*/}
+                  {/*          onChange={e => {*/}
+                  {/*            this.setState({*/}
+                  {/*              icd10_5: {*/}
+                  {/*                entityName: e.value?.entityName,*/}
+                  {/*                entityId: e.value?.entityId*/}
+                  {/*              },*/}
+                  {/*              descriptionICD5: e.value?.entityName*/}
+                  {/*            });*/}
+                  {/*          }}*/}
+                  {/*        />*/}
+                  {/*      </div>*/}
+                  {/*      <ButtonComponent*/}
+                  {/*        icon="search"*/}
+                  {/*        type="search"*/}
+                  {/*        classButton="infraBtn-primary find-button"*/}
+                  {/*        onClick={e => {*/}
+                  {/*          this.setState({ visiableICD5: true });*/}
+                  {/*        }}*/}
+                  {/*      >*/}
+                  {/*        Find*/}
+                  {/*      </ButtonComponent>*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*  <div style={{ float: "left", width: "380px" }}>*/}
+                  {/*    <div style={{ float: "left", marginLeft: "10px" }}>*/}
+                  {/*      <label className="userInfoLabel">Description</label>*/}
+                  {/*    </div>*/}
+                  {/*    <div style={{ float: "left", width: "300px" }}>*/}
+                  {/*      <TextBox*/}
+                  {/*        value={this.state.descriptionICD5}*/}
+                  {/*        className="unifyHeight"*/}
+                  {/*        onChange={e =>*/}
+                  {/*          this.setState({ descriptionICD5: e.value })*/}
+                  {/*        }*/}
+                  {/*      />*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
+                  {/*<div style={{ display: "flex", flexFlow: "row" }}>*/}
+                  {/*  <div style={{ float: "left" }}>*/}
+                  {/*    <div style={{ float: "left", width: "267px" }}>*/}
+                  {/*      <div style={{ float: "left", marginLeft: "30px" }}>*/}
+                  {/*        <label className="userInfoLabel">ICD6</label>*/}
+                  {/*      </div>*/}
+                  {/*      <div style={{ float: "left", width: "139px" }}>*/}
+                  {/*        <DropDown*/}
+                  {/*          className="unifyHeight"*/}
+                  {/*          data={this.props.dropDownICD10}*/}
+                  {/*          textField="entityId"*/}
+                  {/*          dataItemKey="entityId"*/}
+                  {/*          defaultValue={this.state.icd10_6}*/}
+                  {/*          value={this.state.icd10_6}*/}
+                  {/*          onChange={e => {*/}
+                  {/*            this.setState({*/}
+                  {/*              icd10_6: {*/}
+                  {/*                entityName: e.value?.entityName,*/}
+                  {/*                entityId: e.value?.entityId*/}
+                  {/*              },*/}
+                  {/*              descriptionICD6: e.value?.entityName*/}
+                  {/*            });*/}
+                  {/*          }}*/}
+                  {/*        />*/}
+                  {/*      </div>*/}
+                  {/*      <ButtonComponent*/}
+                  {/*        icon="search"*/}
+                  {/*        type="search"*/}
+                  {/*        classButton="infraBtn-primary find-button"*/}
+                  {/*        onClick={e => {*/}
+                  {/*          this.setState({ visiableICD6: true });*/}
+                  {/*        }}*/}
+                  {/*      >*/}
+                  {/*        Find*/}
+                  {/*      </ButtonComponent>*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*  <div style={{ float: "left", width: "380px" }}>*/}
+                  {/*    <div style={{ float: "left", marginLeft: "10px" }}>*/}
+                  {/*      <label className="userInfoLabel">Description</label>*/}
+                  {/*    </div>*/}
+                  {/*    <div style={{ float: "left", width: "300px" }}>*/}
+                  {/*      <TextBox*/}
+                  {/*        value={this.state.descriptionICD6}*/}
+                  {/*        className="unifyHeight"*/}
+                  {/*        onChange={e =>*/}
+                  {/*          this.setState({ descriptionICD6: e.value })*/}
+                  {/*        }*/}
+                  {/*      />*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
+                  {/*<div style={{ display: "flex", flexFlow: "row" }}>*/}
+                  {/*  <div style={{ float: "left" }}>*/}
+                  {/*    <div style={{ float: "left", width: "267px" }}>*/}
+                  {/*      <div style={{ float: "left", marginLeft: "30px" }}>*/}
+                  {/*        <label className="userInfoLabel">ICD7</label>*/}
+                  {/*      </div>*/}
+                  {/*      <div style={{ float: "left", width: "139px" }}>*/}
+                  {/*        <DropDown*/}
+                  {/*          className="unifyHeight"*/}
+                  {/*          data={this.props.dropDownICD10}*/}
+                  {/*          textField="entityId"*/}
+                  {/*          dataItemKey="entityId"*/}
+                  {/*          defaultValue={this.state.icd10_7}*/}
+                  {/*          value={this.state.icd10_7}*/}
+                  {/*          onChange={e => {*/}
+                  {/*            this.setState({*/}
+                  {/*              icd10_7: {*/}
+                  {/*                entityName: e.value?.entityName,*/}
+                  {/*                entityId: e.value?.entityId*/}
+                  {/*              },*/}
+                  {/*              descriptionICD7: e.value?.entityName*/}
+                  {/*            });*/}
+                  {/*          }}*/}
+                  {/*        />*/}
+                  {/*      </div>*/}
+                  {/*      <ButtonComponent*/}
+                  {/*        icon="search"*/}
+                  {/*        type="search"*/}
+                  {/*        classButton="infraBtn-primary find-button"*/}
+                  {/*        onClick={e => {*/}
+                  {/*          this.setState({ visiableICD7: true });*/}
+                  {/*        }}*/}
+                  {/*      >*/}
+                  {/*        Find*/}
+                  {/*      </ButtonComponent>*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*  <div style={{ float: "left", width: "380px" }}>*/}
+                  {/*    <div style={{ float: "left", marginLeft: "10px" }}>*/}
+                  {/*      <label className="userInfoLabel">Description</label>*/}
+                  {/*    </div>*/}
+                  {/*    <div style={{ float: "left", width: "300px" }}>*/}
+                  {/*      <TextBox*/}
+                  {/*        value={this.state.descriptionICD7}*/}
+                  {/*        className="unifyHeight"*/}
+                  {/*        onChange={e =>*/}
+                  {/*          this.setState({ descriptionICD7: e.value })*/}
+                  {/*        }*/}
+                  {/*      />*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
+                  {/*<div style={{ display: "flex", flexFlow: "row" }}>*/}
+                  {/*  <div style={{ float: "left" }}>*/}
+                  {/*    <div style={{ float: "left", width: "267px" }}>*/}
+                  {/*      <div style={{ float: "left", marginLeft: "30px" }}>*/}
+                  {/*        <label className="userInfoLabel">ICD8</label>*/}
+                  {/*      </div>*/}
+                  {/*      <div style={{ float: "left", width: "139px" }}>*/}
+                  {/*        <DropDown*/}
+                  {/*          className="unifyHeight"*/}
+                  {/*          data={this.props.dropDownICD10}*/}
+                  {/*          textField="entityId"*/}
+                  {/*          dataItemKey="entityId"*/}
+                  {/*          defaultValue={this.state.icd10_8}*/}
+                  {/*          value={this.state.icd10_8}*/}
+                  {/*          onChange={e => {*/}
+                  {/*            this.setState({*/}
+                  {/*              icd10_8: {*/}
+                  {/*                entityName: e.value?.entityName,*/}
+                  {/*                entityId: e.value?.entityId*/}
+                  {/*              },*/}
+                  {/*              descriptionICD8: e.value?.entityName*/}
+                  {/*            });*/}
+                  {/*          }}*/}
+                  {/*        />*/}
+                  {/*      </div>*/}
+                  {/*      <ButtonComponent*/}
+                  {/*        icon="search"*/}
+                  {/*        type="search"*/}
+                  {/*        classButton="infraBtn-primary find-button"*/}
+                  {/*        onClick={e => {*/}
+                  {/*          this.setState({ visiableICD8: true });*/}
+                  {/*        }}*/}
+                  {/*      >*/}
+                  {/*        Find*/}
+                  {/*      </ButtonComponent>*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*  <div style={{ float: "left", width: "380px" }}>*/}
+                  {/*    <div style={{ float: "left", marginLeft: "10px" }}>*/}
+                  {/*      <label className="userInfoLabel">Description</label>*/}
+                  {/*    </div>*/}
+                  {/*    <div style={{ float: "left", width: "300px" }}>*/}
+                  {/*      <TextBox*/}
+                  {/*        value={this.state.descriptionICD8}*/}
+                  {/*        className="unifyHeight"*/}
+                  {/*        onChange={e =>*/}
+                  {/*          this.setState({ descriptionICD8: e.value })*/}
+                  {/*        }*/}
+                  {/*      />*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
+                </div>
+                <div style={{ float: "left", width: "400px" }}>
                   <div>
                     <fieldset
                       className="fieldsetStyle"
@@ -1549,7 +1548,7 @@ class Details extends Component {
                           style={{
                             display: "flex",
                             flexFlow: "row",
-                            marginTop: "20px"
+                            marginTop: "10px"
                           }}
                         >
                           <div style={{ float: "left" }}>
@@ -1730,7 +1729,7 @@ class Details extends Component {
                       style={{ display: "flex", flexFlow: "row" }}
                     >
                       <div style={{ float: "left" }}>
-                        <div style={{ float: "left", marginLeft: "77px" }}>
+                        <div style={{ float: "left", marginLeft: "76px" }}>
                           <label className="userInfoLabel">Allowed</label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>
