@@ -95,7 +95,7 @@ namespace PracticeCompass.API.Controllers.API
                     searchCriteria.PhysicianID, searchCriteria.DOSType, searchCriteria.DOSvalue, searchCriteria.ToDOSvalue ,searchCriteria.PatientClass, searchCriteria.InsuranceType, searchCriteria.InsuranceID,
                     searchCriteria.BillNumber, searchCriteria.ClaimIcnNumber, searchCriteria.Age, searchCriteria.ClaimValue, searchCriteria.CoverageOrder, searchCriteria.InsuranceStatus,
                     searchCriteria.Batch, searchCriteria.GuarantorID, searchCriteria.IncludeCompletedClaims, searchCriteria.IncludeCashClaims, searchCriteria.IncludeVoidedClaims,
-                    searchCriteria.IncludeRejections, searchCriteria.IncludePastDue, searchCriteria.IncludeDenials, searchCriteria.Rejections, searchCriteria.PastDue, searchCriteria.Denials,
+                    searchCriteria.Rejections, searchCriteria.PastDue, searchCriteria.Denials,
                     searchCriteria.TimelyFilling, searchCriteria.Skip, searchCriteria.SortColumn, searchCriteria.SortDirection);
                 foreach(var claim in Result)
                 {

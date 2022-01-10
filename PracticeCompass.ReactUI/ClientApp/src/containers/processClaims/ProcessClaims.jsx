@@ -12,7 +12,7 @@ class ProcessClaims extends Component {
   render() {
     return (
       <Fragment>
-        <UnSubmitted filterName="UnSubmitted"></UnSubmitted>
+        <UnSubmitted filterName="ClaimSearch"></UnSubmitted>
       </Fragment>
     );
   }

@@ -43,19 +43,19 @@ class Main extends Component {
               />
               <Route
                 exact={true}
-                path="/processclaims/Generate Claims"
+                path="/processclaims/Claim Search"
                 component={UnSubmitted}
               />
-              {/*<Route*/}
-              {/*  exact={true}*/}
-              {/*  path="/processclaims/rejections"*/}
-              {/*  component={Rejections}*/}
-              {/*/>*/}
-              {/*<Route*/}
-              {/*  exact={true}*/}
-              {/*  path="/processclaims/denials"*/}
-              {/*  component={Denials}*/}
-              {/*/>*/}
+              <Route
+                exact={true}
+                path="/processclaims/rejections"
+                component={Rejections}
+              />
+              <Route
+                exact={true}
+                path="/processclaims/denials"
+                component={Denials}
+              />
               {/*<Route*/}
               {/*  exact={true}*/}
               {/*  path="/processclaims/search"*/}
