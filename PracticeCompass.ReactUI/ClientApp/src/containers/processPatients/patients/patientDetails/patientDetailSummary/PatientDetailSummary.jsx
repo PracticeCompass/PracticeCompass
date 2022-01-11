@@ -12,7 +12,6 @@ import "./PatientDetailSummary.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import { exportExcelFile } from "../../../../common/export";
-import PlanAddingDialogComponent from "./PlanAddingDialog"
 import moment from 'moment';
 import {
   getParacticesUrl,
