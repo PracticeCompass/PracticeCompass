@@ -29,33 +29,45 @@ CREATE TABLE [dbo].[ClaimStatus](
 SET IDENTITY_INSERT [dbo].[ClaimStatus] ON 
 End
 --- Create Index
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='Claim##ClaimStatus' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [Claim##ClaimStatus] ON [dbo].[ClaimStatus]
 (
 	[ClaimSID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='Plan##ClaimStatus' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [Plan##ClaimStatus] ON [dbo].[ClaimStatus]
 (
 	[PlanID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='Policy##ClaimStatus' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [Policy##ClaimStatus] ON [dbo].[ClaimStatus]
 (
 	[PolicyNumber] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='Coverage##ClaimStatus' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [Coverage##ClaimStatus] ON [dbo].[ClaimStatus]
 (
 	[CoverageOrder] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='ClaimStatus##PlanPolicyClaim' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [ClaimStatus##PlanPolicyClaim] ON [dbo].[ClaimStatus]
 (
 	[PlanID] ASC,
 	[PolicyNumber] ASC,
 	[ClaimSID] DESC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='ClaimStatus##PlanPolicyCovrageClaim' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [ClaimStatus##PlanPolicyCovrageClaim] ON [dbo].[ClaimStatus]
 (
 	[PlanID] ASC,
@@ -63,7 +75,9 @@ CREATE NONCLUSTERED INDEX [ClaimStatus##PlanPolicyCovrageClaim] ON [dbo].[ClaimS
 	[CoverageOrder] ASC,
 	[ClaimSID] DESC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+If Not EXISTS (SELECT * FROM sys.indexes WHERE name='ClaimStatus##PlanPolicyCovrageClaimStatus' AND object_id = OBJECT_ID('dbo.ClaimStatus'))
+BEGIN
 CREATE NONCLUSTERED INDEX [ClaimStatus##PlanPolicyCovrageClaimStatus] ON [dbo].[ClaimStatus]
 (
 	[PlanID] ASC,
@@ -72,7 +86,8 @@ CREATE NONCLUSTERED INDEX [ClaimStatus##PlanPolicyCovrageClaimStatus] ON [dbo].[
 	[Status] ASC,
 	[ClaimSID] DESC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
+end
+
 ----------------------------------------------------------------------------------------
 --USE [Medman]
 --GO
