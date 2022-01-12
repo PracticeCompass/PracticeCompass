@@ -53,7 +53,7 @@ namespace PracticeCompass.API.Controllers.API
                     var fileText = System.IO.File.ReadAllText(files[f]);
                     var reportData = reportParser.ProcessClaimReport(fileText, "~", "|");
                     unitOfWork.ClaimReportsRepository.ParseClaimReport(reportData);
-                    System.IO.File.Move(files[f], Path.Combine(@"C:\PracticeCompas\ParsedClaimReports", filename));
+                    System.IO.File.Move(files[f], Path.Combine(@"C:\PracticeCompas\ParsedClaimReports", filename),true);
                 }
                 return true;
             }

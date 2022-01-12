@@ -44,15 +44,6 @@ namespace PracticeCompass.Messaging.Parsing
                     var othersegments = segments.Where(s => !ignoringList.Contains(s.Name)).ToList();
                     for (var c = 0; c < CIsegments.Count; c++)
                     {
-                        var claimitem = new ClaimReportItem
-                        {
-                            ClearingHouseFileref = CIsegments[c].Fields[3],
-                            ClearingHouseClaimref = CIsegments[c].Fields[4],
-                            ClaimNumber = CIsegments[c].Fields[5],
-                            PayerPlanID = CIsegments[c].Fields[12],
-                            PracticeTaxCode = CIsegments[c].Fields[17],
-                            ClaimMemberID = CIsegments[c].Fields[18]
-                        };
                         var CI_otherSegments = othersegments.Where(e => e.Fields[4] == CIsegments[c].Fields[4]).ToList();
                         if (claimreports.reportType == "10")
                         {
@@ -60,23 +51,35 @@ namespace PracticeCompass.Messaging.Parsing
                         }
                         for (var ci = 0; ci < CI_otherSegments.Count; ci++)
                         {
+                            var claimitem = new ClaimReportItem
+                            {
+                                ClearingHouseFileref = CIsegments[c].Fields[3],
+                                ClearingHouseClaimref = CIsegments[c].Fields[4],
+                                ClaimNumber = CIsegments[c].Fields[6],
+                                PayerPlanID = CIsegments[c].Fields[12],
+                                PracticeTaxCode = CIsegments[c].Fields[21],
+                                ClaimMemberID = CIsegments[c].Fields[22],
+                                RunNumber = CIsegments[c].Fields[CIsegments[c].Fields.Count - 2],
+                                SatatusSource = CIsegments[c].Fields[12]
+                            };
+
                             if (CI_otherSegments[ci].Name == "CE")//BATCH & CLAIM LEVEL REJECTION REPORT | 05
                             {
 
                                 claimitem.ErrorFieldData = CI_otherSegments[ci].Fields[5];
                                 claimitem.ErrorField = CI_otherSegments[ci].Fields[6];
-                                claimitem.Message = CI_otherSegments[ci].Fields[8];
-                                claimitem.ErrorRejectReason = CI_otherSegments[ci].Fields[9];
-                                claimitem.ErrorLevel = CI_otherSegments[ci].Fields[10];
-                                claimitem.ClaimNumber = CIsegments[c].Fields[6];
+                                claimitem.Message = CI_otherSegments[ci].Fields[9];
+                                claimitem.ErrorRejectReason = CI_otherSegments[ci].Fields[10];
+                                claimitem.ErrorLevel = CI_otherSegments[ci].Fields[11];
+                                
                             }
                             else if (CI_otherSegments[ci].Name == "PS")//PROVIDER CLAIM STATUS REPORT | 10
                             {
-                                claimitem.PayerClaimID = CI_otherSegments[ci].Fields[7];
-                                claimitem.SatatusSource = CI_otherSegments[ci].Fields[8];
-                                claimitem.Message = CI_otherSegments[ci].Fields[11];
-                                claimitem.SatatusCategory = CI_otherSegments[ci].Fields[17];
-                                claimitem.ClaimStatus = CI_otherSegments[ci].Fields[18];
+                                claimitem.PayerClaimID = CI_otherSegments[ci].Fields[8];
+                                claimitem.SatatusSource = CI_otherSegments[ci].Fields[9];
+                                claimitem.Message = CI_otherSegments[ci].Fields[13];
+                                claimitem.SatatusCategory = CI_otherSegments[ci].Fields[21];
+                                claimitem.ClaimStatus = CI_otherSegments[ci].Fields[22];
 
                             }
                             else if (CI_otherSegments[ci].Name == "WS")//FILE DETAIL SUMMARY REPORT | 04
