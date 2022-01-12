@@ -22,7 +22,7 @@ IF @EntityName='Patient'
 
 ELSE if  @EntityName='Insurance'
 
-        SELECT distinct   Trends.EntityValueID as EntityId,Carrier.Name as EntityName,searchcount from Trends inner join Carrier on Carrier.CarrierID=EntityValueID
+        SELECT distinct   Trends.EntityValueID as EntityId,[Plan].SortName as EntityName,searchcount from Trends inner join [Plan] on [Plan].PlanID=EntityValueID
 		where Trends.UserID=@UserID and Trends.EntityName =@EntityName order by searchcount desc
 
 ELSE if  @EntityName='Guarantor'

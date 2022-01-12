@@ -181,20 +181,6 @@ export const DOSFilter = [
         text: "Range",
     },
 ];
-export const InsuranceCategory = [
-    {
-        id: "1",
-        text: "1",
-    },
-    {
-        id: "2",
-        text: "2",
-    },
-    {
-        id: "3",
-        text: "3",
-    },
-];
 export const InsuranceStatus = [
     {
         id: "1",

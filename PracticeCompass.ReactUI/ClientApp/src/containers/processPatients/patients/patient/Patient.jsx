@@ -4,7 +4,6 @@ import ButtonComponent from "../../../../components/Button";
 import GridComponent from "../../../../components/Grid";
 import DropDown from "../../../../components/DropDown";
 import TextBox from "../../../../components/TextBox";
-import DatePickerComponent from "../../../../components/DatePicker";
 import "./Patient.css";
 import config from "../../../../../src/config";
 import { getter } from "@progress/kendo-react-common";
@@ -53,6 +52,7 @@ import FindDialogComponent from "../../../common/findDialog";
 import PatientFindDialogComponent from "../../../common/patientFindDialog";
 import Show_HideDialogComponent from "../../../common/show_hideDialog";
 import CheckboxComponent from "../../../../components/Checkbox";
+
 function mapStateToProps(state) {
     return {
         patientTypes: state.patients.patientTypes,
@@ -70,7 +70,6 @@ function mapStateToProps(state) {
         UiExpand: state.ui.UiExpand,
     };
 }
-
 function mapDispatchToProps(dispatch) {
     return {
         GetGridColumns: (name) => dispatch(GetGridColumns(name)),
@@ -102,15 +101,12 @@ function mapDispatchToProps(dispatch) {
 }
 const DATA_ITEM_KEY_PATIENTlIST = "patientgridID";
 const idGetterPaientList = getter(DATA_ITEM_KEY_PATIENTlIST);
-
 const DATA_ITEM_KEY_PATIENT = "patientListgridID";
 const idGetterPaient = getter(DATA_ITEM_KEY_PATIENT);
 const DATA_ITEM_KEY_PATIENT_TYPE = "lookupCode";
 const idGetterPaientYype = getter(DATA_ITEM_KEY_PATIENT_TYPE);
-
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
-
 const DATA_ITEM_KEY_INSURANCE = "entitySID";
 const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
 class Patient extends Component {
@@ -169,7 +165,9 @@ class Patient extends Component {
         patientListColumns: columns,
         gridWidth: 0,
         _export: null,
-        showfilter: true,
+        showFilter: true,
+        searchText: null,
+
     };
     setExporter=(exporter)=>{
         this.setState({_export:exporter});
@@ -783,12 +781,12 @@ class Patient extends Component {
     };
     expandFilter = () => {
         this.setState({
-            showfilter: true,
+            showFilter: true,
         });
     };
     collapseFilter = () => {
         this.setState({
-            showfilter: false,
+            showFilter: false,
         });
     };
     patientGridSearch = async (refreshData = true) => {
@@ -816,6 +814,7 @@ class Patient extends Component {
                 : "",
             SortDirection: this.state.sortDirection ? this.state.sortDirection : "",
         };
+        this.collapseFilter();
         await this.props.getPatients(patientGrid, refreshData);
     };
     closeNotification = () => {
@@ -892,7 +891,7 @@ class Patient extends Component {
                             saveFilter={this.saveFilter}
                         ></SaveFilterComponent>
                     )}
-                    {this.state.showfilter && <div style={{ width: "100%" }}>
+                    {this.state.showFilter && <div style={{ width: "100%" }}>
                         <div
                             className="rowHeight"
                             style={{ display: "flex", flexFlow: "row nowrap" }}
@@ -1170,7 +1169,7 @@ class Patient extends Component {
                             }}
                         >
                             <div style={{ float: "left", width: "430px" }}>
-                                {this.state.showfilter && <ButtonComponent
+                                {this.state.showFilter && <ButtonComponent
                                     classButton="infraBtn-primary action-button"
                                     look="outline"
                                     icon="arrow-60-up"
@@ -1178,7 +1177,7 @@ class Patient extends Component {
                                     onClick={this.collapseFilter}
                                 >
                                 </ButtonComponent>}
-                                {!this.state.showfilter && <ButtonComponent
+                                {!this.state.showFilter && <ButtonComponent
                                     classButton="infraBtn-primary action-button"
                                     look="outline"
                                     icon="arrow-60-down"

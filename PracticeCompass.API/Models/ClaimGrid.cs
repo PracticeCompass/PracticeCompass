@@ -24,7 +24,7 @@
         public bool IncludeVoidedClaims { get; set; }
         public bool TimelyFilling { get; set; }
         public bool Rejections { get; set; }
-        public bool PastDue { get; set; }
+        public int PastDue { get; set; }
         public bool Denials { get; set; }
         public int Skip { get; set; }
         public string SortColumn { get; set; }
