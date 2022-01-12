@@ -313,7 +313,7 @@ namespace PracticeCompass.Data.Repositories
                 string PlanClaimChargeRemitadjMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeRemitAdj", PlanClaimChargeRemitadjs.Count() != 0 ? PlanClaimChargeRemitadjs[PlanClaimChargeRemitadjs.Count() - 1].prrowid : "0");
                 var planclaim = PlanClaimCharges.FirstOrDefault(c => c.ChargeSID == int.Parse((ERSChargeReferences.FirstOrDefault(x => x.ERSChargeSID == chargeclaimadjus.ERSChargeSID)).ReferenceID));
                 var adjexistsql = "select * from PlanClaimChargeRemitAdj where ChargeSID = @ChargeSID ";
-                var PlanClaimChargermtadj = this.db.QueryFirst<PlanClaimChargeRemitAdj>(adjexistsql, new { ChargeSID = planclaim.ChargeSID });
+                var PlanClaimChargermtadj = this.db.QueryFirstOrDefault<PlanClaimChargeRemitAdj>(adjexistsql, new { ChargeSID = planclaim.ChargeSID });
 
                 PlanClaimChargeRemitadjs.Add(new PlanClaimChargeRemitAdj
                 {
@@ -351,11 +351,11 @@ namespace PracticeCompass.Data.Repositories
                     string PlanClaimChargeRemitadjMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeRemitAdj", PlanClaimChargeRemitadjs.Count() != 0 ? PlanClaimChargeRemitadjs[PlanClaimChargeRemitadjs.Count() - 1].prrowid : "0");
                     
                     var planclaimSql = "select* from PlanClaimCharge where ChargeSID = @ChargeSID and PlanID = @PlanID and ClaimSID = @ClaimSID ";
-                    var planclaim = this.db.QueryFirst<PlanClaimCharge>(planclaimSql, new { ChargeSID = chargeclaimadjus.chargeSid, PlanID= chargeclaimadjus.planId, ClaimSID= chargeclaimadjus.claimSid });
+                    var planclaim = this.db.QueryFirst<PlanClaimCharge>(planclaimSql, new { ChargeSID = chargeclaimadjus.chargeSid, PlanID = applyPaymentModel.PlanID, ClaimSID= chargeclaimadjus.claimSid });
 
 
                     var adjexistsql = "select * from PlanClaimChargeRemitAdj where ChargeSID = @ChargeSID ";
-                    var PlanClaimChargermtadj = this.db.QueryFirst<PlanClaimChargeRemitAdj>(adjexistsql, new { ChargeSID = chargeclaimadjus.chargeSid });
+                    var PlanClaimChargermtadj = this.db.QueryFirstOrDefault<PlanClaimChargeRemitAdj>(adjexistsql, new { ChargeSID = chargeclaimadjus.chargeSid });
                     PlanClaimChargeRemitadjs.Add(new PlanClaimChargeRemitAdj
                     {
                         TimeStamp = timestamp,
