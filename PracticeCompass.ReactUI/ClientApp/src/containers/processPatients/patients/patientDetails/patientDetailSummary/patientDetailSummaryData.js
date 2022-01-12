@@ -40,11 +40,11 @@ export const Insured = [
 
 export const columns = [
     {
-        field: "disable",
+        field: "recordStatus",
         title: "Disable",
         minWidth: 50,
-        isCustomCell: true,
         type: "checkBox",
+        cell: "checkBox",
         orderIndex: 1,
     },
     {
@@ -77,6 +77,8 @@ export const columns = [
         title: "Insured",
         minWidth: 70,
         orderIndex: 6,
+        type: "checkBox",
+        cell: "checkBox",
     },
     {
         field: "planName",

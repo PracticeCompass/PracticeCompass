@@ -20,7 +20,9 @@ Select  PolicyMember.CoverageOrder , [Plan].SortName as PlanName , [Plan].PlanID
     InsuranceType.Description as InsuranceTypeName , PolicyMember.InsuranceType as InsuranceTypeCode,
 	PolicyMember.PolicyNumber , [Plan].Class as plantypecode , PlanClass.Description as PlanTypeName,
 	Policy.GroupNumber , convert(varchar, Policy.StartDate, 101) as StartDate , convert(varchar,Policy.EndDate, 101) as EndDate, 
-	PolicyMember.RelationToSub , PolicyMember.RecordStatus,PolicyMember.EDIMemberID AS InsuredID,
+	PolicyMember.RelationToSub ,
+	CASE WHEN  PolicyMember.RecordStatus ='A'  THEN 'True'
+    ELSE 'False'END  As RecordStatus,PolicyMember.EDIMemberID AS InsuredID,
 	CASE
     WHEN PolicyMember.CoverageOrder in (1,2,3)  THEN 'True'
     ELSE 'False'

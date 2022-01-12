@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Repositories;
+using Z.Dapper.Plus;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -102,6 +103,19 @@ namespace PracticeCompass.Data.Repositories
         {
             var data = this.db.QueryMultiple("uspInsuranceGridGet", new { @PersonID = PersonID }, commandType: CommandType.StoredProcedure);
             return data.Read<InsuranceGrid>().ToList();
+        }
+        public List<InsuranceGrid> InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder)
+        {
+            string sql = "select * from PolicyMember where PlanID=@PlanID and PolicyNumber=@PolicyNumber and CoverageOrder=@CoverageOrder";
+            var PolicyMemberResults = this.db.QueryMultiple(sql, new { PlanID = PlanID, PolicyNumber= PolicyNumber, CoverageOrder= CoverageOrder });
+            var PolicyMember = PolicyMemberResults.Read<PolicyMember>().FirstOrDefault();
+            if(PolicyMember != null)
+            {
+                PolicyMember.RecordStatus= PolicyMember.RecordStatus == "A" ? "I" : "A";
+                this.db.BulkUpdate(PolicyMember);
+                return this.InsuranceGridGet((int)PolicyMember.PersonID);
+            }
+            return new List<InsuranceGrid>();
         }
         public List<PatientDetails> PatientDetailsGet(int PersonID, int PracticeID)
         {

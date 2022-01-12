@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import ButtonComponent from "components/Button";
 import TextBox from "components/TextBox";
+import CheckboxComponent from "components/Checkbox"
 import FindDialogComponent from "../../../../common/findDialog";
 import Show_HideDialogComponent from "../../../../common/show_hideDialog";
 import RadioButtonComponent from "components/RadioButton";
@@ -31,6 +32,7 @@ import {
   InsuranceGridGet,
   GetPatientDetails,
   resetInsuranceGridGet,
+  inActivePlan
 } from "../../../../../redux/actions/patientDetails";
 import {
   getPracticeList,
@@ -81,6 +83,7 @@ function mapDispatchToProps(dispatch) {
     resetCompanyList: () => dispatch(resetCompanyList()),
     resetPracticeList: () => dispatch(resetPracticeList()),
     resetInsuranceGridGet: () => dispatch(resetInsuranceGridGet()),
+    inActivePlan:(planID,coverageOrder,policyNumber) => dispatch(inActivePlan(planID,coverageOrder,policyNumber)),
   };
 }
 const DATA_ITEM_KEY_INSURANCE = "gridID";
@@ -330,6 +333,10 @@ class PatientDetailSummary extends Component {
           this.state.currentInsurance.startDate
           ? new Date(this.state.currentInsurance.startDate)
           : null,
+      recordStatus:
+        this.state.currentInsurance != null
+          ? this.state.currentInsurance.recordStatus == "True"
+          : false,
       Insured: this.state.currentInsurance?.relationToSub,
       InsuredID: this.state.currentInsurance?.insuredID,
       OtherName: this.state.currentInsurance?.subscriberName,
@@ -559,7 +566,7 @@ class PatientDetailSummary extends Component {
     });
   };
   setExporter = (exporter) => {
-     this.setState({ _export: exporter });
+    this.setState({ _export: exporter });
   }
   revertOtherCompany = (e) => {
     this.setState({ Insured: e.value });
@@ -571,6 +578,9 @@ class PatientDetailSummary extends Component {
       });
     }
   };
+  inActivePlan=()=>{
+    this.props.inActivePlan(this.state.currentInsurance?.planID,this.state.currentInsurance?.policyNumber,this.state.currentInsurance?.coverageOrder);
+  }
   onSortChange = () => { };
   render() {
     return (
@@ -1049,6 +1059,7 @@ class PatientDetailSummary extends Component {
                     icon="delete"
                     classButton="infraBtn-primary action-button"
                     onClick={this.delete}
+                    disabled={this.state.currentInsurance==null}
                   >
                     Edit
                   </ButtonComponent>
@@ -1056,9 +1067,10 @@ class PatientDetailSummary extends Component {
                     type="edit"
                     icon="reset"
                     classButton="infraBtn-primary action-button"
-                    onClick={this.reset}
+                    onClick={this.inActivePlan}
+                    disabled={this.state.currentInsurance==null}
                   >
-                    Inactive
+                    {this.state.recordStatus? 'Inactive': 'Active'}
                   </ButtonComponent>
                   <ButtonComponent
                     type="edit"
@@ -1254,7 +1266,7 @@ class PatientDetailSummary extends Component {
                     <GridComponent
                       id="summeryGrid"
                       height="150px"
-                      width="100%"
+                      width="99%"
                       take={3}
                       columns={this.state.patientListColumns}
                       selectionMode="single"
@@ -1499,6 +1511,15 @@ class PatientDetailSummary extends Component {
                           }
                         ></DatePicker>
                       </div>
+                      {/* <div style={{ float: "left" }}>
+                        <CheckboxComponent
+                          style={{ marginRight: "5px" }}
+                          id="active"
+                          label="Active"
+                          value={this.state.recordStatus}
+                          onChange={(e) => this.setState({ recordStatus: e.value })}
+                        />
+                      </div> */}
                     </div>
                     <div
                       className="rowHeight"

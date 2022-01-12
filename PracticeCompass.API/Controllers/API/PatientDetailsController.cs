@@ -156,6 +156,20 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
         [HttpGet]
+        [Route("api/PatientDetails/inActiveInsurance")]
+        public List<InsuranceGrid> InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder)
+        {
+            try
+            {
+                return unitOfWork.PatientDetailsRepository.InActiveInsurance(PlanID, PolicyNumber, CoverageOrder);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return new List<InsuranceGrid>();
+            }
+        }
+        [HttpGet]
         [Route("api/PatientDetails/PatientDetailsGet")]
         public List<PatientDetails> PatientDetailsGet(int PersonID, int PracticeID)
         {
