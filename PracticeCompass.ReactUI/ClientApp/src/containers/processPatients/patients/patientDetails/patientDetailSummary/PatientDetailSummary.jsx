@@ -307,6 +307,10 @@ class PatientDetailSummary extends Component {
         "Company"
       );
     }
+    this.updateCurrentSelectInsurnace();
+    this.scrollToBottom();
+  };
+  updateCurrentSelectInsurnace=async()=>{
     await this.setState({
       Type: {
         lookupCode: this.state.currentInsurance?.insuranceTypeCode,
@@ -362,8 +366,7 @@ class PatientDetailSummary extends Component {
       OtherExt: this.state.currentInsurance?.insuredID,
       OtherCellPhone: this.state.currentInsurance?.mobilePhone,
     });
-    this.scrollToBottom();
-  };
+  }
   scrollToBottom = () => {
     window.scrollTo(0, document.documentElement.scrollHeight);
   };
@@ -578,8 +581,30 @@ class PatientDetailSummary extends Component {
       });
     }
   };
-  inActivePlan=()=>{
-    this.props.inActivePlan(this.state.currentInsurance?.planID,this.state.currentInsurance?.policyNumber,this.state.currentInsurance?.coverageOrder);
+  inActivePlan=async ()=>{
+   let result=  await this.props.inActivePlan(this.state.currentInsurance?.planID,this.state.currentInsurance?.policyNumber,this.state.currentInsurance?.coverageOrder);
+   let messageResult=this.state.currentInsurance.recordStatus == "True"?"InActive":"Active";
+   if (result) {
+    this.setState({ success: true, message: ""+messageResult+" (" + this.state.currentInsurance?.companyName + ") save succefully" });
+    setTimeout(() => {
+      this.setState({
+        success: false,
+      });
+    }, this.state.timer);
+    await this.props.InsuranceGridGet(this.props.patientDetails.patientID);
+    this.setState({currentInsurance:null,refreshGrid:false});
+    this.updateCurrentSelectInsurnace();
+    this.setState({refreshGrid:true})
+    return;
+  } else {
+    this.setState({ error: true, message: ""+messageResult+" (" + this.state.currentInsurance?.companyName + ") save failed" });
+    setTimeout(() => {
+      this.setState({
+        error: false,
+      });
+    }, this.state.timer);
+    return;
+  }
   }
   onSortChange = () => { };
   render() {
@@ -1070,7 +1095,7 @@ class PatientDetailSummary extends Component {
                     onClick={this.inActivePlan}
                     disabled={this.state.currentInsurance==null}
                   >
-                    {this.state.recordStatus? 'Inactive': 'Active'}
+                    {this.state.recordStatus? 'InActive': 'Active'}
                   </ButtonComponent>
                   <ButtonComponent
                     type="edit"

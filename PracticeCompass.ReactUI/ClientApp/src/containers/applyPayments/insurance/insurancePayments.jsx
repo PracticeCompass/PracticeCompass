@@ -829,7 +829,6 @@ class insurancePayments extends Component {
     onApplyPaymentGridSelectionChange = () => { 
     };
     onApplyPaymentGridDoubleSelectionChange = (event) => {
-        debugger;
         if (this.state.InsurancePaymentDetails == null || this.state.applyPlanPayments == null) {
             this.setState({
                 warning: true,
@@ -1108,7 +1107,6 @@ class insurancePayments extends Component {
         }
     };
     applyItemChanged =async (event) => {
-        debugger;
         let row =event.dataItem;
         row[event.field]=event.value;
         if(!row?.isEdit  || ( row?.ChargeAdjustmentDetails !=null || row?.ChargeAdjustmentDetails.length != 0 )){

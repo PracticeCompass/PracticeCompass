@@ -33,7 +33,7 @@ export const inActivePlan=(PlanID,PolicyNumber,CoverageOrder)=>async(dispatch,ge
       method: "GET",
       url: `${config.baseUrl}/PatientDetails/inActiveInsurance?PlanID=${PlanID}&PolicyNumber=${PolicyNumber}&CoverageOrder=${CoverageOrder}`,
     });
-
+   return resp.data;
   }catch(error){
 
   }finally {
