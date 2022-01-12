@@ -351,7 +351,7 @@ namespace PracticeCompass.Data.Repositories
                     string PlanClaimChargeRemitadjMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeRemitAdj", PlanClaimChargeRemitadjs.Count() != 0 ? PlanClaimChargeRemitadjs[PlanClaimChargeRemitadjs.Count() - 1].prrowid : "0");
                     
                     var planclaimSql = "select* from PlanClaimCharge where ChargeSID = @ChargeSID and PlanID = @PlanID and ClaimSID = @ClaimSID ";
-                    var planclaim = this.db.QueryFirst<PlanClaimCharge>(planclaimSql, new { ChargeSID = chargeclaimadjus.chargeSid, PlanID= chargeclaimadjus.planId });
+                    var planclaim = this.db.QueryFirst<PlanClaimCharge>(planclaimSql, new { ChargeSID = chargeclaimadjus.chargeSid, PlanID= chargeclaimadjus.planId, ClaimSID= chargeclaimadjus.claimSid });
 
 
                     var adjexistsql = "select * from PlanClaimChargeRemitAdj where ChargeSID = @ChargeSID ";
