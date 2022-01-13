@@ -1851,15 +1851,15 @@ class ClaimList extends Component {
                                         Open
                                     </ButtonComponent>
                                 </div>
-                                <div className="float-left">
-                                    <ButtonComponent
-                                        classButton="infraBtn-primary action-grid-button"
-                                        look="outline"
-                                        icon="error"
-                                    >
-                                        Check Errors
-                                    </ButtonComponent>
-                                </div>
+                                {/*<div className="float-left">*/}
+                                {/*    <ButtonComponent*/}
+                                {/*        classButton="infraBtn-primary action-grid-button"*/}
+                                {/*        look="outline"*/}
+                                {/*        icon="error"*/}
+                                {/*    >*/}
+                                {/*        Check Errors*/}
+                                {/*    </ButtonComponent>*/}
+                                {/*</div>*/}
                                 <div className="float-left">
                                     <ButtonComponent
                                         onClick={this.submitClaim}
