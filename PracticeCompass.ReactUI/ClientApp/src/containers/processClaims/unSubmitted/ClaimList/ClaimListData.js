@@ -178,7 +178,7 @@ export const DOSFilter = [
     },
     {
         id: "4",
-        text: "Range",
+        text: "Between",
     },
 ];
 export const InsuranceStatus = [
