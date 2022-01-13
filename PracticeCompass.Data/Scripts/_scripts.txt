@@ -88,3 +88,4 @@ uspChargeAdjustmentDetailsGet.sql
 CreateClaimStatusTable.sql
 uspClaimGridGetByStatus.sql
 PlanClaimIndex_ClaimCoverage.sql
+uspUpdateVoidedCharge.sql

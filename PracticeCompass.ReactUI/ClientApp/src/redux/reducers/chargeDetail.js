@@ -14,7 +14,8 @@ import {
   FILTERS_REFERRING_FAILED,
   FILTERS_SUPERVISING_FAILED,
   FILTERS_SUPERVISING,
-  FILTERS_RENDERING
+  FILTERS_RENDERING,
+  VOIDED_FAILED
 } from "../actionTypes/actionTypes";
 
 const INITIAL_STATE = {
@@ -30,7 +31,8 @@ const INITIAL_STATE = {
   modifiersFailed: false,
   rendering: [],
   referring: [],
-  supervising: []
+  supervising: [],
+  voided_FAILED: false
 };
 
 export function charageDetailsReducer(state = INITIAL_STATE, action) {
@@ -67,6 +69,8 @@ export function charageDetailsReducer(state = INITIAL_STATE, action) {
       return { ...state, referringFailed: action.payload };
     case FILTERS_SUPERVISING_FAILED:
       return { ...state, supervisingFailed: action.payload };
+    case VOIDED_FAILED:
+      return { ...state, voided_FAILED: action.payload };
     default:
       return state;
   }

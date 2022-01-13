@@ -15,6 +15,7 @@ import {
 } from "../ChargeDetailData";
 import CheckboxComponent from "components/Checkbox";
 import FindDialogComponent from "../../../../common/findDialog";
+import NotificationComponent from "../../../../common/notification";
 import { getter } from "@progress/kendo-react-common";
 import {
   ResetICD10Codes,
@@ -27,7 +28,8 @@ import {
   resetReferring,
   GetReferring,
   resetSupervising,
-  GetSupervising
+  GetSupervising,
+  addVoided
 } from "../../../../../redux/actions/chargeDetail";
 import {
   SaveLookups,
@@ -42,6 +44,7 @@ const cptGetterCode = getter(DATA_ITEM_KEY_CPT);
 
 const DATA_ITEM_KEY_PROVIDER = "providerID";
 const providerId = getter(DATA_ITEM_KEY_PROVIDER);
+
 
 function mapStateToProps(state) {
   return {
@@ -80,8 +83,8 @@ function mapDispatchToProps(dispatch) {
     GetReferring: filter => dispatch(GetReferring(filter)),
     resetReferring: () => dispatch(resetReferring()),
     GetSupervising: filter => dispatch(GetSupervising(filter)),
-    resetSupervising: () => dispatch(resetSupervising()),
-
+      resetSupervising: () => dispatch(resetSupervising()),
+      addVoided: (chargeSid) => dispatch(addVoided(chargeSid))
   };
 }
 
@@ -147,7 +150,8 @@ class Details extends Component {
     icd10_5: null,
     icd10_6: null,
     icd10_7: null,
-    icd10_8: null
+    icd10_8: null,
+    timer:5000
   };
   async componentDidMount() {
     if (
@@ -685,7 +689,31 @@ class Details extends Component {
       visiableICD7: false,
       visiableICD8: false
     });
-  };
+    };
+
+    saveVoided = async () => {
+        var chargeSid = this.props.ChargeDetails?.chargeSID;
+        let result = await this.props.addVoided(chargeSid);
+        debugger;
+        if (result) {
+            this.setState({ success: true, message: "Voided charge succefully" });
+            setTimeout(() => {
+                this.setState({
+                    success: false,
+                });
+            }, this.state.timer);
+            return;
+        } else {
+            this.setState({ error: true, message: "Voided charge failed" });
+            setTimeout(() => {
+                this.setState({
+                    error: false,
+                });
+            }, this.state.timer);
+            return;
+        }
+    }
+
   render() {
     return (
       <Fragment>
@@ -785,7 +813,16 @@ class Details extends Component {
             toggleDialog={this.cancelProviderDialog}
             cancelDialog={this.cancelProviderDialog}
           />
-        )}
+          )}
+           <NotificationComponent
+                message={this.state.message}
+                onClose={this.closeNotification}
+                success={this.state.success}
+                error={this.state.error}
+                warning={this.state.warning}
+                info={this.state.info}
+                none={this.state.none}
+           ></NotificationComponent>
         {this.state.supervisingVisible && (
           <FindDialogComponent
             title={this.state.providerTitle}
@@ -857,7 +894,7 @@ class Details extends Component {
                     />
                   </div>
                 </div>
-                <div style={{ float: "left", width: "305px" }}>
+                <div style={{ float: "left", width: "296px" }}>
                   <div style={{ float: "left" }}>
                     <div style={{ float: "left", marginLeft: "10px" }}>
                       <label className="userInfoLabel">Units</label>
@@ -894,6 +931,16 @@ class Details extends Component {
                     </div>
                                 </div>
                 </div>
+                <div style={{ float: "left", margin:"-4px" }}>
+                  <ButtonComponent
+                                    classButton="infraBtn-primary find-button"
+                                    onClick={() => { this.saveVoided() }
+                                    }                    /*disabled={this.state.recordStatus == null || this.state.recordStatus == "Voided"}*/
+                  >
+                     Voided
+                  </ButtonComponent>
+                </div>
+
               </div>
               <div
                 className="rowHeight"
@@ -1076,7 +1123,7 @@ class Details extends Component {
                 style={{ display: "flex", flexFlow: "row" }}
               >
                 <div style={{ float: "left" }}>
-                  <div style={{ display: "flex", flexFlow: "row", marginLeft: "37px" }}>
+                  <div className="rowHeight" style={{ display: "flex", flexFlow: "row", marginLeft: "37px" }}>
                     <div style={{ float: "left" }}>
                       <div style={{ float: "left", width: "255" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
@@ -1108,6 +1155,7 @@ class Details extends Component {
                           onClick={e => {
                             this.setState({ visiableICD1: true });
                           }}
+                          style={{ marginTop: "0px" }}
                         >
                           Find
                         </ButtonComponent>
@@ -1128,7 +1176,7 @@ class Details extends Component {
                       </div>
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexFlow: "row", marginLeft: "37px" }}>
+                  <div className="rowHeight" style={{ display: "flex", flexFlow: "row", marginLeft: "37px" }}>
                     <div style={{ float: "left" }}>
                       <div style={{ float: "left", width: "260px" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
@@ -1160,6 +1208,7 @@ class Details extends Component {
                           onClick={e => {
                             this.setState({ visiableICD2: true });
                           }}
+                          style={{ marginTop: "0px" }}
                         >
                           Find
                         </ButtonComponent>
@@ -1180,7 +1229,7 @@ class Details extends Component {
                       </div>
                     </div>
                                 </div>
-                  <div style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}>
+                  <div className="rowHeight"  style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}>
                     <div style={{ float: "left" }}>
                       <div style={{ float: "left", width: "260px" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
@@ -1212,6 +1261,7 @@ class Details extends Component {
                           onClick={e => {
                             this.setState({ visiableICD3: true });
                           }}
+                          style={{ marginTop: "0px" }}
                         >
                           Find
                         </ButtonComponent>
@@ -1232,7 +1282,7 @@ class Details extends Component {
                       </div>
                     </div>
                                 </div>
-                  <div style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}>
+                  <div className="rowHeight"  style={{ display: "flex", flexFlow: "row", marginLeft:"37px" }}>
                     <div style={{ float: "left" }}>
                       <div style={{ float: "left", width: "260px" }}>
                         <div style={{ float: "left", marginLeft: "30px" }}>
@@ -1264,6 +1314,7 @@ class Details extends Component {
                           onClick={e => {
                             this.setState({ visiableICD4: true });
                           }}
+                          style={{ marginTop: "0px" }}
                         >
                           Find
                         </ButtonComponent>
@@ -1532,9 +1583,10 @@ class Details extends Component {
                     <fieldset
                       className="fieldsetStyle"
                       style={{
-                        width: "380px",
-                        height: "120px",
-                        marginLeft: "10px"
+                        width: "373px",
+                        height: "99px",
+                        marginLeft: "10px",
+                        marginTop: "-4px"
                       }}
                     >
                       <legend
@@ -1548,7 +1600,7 @@ class Details extends Component {
                           style={{
                             display: "flex",
                             flexFlow: "row",
-                            marginTop: "10px"
+                            marginTop: "-2px"
                           }}
                         >
                           <div style={{ float: "left" }}>

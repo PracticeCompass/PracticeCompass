@@ -101,6 +101,7 @@ export const CPT_LIST = "CPT_LIST";
 export const CPT_LIST_FAILED = "CPT_LIST_FAILED";
 export const GET_MODIFIER_LIST = "GET_MODIFIER_LIST";
 export const GET_MODIFIER_LIST_FAILED = "GET_MODIFIER_LIST_FAILED";
+export const VOIDED_FAILED = "VOIDED_FAILED";
 // Account
 export const USERID = "USERID";
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using PracticeCompass.Core.Common;
 using PracticeCompass.Core.Models;
 using PracticeCompass.Core.Repositories;
+using PracticeCompass.Logger;
 
 namespace PracticeCompass.Data.Repositories
 {
@@ -179,6 +180,29 @@ namespace PracticeCompass.Data.Repositories
         {
             throw new NotImplementedException();
         }
-       
+
+        public bool AddClaimDetails(ChargeDetails Voided)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public bool UpdateVoidedCharge(int ChargeSID)
+        {
+            try
+            {
+                var data = this.db.QueryMultiple("uspUpdateVoidedCharge", new
+                {
+                    @ChargeSID = ChargeSID
+                },
+                  commandType: CommandType.StoredProcedure);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
     }
 }

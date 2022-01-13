@@ -156,6 +156,22 @@ namespace PracticeCompass.API.Controllers.API
             }
         }
 
+        [HttpGet]
+        [Route("api/ChargeDetails/Voided")]
+        public bool Voided(int ChargeSID)
+        {
+            try
+            {
+                bool Result = unitOfWork.ChargeDetailsRepository.UpdateVoidedCharge(ChargeSID);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+
         public bool ChargeDetailsUpdate(ChargeDetails chargeDetails)
         {
             try

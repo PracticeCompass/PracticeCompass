@@ -15,5 +15,6 @@ namespace PracticeCompass.Core.Repositories
         public List<Modifier> ModifierGet();
         public List<CPTCode> CptCodesGet(string cptCode);
         public bool ChargeDetailsUpdate(ChargeDetails chargeDetails);
+        bool UpdateVoidedCharge(int chargeSID);
     }
 }

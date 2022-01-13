@@ -14,7 +14,8 @@ import {
   FILTERS_REFERRING_FAILED,
   FILTERS_SUPERVISING_FAILED,
   FILTERS_SUPERVISING,
-  FILTERS_RENDERING
+  FILTERS_RENDERING,
+  VOIDED_FAILED
 
 } from "../actionTypes/actionTypes";
 
@@ -292,4 +293,28 @@ export const setChargeActivityList = (data) => {
     payload: data,
   };
 };
+
+export const addVoided =
+    (chargeSID) =>
+        async (dispatch, getState) => {
+            try {
+                dispatch(uiStartLoading());
+ 
+                const resp = await axios({
+                    method: "GET",
+                    url: `${config.baseUrl}/ChargeDetails/Voided?ChargeSID=${chargeSID}`
+                });
+                return resp.data;
+            } catch (error) {
+
+                console.log("error ==> ", error);
+                dispatch({
+                    type: VOIDED_FAILED,
+                    payload: error,
+                });
+                return false;
+            } finally {
+                dispatch(uiStopLoading());
+            }
+        };
 
