@@ -45,7 +45,7 @@ namespace PracticeCompass.Messaging.Parsing
                     for (var c = 0; c < CIsegments.Count; c++)
                     {
                         var CI_otherSegments = othersegments.Where(e => e.Fields[4] == CIsegments[c].Fields[4]).ToList();
-                        if (claimreports.reportType == "10")
+                        if (claimreports.reportType == "10" || claimreports.reportType == "11")
                         {
                             CI_otherSegments = othersegments.Where(e => e.Fields[3] == CIsegments[c].Fields[4]).ToList();
                         }
@@ -68,6 +68,8 @@ namespace PracticeCompass.Messaging.Parsing
 
                                 claimitem.ErrorFieldData = CI_otherSegments[ci].Fields[5];
                                 claimitem.ErrorField = CI_otherSegments[ci].Fields[6];
+                                claimitem.ErrorFieldName = CI_otherSegments[ci].Fields[7];
+                                claimitem.ErrorSequence = Convert.ToInt32( CI_otherSegments[ci].Fields[8]);
                                 claimitem.Message = CI_otherSegments[ci].Fields[9];
                                 claimitem.ErrorRejectReason = CI_otherSegments[ci].Fields[10];
                                 claimitem.ErrorLevel = CI_otherSegments[ci].Fields[11];

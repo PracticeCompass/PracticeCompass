@@ -17,7 +17,7 @@ namespace PracticeCompass.Core.Repositories
         List<InsurancePayment> GetInsurancePaymentforApply(int GuarantorID, int DOSType, string DOSvalue, string ToDOSvalue, int InsuranceID, string ClaimIcnNumber);
         List<ChargeAdjustmentDetail> GetChargeAdjustmentDetails(int ChargeSID, int ClaimSID,int PlanId);
         bool ApplyPayment(List<ApplyPaymentModel> applyPaymentModel);
-        List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, string SenderAccount, string ReceiverAccount, string PostDate, int Days);
+        List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, int PayerID, string PostDate, int Days);
 
         List<ERAPaymentDetail> GetERAPaymentDetails(int ERSPaymentSID);
 

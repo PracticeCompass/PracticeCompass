@@ -538,7 +538,7 @@ namespace PracticeCompass.Data.Repositories
             return accounts;
 
         }
-        public List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, string SenderAccount, string ReceiverAccount, string PostDate, int Days)
+        public List<ERAPaymentHeader> GetERAPaymentHeader(int PracticeID, string IsPosted, float Amount, string CheckNumber, string AmountType, int PayerID, string PostDate, int Days)
         {
             var data = this.db.QueryMultiple("uspERAPaymentHeaderGet", new
             {
@@ -547,8 +547,7 @@ namespace PracticeCompass.Data.Repositories
                 @Amount = Amount,
                 @CheckNumber = CheckNumber,
                 @AmountType = AmountType,
-                @SenderAccount = SenderAccount,
-                @ReceiverAccount = ReceiverAccount,
+                @PayerID = PayerID,
                 @PostDate = PostDate,
                 @Days = Days
             }, commandType: CommandType.StoredProcedure);

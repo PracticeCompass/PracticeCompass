@@ -32,6 +32,8 @@ namespace PracticeCompass.Common.Models
         public string ErrorRejectReason { get; set; }
         public string ErrorLevel { get; set; }
         public string RunNumber { get; set; }
+        public int ErrorSequence { get; set; }
+        public string ErrorFieldName { get; set; }
 
     }
 }

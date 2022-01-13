@@ -17,8 +17,7 @@ Create or Alter   PROCEDURE [dbo].[uspERAPaymentHeaderGet]
 @Amount float,
 @CheckNumber varchar(50),
 @AmountType varchar(20),
-@SenderAccount varchar(20),
-@ReceiverAccount varchar(20),
+@PayerID int,
 @PostDate varchar(20),
 @Days  int
 AS
@@ -53,8 +52,9 @@ SELECT
 		(@PracticeID=0 or  [ERSPaymentHeader].PracticeID= @PracticeID) and
 		(@CheckNumber='' or [ERSPaymentHeader].CheckTraceNbr=@CheckNumber )and
 		(@Amount=0 or [ERSPaymentHeader].TotalActualProviderPaymentAmt = @Amount )) and
-		(@SenderAccount='' or ERSPaymentHeader.SenderBankAcctNbr = @SenderAccount) and 
-		(@ReceiverAccount='' or ERSPaymentHeader.ReceiverAcctNbr= @ReceiverAccount) 
+		(@PayerID=0 or Payment.PayorID = @PayerID)
+		--(@SenderAccount='' or ERSPaymentHeader.SenderBankAcctNbr = @SenderAccount) and 
+		--(@ReceiverAccount='' or ERSPaymentHeader.ReceiverAcctNbr= @ReceiverAccount) 
 		--(@PostDate='' or CheckIssueDate between @CheckIssueDatefrom and @CheckIssueDateto )
 		Order by [ERSPaymentHeader].ERSPaymentSID
 

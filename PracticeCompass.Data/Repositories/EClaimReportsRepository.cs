@@ -104,8 +104,8 @@ namespace PracticeCompass.Data.Repositories
                 #endregion
                 int maxStatusCount = practiceCompassHelper.GetMAXColumnid("PlanClaimStatus", "StatusCount", claimstatuses.Count(x => x.ClaimSID == claimSID) != 0 ?
                    claimstatuses[claimstatuses.Count() - 1].StatusCount.Value : 0, string.Format("Where ClaimSID = {0}", claimSID.ToString()));
-                int maxerrorSequence= practiceCompassHelper.GetMAXColumnid("PlanClaimStatus", "ErrorSequence", claimstatuses.Count(x => x.ClaimSID == claimSID &&x.ErrorSequence!=null) != 0 ?
-                   claimstatuses[claimstatuses.Count() - 1].ErrorSequence.Value : 0, string.Format("Where ClaimSID = {0} and ReportType='05' ", claimSID.ToString()));
+                //int maxerrorSequence= practiceCompassHelper.GetMAXColumnid("PlanClaimStatus", "ErrorSequence", claimstatuses.Count(x => x.ClaimSID == claimSID &&x.ErrorSequence!=null) != 0 ?
+                //   claimstatuses[claimstatuses.Count() - 1].ErrorSequence.Value : 0, string.Format("Where ClaimSID = {0} and ReportType='05' ", claimSID.ToString()));
                
                 var planclaimstatus = new PlanClaimStatus
                 {
@@ -119,12 +119,12 @@ namespace PracticeCompass.Data.Repositories
                     ErrorField = claimReportModel.ClaimReportItems[cr].ErrorField,
                     ErrorLevel = claimReportModel.ClaimReportItems[cr].ErrorLevel,
                     ErrorFieldData = claimReportModel.ClaimReportItems[cr].ErrorFieldData,
-                    ErrorFieldName= "",
+                    ErrorFieldName= claimReportModel.ClaimReportItems[cr].ErrorFieldName,
                     ErrorRejectReason = claimReportModel.ClaimReportItems[cr].ErrorRejectReason,
                     ErrorMessage = claimReportModel.ClaimReportItems[cr].Message,
-                    ErrorSequence= claimReportModel.reportType == "05" ? maxerrorSequence:(int?)null,
-                    ClearinghouseClaimRef = claimReportModel.reportType == "04" ? claimReportModel.ClaimReportItems[cr].ClearingHouseClaimref:null,
-                    ClearinghouseFileRef = claimReportModel.reportType == "04" ? claimReportModel.ClaimReportItems[cr].ClearingHouseFileref:null,
+                    ErrorSequence= (claimReportModel.reportType == "05"|| claimReportModel.reportType == "05A") ? claimReportModel.ClaimReportItems[cr].ErrorSequence: (int?)null,
+                    ClearinghouseClaimRef = (claimReportModel.reportType == "04" || claimReportModel.reportType == "04A") ? claimReportModel.ClaimReportItems[cr].ClearingHouseClaimref:null,
+                    ClearinghouseFileRef = (claimReportModel.reportType == "04" || claimReportModel.reportType == "04A") ? claimReportModel.ClaimReportItems[cr].ClearingHouseFileref:null,
                     ClaimStatus = claimReportModel.ClaimReportItems[cr].ClaimStatus,
                     StatusCategory = claimReportModel.ClaimReportItems[cr].SatatusCategory,
                     ReportType = claimReportModel.reportType,
@@ -135,10 +135,10 @@ namespace PracticeCompass.Data.Repositories
                     PayerClaimID = claimReportModel.ClaimReportItems[cr].PayerClaimID,
                     PlanID= BatchRun.PlanID,
                     PolicyNumber= BatchRun.PolicyNumber,
-                    AmountPaid = (claimReportModel.reportType == "10"|| claimReportModel.reportType == "11") ? BatchRun.TotalClaimAmount:null,
+                    AmountPaid = (claimReportModel.reportType == "10") ? BatchRun.TotalClaimAmount:null,
                     DueDate=null,
                     StatusDateStamp= timestamp,
-                    SplitClaim = claimReportModel.reportType == "10" ? 1 : (int?)null,
+                    SplitClaim = (claimReportModel.reportType == "10" || claimReportModel.reportType == "11") ? 1 : (int?)null,
                     PayerAddress1="",
                     PayerAddress2="",
                     PayerCity="",
