@@ -1876,7 +1876,7 @@ class ClaimList extends Component {
                                         look="outline"
                                         icon="edit"
                                     >
-                                        Hold all
+                                        Hold
                                     </ButtonComponent>
                                 </div>
                                 <div
