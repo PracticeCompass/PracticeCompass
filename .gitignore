@@ -387,3 +387,4 @@ PracticeCompass.Data/Scripts/__tmp_uspChargeAdjustmentDetailsGet.sql.txt
 PracticeCompass.Data/Scripts/__tmp_CreateClaimStatusTable.sql.txt
 PracticeCompass.Data/Scripts/__tmp_PlanClaimIndex_ClaimCoverage.sql.txt
 PracticeCompass.Data/Scripts/__tmp_uspClaimGridGetByStatus.sql.txt
+PracticeCompass.Data/Scripts/__tmp_uspUpdateVoidedCharge.sql.txt
