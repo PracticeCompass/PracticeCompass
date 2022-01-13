@@ -34,5 +34,8 @@ namespace PracticeCompass.Core.Models
         public string AlertCode { get; set; }
         public string comment_ { get; set; }
         public string type { get; set; }
+        public int PracticeID { get; set; }
+        public int ClaimSID { get; set; }
+        public int PatientID { get; set; }
     }
 }

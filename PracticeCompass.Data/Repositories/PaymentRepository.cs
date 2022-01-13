@@ -186,10 +186,7 @@ namespace PracticeCompass.Data.Repositories
 
             var PlanClaimChargeRemitAdjments = new List<PlanClaimChargeRemitAdj>();
             PlanClaimChargeRemitAdjments = PlanClaimChargeRemitAdjAdd(applyPaymentModel);
-            var PlanClaimChargeRemitAdjSql = "INSERT INTO [dbo].[PlanClaimChargeRemitAdj] VALUES(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@ChargeSID,@RemitCount" +
-            " ,@ClaimAdjustmentGroupCode,@AdjustmentReasonCode,@AdjustmentAmount,@AdjustmentQuantity,@TimeStamp" +
-            " ,@LastUser,@CreateStamp,@CreateUser,@LineItem,@Pro2SrcPDB,@pro2created,@pro2modified)";
-            var PlanClaimChargeRemitAd = this.db.Execute(PlanClaimChargeRemitAdjSql, PlanClaimChargeRemitAdjments);
+
 
             // update Charge
             ChargeActivities = ChargeActivityAdd(applyPaymentModel, ChargeActivities, Charges);
@@ -217,6 +214,10 @@ namespace PracticeCompass.Data.Repositories
            "(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@LineItem,@ChargeSID,@BilledAmount,@TimeStamp,@LastUser" +
            ",@CreateStamp,@CreateUser,@PatReceipts,@InsReceipts,@Pro2SrcPDB,@pro2created,@pro2modified)";
             var PlanClaimCharge = this.db.Execute(PlanClaimChargeSQL, PlanClaimCharges);
+            var PlanClaimChargeRemitAdjSql = "INSERT INTO [dbo].[PlanClaimChargeRemitAdj] VALUES(@prrowid,@PlanID,@ClaimSID,@PolicyNumber,@ChargeSID,@RemitCount" +
+            " ,@ClaimAdjustmentGroupCode,@AdjustmentReasonCode,@AdjustmentAmount,@AdjustmentQuantity,@TimeStamp" +
+            " ,@LastUser,@CreateStamp,@CreateUser,@LineItem,@Pro2SrcPDB,@pro2created,@pro2modified)";
+            var PlanClaimChargeRemitAd = this.db.Execute(PlanClaimChargeRemitAdjSql, PlanClaimChargeRemitAdjments);
             #endregion
             txScope.Complete();
 

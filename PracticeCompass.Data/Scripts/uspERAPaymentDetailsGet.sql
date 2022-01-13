@@ -31,7 +31,7 @@ sum(ERSClaimAdjustment.AdjustmentAmt) as ClaimAdjustmentAmt , '' as ERSClaimAdju
 sum(ERSPmtProvLevelAdj.ProviderAdjustmentAmt) as ProviderAdjustmentAmt , '' as PmtProvLevelAdjReason ,
 dbo.FuncERAMatchingGet(ERSChargeServiceInfo.ERSChargeSID,ERSClaimData.ERSClaimSID ,ERSPaymentHeader.RecordStatus) as comment,
 '' as comment_,
-'' as AlertCode
+'' as AlertCode,Claim.PracticeID , Claim.ClaimSID , PlanClaim.PatientID
 
  from ERSClaimData
 inner join ERSClaimName on ERSClaimName.ERSClaimSID = ERSClaimData.ERSClaimSID and ERSClaimName.EntityIDCode='QC'
@@ -48,7 +48,7 @@ where ERSClaimData.ERSPaymentSID=@ERSPaymentSID
 group by ERSClaimData.ERSClaimSID ,ERSChargeServiceInfo.ERSChargeSID,PayerClaimControlNumber
 ,claim.ClaimNumber,ERSClaimName.NameLastOrOrgName,ERSClaimName.NameFirst, ERSChargeServiceInfo.ProcedureModifier01
 ,ERSChargeServiceInfo.ProcedureModifier02,ERSChargeServiceInfo.ProductServiceID,[ERSChargeDate].ServiceDate,
-ERSChargeServiceInfo.LineItemChargeAmt,ERSChargeServiceInfo.LineItemProviderPaymentAmt,ERSPaymentHeader.RecordStatus
+ERSChargeServiceInfo.LineItemChargeAmt,ERSChargeServiceInfo.LineItemProviderPaymentAmt,ERSPaymentHeader.RecordStatus,Claim.PracticeID , Claim.ClaimSID , PlanClaim.PatientID
 
 
 union all 
@@ -68,7 +68,7 @@ case when [ERADenialAlert].[AlertCode]='Phys' then 'Physician Responsibility'
      when [ERADenialAlert].[AlertCode]='Pat' then 'Patient responsibility'
 	 when [ERADenialAlert].[AlertCode]='Move' then 'Move responsibility to the next level. Secondary/tertiary insurance or patient.'
 	 when [ERADenialAlert].[AlertCode]='Manual' then 'Manual Processing'
-	 else '' end as AlertCode
+	 else '' end as AlertCode,0,0,0
 
 from ERSClaimData
 inner join ERSChargeServiceInfo on ERSChargeServiceInfo.ERSClaimSID = ERSClaimData.ERSClaimSID
