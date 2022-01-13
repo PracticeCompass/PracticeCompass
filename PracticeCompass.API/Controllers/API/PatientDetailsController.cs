@@ -157,7 +157,7 @@ namespace PracticeCompass.API.Controllers.API
         }
         [HttpGet]
         [Route("api/PatientDetails/inActiveInsurance")]
-        public List<InsuranceGrid> InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder)
+        public bool InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder)
         {
             try
             {
@@ -166,7 +166,7 @@ namespace PracticeCompass.API.Controllers.API
             catch (Exception ex)
             {
                 Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
-                return new List<InsuranceGrid>();
+                return false;
             }
         }
         [HttpGet]

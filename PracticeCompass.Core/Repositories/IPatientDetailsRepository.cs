@@ -19,7 +19,7 @@ namespace PracticeCompass.Core.Repositories
         List<LookupCodes> PlanTypesGet(string description);
         List<LookupCodes> InsuranceTypesGet(string description);
         List<InsuranceGrid> InsuranceGridGet(int PersonID);
-        List<InsuranceGrid> InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder);
+        bool InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder);
         List<PatientDetails> PatientDetailsGet(int PersonID,int PracticeID);
         List<LedgerData> LedgerDataGet(int PersonID);
         bool PatientDetailsUpdate(PatientDetails patientDetails);

@@ -154,7 +154,6 @@ class GridComponent extends React.Component {
         }
     };
     sortChange = (event) => {
-        debugger;
         this.setState({
             sort: event.sort,
         });

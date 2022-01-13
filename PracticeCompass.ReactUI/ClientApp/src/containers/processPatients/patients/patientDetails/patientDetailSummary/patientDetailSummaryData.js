@@ -41,7 +41,7 @@ export const Insured = [
 export const columns = [
     {
         field: "recordStatus",
-        title: "Disable",
+        title: "Active",
         minWidth: 50,
         type: "checkBox",
         cell: "checkBox",

@@ -829,7 +829,6 @@ class insurancePayments extends Component {
     onApplyPaymentGridSelectionChange = () => { 
     };
     onApplyPaymentGridDoubleSelectionChange = (event) => {
-        debugger;
         if (this.state.InsurancePaymentDetails == null || this.state.applyPlanPayments == null) {
             this.setState({
                 warning: true,
@@ -1001,7 +1000,7 @@ class insurancePayments extends Component {
                         deductibleApplied: item.deductibleApplied,
                         copayAmount: item.copayAmount,
                         approvedAmount: item.approvedAmount,
-                        goToNext: item.moveToNextPlan,
+                        goToNext: item.moveToNextPlan != null ? item.moveToNextPlan : false,
                         ChargeAdjustments: item.ChargeAdjustmentDetails,
                         planID: item.respCoverageOrder == 1 ? item.plan1 : item.respCoverageOrder == 2 ? item.plan2 : item.respCoverageOrder == 3 ? item.plan3 : item.respCoverageOrder == 4 ? item.plan4 : null,
                         policyNumber: item.respCoverageOrder == 1 ? item.policyNumber1 : item.respCoverageOrder == 2 ? item.policyNumber2 : item.respCoverageOrder == 3 ? item.policyNumber3 : item.respCoverageOrder == 4 ? item.policyNumber4 : "",
@@ -1108,7 +1107,6 @@ class insurancePayments extends Component {
         }
     };
     applyItemChanged =async (event) => {
-        debugger;
         let row =event.dataItem;
         row[event.field]=event.value;
         if(!row?.isEdit  || ( row?.ChargeAdjustmentDetails !=null || row?.ChargeAdjustmentDetails.length != 0 )){
