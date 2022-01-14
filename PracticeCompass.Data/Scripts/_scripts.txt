@@ -90,3 +90,4 @@ uspClaimGridGetByStatus.sql
 PlanClaimIndex_ClaimCoverage.sql
 uspUpdateVoidedCharge.sql
 uspGuarantorInfoGet.sql
+uspPlanInfoGet.sql

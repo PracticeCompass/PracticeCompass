@@ -36,7 +36,8 @@ import {
   GetPatientDetails,
   resetInsuranceGridGet,
   inActivePlan,
-  updateInsuranceDetails
+  updateInsuranceDetails,
+  GuarantorInfoGet
 } from "../../../../../redux/actions/patientDetails";
 import {
   getPracticeList,
@@ -86,6 +87,7 @@ function mapDispatchToProps(dispatch) {
     SaveGridColumns: (name, columns) =>
       dispatch(SaveGridColumns(name, columns)),
     InsuranceGridGet: (personID) => dispatch(InsuranceGridGet(personID)),
+    GuarantorInfoGet: (personID) => dispatch(GuarantorInfoGet(personID)),
     GetPatientDetails: (personID, PracticeID) =>
       dispatch(GetPatientDetails(personID, PracticeID)),
     getPracticeList: (name) => dispatch(getPracticeList(name)),
@@ -369,7 +371,11 @@ class PatientDetailSummary extends Component {
           : false,
       Insured: this.state.currentInsurance?.relationToSub,
       InsuredID: this.state.currentInsurance?.insuredID,
-      OtherName: this.state.currentInsurance?.subscriberName,
+      // OtherName: this.state.currentInsurance?.subscriberName,
+      patientDetailsGuarantorID: {
+        entityName: this.state.currentInsurance?.subscriberName,
+        entityId: this.state.currentInsurance?.subscriberId,
+      },
       OtherRelationShip: this.state.currentInsurance
         ? {
           lookupCode: this.state.currentInsurance.relationToSub,
@@ -657,22 +663,22 @@ class PatientDetailSummary extends Component {
     });
   };
   cancelInsuranceDialog = () => {
-    this.setState({
-      selectedInsurance: null,
-    });
+    // this.setState({
+    //   selectedInsurance: null,
+    // });
     this.toggleInsuranceDialog();
   };
   onInsuranceSelectionChange = (event) => {
-    var selectedDataItems = event.dataItems.slice(
-      event.startRowIndex,
-      event.endRowIndex + 1
-    );
-    this.setState({
-      selectedInsurance: {
-        entityId: selectedDataItems[0].entitySID,
-        entityName: selectedDataItems[0].sortName,
-      },
-    });
+    // var selectedDataItems = event.dataItems.slice(
+    //   event.startRowIndex,
+    //   event.endRowIndex + 1
+    // );
+    // this.setState({
+    //   selectedInsurance: {
+    //     entityId: selectedDataItems[0].entitySID,
+    //     entityName: selectedDataItems[0].sortName,
+    //   },
+    // });
   };
   onInsuranceDoubleClick = async (event) => {
     await this.setState({
@@ -739,13 +745,31 @@ class PatientDetailSummary extends Component {
     this.props.SaveLookups(event.dataItem.entitySID, "Guarantor");
     //this.selectGuarantor();
     this.toggleGuarantorDialog();
+    let data = await this.props.GuarantorInfoGet(event.dataItem.entitySID);
+    this.setState({
+      OtherAddress1: data?.address1,
+      OtherAddress2: data?.address2,
+      OtherCity: data?.city,
+      OtherStatevalue: data
+        ? {
+          stateCode: data?.stateCode,
+          state: data?.state,
+        }
+        : null,
+      OtherZip: data?.zip,
+      OtherSSN: data?.insuredID,
+      OtherHomePhone: data?.homePhone,
+      OtherWorkPhone: data?.workPhone,
+      OtherExt: data?.insuredID,
+      OtherCellPhone: data?.mobilePhone
+    })
   };
   onGuarantorKeyDown = (event) => {
     var selectedDataItems = event.dataItems.slice(
       event.startRowIndex,
       event.endRowIndex + 1
     );
-   this.setState({
+    this.setState({
       patientDetailsGuarantorID: {
         entityName: selectedDataItems[0].sortName,
         entityId: selectedDataItems[0].entitySID

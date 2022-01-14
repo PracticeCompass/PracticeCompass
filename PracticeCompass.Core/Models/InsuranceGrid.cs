@@ -26,6 +26,7 @@ namespace PracticeCompass.Core.Models
         public int CarrierID { get; set; }
         //Subscriber info (other)
         public string SubscriberName { get; set; }
+        public int SubscriberId { get; set; }
         public string ReleationDescription { get; set; }
         public string HomePhone { get; set; }
         public string WorkPhone { get; set; }

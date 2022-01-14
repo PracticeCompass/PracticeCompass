@@ -104,6 +104,11 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspInsuranceGridGet", new { @PersonID = PersonID }, commandType: CommandType.StoredProcedure);
             return data.Read<InsuranceGrid>().ToList();
         }
+        public InsuranceGrid GuarantorInfoGet(int PersonID)
+        {
+            var data = this.db.QueryMultiple("uspGuarantorInfoGet", new { @PersonID = PersonID }, commandType: CommandType.StoredProcedure);
+            return data.Read<InsuranceGrid>().FirstOrDefault();
+        }
         public bool InActiveInsurance(int PlanID, string PolicyNumber, int CoverageOrder)
         {
             string sql = "select * from PolicyMember where PlanID=@PlanID and PolicyNumber=@PolicyNumber and CoverageOrder=@CoverageOrder";

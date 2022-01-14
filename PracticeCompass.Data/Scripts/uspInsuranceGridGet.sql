@@ -28,7 +28,7 @@ Select  PolicyMember.CoverageOrder , [Plan].SortName as PlanName , [Plan].PlanID
     ELSE 'False'
 END AS Insured ,
   Carrier.Name as CompanyName , Carrier.CarrierID as CarrierID,
-  Subscriber.SortName as SubscriberName ,Relation.Description as ReleationDescription  ,
+  Subscriber.SortName as SubscriberName , Subscriber.PersonID  as SubscriberId, Relation.Description as ReleationDescription  ,
   	HomePhone.Number as HomePhone , WorkPhone.Number as WorkPhone,
 	MobilePhone.Number as MobilePhone,
 		Address.Line1 as Address1 , Address.Line2 as Address2 ,
