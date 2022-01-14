@@ -2077,65 +2077,21 @@ class insurancePayments extends Component {
                                                     display: "flex",
                                                     flexFlow: "row nowrap",
                                                     width: "100%",
-                                                }}
-                                            >
-                                                <div style={{ float: "left", marginLeft: "14px" }}>
-                                                    <label className="userInfoLabel">Amount </label>
-                                                </div>
-                                                <div style={{ float: "left", width: "100px" }}>
-                                                    <TextBox
-                                                        type="numeric"
-                                                        format="c2"
-                                                        className="unifyHeight"
-                                                        value={this.state.InsurancePaymentDetails?.amount}
-                                                        onChange={(e) =>
-                                                            this.setState({
-                                                                amountApply: e.value,
-                                                            })
-                                                        }
-                                                        disabled={true}
-                                                    ></TextBox>
-                                                </div>
-                                                <div style={{ float: "left", marginLeft: "10px" }}>
-                                                    <label className="userInfoLabel">Remaining </label>
-                                                </div>
-                                                <div style={{ float: "left", width: "132px" }}>
-                                                    <TextBox
-                                                        type="numeric"
-                                                        format="c2"
-                                                        className="unifyHeight"
-                                                        value={
-                                                            this.state.InsurancePaymentDetails?.remaining
-                                                        }
-                                                        onChange={(e) =>
-                                                            this.setState({
-                                                                remaining: e.value,
-                                                            })
-                                                        }
-                                                        disabled={true}
-                                                    ></TextBox>
-                                                </div>
-                                            </div>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    flexFlow: "row nowrap",
-                                                    width: "100%",
                                                     marginBottom: "10px",
                                                 }}
                                             >
                                                 <fieldset
                                                     className="fieldsetStyle"
                                                     style={{
-                                                        width: "695px",
+                                                        width: "98.5%",
                                                         marginTop: "5px",
-                                                        height: "66px",
+                                                        height: "35px",
                                                         marginLeft: "10px",
                                                     }}
                                                 >
                                                     <div
                                                         className="row nowrap rowHeight"
-                                                        style={{ marginTop: "10px" }}
+                                                        style={{ marginTop: "6px" }}
                                                     >
                                                         <div
                                                             style={{ textAlign: "right", marginLeft: "66px" }}
@@ -2209,78 +2165,71 @@ class insurancePayments extends Component {
                                                                 Find
                                                             </ButtonComponent>
                                                         </div>
-                                                    </div>
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexFlow: "row",
-                                                            width: "100%",
-                                                        }}
-                                                    >
-                                                        <div style={{ width: "57px", marginLeft: "36px" }}>
-                                                            <label className="userInfoLabel">Txn Date </label>
+                                                        <div style={{ width: "57px", marginLeft: "26px" }}>
+                                                                <label className="userInfoLabel">Txn Date </label>
                                                         </div>
                                                         <div style={{ width: "147px" }}>
-                                                            <DropDown
-                                                                data={DOSFilter}
-                                                                textField="text"
-                                                                dataItemKey="id"
-                                                                className="unifyHeight"
-                                                                id="tins"
-                                                                name="tins"
-                                                                value={this.state.txnApplyDatetype}
-                                                                onChange={(e) =>
-                                                                    this.setState({ txnApplyDatetype: e.value })
-                                                                }
+                                                           <DropDown
+                                                                    data={DOSFilter}
+                                                                    textField="text"
+                                                                    dataItemKey="id"
+                                                                    className="unifyHeight"
+                                                                    id="tins"
+                                                                    name="tins"
+                                                                    value={this.state.txnApplyDatetype}
+                                                                    onChange={(e) =>
+                                                                        this.setState({ txnApplyDatetype: e.value })
+                                                                    }
                                                             ></DropDown>
                                                         </div>
-                                                        {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
-                                                            <div style={{ width: "28px", marginLeft: "10px" }}>
-                                                                <label className="userInfoLabel">From </label>
-                                                            </div>
-                                                        )}
+                                                            {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
+                                                                <div style={{ width: "28px", marginLeft: "10px" }}>
+                                                                    <label className="userInfoLabel">From </label>
+                                                                </div>
+                                                            )}
                                                         <div
                                                             className="dateStyle"
                                                             style={{ marginLeft: "5px" }}
                                                         >
-                                                            <DatePickerComponent
-                                                                className="unifyHeight"
-                                                                placeholder="MM/DD/YYYY"
-                                                                format="M/dd/yyyy"
-                                                                value={this.state.txnApplyDate}
-                                                                onChange={(e) =>
-                                                                    this.setState({ txnApplyDate: e.value })
-                                                                }
-                                                            ></DatePickerComponent>
-                                                        </div>
-                                                        {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
-                                                            <div style={{ width: "15px", marginLeft: "10px" }}>
-                                                                <label className="userInfoLabel">To </label>
-                                                            </div>
-                                                        )}
-                                                        {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
-                                                            <div className="dateStyle" style={{ marginLeft: "5px" }}>
-                                                                <DatePickerComponent
+                                                           <DatePickerComponent
                                                                     className="unifyHeight"
                                                                     placeholder="MM/DD/YYYY"
                                                                     format="M/dd/yyyy"
-                                                                    value={this.state.toTxnApplyDate}
-                                                                    onChange={(e) => this.setState({ toTxnApplyDate: e.value })}
-                                                                ></DatePickerComponent>
-                                                            </div>
-                                                        )}
-                                                        <div>
-                                                            <ButtonComponent
-                                                                icon="search"
-                                                                type="search"
-                                                                classButton="infraBtn-primary"
-                                                                onClick={() => this.findClaim()}
-                                                                style={{ marginTop: "0px" }}
-                                                            >
-                                                                Find Claim
+                                                                    value={this.state.txnApplyDate}
+                                                                    onChange={(e) =>
+                                                                        this.setState({ txnApplyDate: e.value })
+                                                                    }
+                                                           ></DatePickerComponent>
+                                                         </div>
+                                                            {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
+                                                                <div style={{ width: "15px", marginLeft: "10px" }}>
+                                                                    <label className="userInfoLabel">To </label>
+                                                                </div>
+                                                            )}
+                                                            {this.state.txnApplyDatetype != null && this.state.txnApplyDatetype.id == "4" && (
+                                                                <div className="dateStyle" style={{ marginLeft: "5px" }}>
+                                                                    <DatePickerComponent
+                                                                        className="unifyHeight"
+                                                                        placeholder="MM/DD/YYYY"
+                                                                        format="M/dd/yyyy"
+                                                                        value={this.state.toTxnApplyDate}
+                                                                        onChange={(e) => this.setState({ toTxnApplyDate: e.value })}
+                                                                    ></DatePickerComponent>
+                                                                </div>
+                                                            )}
+                                                            <div>
+                                                                <ButtonComponent
+                                                                    icon="search"
+                                                                    type="search"
+                                                                    classButton="infraBtn-primary"
+                                                                    onClick={() => this.findClaim()}
+                                                                    style={{ marginTop: "0px" }}
+                                                                >
+                                                                    Find Claim
                                                             </ButtonComponent>
-                                                        </div>
+                                                            </div>
                                                     </div>
+                                                    
                                                 </fieldset>
                                             </div>
                                             <div
@@ -2288,13 +2237,51 @@ class insurancePayments extends Component {
                                                     display: "flex",
                                                     flexFlow: "row",
                                                     height: "20px",
+                                                    marginLeft: "42px",
+                                                    marginTop: "-4px",
                                                 }}
                                             >
+                                                <div style={{ float: "left", marginLeft: "14px" }}>
+                                                    <label className="userInfoLabel">Amount </label>
+                                                </div>
+                                                <div style={{ float: "left", width: "100px" }}>
+                                                    <TextBox
+                                                        type="numeric"
+                                                        format="c2"
+                                                        className="unifyHeight"
+                                                        value={this.state.InsurancePaymentDetails?.amount}
+                                                        onChange={(e) =>
+                                                            this.setState({
+                                                                amountApply: e.value,
+                                                            })
+                                                        }
+                                                        disabled={true}
+                                                    ></TextBox>
+                                                </div>
+                                                <div style={{ float: "left", marginLeft: "10px" }}>
+                                                    <label className="userInfoLabel">Remaining </label>
+                                                </div>
+                                                <div style={{ float: "left", width: "132px" }}>
+                                                    <TextBox
+                                                        type="numeric"
+                                                        format="c2"
+                                                        className="unifyHeight"
+                                                        value={
+                                                            this.state.InsurancePaymentDetails?.remaining
+                                                        }
+                                                        onChange={(e) =>
+                                                            this.setState({
+                                                                remaining: e.value,
+                                                            })
+                                                        }
+                                                        disabled={true}
+                                                    ></TextBox>
+                                                </div>
                                                 <div
                                                     style={{
                                                         float: "right",
                                                         position: "absolute",
-                                                        marginRight: "18px",
+                                                        marginRight: "37px",
                                                         right: "0",
                                                     }}
                                                 >
@@ -2327,7 +2314,7 @@ class insurancePayments extends Component {
                                                     width: this.state.gridcharged,
                                                     marginTop: "5px",
                                                     marginBottom: "5px",
-                                                    height: "330px",
+                                                    height: "340px",
                                                     marginLeft: "10px",
                                                 }}
                                             >
@@ -2425,7 +2412,7 @@ class insurancePayments extends Component {
                                                     width: this.state.gridcharged,
                                                     marginTop: "5px",
                                                     marginBottom: "30px",
-                                                    height: "360px",
+                                                    height: "340px",
                                                     marginLeft: "10px",
                                                 }}
                                             >
