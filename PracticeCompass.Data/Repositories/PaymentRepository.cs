@@ -157,6 +157,7 @@ namespace PracticeCompass.Data.Repositories
         }
         public bool ApplyPayment(List<ApplyPaymentModel> applyPaymentModel)
         {
+            //Test
             var ChargeActivities = new List<ChargeActivity>();
             var Charges = new List<Charge>();
             var Accounts = new List<Account>();
