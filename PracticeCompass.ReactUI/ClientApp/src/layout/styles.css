@@ -251,6 +251,9 @@ button {
   font-size: 12px !important;
   white-space: nowrap !important;
 }
+.k-grid tr td {
+    border-bottom: 1px solid black;
+}
 .rowHeight {
   height: 25px;
 }
