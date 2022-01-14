@@ -126,6 +126,24 @@ namespace PracticeCompass.Data.Repositories
             var data = this.db.QueryMultiple("uspLedgerGet", new { @PatientID = PersonID }, commandType: CommandType.StoredProcedure);
             return data.Read<LedgerData>().ToList();
         }
+        public bool InsuranceDetailsUpdate(InsuranceDetails insuranceDetails)
+        {
+           string sql = "select * from PolicyMember where  convert(varchar, PlanID, 10) + convert(varchar, PolicyMember.CoverageOrder, 10) + convert(varchar, PolicyMember.PolicyNumber, 10) = @gridId";
+            var PolicyMemberResults = this.db.QueryMultiple(sql, new { gridId = insuranceDetails.GridID});
+            var PolicyMember = PolicyMemberResults.Read<PolicyMember>().FirstOrDefault();
+            if (PolicyMember != null)
+            {
+                PolicyMember.PlanID = insuranceDetails.PlanID;
+                PolicyMember.PolicyNumber = insuranceDetails.PolicyNumber;
+                //PolicyMember.=insuranceDetails.groupNumber;
+                //PolicyMember.insuredID=insuranceDetails.insuredID;
+                //PolicyMember.insured=insuranceDetails.insured;
+                PolicyMember.RelationToSub=insuranceDetails.relationToSub;
+                this.db.BulkUpdate(PolicyMember);
+            }
+            return true;
+        }
+
         public bool PatientDetailsUpdate(PatientDetails patientDetails)
         {
             var data = this.db.QueryMultiple("uspPatientDetailsUpdate", new {
@@ -154,6 +172,7 @@ namespace PracticeCompass.Data.Repositories
             }, commandType: CommandType.StoredProcedure);
             return true;
         }
+      
         public void Remove(LookupCodes entity)
         {
             throw new NotImplementedException();

@@ -26,13 +26,17 @@ import {
   countryStateGetUrl,
   Insured,
   columns,
+  insuranceColumns,
+  guarantorColumns
+
 } from "./patientDetailSummaryData.js";
 import { getter } from "@progress/kendo-react-common";
 import {
   InsuranceGridGet,
   GetPatientDetails,
   resetInsuranceGridGet,
-  inActivePlan
+  inActivePlan,
+  updateInsuranceDetails
 } from "../../../../../redux/actions/patientDetails";
 import {
   getPracticeList,
@@ -41,6 +45,8 @@ import {
   resetCompanyList,
   resetPracticeList,
   getCompaniesList,
+  resetInsuranceList,
+  getinsuranceList,
 } from "../../../../../redux/actions/patient";
 import {
   PracticeColumns,
@@ -48,6 +54,10 @@ import {
   companyNameColumns,
 } from "./../../patient/patientData";
 import { SaveLookups } from "../../../../../redux/actions/lookups";
+import {
+  getguarantorList,
+  resetGuarantorList,
+} from "../../../../../redux/actions/claimList";
 import NotificationComponent from "../../../../common/notification";
 import {
   GetGridColumns,
@@ -63,6 +73,10 @@ function mapStateToProps(state) {
     patientTypes: state.patients.patientTypes,
     dropDownPatientTypes: state.lookups.patientTypes,
     UiExpand: state.ui.UiExpand,
+    insuranceList: state.patients.insuranceList,
+    dropDownInsurance: state.lookups.insurances,
+    guarantorList: state.claimList.guarantorList,
+    dropDownGuarantors: state.lookups.guarantors,
   };
 }
 
@@ -83,7 +97,14 @@ function mapDispatchToProps(dispatch) {
     resetCompanyList: () => dispatch(resetCompanyList()),
     resetPracticeList: () => dispatch(resetPracticeList()),
     resetInsuranceGridGet: () => dispatch(resetInsuranceGridGet()),
-    inActivePlan:(planID,coverageOrder,policyNumber) => dispatch(inActivePlan(planID,coverageOrder,policyNumber)),
+    inActivePlan: (planID, coverageOrder, policyNumber) => dispatch(inActivePlan(planID, coverageOrder, policyNumber)),
+    updateInsuranceDetails: (data) => dispatch(updateInsuranceDetails(data)),
+    getinsuranceList: (name, refreshData, skip) =>
+      dispatch(getinsuranceList(name, refreshData, skip)),
+    resetInsuranceList: () => dispatch(resetInsuranceList()),
+    getguarantorList: (name, refreshData, skip) =>
+      dispatch(getguarantorList(name, refreshData, skip)),
+    resetGuarantorList: () => dispatch(resetGuarantorList()),
   };
 }
 const DATA_ITEM_KEY_INSURANCE = "gridID";
@@ -108,6 +129,7 @@ class PatientDetailSummary extends Component {
     LastName: null,
     Suffix: null,
     Copay: null,
+    insuranceSearchText: null,
     PrimaryInsuranceBalanc: null,
     Address1: null,
     Address2: null,
@@ -123,6 +145,7 @@ class PatientDetailSummary extends Component {
     InsurancePortion: null,
     DOB: null,
     Gender: null,
+    guarantorSearchText: null,
     MaritalStatus: null,
     TotalDue: null,
     HomePhone: null,
@@ -171,7 +194,7 @@ class PatientDetailSummary extends Component {
     gridWidth: 0,
   };
   handleSelect = (e) => {
-    if (this.state.Insured == "S" || this.state.Insured == "Self") {
+    if ((this.state.Insured == "S" || this.state.Insured == "Self") && e.selected == 1) {
       return;
     }
     this.setState({ selected: e.selected });
@@ -308,9 +331,9 @@ class PatientDetailSummary extends Component {
       );
     }
     this.updateCurrentSelectInsurnace();
-    this.scrollToBottom();
+    //this.scrollToBottom();
   };
-  updateCurrentSelectInsurnace=async()=>{
+  updateCurrentSelectInsurnace = async () => {
     await this.setState({
       Type: {
         lookupCode: this.state.currentInsurance?.insuranceTypeCode,
@@ -324,7 +347,10 @@ class PatientDetailSummary extends Component {
         lookupCode: this.state.currentInsurance?.plantypecode,
         description: this.state.currentInsurance?.planTypeName,
       },
-      PlanName: this.state.currentInsurance?.planName,
+      selectedInsurance: {
+        entityId: this.state.currentInsurance?.planID,
+        entityName: this.state.currentInsurance?.planName,
+      },
       PolicyNumber: this.state.currentInsurance?.policyNumber,
       GroupNumber: this.state.currentInsurance?.groupNumber,
       PlanEndDate:
@@ -581,32 +607,151 @@ class PatientDetailSummary extends Component {
       });
     }
   };
-  inActivePlan=async ()=>{
-   let result=  await this.props.inActivePlan(this.state.currentInsurance?.planID,this.state.currentInsurance?.policyNumber,this.state.currentInsurance?.coverageOrder);
-   let messageResult=this.state.currentInsurance.recordStatus == "True"?"InActive":"Active";
-   if (result) {
-    this.setState({ success: true, message: ""+messageResult+" (" + this.state.currentInsurance?.companyName + ") save succefully" });
-    setTimeout(() => {
-      this.setState({
-        success: false,
-      });
-    }, this.state.timer);
-    await this.props.InsuranceGridGet(this.props.patientDetails.patientID);
-    this.setState({currentInsurance:null,refreshGrid:false});
-    this.updateCurrentSelectInsurnace();
-    this.setState({refreshGrid:true})
-    return;
-  } else {
-    this.setState({ error: true, message: ""+messageResult+" (" + this.state.currentInsurance?.companyName + ") save failed" });
-    setTimeout(() => {
-      this.setState({
-        error: false,
-      });
-    }, this.state.timer);
-    return;
-  }
+  inActivePlan = async () => {
+    let result = await this.props.inActivePlan(this.state.currentInsurance?.planID, this.state.currentInsurance?.policyNumber, this.state.currentInsurance?.coverageOrder);
+    let messageResult = this.state.currentInsurance.recordStatus == "True" ? "InActive" : "Active";
+    if (result) {
+      this.setState({ success: true, message: "" + messageResult + " (" + this.state.currentInsurance?.companyName + ") save succefully" });
+      setTimeout(() => {
+        this.setState({
+          success: false,
+        });
+      }, this.state.timer);
+      await this.props.InsuranceGridGet(this.props.patientDetails.patientID);
+      this.setState({ currentInsurance: null, refreshGrid: false });
+      this.updateCurrentSelectInsurnace();
+      this.setState({ refreshGrid: true })
+      return;
+    } else {
+      this.setState({ error: true, message: "" + messageResult + " (" + this.state.currentInsurance?.companyName + ") save failed" });
+      setTimeout(() => {
+        this.setState({
+          error: false,
+        });
+      }, this.state.timer);
+      return;
+    }
   }
   onSortChange = () => { };
+  EditInsuranceRow = (event) => {
+    this.props.updateInsuranceDetails({
+      gridId: this.state.currentInsurance?.gridID,
+      patientId: this.props.patientDetails.patientID,
+      planId: this.state.CompanyName?.entityId,
+      groupNumber: this.state.currentInsurance?.groupNumber,
+      insuredID: this.state.currentInsurance?.insuredID,
+      insured: this.state.currentInsurance?.insured,
+      policyNumber: this.state.currentInsurance?.policyNumber,
+      relationToSub: this.state.currentInsurance?.relationToSub
+    })
+  }
+  toggleInsuranceDialog = () => {
+    if (this.state.insuranceVisible) {
+      this.setState({
+        insuranceSearchText: null,
+      });
+      this.props.resetInsuranceList();
+    }
+    this.setState({
+      insuranceVisible: !this.state.insuranceVisible,
+    });
+  };
+  cancelInsuranceDialog = () => {
+    this.setState({
+      selectedInsurance: null,
+    });
+    this.toggleInsuranceDialog();
+  };
+  onInsuranceSelectionChange = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      selectedInsurance: {
+        entityId: selectedDataItems[0].entitySID,
+        entityName: selectedDataItems[0].sortName,
+      },
+    });
+  };
+  onInsuranceDoubleClick = async (event) => {
+    await this.setState({
+      selectedInsurance: {
+        entityId: event.dataItem.entitySID,
+        entityName: event.dataItem.sortName,
+      },
+    });
+    this.props.SaveLookups(event.dataItem.entitySID, "Insurance");
+    //this.selectInsurance();
+    this.toggleInsuranceDialog();
+  };
+  onInsuranceKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+    this.setState({
+      selectedInsurance: {
+        entityId: selectedDataItems[0].entitySID,
+        entityName: selectedDataItems[0].sortName,
+      },
+    });
+  };
+  insuranceSearch = (refreshData = true, skip = 0) => {
+    this.props.getinsuranceList(
+      this.state.insuranceSearchText,
+      refreshData,
+      skip
+    );
+  };
+  selectGuarantor = () => {
+    this.setState({
+      guarantorSelected: this.state.guarantorSelectedState,
+      guarantorID: this.state.guarantorIDSelectedState,
+    });
+    this.toggleGuarantorDialog();
+  };
+  guarantorsearch = (refreshData, skip) => {
+    this.props.getguarantorList(
+      this.state.guarantorSearchText,
+      refreshData,
+      skip
+    );
+  };
+  toggleGuarantorDialog = () => {
+    if (this.state.guarantorVisible) {
+      this.setState({
+        guarantorSearchText: null,
+      });
+      this.props.resetGuarantorList();
+    }
+    this.setState({
+      guarantorVisible: !this.state.guarantorVisible,
+    });
+  };
+  onGuarantorDoubleClick = async (event) => {
+    await this.setState({
+      patientDetailsGuarantorID: {
+        entityName: event.dataItem.sortName,
+        entityId: event.dataItem.entitySID
+      }
+    });
+    this.props.SaveLookups(event.dataItem.entitySID, "Guarantor");
+    //this.selectGuarantor();
+    this.toggleGuarantorDialog();
+  };
+  onGuarantorKeyDown = (event) => {
+    var selectedDataItems = event.dataItems.slice(
+      event.startRowIndex,
+      event.endRowIndex + 1
+    );
+   this.setState({
+      patientDetailsGuarantorID: {
+        entityName: selectedDataItems[0].sortName,
+        entityId: selectedDataItems[0].entitySID
+      }
+    });
+  };
   render() {
     return (
       <Fragment>
@@ -617,6 +762,51 @@ class PatientDetailSummary extends Component {
               toggleShowColumnsDialog={this.toggleShowColumnsDialog}
               SaveColumnsShow={this.SaveColumnsShow}
             ></Show_HideDialogComponent>
+          )}
+          {this.state.guarantorVisible && (
+            <FindDialogComponent
+              title="Guarantor Search"
+              placeholder="Enter Guarantor Name"
+              searcTextBoxValue={this.state.guarantorSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  guarantorSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.guarantorsearch}
+              dataItemKey="entitySID"
+              data={this.props.guarantorList}
+              columns={guarantorColumns}
+              onSelectionChange={this.onGuarantorSelectionChange}
+              onRowDoubleClick={this.onGuarantorDoubleClick}
+              onKeyDown={this.onGuarantorKeyDown}
+              idGetterLookup={idGetterInsurance}
+              toggleDialog={this.cancelGuarantorDialog}
+              cancelDialog={this.cancelGuarantorDialog}
+            ></FindDialogComponent>
+          )}
+          {this.state.insuranceVisible && (
+            <FindDialogComponent
+              title="Plan Search"
+              placeholder="Enter Plan Company Name Or Company Code"
+              searcTextBoxValue={this.state.insuranceSearchText}
+              onTextSearchChange={(e) => {
+                this.setState({
+                  insuranceSearchText: e.value,
+                });
+              }}
+              clickOnSearch={this.insuranceSearch}
+              dataItemKey="entitySID"
+              data={this.props.insuranceList}
+              columns={insuranceColumns}
+              onSelectionChange={this.onInsuranceSelectionChange}
+              onRowDoubleClick={this.onInsuranceDoubleClick}
+              onKeyDown={this.onInsuranceKeyDown}
+              idGetterLookup={idGetterInsurance}
+              toggleDialog={this.cancelInsuranceDialog}
+              cancelDialog={this.cancelInsuranceDialog}
+              getNextData={true}
+            ></FindDialogComponent>
           )}
           <NotificationComponent
             message={this.state.message}
@@ -1083,8 +1273,8 @@ class PatientDetailSummary extends Component {
                     type="delete"
                     icon="delete"
                     classButton="infraBtn-primary action-button"
-                    onClick={this.delete}
-                    disabled={this.state.currentInsurance==null}
+                    onClick={this.EditInsuranceRow}
+                    disabled={this.state.currentInsurance == null}
                   >
                     Edit
                   </ButtonComponent>
@@ -1093,9 +1283,9 @@ class PatientDetailSummary extends Component {
                     icon="reset"
                     classButton="infraBtn-primary action-button"
                     onClick={this.inActivePlan}
-                    disabled={this.state.currentInsurance==null}
+                    disabled={this.state.currentInsurance == null}
                   >
-                    {this.state.recordStatus? 'InActive': 'Active'}
+                    {this.state.recordStatus ? 'InActive' : 'Active'}
                   </ButtonComponent>
                   <ButtonComponent
                     type="edit"
@@ -1330,7 +1520,7 @@ class PatientDetailSummary extends Component {
             </ButtonComponent> */}
           </div>
           <div
-            style={{ display: "flex", flexFlow: "row nowrap", width: "1222px" }}
+            style={{ display: "flex", flexFlow: "row nowrap", width: "1232px" }}
           >
             <fieldset
               className="fieldsetStyle"
@@ -1342,201 +1532,239 @@ class PatientDetailSummary extends Component {
               >
                 Plan Detail
               </legend>
-              <div style={{ float: "left", width: "110px" }}>
-                <fieldset
-                  className="fieldsetStyle"
-                  style={{
-                    width: "75px",
-                    marginLeft: "10px",
-                    marginTop: "5px",
-                    height: "75px",
-                  }}
-                >
-                  <legend
-                    className="legendStyle"
-                    style={{ paddingRight: "5px", paddingLeft: "5px" }}
+              <div
+                style={{ display: "flex", flexFlow: "row nowrap", width: "1222px" }}
+              >
+                <div style={{ float: "left", width: "110px" }}>
+                  <fieldset
+                    className="fieldsetStyle"
+                    style={{
+                      width: "75px",
+                      marginLeft: "10px",
+                      marginTop: "5px",
+                      height: "75px",
+                    }}
                   >
-                    Insured
-                  </legend>
-                  <div className="row" style={{ marginLeft: "5px" }}>
-                    <RadioButtonComponent
-                      name="Insured"
-                      className="userInfoLabel"
-                      items={Insured}
-                      selectedValue={
-                        this.state.Insured &&
-                        (this.state.Insured == "S" ||
-                          this.state.Insured == "Self"
-                          ? "Self"
-                          : "Other")
-                      }
-                      handleChange={(e) => this.revertOtherCompany(e)}
-                    ></RadioButtonComponent>
-                  </div>
-                </fieldset>
-              </div>
-              <div style={{ float: "left" }}>
-                <TabStrip
-                  selected={this.state.selected}
-                  onSelect={this.handleSelect}
-                >
-                  <TabStripTab title="Plan">
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
+                    <legend
+                      className="legendStyle"
+                      style={{ paddingRight: "5px", paddingLeft: "5px" }}
                     >
-                      <div style={{ float: "left" }}>
-                        <label className="userInfoLabel">Company Name</label>
-                      </div>
-                      <div style={{ float: "left", width: "300px" }}>
-                        <DropDown
-                          className="unifyHeight"
-                          textField="entityName"
-                          dataItemKey="entityId"
-                          value={this.state.CompanyName}
-                          data={this.props.dropDownCompanies}
-                          onChange={(e) =>
-                            this.setState({ CompanyName: e.value })
-                          }
-                        ></DropDown>
-                      </div>
-                      <div style={{ float: "left" }}>
-                        <ButtonComponent
-                          icon="search"
-                          type="search"
-                          classButton="infraBtn-primary find-button"
-                          style={{ marginTop: "0px" }}
-                          onClick={(e) =>
-                            this.setState({ companyNameVisible: true })
-                          }
-                        >
-                          Find
-                        </ButtonComponent>
-                      </div>
-                      <div style={{ float: "left", marginLeft: "15px" }}>
-                        <label className="userInfoLabel">Plan Type</label>
-                      </div>
-                      <div style={{ float: "left", width: "362px" }}>
-                        <DropDown
-                          className="unifyHeight"
-                          type="remoteDropDown"
-                          textField="description"
-                          dataItemKey="lookupCode"
-                          getBaseUrl={(filter) => getCompanyTypeUrl(filter)}
-                          value={this.state.Type}
-                          onChange={(e) => this.setState({ Type: e.value })}
-                        ></DropDown>
-                      </div>
+                      Insured
+                    </legend>
+                    <div className="row" style={{ marginLeft: "5px" }}>
+                      <RadioButtonComponent
+                        name="Insured"
+                        className="userInfoLabel"
+                        items={Insured}
+                        selectedValue={
+                          this.state.Insured &&
+                          (this.state.Insured == "S" ||
+                            this.state.Insured == "Self"
+                            ? "Self"
+                            : "Other")
+                        }
+                        handleChange={(e) => this.revertOtherCompany(e)}
+                      ></RadioButtonComponent>
                     </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", marginLeft: "28px" }}>
-                        <label className="userInfoLabel">Plan Name</label>
+                  </fieldset>
+                </div>
+                <div style={{ float: "left" }}>
+                  <TabStrip
+                    selected={this.state.selected}
+                    onSelect={this.handleSelect}
+                  >
+                    <TabStripTab title="Plan">
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left" }}>
+                          <label className="userInfoLabel">Company Name</label>
+                        </div>
+                        <div style={{ float: "left", width: "300px" }}>
+                          <DropDown
+                            className="unifyHeight"
+                            textField="entityName"
+                            dataItemKey="entityId"
+                            value={this.state.CompanyName}
+                            data={this.props.dropDownCompanies}
+                            onChange={(e) =>
+                              this.setState({ CompanyName: e.value })
+                            }
+                            disabled={true}
+                          ></DropDown>
+                        </div>
+                        <div style={{ float: "left" }}>
+                          <ButtonComponent
+                            icon="search"
+                            type="search"
+                            classButton="infraBtn-primary find-button"
+                            style={{ marginTop: "0px" }}
+                            onClick={(e) =>
+                              this.setState({ companyNameVisible: true })
+                            }
+                            disabled={true}
+                          >
+                            Find
+                          </ButtonComponent>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "22px" }}>
+                          <label className="userInfoLabel">Plan Type</label>
+                        </div>
+                        <div style={{ float: "left", width: "362px" }}>
+                          <DropDown
+                            className="unifyHeight"
+                            type="remoteDropDown"
+                            textField="description"
+                            dataItemKey="lookupCode"
+                            getBaseUrl={(filter) => getCompanyTypeUrl(filter)}
+                            value={this.state.Type}
+                            onChange={(e) => this.setState({ Type: e.value })}
+                            disabled={true}
+                          ></DropDown>
+                        </div>
                       </div>
-                      <div style={{ float: "left" }}>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", marginLeft: "28px" }}>
+                          <label className="userInfoLabel">Plan Name</label>
+                        </div>
+                        <div style={{ float: "left" }} className="insuranceStyle">
+                          <DropDown
+                            className="unifyHeight"
+                            data={this.props.dropDownInsurance}
+                            textField="entityName"
+                            dataItemKey="entityId"
+                            defaultValue={this.state.selectedInsurance}
+                            value={this.state.selectedInsurance}
+                            onChange={(e) =>
+                              this.setState({
+                                selectedInsurance: {
+                                  entityId: e.value?.entityId,
+                                  entityName: e.value?.entityName,
+                                },
+                              })
+                            }
+                          ></DropDown>
+                        </div>
+                        <div
+                          style={{ float: "left", width: "70px", marginRight: "3px" }}
+                        >
+                          <ButtonComponent
+                            look="outline"
+                            icon="search"
+                            type="search"
+                            classButton="infraBtn-primary find-button"
+                            onClick={this.toggleInsuranceDialog}
+                          >
+                            Find
+                          </ButtonComponent>
+                        </div>
+                        {/* <div style={{ float: "left" }}>
                         <TextBox
                           className="unifyHeight"
                           value={this.state.PlanName}
                           onChange={(e) => this.setState({ PlanName: e.value })}
                         ></TextBox>
+                      </div> */}
+                        <div style={{ float: "left", marginLeft: "15px" }}>
+                          <label className="userInfoLabel">Plan Class</label>
+                        </div>
+                        <div style={{ float: "left", width: "261px" }}>
+                          <DropDown
+                            className="unifyHeight"
+                            type="remoteDropDown"
+                            textField="description"
+                            dataItemKey="lookupCode"
+                            getBaseUrl={(filter) => getPlanTypeUrl(filter)}
+                            value={this.state.PlanType}
+                            onChange={(e) => this.setState({ PlanType: e.value })}
+                            disabled={true}
+                          ></DropDown>
+                        </div>
                       </div>
-                      <div style={{ float: "left", marginLeft: "17px" }}>
-                        <label className="userInfoLabel">Policy Number</label>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", marginLeft: "31px" }}>
+                          <label className="userInfoLabel">Insured ID</label>
+                        </div>
+                        <div style={{ float: "left" }}>
+                          <TextBox
+                            className="unifyHeight"
+                            value={this.state.InsuredID}
+                            onChange={(e) =>
+                              this.setState({ InsuredID: e.value })
+                            }
+                          ></TextBox>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "17px" }}>
+                          <label className="userInfoLabel">Policy Number</label>
+                        </div>
+                        <div style={{ float: "left" }}>
+                          <TextBox
+                            className="unifyHeight"
+                            value={this.state.PolicyNumber}
+                            onChange={(e) =>
+                              this.setState({ PolicyNumber: e.value })
+                            }
+                          ></TextBox>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "15px" }}>
+                          <label className="userInfoLabel">Group Number</label>
+                        </div>
+                        <div style={{ float: "left" }}>
+                          <TextBox
+                            className="unifyHeight"
+                            value={this.state.GroupNumber}
+                            onChange={(e) =>
+                              this.setState({ GroupNumber: e.value })
+                            }
+                          ></TextBox>
+                        </div>
                       </div>
-                      <div style={{ float: "left" }}>
-                        <TextBox
-                          className="unifyHeight"
-                          value={this.state.PolicyNumber}
-                          onChange={(e) =>
-                            this.setState({ PolicyNumber: e.value })
-                          }
-                        ></TextBox>
-                      </div>
-                      <div style={{ float: "left", marginLeft: "15px" }}>
-                        <label className="userInfoLabel">Plan Class</label>
-                      </div>
-                      <div style={{ float: "left", width: "261px" }}>
-                        <DropDown
-                          className="unifyHeight"
-                          type="remoteDropDown"
-                          textField="description"
-                          dataItemKey="lookupCode"
-                          getBaseUrl={(filter) => getPlanTypeUrl(filter)}
-                          value={this.state.PlanType}
-                          onChange={(e) => this.setState({ PlanType: e.value })}
-                        ></DropDown>
-                      </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", marginLeft: "31px" }}>
-                        <label className="userInfoLabel">Insured ID</label>
-                      </div>
-                      <div style={{ float: "left" }}>
-                        <TextBox
-                          className="unifyHeight"
-                          value={this.state.InsuredID}
-                          onChange={(e) =>
-                            this.setState({ InsuredID: e.value })
-                          }
-                        ></TextBox>
-                      </div>
-                      <div style={{ float: "left", marginLeft: "15px" }}>
-                        <label className="userInfoLabel">Group Number</label>
-                      </div>
-                      <div style={{ float: "left" }}>
-                        <TextBox
-                          className="unifyHeight"
-                          value={this.state.GroupNumber}
-                          onChange={(e) =>
-                            this.setState({ GroupNumber: e.value })
-                          }
-                        ></TextBox>
-                      </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", marginLeft: "15px" }}>
-                        <label className="userInfoLabel">
-                          Plan Effective Date
-                        </label>
-                      </div>
-                      <div className="dateStyle" style={{ float: "left" }}>
-                        <DatePicker
-                          id="planEndDate"
-                          name="planEndDate"
-                          className="unifyHeight"
-                          placeholder="MM/DD/YYYY"
-                          format="M/dd/yyyy"
-                          value={this.state.PlanEffectiveDate}
-                          onChange={(e) =>
-                            this.setState({ PlanEffectiveDate: e.value })
-                          }
-                        ></DatePicker>
-                      </div>
-                      <div style={{ float: "left", marginLeft: "17px" }}>
-                        <label className="userInfoLabel">Plan End Date</label>
-                      </div>
-                      <div className="dateStyle" style={{ float: "left" }}>
-                        <DatePicker
-                          id="planEndDate"
-                          name="planEndDate"
-                          className="unifyHeight"
-                          placeholder="MM/DD/YYYY"
-                          format="M/dd/yyyy"
-                          value={this.state.PlanEndDate}
-                          onChange={(e) =>
-                            this.setState({ PlanEndDate: e.value })
-                          }
-                        ></DatePicker>
-                      </div>
-                      {/* <div style={{ float: "left" }}>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", marginLeft: "15px" }}>
+                          <label className="userInfoLabel">
+                            Plan Effective Date
+                          </label>
+                        </div>
+                        <div className="dateStyle" style={{ float: "left" }}>
+                          <DatePicker
+                            id="planEndDate"
+                            name="planEndDate"
+                            className="unifyHeight"
+                            placeholder="MM/DD/YYYY"
+                            format="M/dd/yyyy"
+                            value={this.state.PlanEffectiveDate}
+                            onChange={(e) =>
+                              this.setState({ PlanEffectiveDate: e.value })
+                            }
+                          ></DatePicker>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "17px" }}>
+                          <label className="userInfoLabel">Plan End Date</label>
+                        </div>
+                        <div className="dateStyle" style={{ float: "left" }}>
+                          <DatePicker
+                            id="planEndDate"
+                            name="planEndDate"
+                            className="unifyHeight"
+                            placeholder="MM/DD/YYYY"
+                            format="M/dd/yyyy"
+                            value={this.state.PlanEndDate}
+                            onChange={(e) =>
+                              this.setState({ PlanEndDate: e.value })
+                            }
+                          ></DatePicker>
+                        </div>
+                        {/* <div style={{ float: "left" }}>
                         <CheckboxComponent
                           style={{ marginRight: "5px" }}
                           id="active"
@@ -1545,22 +1773,22 @@ class PatientDetailSummary extends Component {
                           onChange={(e) => this.setState({ recordStatus: e.value })}
                         />
                       </div> */}
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    ></div>
-                  </TabStripTab>
+                      </div>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      ></div>
+                    </TabStripTab>
 
-                  <TabStripTab title="Other">
-                    <div
-                      className="rowHeight"
-                      style={{
-                        display: "flex",
-                        flexFlow: "row nowrap",
-                      }}
-                    >
-                      <div style={{ float: "left", marginLeft: "40px" }}>
+                    <TabStripTab title="Other">
+                      <div
+                        className="rowHeight"
+                        style={{
+                          display: "flex",
+                          flexFlow: "row nowrap",
+                        }}
+                      >
+                        {/* <div style={{ float: "left", marginLeft: "40px" }}>
                         <label className="userInfoLabel">Name</label>
                       </div>
                       <div style={{ float: "left", width: "200px" }}>
@@ -1571,217 +1799,260 @@ class PatientDetailSummary extends Component {
                             this.setState({ OtherName: e.value })
                           }
                         ></TextBox>
-                      </div>
-                      <div style={{ float: "left", marginLeft: "32px" }}>
-                        <label className="userInfoLabel">RelationShip</label>
-                      </div>
-                      <div style={{ width: "185px" }}>
-                        <DropDown
-                          className="unifyHeight"
-                          id="relationList"
-                          name="relationList"
-                          type="remoteDropDown"
-                          textField="description"
-                          dataItemKey="lookupCode"
-                          getBaseUrl={(filter) => getRelationUrl(filter)}
-                          value={this.state.OtherRelationShip}
-                          onChange={(e) =>
-                            this.setState({ OtherRelationShip: e.value })
-                          }
-                        ></DropDown>
-                      </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row" }}
-                    >
-                      <div style={{ float: "left", width: "377px" }}>
-                        <div style={{ float: "left", marginLeft: "17px" }}>
-                          <label className="userInfoLabel">Address 1</label>
+                      </div> */}
+                        <div style={{ marginLeft: "15px" }}>
+                          <label className="userInfoLabel">Guarantor</label>
                         </div>
-                        <div style={{ float: "left", width: "300px" }}>
-                          <TextBox
-                            className="unifyHeight"
-                            value={this.state.OtherAddress1}
-                            onChange={(e) => {
-                              this.setState({ OtherAddress1: e.value });
-                            }}
-                          ></TextBox>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", width: "377px" }}>
-                        <div style={{ float: "left", marginLeft: "17px" }}>
-                          <label className="userInfoLabel">Address 2</label>
-                        </div>
-                        <div style={{ float: "left", width: "300px" }}>
-                          <TextBox
-                            className="unifyHeight"
-                            value={this.state.OtherAddress2}
-                            onChange={(e) =>
-                              this.setState({ OtherAddress2: e.value })
-                            }
-                          ></TextBox>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", width: "400px" }}>
-                        <div style={{ float: "left", marginLeft: "51px" }}>
-                          <label className="userInfoLabel">City</label>
-                        </div>
-                        <div style={{ float: "left", width: "133px" }}>
-                          <TextBox
-                            className="unifyHeight"
-                            value={this.state.OtherCity}
-                            onChange={(e) =>
-                              this.setState({ OtherCity: e.value })
-                            }
-                          ></TextBox>
-                        </div>
-                        <div style={{ float: "left", marginLeft: "29px" }}>
-                          <label className="userInfoLabel">State</label>
-                        </div>
-                        <div style={{ float: "left", width: "105px" }}>
+                        <div className="GuarantorStyle">
                           <DropDown
                             className="unifyHeight"
-                            id="stateList"
-                            name="stateList"
-                            type="remoteDropDown"
-                            textField="stateCode"
-                            dataItemKey="stateCode"
-                            getBaseUrl={(filter) => countryStateGetUrl(filter)}
-                            value={this.state.OtherStatevalue}
+                            data={this.props.dropDownGuarantors}
+                            textField="entityName"
+                            dataItemKey="entityId"
+                            defaultValue={this.state.patientDetailsGuarantorID}
+                            value={this.state.patientDetailsGuarantorID}
                             onChange={(e) =>
-                              this.setState({ OtherStatevalue: e.value })
+                              this.setState({
+                                patientDetailsGuarantorID: {
+                                  entityName: e.value?.entityName,
+                                  entityId: e.value?.entityId,
+                                },
+                              })
+                            }
+                          ></DropDown>
+                        </div>
+                        <div>
+                          <ButtonComponent
+                            icon="search"
+                            type="search"
+                            classButton="infraBtn-primary find-button"
+                            onClick={() => this.toggleGuarantorDialog(true)}
+                            style={{ marginTop: "0px" }}
+                          >
+                            Find
+                          </ButtonComponent>
+                        </div>
+                        <div style={{ float: "left", marginLeft: "32px" }}>
+                          <label className="userInfoLabel">RelationShip</label>
+                        </div>
+                        <div style={{ width: "185px" }}>
+                          <DropDown
+                            className="unifyHeight"
+                            id="relationList"
+                            name="relationList"
+                            type="remoteDropDown"
+                            textField="description"
+                            dataItemKey="lookupCode"
+                            getBaseUrl={(filter) => getRelationUrl(filter)}
+                            value={this.state.OtherRelationShip}
+                            onChange={(e) =>
+                              this.setState({ OtherRelationShip: e.value })
                             }
                           ></DropDown>
                         </div>
                       </div>
-                      <div style={{ float: "left", width: "336px" }}>
-                        <div style={{ float: "left", marginLeft: "15px" }}>
-                          <label className="userInfoLabel">Zip</label>
-                        </div>
-                        <div className="ZipStyle" style={{ float: "left" }}>
-                          <TextBox
-                            type="maskedTextBox"
-                            format="#####-####"
-                            placeholder="00000-0000"
-                            className="unifyHeight"
-                            value={this.state.OtherZip}
-                            onValueChange={(e) =>
-                              this.setState({ OtherZip: e.target.value })
-                            }
-                          ></TextBox>
-                        </div>
-                        <div style={{ float: "left", marginLeft: "15px" }}>
-                          <label className="userInfoLabel">SSN</label>
-                        </div>
-                        <div className="SSNStyle" style={{ float: "left" }}>
-                          <TextBox
-                            type="maskedTextBox"
-                            format="###-##-####"
-                            placeholder="000-00-00000"
-                            className="unifyHeight"
-                            value={this.state.OtherSSN}
-                            onValueChange={(e) =>
-                              this.setState({ OtherSSN: e.target.value })
-                            }
-                          ></TextBox>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row" }}
+                      >
+                        <div style={{ float: "left", width: "377px" }}>
+                          <div style={{ float: "left", marginLeft: "17px" }}>
+                            <label className="userInfoLabel">Address 1</label>
+                          </div>
+                          <div style={{ float: "left", width: "300px" }}>
+                            <TextBox
+                              className="unifyHeight"
+                              value={this.state.OtherAddress1}
+                              onChange={(e) => {
+                                this.setState({ OtherAddress1: e.value });
+                              }}
+                              disabled={true}
+                            ></TextBox>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row" }}
-                    >
-                      <div style={{ float: "left", width: "440px" }}>
-                        <div style={{ float: "left" }}>
-                          <label className="userInfoLabel">Home Phone</label>
-                        </div>
-                        <div className="PhoneStyle" style={{ float: "left" }}>
-                          <TextBox
-                            type="maskedTextBox"
-                            format="(###) ###-####"
-                            placeholder="(000) 000-0000"
-                            className="unifyHeight"
-                            value={this.state.OtherHomePhone}
-                            onValueChange={(e) =>
-                              this.setState({ OtherHomePhone: e.target.value })
-                            }
-                          ></TextBox>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", width: "377px" }}>
+                          <div style={{ float: "left", marginLeft: "17px" }}>
+                            <label className="userInfoLabel">Address 2</label>
+                          </div>
+                          <div style={{ float: "left", width: "300px" }}>
+                            <TextBox
+                              className="unifyHeight"
+                              value={this.state.OtherAddress2}
+                              onChange={(e) =>
+                                this.setState({ OtherAddress2: e.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", width: "435px" }}>
-                        <div style={{ float: "left", marginLeft: "3px" }}>
-                          <label className="userInfoLabel">Work Phone</label>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", width: "400px" }}>
+                          <div style={{ float: "left", marginLeft: "51px" }}>
+                            <label className="userInfoLabel">City</label>
+                          </div>
+                          <div style={{ float: "left", width: "133px" }}>
+                            <TextBox
+                              className="unifyHeight"
+                              value={this.state.OtherCity}
+                              onChange={(e) =>
+                                this.setState({ OtherCity: e.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
+                          <div style={{ float: "left", marginLeft: "29px" }}>
+                            <label className="userInfoLabel">State</label>
+                          </div>
+                          <div style={{ float: "left", width: "105px" }}>
+                            <DropDown
+                              className="unifyHeight"
+                              id="stateList"
+                              name="stateList"
+                              type="remoteDropDown"
+                              textField="stateCode"
+                              dataItemKey="stateCode"
+                              getBaseUrl={(filter) => countryStateGetUrl(filter)}
+                              value={this.state.OtherStatevalue}
+                              onChange={(e) =>
+                                this.setState({ OtherStatevalue: e.value })
+                              }
+                              disabled={true}
+                            ></DropDown>
+                          </div>
                         </div>
-                        <div className="PhoneStyle" style={{ float: "left" }}>
-                          <TextBox
-                            type="maskedTextBox"
-                            format="(###) ###-####"
-                            placeholder="(000) 000-0000"
-                            className="unifyHeight"
-                            value={this.state.OtherWorkPhone}
-                            onValueChange={(e) =>
-                              this.setState({ OtherWorkPhone: e.target.value })
-                            }
-                          ></TextBox>
-                        </div>
-                        <div style={{ float: "left", marginLeft: "5px" }}>
-                          <label className="userInfoLabel">Ext</label>
-                        </div>
-                        <div className="phoneExt" style={{ float: "left" }}>
-                          <TextBox
-                            max={5}
-                            type="maskedTextBox"
-                            format="#####"
-                            placeholder="00000"
-                            className="unifyHeight"
-                            value={this.state.OtherExt}
-                            onValueChange={(e) =>
-                              this.setState({ OtherExt: e.target.value })
-                            }
-                          ></TextBox>
+                        <div style={{ float: "left", width: "336px" }}>
+                          <div style={{ float: "left", marginLeft: "15px" }}>
+                            <label className="userInfoLabel">Zip</label>
+                          </div>
+                          <div className="ZipStyle" style={{ float: "left" }}>
+                            <TextBox
+                              type="maskedTextBox"
+                              format="#####-####"
+                              placeholder="00000-0000"
+                              className="unifyHeight"
+                              value={this.state.OtherZip}
+                              onValueChange={(e) =>
+                                this.setState({ OtherZip: e.target.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
+                          <div style={{ float: "left", marginLeft: "15px" }}>
+                            <label className="userInfoLabel">SSN</label>
+                          </div>
+                          <div className="SSNStyle" style={{ float: "left" }}>
+                            <TextBox
+                              type="maskedTextBox"
+                              format="###-##-####"
+                              placeholder="000-00-00000"
+                              className="unifyHeight"
+                              value={this.state.OtherSSN}
+                              onValueChange={(e) =>
+                                this.setState({ OtherSSN: e.target.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="rowHeight"
-                      style={{ display: "flex", flexFlow: "row nowrap" }}
-                    >
-                      <div style={{ float: "left", width: "400px" }}>
-                        <div style={{ float: "left", marginLeft: "13px" }}>
-                          <label className="userInfoLabel">Cell Phone</label>
-                        </div>
-                        <div className="PhoneStyle" style={{ float: "left" }}>
-                          <TextBox
-                            type="maskedTextBox"
-                            format="(###) ###-####"
-                            placeholder="(000) 000-0000"
-                            className="unifyHeight"
-                            value={this.state.OtherCellPhone}
-                            onValueChange={(e) =>
-                              this.setState({ OtherCellPhone: e.target.value })
-                            }
-                          ></TextBox>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row" }}
+                      >
+                        <div style={{ float: "left", width: "440px" }}>
+                          <div style={{ float: "left" }}>
+                            <label className="userInfoLabel">Home Phone</label>
+                          </div>
+                          <div className="PhoneStyle" style={{ float: "left" }}>
+                            <TextBox
+                              type="maskedTextBox"
+                              format="(###) ###-####"
+                              placeholder="(000) 000-0000"
+                              className="unifyHeight"
+                              value={this.state.OtherHomePhone}
+                              onValueChange={(e) =>
+                                this.setState({ OtherHomePhone: e.target.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </TabStripTab>
-                </TabStrip>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", width: "435px" }}>
+                          <div style={{ float: "left", marginLeft: "3px" }}>
+                            <label className="userInfoLabel">Work Phone</label>
+                          </div>
+                          <div className="PhoneStyle" style={{ float: "left" }}>
+                            <TextBox
+                              type="maskedTextBox"
+                              format="(###) ###-####"
+                              placeholder="(000) 000-0000"
+                              className="unifyHeight"
+                              value={this.state.OtherWorkPhone}
+                              onValueChange={(e) =>
+                                this.setState({ OtherWorkPhone: e.target.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
+                          <div style={{ float: "left", marginLeft: "5px" }}>
+                            <label className="userInfoLabel">Ext</label>
+                          </div>
+                          <div className="phoneExt" style={{ float: "left" }}>
+                            <TextBox
+                              max={5}
+                              type="maskedTextBox"
+                              format="#####"
+                              placeholder="00000"
+                              className="unifyHeight"
+                              value={this.state.OtherExt}
+                              onValueChange={(e) =>
+                                this.setState({ OtherExt: e.target.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="rowHeight"
+                        style={{ display: "flex", flexFlow: "row nowrap" }}
+                      >
+                        <div style={{ float: "left", width: "400px" }}>
+                          <div style={{ float: "left", marginLeft: "13px" }}>
+                            <label className="userInfoLabel">Cell Phone</label>
+                          </div>
+                          <div className="PhoneStyle" style={{ float: "left" }}>
+                            <TextBox
+                              type="maskedTextBox"
+                              format="(###) ###-####"
+                              placeholder="(000) 000-0000"
+                              className="unifyHeight"
+                              value={this.state.OtherCellPhone}
+                              onValueChange={(e) =>
+                                this.setState({ OtherCellPhone: e.target.value })
+                              }
+                              disabled={true}
+                            ></TextBox>
+                          </div>
+                        </div>
+                      </div>
+                    </TabStripTab>
+                  </TabStrip>
+                </div>
               </div>
             </fieldset>
           </div>

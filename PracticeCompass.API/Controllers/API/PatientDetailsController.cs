@@ -216,12 +216,28 @@ namespace PracticeCompass.API.Controllers.API
                 return new List<LedgerData>();
             }
         }
-
+        [HttpGet]
+        [Route("api/PatientDetails/PatientDetailsUpdate")]
         public bool PatientDetailsUpdate(PatientDetails patientDetails)
         {
             try
             {
                 bool Result = unitOfWork.PatientDetailsRepository.PatientDetailsUpdate(patientDetails);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message, "PracticeCompass", TechnoMedicLogFiles.API.ToString());
+                return false;
+            }
+        }
+        [HttpGet]
+        [Route("api/PatientDetails/InsuranceDetailsUpdate")]
+        public bool InsuranceDetailsUpdate(InsuranceDetails insuranceDetails)
+        {
+            try
+            {
+                bool Result = unitOfWork.PatientDetailsRepository.InsuranceDetailsUpdate(insuranceDetails);
                 return Result;
             }
             catch (Exception ex)

@@ -23,6 +23,7 @@ namespace PracticeCompass.Core.Repositories
         List<PatientDetails> PatientDetailsGet(int PersonID,int PracticeID);
         List<LedgerData> LedgerDataGet(int PersonID);
         bool PatientDetailsUpdate(PatientDetails patientDetails);
+        bool InsuranceDetailsUpdate(InsuranceDetails insuranceDetails);
 
     }
 }

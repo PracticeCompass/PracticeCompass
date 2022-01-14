@@ -42,6 +42,7 @@ const getRemoteDropDown = (props) => {
       textField={props.textField}
       getBaseUrl={(filter) => props.getBaseUrl(filter)}
       onChange={props.onChange}
+      disabled={props.disabled}
     ></RemoteDropDown>
   );
 };

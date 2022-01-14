@@ -133,6 +133,7 @@ class RemoteDropDown extends React.Component {
           skip: this.state.skip,
           total: this.state.total,
         }}
+        disabled={this.props.disabled}
         onPageChange={this.pageChange}
         style={{ width: this.props.width }}
       />

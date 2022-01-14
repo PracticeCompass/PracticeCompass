@@ -40,6 +40,20 @@ export const inActivePlan=(PlanID,PolicyNumber,CoverageOrder)=>async(dispatch,ge
     dispatch(uiStopLoading());
   }
 }
+export const updateInsuranceDetails=(data)=>async(dispatch,getState)=>{
+  try{
+    dispatch(uiStartLoading());
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/PatientDetails/InsuranceDetailsUpdate?GridID=${data.gridId}&PatientID=${data.patientId}&PlanID=${data.planId}&PolicyNumber=${data.policyNumber}`,
+    });
+   return resp.data;
+  }catch(error){
+
+  }finally {
+    dispatch(uiStopLoading());
+  }
+}
 export const resetInsuranceGridGet = () => async (dispatch, getState) => {
   try {
     dispatch(uiStartLoading());

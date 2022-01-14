@@ -120,3 +120,25 @@ export const columns = [
         //minWidth: 120,
     },
 ];
+export const insuranceColumns = [
+    {
+      field: "carrierCode",
+      title: "Code",
+      orderIndex:0,
+      minWidth: "100px",
+  },
+    {
+      field: "sortName",
+      title: "Plan Company",
+      orderIndex: 1,
+      minWidth: "700px",
+    },
+  ];
+  export const guarantorColumns = [
+    {
+        field: "sortName",
+        title: "Guarantor Name",
+        minWidth: "817px",
+        //minWidth: "100px",
+    },
+];
