@@ -37,7 +37,8 @@ import {
   resetInsuranceGridGet,
   inActivePlan,
   updateInsuranceDetails,
-  GuarantorInfoGet
+  GuarantorInfoGet,
+  PlanInfoGet
 } from "../../../../../redux/actions/patientDetails";
 import {
   getPracticeList,
@@ -107,6 +108,7 @@ function mapDispatchToProps(dispatch) {
     getguarantorList: (name, refreshData, skip) =>
       dispatch(getguarantorList(name, refreshData, skip)),
     resetGuarantorList: () => dispatch(resetGuarantorList()),
+    PlanInfoGet:(planId)=>dispatch(PlanInfoGet(planId))
   };
 }
 const DATA_ITEM_KEY_INSURANCE = "gridID";
@@ -688,6 +690,24 @@ class PatientDetailSummary extends Component {
       },
     });
     this.props.SaveLookups(event.dataItem.entitySID, "Insurance");
+    let planRow= await this.props.PlanInfoGet(event.dataItem.entitySID);
+    if(planRow != null){
+      debugger;
+      this.setState({
+      PlanType: {
+        lookupCode: planRow?.plantypecode,
+        description: planRow?.planTypeName,
+      },
+      Type: {
+        lookupCode: planRow?.insuranceTypeCode,
+        description: planRow?.insuranceTypeName,
+      },
+      CompanyName: {
+        entityId: planRow?.carrierID,
+        entityName: planRow?.companyName,
+      },
+    })
+    }
     //this.selectInsurance();
     this.toggleInsuranceDialog();
   };

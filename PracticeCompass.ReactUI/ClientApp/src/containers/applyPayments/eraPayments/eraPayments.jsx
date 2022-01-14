@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import RadioButtonComponent from "../../../components/RadioButton";
 import { PanelBar, PanelBarItem } from "@progress/kendo-react-layout";
-import { masterColumns, PracticeColumns } from "./eraPaymentsData";
+import { masterColumns, PracticeColumns, PlanCategory,insuranceColumns } from "./eraPaymentsData";
 import $ from "jquery";
 import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import ButtonComponent from "../../../components/Button";
@@ -44,7 +44,8 @@ const DATA_ITEM_KEY_MASTER_PAYMENT = "ersPaymentSID";
 const idGetterMasterPaymentID = getter(DATA_ITEM_KEY_MASTER_PAYMENT);
 const DATA_ITEM_KEY_DETAILS_PAYMENT = "gridID";
 const idGetterDetailsPaymentID = getter(DATA_ITEM_KEY_DETAILS_PAYMENT);
-
+const DATA_ITEM_KEY_INSURANCE = "gridID";
+const idGetterInsurance = getter(DATA_ITEM_KEY_INSURANCE);
 const DATA_ITEM_KEY_PRACTICE = "practiceID";
 const idGetterPracticeID = getter(DATA_ITEM_KEY_PRACTICE);
 const filters = [
@@ -58,6 +59,8 @@ function mapStateToProps(state) {
         practiceList: state.patients.paractices,
         eRApayments: state.payments.eRApayments,
         UiExpand: state.ui.UiExpand,
+        insuranceList: state.patients.insuranceList,
+        dropDownInsurance: state.lookups.insurances,
     };
 }
 
@@ -72,16 +75,18 @@ function mapDispatchToProps(dispatch) {
         GetERAPaymentDetails: (PaymentSID) =>
             dispatch(GetERAPaymentDetails(PaymentSID)),
         resetPracticeList: () => dispatch(resetPracticeList()),
+        resetInsuranceList: () => dispatch(resetInsuranceList()),
+        getinsuranceList: (name, refreshData, skip) =>
+        dispatch(getinsuranceList(name, refreshData, skip)),
         getERAPaymentHeader: (
             PracticeID,
             IsPosted,
             Amount,
             CheckNumber,
             AmountType,
-            SenderAccount,
-            ReceiverAccount,
             PostDate,
-            Days
+            Days,
+            payerId
         ) =>
             dispatch(
                 getERAPaymentHeader(
@@ -90,10 +95,9 @@ function mapDispatchToProps(dispatch) {
                     Amount,
                     CheckNumber,
                     AmountType,
-                    SenderAccount,
-                    ReceiverAccount,
                     PostDate,
-                    Days
+                    Days,
+                    payerId
                 )
             ),
         PostingEraPayment: (checkTraceNbr) => dispatch(PostEraPayment(checkTraceNbr)),
@@ -122,6 +126,7 @@ class EraPayments extends Component {
         posted: false,
         receiverAccount: null,
         senderAccount: null,
+        insuranceSearchText:null,
         checkIssue: null,
         transactionHeader: "Payment Transactions ",
         masterColumns: masterColumns,
@@ -297,18 +302,18 @@ class EraPayments extends Component {
         });
     };
     ERAPaymentGridSearch = async () => {
+        debugger;
         this.props.getERAPaymentHeader(
             this.state.insurancePracticeID?.entityId,
             this.state.posted ? "p" : "r",
             this.state.amountFilter ?? 0,
             this.state.checkNumber ? this.state.checkNumber : "",
             this.state.amountType ? this.state.amountType.id : null,
-            this.state.senderAccount ?? "",
-            this.state.receiverAccount ?? "",
             this.state.checkIssue
                 ? new Date(this.state.checkIssue).toLocaleDateString()
                 : "",
-            this.state.day?.id ?? 0
+            this.state.day?.id ?? 0,
+            this.state.selectedInsurance?.entityId,
         );
     };
     onERAPaymentGridSelectionChange = (event) => {
@@ -546,6 +551,65 @@ class EraPayments extends Component {
             });
         }
     }
+    toggleInsuranceDialog = () => {
+        if (this.state.insuranceVisible) {
+            this.setState({
+                insuranceSearchText: null,
+            });
+            this.props.resetInsuranceList();
+        }
+        this.setState({
+            insuranceVisible: !this.state.insuranceVisible,
+        });
+    };
+    cancelInsuranceDialog = () => {
+        // this.setState({
+        //   selectedInsurance: null,
+        // });
+        this.toggleInsuranceDialog();
+    };
+    onInsuranceSelectionChange = (event) => {
+        // var selectedDataItems = event.dataItems.slice(
+        //   event.startRowIndex,
+        //   event.endRowIndex + 1
+        // );
+        // this.setState({
+        //   selectedInsurance: {
+        //     entityId: selectedDataItems[0].entitySID,
+        //     entityName: selectedDataItems[0].sortName,
+        //   },
+        // });
+    };
+    onInsuranceDoubleClick = async (event) => {
+        await this.setState({
+            selectedInsurance: {
+                entityId: event.dataItem.entitySID,
+                entityName: event.dataItem.sortName,
+            },
+        });
+        this.props.SaveLookups(event.dataItem.entitySID, "Insurance");
+        //this.selectInsurance();
+        this.toggleInsuranceDialog();
+    };
+    onInsuranceKeyDown = (event) => {
+        var selectedDataItems = event.dataItems.slice(
+            event.startRowIndex,
+            event.endRowIndex + 1
+        );
+        this.setState({
+            selectedInsurance: {
+                entityId: selectedDataItems[0].entitySID,
+                entityName: selectedDataItems[0].sortName,
+            },
+        });
+    };
+    insuranceSearch = (refreshData = true, skip = 0) => {
+        this.props.getinsuranceList(
+            this.state.insuranceSearchText,
+            refreshData,
+            skip
+        );
+    };
     render() {
         return (
             <Fragment>
@@ -564,6 +628,29 @@ class EraPayments extends Component {
                         info={this.state.info}
                         none={this.state.none}
                     ></NotificationComponent>
+                    {this.state.insuranceVisible && (
+                        <FindDialogComponent
+                            title="Plan Search"
+                            placeholder="Enter Plan Company Name Or Company Code"
+                            searcTextBoxValue={this.state.insuranceSearchText}
+                            onTextSearchChange={(e) => {
+                                this.setState({
+                                    insuranceSearchText: e.value,
+                                });
+                            }}
+                            clickOnSearch={this.insuranceSearch}
+                            dataItemKey="entitySID"
+                            data={this.props.insuranceList}
+                            columns={insuranceColumns}
+                            onSelectionChange={this.onInsuranceSelectionChange}
+                            onRowDoubleClick={this.onInsuranceDoubleClick}
+                            onKeyDown={this.onInsuranceKeyDown}
+                            idGetterLookup={idGetterInsurance}
+                            toggleDialog={this.cancelInsuranceDialog}
+                            cancelDialog={this.cancelInsuranceDialog}
+                            getNextData={true}
+                        ></FindDialogComponent>
+                    )}
                     {this.state.ShowEditERARow && (
                         <EraPaymentsDialogComponent
                             ERAItemDetails={this.state.ERAItemDetails}
@@ -663,7 +750,61 @@ class EraPayments extends Component {
                                             Find
                                         </ButtonComponent>
                                     </div>
-                                    <div style={{ marginLeft: "10px", width: "95px" }}>
+                                    <div style={{ float: "left" }}>
+                                        {/* <div style={{ float: "left", marginLeft: "45px" }}>
+                                            <label className="userInfoLabel">Plan</label>
+                                        </div> */}
+                                        <div
+                                            className="insPlan"
+                                            style={{ float: "left", marginRight: "3px" }}
+                                        >
+                                            <DropDown
+                                                data={PlanCategory}
+                                                textField="text"
+                                                dataItemKey="id"
+                                                className="unifyHeight"
+                                                id="ins"
+                                                name="ins"
+                                                value={this.state.insuranceType}
+                                                onChange={(e) => this.setState({ insuranceType: e.value })}
+                                            ></DropDown>
+                                        </div>
+                                        <div style={{ float: "left", marginLeft: "5px" }}>
+                                            <label className="userInfoLabel">Payer Name</label>
+                                        </div>
+                                        <div style={{ float: "left" }} className="insuranceStyle">
+                                            <DropDown
+                                                className="unifyHeight"
+                                                data={this.props.dropDownInsurance}
+                                                textField="entityName"
+                                                dataItemKey="entityId"
+                                                defaultValue={this.state.selectedInsurance}
+                                                value={this.state.selectedInsurance}
+                                                onChange={(e) =>
+                                                    this.setState({
+                                                        selectedInsurance: {
+                                                            entityId: e.value?.entityId,
+                                                            entityName: e.value?.entityName,
+                                                        },
+                                                    })
+                                                }
+                                            ></DropDown>
+                                        </div>
+                                        <div
+                                            style={{ float: "left", width: "70px", marginRight: "3px" }}
+                                        >
+                                            <ButtonComponent
+                                                look="outline"
+                                                icon="search"
+                                                type="search"
+                                                classButton="infraBtn-primary find-button"
+                                                onClick={this.toggleInsuranceDialog}
+                                            >
+                                                Find
+                                            </ButtonComponent>
+                                        </div>
+                                    </div>
+                                    {/* <div style={{ marginLeft: "10px", width: "95px" }}>
                                         <label className="userInfoLabel">Sender Account </label>
                                     </div>
                                     <div style={{ width: "147px" }}>
@@ -690,7 +831,7 @@ class EraPayments extends Component {
                                                 })
                                             }
                                         ></TextBox>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div
                                     className="rowHeight"

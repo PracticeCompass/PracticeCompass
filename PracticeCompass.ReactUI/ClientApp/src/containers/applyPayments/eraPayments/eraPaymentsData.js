@@ -38,7 +38,34 @@ export const PracticeColumns = [
         minWidth: "700px",
     },
 ];
-
+export const insuranceColumns = [
+    {
+      field: "carrierCode",
+      title: "Code",
+      orderIndex:0,
+      minWidth: "100px",
+  },
+    {
+      field: "sortName",
+      title: "Plan Company",
+      orderIndex: 1,
+      minWidth: "700px",
+    },
+  ];
+export const PlanCategory = [
+    {
+      id: "1",
+      text: "1",
+    },
+    {
+      id: "2",
+      text: "2",
+    },
+    {
+      id: "3",
+      text: "3",
+    },
+  ];
 export const detailsColumns = [
     {
         field: "gridID",

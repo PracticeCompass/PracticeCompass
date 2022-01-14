@@ -61,6 +61,26 @@ export const GuarantorInfoGet = (personID) => async (dispatch, getState) => {
     dispatch(uiStopLoading());
   }
 };
+export const PlanInfoGet = (planId) => async (dispatch, getState) => {
+  try {
+    dispatch(uiStartLoading());
+    if (planId == null) return;
+    const resp = await axios({
+      method: "GET",
+      url: `${config.baseUrl}/PatientDetails/PlanInfoGet?PlanId=${planId}`,
+    });
+    return resp.data;
+  } catch (error) {
+    await dispatch(setInsurance([]));
+    console.log("error ==> ", error);
+    dispatch({
+      type: GET_PATIENT_FILTER_FAILED,
+      payload: error,
+    });
+  } finally {
+    dispatch(uiStopLoading());
+  }
+};
 export const updateInsuranceDetails=(data)=>async(dispatch,getState)=>{
   try{
     dispatch(uiStartLoading());

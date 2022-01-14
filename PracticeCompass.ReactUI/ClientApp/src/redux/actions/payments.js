@@ -57,10 +57,9 @@ export const getERAPaymentHeader =
         Amount,
         CheckNumber,
         AmountType,
-        SenderAccount,
-        ReceiverAccount,
         PostDate,
-        Days
+        Days,
+        payerId
     ) =>
         async (dispatch, getState) => {
             try {
@@ -69,7 +68,7 @@ export const getERAPaymentHeader =
                 // if (PracticeID == null && PatientID == null) return;
                 const resp = await axios({
                     method: "GET",
-                    url: `${config.baseUrl}/payment/ERAPaymentHeaderGet?PracticeID=${PracticeID}&IsPosted=${IsPosted}&Amount=${Amount}&CheckNumber=${CheckNumber}&AmountType=${AmountType}&SenderAccount=${SenderAccount}&ReceiverAccount=${ReceiverAccount}&PostDate=${PostDate}&Days=${Days}`,
+                    url: `${config.baseUrl}/payment/ERAPaymentHeaderGet?PracticeID=${PracticeID}&IsPosted=${IsPosted}&Amount=${Amount}&CheckNumber=${CheckNumber}&AmountType=${AmountType}&PostDate=${PostDate}&Days=${Days}&PayerID=${payerId}`,
                 });
                 dispatch(setERAPayments(resp.data || []));
             } catch (error) {

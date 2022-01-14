@@ -5,7 +5,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
 -- =============================================
 -- exec uspInsuranceGridGet @personid =1782 =============================================
 CREATE OR ALTER   PROCEDURE [dbo].[uspPlanInfoGet] 
