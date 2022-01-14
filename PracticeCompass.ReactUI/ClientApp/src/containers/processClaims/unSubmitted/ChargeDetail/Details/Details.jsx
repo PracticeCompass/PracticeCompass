@@ -1758,7 +1758,7 @@ class Details extends Component {
                     >
                       <div style={{ float: "left" }}>
                         <div style={{ float: "left", marginLeft: "33px" }}>
-                          <label className="userInfoLabel">Charge Amount</label>
+                          <label className="userInfoLabel">Charge Balance</label>
                         </div>
                         <div style={{ float: "left", width: "120px" }}>
                           <TextBox
