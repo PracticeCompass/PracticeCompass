@@ -1587,10 +1587,6 @@ class ClaimList extends Component {
                                         </ButtonComponent>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="row" style={{ flexWrap: "nowrap" }}>
-                            <div>
                                 <div className="row nowrap rowHeight">
                                     <div style={{ textAlign: "right", marginLeft: "68px" }}>
                                         <label className="userInfoLabel">Plan </label>
@@ -1763,7 +1759,7 @@ class ClaimList extends Component {
                                     )}
                                 </div>
                             </div>
-                            <div style={{ marginLeft: "30px", marginTop: "5px" }}>
+                            <div style={{ marginLeft: "10px", marginTop: "5px" }}>
                                 <div
                                     style={{
                                         borderStyle: "dotted",
@@ -1796,7 +1792,6 @@ class ClaimList extends Component {
                                 </div>
                             </div>
                         </div>
-
                     </div>}
                     {!this.state.showFilter && <div>
                         <span>{this.state.searchText}</span>
