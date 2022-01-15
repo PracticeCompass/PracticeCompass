@@ -281,7 +281,7 @@ namespace PracticeCompass.Data.Repositories
                 var planclaim = PlanClaimCharges.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
                 var ERSChargeServiceInfo = ERSChargeServiceInfos.FirstOrDefault(c => c.ERSChargeSID == (ERSChargeReferences.FirstOrDefault(x => x.ReferenceID == paymentmodel.ChargeSID.ToString()).ERSChargeSID));
                 var chargeexistsql = "select * from PlanClaimChargeRemit where ChargeSID = @ChargeSID order by RemitCount desc  ";
-                var PlanClaimChargermt = this.db.QueryFirst<PlanClaimChargeRemit>(chargeexistsql, new { ChargeSID = paymentmodel.ChargeSID });
+                var PlanClaimChargermt = this.db.QueryFirstOrDefault<PlanClaimChargeRemit>(chargeexistsql, new { ChargeSID = paymentmodel.ChargeSID });
                 PlanClaimChargeRemits.Add(new PlanClaimChargeRemit
                 {
                     TimeStamp = timestamp,
@@ -327,15 +327,15 @@ namespace PracticeCompass.Data.Repositories
                 var chargeactivity = ChargeActivities.FirstOrDefault(x => x.ChargeSID == paymentmodel.ChargeSID);
 
                 var planclaimSql = "select* from PlanClaimCharge where ChargeSID = @ChargeSID and PlanID = @PlanID and ClaimSID = @ClaimSID ";
-                var planclaim = this.db.QueryFirst<PlanClaimCharge>(planclaimSql, new { ChargeSID = paymentmodel.ChargeSID, PlanID = paymentmodel.PlanID, ClaimSID = paymentmodel.ChargeAdjustments[0].claimSid });
+                var planclaim = this.db.QueryFirstOrDefault<PlanClaimCharge>(planclaimSql, new { ChargeSID = paymentmodel.ChargeSID, PlanID = paymentmodel.PlanID, ClaimSID = paymentmodel.ChargeAdjustments[0].claimSid });
 
-                var ProcedureEventsql = @"select ProcedureCode+ISNULL('-'+Modifier,'') from ProcedureEvent left outer join ProcedureEventModifier on ProcedureEvent.ProcedureEventSID = ProcedureEventModifier.ProcedureEventSID
-                                            where ChargeSID = @ChargeSID and ProcedureEventModifier.[Order]= 1";
+                var ProcedureEventsql = @"select ProcedureCode+ISNULL('-'+Modifier,'') from ProcedureEvent left outer join ProcedureEventModifier on ProcedureEvent.ProcedureEventSID = ProcedureEventModifier.ProcedureEventSID and ProcedureEventModifier.[Order]= 1
+                                            where ChargeSID = @ChargeSID ";
 
-                var ProcedureEvent = this.db.QueryFirst<string>(ProcedureEventsql, new { ChargeSID = paymentmodel.ChargeSID });
+                var ProcedureEvent = this.db.QueryFirstOrDefault<string>(ProcedureEventsql, new { ChargeSID = paymentmodel.ChargeSID });
 
-                var chargeexistsql = "select * from PlanClaimChargeRemit where ChargeSID = @ChargeSID ";
-                var PlanClaimChargermt = this.db.QueryFirst<PlanClaimChargeRemit>(chargeexistsql, new { ChargeSID = paymentmodel.ChargeSID });
+                var chargeexistsql = "select * from PlanClaimChargeRemit where ChargeSID = @ChargeSID Order by RemitCount desc ";
+                var PlanClaimChargermt = this.db.QueryFirstOrDefault<PlanClaimChargeRemit>(chargeexistsql, new { ChargeSID = paymentmodel.ChargeSID });
                 PlanClaimChargeRemits.Add(new PlanClaimChargeRemit
                 {
                     TimeStamp = timestamp,
@@ -416,7 +416,7 @@ namespace PracticeCompass.Data.Repositories
                     string PlanClaimChargeRemitadjMAXRowID = practiceCompassHelper.GetMAXprrowid("PlanClaimChargeRemitAdj", PlanClaimChargeRemitadjs.Count() != 0 ? PlanClaimChargeRemitadjs[PlanClaimChargeRemitadjs.Count() - 1].prrowid : "0");
 
                     var planclaimSql = "select* from PlanClaimCharge where ChargeSID = @ChargeSID and PlanID = @PlanID and ClaimSID = @ClaimSID ";
-                    var planclaim = this.db.QueryFirst<PlanClaimCharge>(planclaimSql, new { ChargeSID = chargeclaimadjus.chargeSid, PlanID = applyPaymentModel.PlanID, ClaimSID = chargeclaimadjus.claimSid });
+                    var planclaim = this.db.QueryFirstOrDefault<PlanClaimCharge>(planclaimSql, new { ChargeSID = chargeclaimadjus.chargeSid, PlanID = applyPaymentModel.PlanID, ClaimSID = chargeclaimadjus.claimSid });
 
                     var planClaimChargeRemit = planClaimChargeRemits.FirstOrDefault(c => c.ChargeSID == chargeclaimadjus.chargeSid);
                     PlanClaimChargeRemitadjs.Add(new PlanClaimChargeRemitAdj
