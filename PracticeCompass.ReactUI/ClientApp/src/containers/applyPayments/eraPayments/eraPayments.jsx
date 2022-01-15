@@ -714,6 +714,7 @@ class EraPayments extends Component {
                                         display: "flex",
                                         flexFlow: "row",
                                         width: "100%",
+                                        marginBottom: "-1px"
                                     }}
                                 >
                                     <div style={{ marginLeft: "12px" }}>
@@ -737,7 +738,7 @@ class EraPayments extends Component {
                                             }
                                         ></DropDown>
                                     </div>
-                                    <div style={{ float: "left" }}>
+                                    <div style={{ float: "left", marginTop: "2px" }}>
                                         <ButtonComponent
                                             icon="search"
                                             type="search"
@@ -839,7 +840,7 @@ class EraPayments extends Component {
                                         display: "flex",
                                         flexFlow: "row",
                                         width: "100%",
-                                        marginBottom: "5px",
+                                        marginBottom: "-1px",
                                     }}
                                 >
                                     <div style={{ marginLeft: "11px" }}>
@@ -859,7 +860,7 @@ class EraPayments extends Component {
                                     <div style={{ width: "57px", marginLeft: "10px" }}>
                                         <label className="userInfoLabel">Amount</label>
                                     </div>
-                                    <div style={{ width: "147px" }}>
+                                    <div style={{ width: "147px", marginLeft: "-5px" }}>
                                         <DropDown
                                             data={AmountFilter}
                                             textField="text"
@@ -935,7 +936,8 @@ class EraPayments extends Component {
                                         display: "flex",
                                         flexFlow: "row",
                                         width: "100%",
-                                        marginBottom: "5px",
+                                        /*marginBottom: "5px",*/
+                                        marginLeft: "-22px"
                                     }} >
                                     <div style={{ float: "left", marginLeft: "30px" }}>
                                         <ButtonComponent

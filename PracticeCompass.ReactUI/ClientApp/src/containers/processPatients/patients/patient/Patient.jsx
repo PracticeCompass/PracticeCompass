@@ -1166,6 +1166,7 @@ class Patient extends Component {
                                 display: "flex",
                                 flexFlow: "row nowrap",
                                 marginTop: "10px",
+                                marginLeft: "-17px"
                             }}
                         >
                             <div style={{ float: "left", width: "430px" }}>
@@ -1219,7 +1220,7 @@ class Patient extends Component {
                                     float: "right",
                                     position: "absolute",
                                     marginRight: "10px",
-                                    right: "0",
+                                    right: "5px",
                                 }}
                             >
                                 <ButtonComponent

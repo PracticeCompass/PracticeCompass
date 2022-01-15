@@ -1196,7 +1196,7 @@ class PatientPayments extends Component {
                         >
                             <div style={{ display: "flex", flexFlow: "row", width: "100%" }}>
                                 <div style={{ float: "left", width: "100%" }}>
-                                    <div style={{ display: "flex", flexFlow: "row" }}>
+                                    <div style={{ display: "flex", flexFlow: "row", marginBottom: "-7px", marginLeft:"-15px" }}>
                                         <div style={{ marginLeft: "32px" }}>
                                             <label className="userInfoLabel">Practice </label>
                                         </div>
@@ -1218,7 +1218,7 @@ class PatientPayments extends Component {
                                                 }
                                             ></DropDown>
                                         </div>
-                                        <div style={{ float: "left" }}>
+                                        <div style={{ float: "left", marginTop: "1px" }}>
                                             <ButtonComponent
                                                 icon="search"
                                                 type="search"
@@ -1252,7 +1252,7 @@ class PatientPayments extends Component {
                                                 }
                                             ></DropDown>
                                         </div>
-                                        <div>
+                                        <div style={{marginTop: "1px" }}>
                                             <ButtonComponent
                                                 icon="search"
                                                 type="search"
@@ -1265,12 +1265,12 @@ class PatientPayments extends Component {
                                         </div>
                                     </div>
                                     <div
-                                        style={{ display: "flex", flexFlow: "row", width: "100%" }}
+                                        style={{ display: "flex", flexFlow: "row", width: "100%", marginBottom: "-7px", marginLeft: "-15px" }}
                                     >
                                         <div style={{ width: "54px", marginLeft: "27px" }}>
                                             <label className="userInfoLabel">Txn Date</label>
                                         </div>
-                                        <div style={{ width: "147px" }}>
+                                        <div style={{ width: "147px", marginLeft: "-1px" }}>
                                             <DropDown
                                                 data={DOSFilter}
                                                 textField="text"
@@ -1356,7 +1356,7 @@ class PatientPayments extends Component {
                                 </div>
                             </div>
                             <div
-                                style={{ display: "flex", flexFlow: "row", marginLeft: "20px" }}
+                                style={{ display: "flex", flexFlow: "row", marginLeft: "8px", marginBottom: "-5px" }}
                             >
                                 <div style={{ float: "left" }}>
                                     <ButtonComponent
@@ -1504,7 +1504,7 @@ class PatientPayments extends Component {
                             >
                                 <div style={{ display: "flex", flexFlow: "row" }}>
                                     <div style={{ textAlign: "left" }}>
-                                        <div style={{ display: "flex", flexFlow: "row" }}>
+                                        <div style={{ display: "flex", flexFlow: "row", marginBottom: "-7px", marginTop: "-6px", marginLeft: "16px" }}>
                                             <div style={{ marginLeft: "16px" }}>
                                                 <label className="userInfoLabel">Practice </label>
                                             </div>
@@ -1526,7 +1526,7 @@ class PatientPayments extends Component {
                                                     }
                                                 ></DropDown>
                                             </div>
-                                            <div style={{ float: "left" }}>
+                                            <div style={{ float: "left", marginTop: "2px" }}>
                                                 <ButtonComponent
                                                     icon="search"
                                                     type="search"
@@ -1542,7 +1542,7 @@ class PatientPayments extends Component {
                                                 </ButtonComponent>
                                             </div>
                                         </div>
-                                        <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+                                        <div style={{ display: "flex", flexFlow: "row nowrap", marginBottom: "-7px", marginLeft: "18px" }}>
                                             <div style={{ marginLeft: "2px" }}>
                                                 <label className="userInfoLabel">Guarantor</label>
                                             </div>
@@ -1564,7 +1564,7 @@ class PatientPayments extends Component {
                                                     }
                                                 ></DropDown>
                                             </div>
-                                            <div>
+                                            <div style={{marginTop: "2px" }}>
                                                 <ButtonComponent
                                                     icon="search"
                                                     type="search"
@@ -1576,7 +1576,7 @@ class PatientPayments extends Component {
                                                 </ButtonComponent>
                                             </div>
                                         </div>
-                                        <div style={{ display: "flex", flexFlow: "row" }}>
+                                        <div style={{ display: "flex", flexFlow: "row", marginBottom: "-7px", marginLeft: "17px" }}>
                                             <div style={{ float: "left", marginLeft: "32px" }}>
                                                 <label className="userInfoLabel">Class </label>
                                             </div>
@@ -1611,7 +1611,7 @@ class PatientPayments extends Component {
                                                 ></DatePickerComponent>
                                             </div>
                                         </div>
-                                        <div style={{ display: "flex", flexFlow: "row" }}>
+                                        <div style={{ display: "flex", flexFlow: "row", marginBottom: "-7px", marginLeft: "17px" }}>
                                             <div style={{ float: "left", marginLeft: "14px" }}>
                                                 <label className="userInfoLabel">Amount </label>
                                             </div>
@@ -1644,7 +1644,7 @@ class PatientPayments extends Component {
                                                     }
                                                 ></TextBox>
                                             </div>
-                                            <div style={{ marginLeft: "30px" }}>
+                                            <div style={{ marginLeft: "-7px" }}>
                                                 <ButtonComponent
                                                     classButton="infraBtn-primary action-button"
                                                     look="outline"
@@ -1670,13 +1670,13 @@ class PatientPayments extends Component {
                                         </div>
                                     </div>
                                     <div style={{ textAlign: "left" }}>
-                                        <div style={{ display: "flex", flexFlow: "row" }}>
+                                        <div style={{ display: "flex", flexFlow: "row", marginTop: "-13px" }}>
                                             <fieldset
                                                 className="fieldsetStyle"
                                                 style={{
                                                     width: "540px",
                                                     marginTop: "5px",
-                                                    height: "85px",
+                                                    height: "80px",
                                                     marginLeft: "10px",
                                                 }}
                                             >
@@ -1686,7 +1686,7 @@ class PatientPayments extends Component {
                                                 >
                                                     Payment Method
                                                 </legend>
-                                                <div className="row" style={{ marginLeft: "5px" }}>
+                                                <div className="row" style={{ marginLeft: "5px", marginBottom: "-7px" }}>
                                                     <div style={{ float: "left", marginLeft: "24px" }}>
                                                         <label className="userInfoLabel">Method</label>
                                                     </div>
@@ -1704,7 +1704,7 @@ class PatientPayments extends Component {
                                                             }
                                                         ></DropDown>
                                                     </div>
-                                                    <div style={{ float: "left", marginLeft: "12px" }}>
+                                                    <div style={{ float: "left", marginLeft: "75px" }}>
                                                         <label className="userInfoLabel">Voucher </label>
                                                     </div>
                                                     <div style={{ float: "left", width: "100px" }}>
@@ -1719,7 +1719,7 @@ class PatientPayments extends Component {
                                                         ></TextBox>
                                                     </div>
                                                 </div>
-                                                <div className="row" style={{ marginLeft: "5px" }}>
+                                                <div className="row" style={{ marginLeft: "5px", marginBottom: "-7px" }}>
                                                     <div style={{ float: "left", marginLeft: "5px" }}>
                                                         <label className="userInfoLabel">Credit Card</label>
                                                     </div>
@@ -1760,21 +1760,21 @@ class PatientPayments extends Component {
                                 </div>
 
                                 <fieldset
-                                    className="fieldsetStyle"
+                                    /*className="fieldsetStyle"*/
                                     style={{
                                         width: "100%",
-                                        marginTop: "5px",
+                                        /*marginTop: "5px",*/
                                         marginBottom: "5px",
                                         width: this.state.gridDetails,
                                         marginLeft: "10px",
                                     }}
                                 >
-                                    <legend
-                                        className="legendStyle"
-                                        style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                                    >
-                                        Assignement Payment
-                                    </legend>
+                                    {/*<legend*/}
+                                    {/*    className="legendStyle"*/}
+                                    {/*    style={{ paddingRight: "5px", paddingLeft: "5px" }}*/}
+                                    {/*>*/}
+                                    {/*    Assignement Payment*/}
+                                    {/*</legend>*/}
                                     <div
                                         style={{
                                             display: "flex",
@@ -1783,12 +1783,14 @@ class PatientPayments extends Component {
                                             height: "20px",
                                         }}
                                     >
-
+                                        <div style={{ float: "left", marginLeft: "12px" }}>
+                                            <label className="userInfoLabel">Assignement Payment</label>
+                                        </div>
                                         <div
                                             style={{
                                                 float: "right",
                                                 position: "absolute",
-                                                marginRight: "41px",
+                                                marginRight: "22px",
                                                 right: "0",
                                             }}
                                         >
@@ -1906,6 +1908,8 @@ class PatientPayments extends Component {
                                                         display: "flex",
                                                         flexFlow: "row nowrap",
                                                         width: "100%",
+                                                        marginBottom: "-10px",
+                                                        marginLeft: "-11px"
                                                     }}
                                                 >
                                                     <div style={{ float: "left", marginLeft: "14px" }}>
@@ -1948,61 +1952,64 @@ class PatientPayments extends Component {
                                                         ></TextBox>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        flexFlow: "row",
-                                                        height: "20px",
-                                                    }}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            float: "right",
-                                                            position: "absolute",
-                                                            marginRight: "18px",
-                                                            right: "0",
-                                                        }}
-                                                    >
-                                                        <ButtonComponent
-                                                            type="add"
-                                                            icon="export"
-                                                            classButton="infraBtn-primary"
-                                                            onClick={() => {
-                                                                exportExcelFile(this.state._exportApply, this.props.applyPatientPayments, this.state.applyPatientPaymentColumns);
-                                                            }}
-                                                        >
-                                                            Export to Excel
-                                                        </ButtonComponent>
-                                                        <ButtonComponent
-                                                            type="add"
-                                                            classButton="infraBtn-primary action-button"
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                    Show_HideApplyDialogVisible: true,
-                                                                });
-                                                            }}
-                                                        >
-                                                            Edit Grid
-                                                        </ButtonComponent>
-                                                    </div>
-                                                </div>
                                                 <fieldset
-                                                    className="fieldsetStyle"
+                                                    /*className="fieldsetStyle"*/
                                                     style={{
                                                         width: this.state.gridcharged,
                                                         marginTop: "5px",
-                                                        marginBottom: "10px",
+                                                        marginBottom: "-18px",
                                                         height: "330px",
-                                                        marginLeft: "10px",
+                                                        /*marginLeft: "10px",*/
                                                     }}
                                                 >
-                                                    <legend
-                                                        className="legendStyle"
-                                                        style={{ paddingRight: "5px", paddingLeft: "5px" }}
+                                                    {/*<legend*/}
+                                                    {/*    className="legendStyle"*/}
+                                                    {/*    style={{ paddingRight: "5px", paddingLeft: "5px" }}*/}
+                                                    {/*>*/}
+                                                    {/*    Assignement Payment*/}
+                                                    {/*</legend>*/}
+                                                    <div style={{ float: "left", marginLeft: "2px", marginBottom: "-10px" }}>
+                                                        <label className="userInfoLabel">Assignement Payment </label>
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            flexFlow: "row",
+                                                            /*height: "20px",*/
+                                                        }}
                                                     >
-                                                        Assignement Payment
-                                                    </legend>
-
+                                                        <div
+                                                            style={{
+                                                                float: "right",
+                                                                position: "absolute",
+                                                                marginRight: "35px",
+                                                                right: "0",
+                                                                marginTop: "-7px"
+                                                            }}
+                                                        >
+                                                            <ButtonComponent
+                                                                type="add"
+                                                                icon="export"
+                                                                classButton="infraBtn-primary"
+                                                                onClick={() => {
+                                                                    exportExcelFile(this.state._exportApply, this.props.applyPatientPayments, this.state.applyPatientPaymentColumns);
+                                                                }}
+                                                            >
+                                                                Export to Excel
+                                                        </ButtonComponent>
+                                                            <ButtonComponent
+                                                                type="add"
+                                                                classButton="infraBtn-primary action-button"
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        Show_HideApplyDialogVisible: true,
+                                                                    });
+                                                                }}
+                                                            >
+                                                                Edit Grid
+                                                        </ButtonComponent>
+                                                        </div>
+                                                    </div>
                                                     <div
                                                         style={{
                                                             display: "flex",
@@ -2014,8 +2021,8 @@ class PatientPayments extends Component {
                                                             <div
                                                                 className="card bg-light mb-3"
                                                                 style={{
-                                                                    marginLeft: "10px",
-                                                                    marginRight: "10px",
+                                                                    //marginLeft: "10px",
+                                                                    //marginRight: "10px",
                                                                     marginTop: "5px",
                                                                 }}
                                                             >
@@ -2066,26 +2073,29 @@ class PatientPayments extends Component {
                                                     </div>
                                                 </fieldset>
                                                 <fieldset
-                                                    className="fieldsetStyle"
+                                                    /*className="fieldsetStyle"*/
                                                     style={{
                                                         width:
                                                             window.innerWidth -
                                                             (!this.props.UiExpand ? 148 : 330),
                                                         marginTop: "5px",
-                                                        marginBottom: "30px",
+                                                        marginBottom: "-43px",
                                                         height: "360px",
-                                                        marginLeft: "10px",
+                                                        marginLeft: "-11px",
                                                     }}
                                                 >
-                                                    <legend
-                                                        className="legendStyle"
-                                                        style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                                                    >
-                                                        Confirmation
-                                                    </legend>
+                                                    {/*<legend*/}
+                                                    {/*    className="legendStyle"*/}
+                                                    {/*    style={{ paddingRight: "5px", paddingLeft: "5px" }}*/}
+                                                    {/*>*/}
+                                                    {/*    Confirmation*/}
+                                                    {/*</legend>*/}
+                                                    <div style={{ float: "left", marginLeft: "14px", marginBottom: "-10px" }}>
+                                                        <label className="userInfoLabel">Confirmation </label>
+                                                    </div>
                                                     <div
                                                         style={{
-                                                            display: "flex",
+                                                           /* display: "flex",*/
                                                             flexFlow: "row nowrap",
                                                             width: "100%",
                                                             marginBottom: "10px",
@@ -2111,8 +2121,47 @@ class PatientPayments extends Component {
                                                     <div
                                                         style={{
                                                             display: "flex",
+                                                            flexFlow: "row",
+                                                            /*height: "20px",*/
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                /*float: "right",*/
+                                                                position: "absolute",
+                                                                marginRight: "33px",
+                                                                right: "0",
+                                                                marginTop: "-38px"
+                                                            }}
+                                                        >
+                                                            <ButtonComponent
+                                                                type="add"
+                                                                icon="export"
+                                                                classButton="infraBtn-primary"
+                                                                onClick={() => {
+                                                                    exportExcelFile(this.state._exportApply, this.props.filterapplyPatientPayments, this.state.applyPatientPaymentColumns);
+                                                                }}
+                                                            >
+                                                                Export to Excel
+                                                        </ButtonComponent>
+                                                            <ButtonComponent
+                                                                type="add"
+                                                                classButton="infraBtn-primary action-button"
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        Show_HideApplyDialogVisible: true,
+                                                                    });
+                                                                }}
+                                                            >
+                                                                Edit Grid
+                                                        </ButtonComponent>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
                                                             flexFlow: "row nowrap",
-                                                            width: "100%",
+                                                            width: "101%",
                                                         }}
                                                     >
                                                         <div className="accordion" id="accordionExample">
@@ -2120,8 +2169,8 @@ class PatientPayments extends Component {
                                                                 className="card bg-light mb-3"
                                                                 style={{
                                                                     marginLeft: "10px",
-                                                                    marginRight: "10px",
-                                                                    marginTop: "5px",
+                                                                    /*marginRight: "10px",*/
+                                                                    marginTop: "-10px",
                                                                 }}
                                                             >
                                                                 <div
@@ -2175,20 +2224,25 @@ class PatientPayments extends Component {
                                             title="Apply Patient Payments Assignment"
                                             selected={"true"}
                                         >
+                                            {/*<div style={{ float: "left", marginLeft: "14px" }}>*/}
+                                            {/*    <label className="userInfoLabel">Assignement Payment </label>*/}
+                                            {/*</div>*/}
                                             <div
                                                 style={{
                                                     display: "flex",
                                                     flexFlow: "row",
-                                                    marginBottom: "2px",
+                                                    marginBottom: "-5px",
                                                     height: "20px",
                                                 }}
                                             >
+                                                <label className="userInfoLabel">Assignement Payment </label>
                                                 <div
                                                     style={{
                                                         float: "right",
                                                         position: "absolute",
-                                                        marginRight: "10px",
+                                                        marginRight: "55px",
                                                         right: "0",
+                                                        marginTop: "-10px"
                                                     }}
                                                 >
                                                     <ButtonComponent
@@ -2222,21 +2276,21 @@ class PatientPayments extends Component {
                                                 }}
                                             >
                                                 <fieldset
-                                                    className="fieldsetStyle"
+                                                    /*className="fieldsetStyle"*/
                                                     style={{
-                                                        marginTop: "5px",
-                                                        marginBottom: "5px",
+                                                        marginTop: "-2px",
+                                                        /*marginBottom: "5px",*/
                                                         // height: "85px",
-                                                        marginLeft: "10px",
+                                                        marginLeft: "-11px",
                                                         width: this.state.gridcharged,
                                                     }}
                                                 >
-                                                    <legend
-                                                        className="legendStyle"
-                                                        style={{ paddingRight: "5px", paddingLeft: "5px" }}
-                                                    >
-                                                        Assignement Payment
-                                                    </legend>
+                                                    {/*<legend*/}
+                                                    {/*    className="legendStyle"*/}
+                                                    {/*    style={{ paddingRight: "5px", paddingLeft: "5px" }}*/}
+                                                    {/*>*/}
+                                                    {/*    Assignement Payment*/}
+                                                    {/*</legend>*/}
                                                     <div className="accordion" id="accordionExample">
                                                         <div
                                                             className="card bg-light mb-3"

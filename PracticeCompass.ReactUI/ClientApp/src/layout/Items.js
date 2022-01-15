@@ -56,13 +56,13 @@ export const itemsList = [
     parentId: 6,
     route: "/processpatients/patients",
   },
-  {
-    text: "More",
-    icon: "k-i-inbox",
-    id: 8,
-    parentId: 6,
-    route: "/processpatients/more",
-  },
+  //{
+  //  text: "More",
+  //  icon: "k-i-inbox",
+  //  id: 8,
+  //  parentId: 6,
+  //  route: "/processpatients/more",
+  //},
 
   {
     text: "Payments Processing",
