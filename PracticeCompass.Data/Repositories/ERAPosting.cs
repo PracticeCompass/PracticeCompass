@@ -229,7 +229,7 @@ namespace PracticeCompass.Data.Repositories
                 Charges = paymentRepository.ChargesUpdate(applyPaymentModels, Charges);
                 Accounts = paymentRepository.AccountUpdate(applyPaymentModels, Accounts, Charges);
                 PlanClaimChargeRemits = paymentRepository.PlanClaimChargeRemitAdd(applyPaymentModels, PlanClaimCharge, ChargeActivities,ERSPaymentHeader, ERSChargeReferences,ERSChargeServiceInfo);
-                PlanClaimChargeRemitAdjments = paymentRepository.PlanClaimChargeRemitAdjAdd(ERSChargeClaimAdjustment, PlanClaimCharge, ERSChargeReferences);
+                PlanClaimChargeRemitAdjments = paymentRepository.PlanClaimChargeRemitAdjAdd(ERSChargeClaimAdjustment, PlanClaimCharge, ERSChargeReferences, PlanClaimChargeRemits);
                 var PlanClaimChargeMonetaryAmt = new List<PlanClaimChargeMonetaryAmt>();
                 foreach (var ERSChargemontAmt in ERSChargeMonetaryAmt)
                 {
