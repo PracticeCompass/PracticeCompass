@@ -18,7 +18,7 @@ BEGIN
 	SET NOCOUNT ON;
 
 	select lookupcode, description from [dbo].[LookupCode] where lookuptype = 'Gender'
-		and( @description is null or @description='' or description like @description+'%')
+		and( @description is null or @description='' or description like @description+'%') and RecordStatus='A'
 END
 
 GO

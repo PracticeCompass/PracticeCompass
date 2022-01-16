@@ -20,7 +20,9 @@ BEGIN
          inner join Staff as ReferralStaff on ProcedureEvent.PracticeID = ReferralStaff.PracticeID 
           and ProcedureEvent.ReferralSID = ReferralStaff.StaffID
 		  inner join [Provider] on [Provider].[ProviderID] = ReferralStaff.StaffID
-	where ( @Entity is null or @Entity=''or lastName like @Entity+'%' or FirstName like @Entity+'%' or SortName like @Entity+'%')
+	where 
+	(ReferralStaff.RecordStatus = 'A') and
+	( @Entity is null or @Entity=''or lastName like @Entity+'%' or FirstName like @Entity+'%' or SortName like @Entity+'%')
 
 	order by SortName
 

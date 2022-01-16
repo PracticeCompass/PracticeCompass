@@ -20,7 +20,9 @@ BEGIN
          inner join Staff as SupervisingStaff on ProcedureEvent.PracticeID = SupervisingStaff.PracticeID 
           and ProcedureEvent.SupervisingStaffID = SupervisingStaff.StaffID
 		  inner join [Provider] on [Provider].[ProviderID] = SupervisingStaff.StaffID
-	where ( @Entity is null or @Entity=''or lastName like @Entity+'%' or FirstName like @Entity+'%' or SortName like @Entity+'%')
+	where 
+	(SupervisingStaff.RecordStatus='A') and 
+	( @Entity is null or @Entity=''or lastName like @Entity+'%' or FirstName like @Entity+'%' or SortName like @Entity+'%')
 
 	order by SortName
 

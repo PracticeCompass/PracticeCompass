@@ -19,7 +19,9 @@ BEGIN
          inner join Staff as RenderingStaff on ProcedureEvent.PracticeID = RenderingStaff.PracticeID 
           and ProcedureEvent.StaffID = RenderingStaff.StaffID
 		  inner join [Provider] on [Provider].[ProviderID] = RenderingStaff.StaffID
-	where ( @filter is null or @filter=''or lastName like @filter+'%' or FirstName like @filter+'%' or SortName like @filter+'%')
+	where 
+	(RenderingStaff.RecordStatus='A') and 
+	( @filter is null or @filter=''or lastName like @filter+'%' or FirstName like @filter+'%' or SortName like @filter+'%')
 	order by SortName
 END
 

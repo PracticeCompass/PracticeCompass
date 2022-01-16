@@ -17,7 +17,9 @@ BEGIN
 	SET NOCOUNT ON;
 
 	select distinct [Procedure].ProcedureCode,[Procedure].class as className,[Procedure].[Description]  from [Procedure] 
-	where (@cptCode is null or @cptCode='' or [Procedure].[Description] like @cptCode+'%' or ProcedureCode like @cptCode+'%')
+	where 
+	(RecordStatus='A') and 
+	(@cptCode is null or @cptCode='' or [Procedure].[Description] like @cptCode+'%' or ProcedureCode like @cptCode+'%')
 END
 GO
 

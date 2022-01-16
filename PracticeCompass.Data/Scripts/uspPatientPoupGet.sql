@@ -49,7 +49,7 @@ set @SQL=	'select distinct COUNT(*) OVER() as totalCount,practice.SortName as pr
 	PatientAccount.AccountSID = 
     Account.AccountSID
 	inner join practice on practice.practiceid=patient.PracticeID
-	where'
+	where Patient.RecordStatus=''A'' and '
 
 	set @SQL = @SQL + +@filter+@DOBfilter +'	Order By PatientID OFFSET '+convert(varchar, @Skip)+' ROWS FETCH NEXT  '+convert(varchar,500)+' ROWS ONLY'
 print @SQL

@@ -18,6 +18,7 @@ BEGIN
 
 	select  lookupcode, description from[LookupCode] where lookuptype = 'PatientClass'
 	 and( @description is null or @description='' or description like @description+'%' or lookupcode like @description+'%')
+	 and (RecordStatus='A')
 
 	order by Description
 END
